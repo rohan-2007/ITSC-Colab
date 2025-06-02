@@ -1,0 +1,29 @@
+{
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ],
+  "eslint.workingDirectories": [
+    "./packages/api",
+    "./packages/client"
+  ],
+  "cSpell.words": [
+    "caseplans",
+    "criminogenic",
+    "Fluffykins",
+    "ITSC",
+    "Microservice",
+    "Microservices",
+    "OCAT",
+    "ORAS",
+    "postgres",
+    "postico",
+    "UCCI"
+  ],
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active"
+}

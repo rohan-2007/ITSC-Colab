@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "formulahendry.auto-rename-tag",
+    "mgmcdermott.vscode-language-babel",
+    "visualstudioexptteam.vscodeintellicode",
+    "streetsidesoftware.code-spell-checker",
+    "gruntfuggly.todo-tree",
+    "vsls-contrib.codetour",
+    "herrmannplatz.npm-dependency-links",
+    "christian-kohler.path-intellisense"
+  ]
+}

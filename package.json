@@ -1,0 +1,19 @@
+{
+  "name": "my-vite-app",
+  "private": true,
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^4.4.0",
+    "lerna": "^8.2.2"
+  },
+  "scripts": {
+    "lint": "lerna run lint --stream --since",
+    "lint:fix": "lerna run lint:fix --stream --since"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.8",
+    "tailwindcss": "^4.1.8"
+  }
+}
