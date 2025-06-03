@@ -42,17 +42,28 @@
 }
 
 button {
-  background-color: #ffffff;  
-  color: rgb(0, 0, 0);
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 220px;
+ background-color: #ffffff; 
+ color: rgb(0, 0, 0);
+ padding: 12px 24px;
+ font-size: 16px;
+ border: none;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 220px;
 }
 
+
 button:hover {
-  background-color: #aaafb5;
+ background-color: #80b1ed;
 }
+
+body {
+  margin: 0;
+  padding: 30px;
+  border: 10px solid #1a1a40; /* blackish-blue */
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+  height: 100vh;
+}
+
