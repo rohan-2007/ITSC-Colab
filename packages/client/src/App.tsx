@@ -1,37 +1,22 @@
-import React, { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-
-const App = () => {
-  const [ count, setCount ] = useState(0);
-
-  return <>
-    <div>
-      <a href="https://vite.dev" target="_blank" rel="noreferrer">
-        <img src={viteLogo} className="logo" alt="Vite logo" />
-      </a>
-      <a href="https://react.dev" target="_blank" rel="noreferrer">
-        <img src={reactLogo} className="logo react" alt="React logo" />
-      </a>
+import './App.css'
+function MainScreen() {
+  return (
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '10px',
+      }}
+    >
+      <h1>Performance Review</h1>
+      <button>Login</button>
+      <button>Sign Up</button>
+      <button>Supervisor Login</button>
+      <button>Supervisor Sign Up</button>
     </div>
-    <h1>Vite + React</h1>
-    <div className="card">
-      <button onClick={() => setCount((c) => c + 1)}>
-        count is {count}
-      </button>
-      <p>
-        Edit
-        {` `}
-        <code>src/App.tsx</code>
-        {` `}
-        and save to test HMR
-      </p>
-    </div>
-    <p className="read-the-docs">
-      Click on the Vite and React logos to learn more
-    </p>
-  </>;
-};
-
-export default App;
+  );
+}
+export default MainScreen
