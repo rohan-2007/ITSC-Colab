@@ -1,20 +1,17 @@
-import express, { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-
-const router = express.Router();
-
+const router = Router();
 interface SignupRequestBody {
   email: string;
   name: string;
   password: string;
-  role?: `STUDENT` | `SUPERVISOR`; // Optional role, default to USER
+  role?: `STUDENT` | `SUPERVISOR`;
 }
 
-// Corrected handler:
 router.post(`/signup`, async (
   req: Request<unknown, unknown, SignupRequestBody>,
   res: Response,
