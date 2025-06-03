@@ -1,3 +1,6 @@
+/* Starts Server Backend */
+/* REPLACE EVENTUALLY with actual server once wes gets back... */
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
