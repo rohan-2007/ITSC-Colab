@@ -1,10 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 
 const App = () => {
-  const [ count, setCount ] = useState(0);
+  const [ message, setMessage ] = useState(`Loading...`);
+
+  const PORT = 3001;
+
+  // Fake User Data
+  const userData = {
+    email: `efef@grgr.mgm`,
+    name: `Kyle`,
+    password: `1234`,
+    role: `STUDENT`,
+  };
+
+  useEffect(() => {
+    const fetchServerMessage = async () => {
+      try {
+        const response = await fetch(`http://localhost:${PORT}/signup/`, {
+          body: JSON.stringify(userData),
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const textData = await response.text();
+        // eslint-disable-next-line no-console
+        console.log(`Successfully sent message`);
+        setMessage(textData);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch server message:`, e);
+        if (e instanceof Error) {
+          setMessage(`Failed to load message from server.`);
+        } else {
+          setMessage(`Failed to load message due to an unknown error.`);
+        }
+      }
+    };
+
+    void fetchServerMessage();
+  }, []);
 
   return <>
     <div>
@@ -15,22 +58,12 @@ const App = () => {
         <img src={reactLogo} className="logo react" alt="React logo" />
       </a>
     </div>
-    <h1>Vite + React</h1>
+    <h1>UC Performance Review</h1>
     <div className="card">
-      <button onClick={() => setCount((c) => c + 1)}>
-        count is {count}
-      </button>
       <p>
-        Edit
-        {` `}
-        <code>src/App.tsx</code>
-        {` `}
-        and save to test HMR
+        {message}
       </p>
     </div>
-    <p className="read-the-docs">
-      Click on the Vite and React logos to learn more
-    </p>
   </>;
 };
 
