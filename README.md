@@ -4,7 +4,7 @@
 
 ### `public/`
 - Static files (not processed by Vite).
-- `vite.svg`: Probably the default Vite logo. You’ll drop favicons, images, or public fonts here.
+- `vite.svg`: The default Vite logo. Drop favicons, images, or public fonts here.
 
 ### `src/`
 - Main front-end app code (likely using React/JSX).
@@ -12,7 +12,7 @@
 
 ### `index.html`
 - Root HTML file Vite uses as a template.
-- Vite injects your JS/TS bundle here.
+- Vite injects the JS/TS bundle here.
 
 ### `vite.config.ts`
 - Vite development/build configuration.
@@ -38,7 +38,7 @@
 - Compiled output from TypeScript (`tsc`).
 - `index.js`: The compiled server file.
 - `*.map`, `.tsbuildinfo`: Used for debugging and incremental build optimization.
-- *Note:* You don’t manually touch this folder — it’s auto-generated.
+- *Note:* Don’t manually touch this folder — it’s auto-generated.
 
 ---
 
@@ -51,7 +51,7 @@
 - Possibly shared lint rules across both client and server.
 
 ### `lerna.json`
-- You're using **Lerna** to manage this monorepo.
+- Using **Lerna** to manage this monorepo.
 - Controls package versioning and publishing.
 
 ### `package.json` (root)
