@@ -3,6 +3,7 @@
   "private": true,
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4.4.0",
+    "@types/bcrypt": "^5.0.2",
     "lerna": "^8.2.2",
     "prisma": "^6.8.2"
   },
@@ -16,6 +17,7 @@
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "@tailwindcss/vite": "^4.1.8",
+    "bcrypt": "^6.0.0",
     "tailwindcss": "^4.1.8"
   }
 }

@@ -11,6 +11,7 @@ datasource db {
 model User {
   id            Int           @id @default(autoincrement())
   name          String
+  password      String
   email         String        @unique
   role          Role
   team          Team?         @relation(fields: [teamId], references: [id])
