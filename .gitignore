@@ -1,3 +1,5 @@
 node_modules/
 lerna-debug.log
 README.md
+/generated/prisma
+.env
