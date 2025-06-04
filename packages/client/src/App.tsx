@@ -45,13 +45,18 @@ const App = () => {
     }
   };
 
+  const userData2 = {
+    email: `efef@grgr.mgm`,
+    password: `1234`,
+  };
+
   const handleLogin = async () => {
     setIsLoading(true);
     setMessage(`Sending login request...`);
 
     try {
       const response = await fetch(`http://localhost:${PORT}/login/`, {
-        body: JSON.stringify(userData),
+        body: JSON.stringify(userData2),
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
@@ -77,14 +82,12 @@ const App = () => {
   return <div className="centered-page">
     <h1>UC Performance Review</h1>
     <div className="button-group">
-      <button>Login</button>
       <button onClick={handleSignUp} disabled={isLoading}>
         {isLoading ? `Signing up...` : `Sign Up`}
       </button>
       <button onClick={handleLogin} disabled={isLoading}>
         {isLoading ? `Logging in...` : `Login`}
       </button>
-      <button>Supervisor Sign Up</button>
     </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
   </div>;
