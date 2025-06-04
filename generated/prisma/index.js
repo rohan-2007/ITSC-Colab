@@ -169,7 +169,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/singhr/ITSC-Performance-Review/generated/prisma",
+      "value": "/Users/barkerk/Desktop/ITSC-Colab/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -183,11 +183,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/singhr/ITSC-Performance-Review/prisma/schema.prisma",
+    "sourceFilePath": "/Users/barkerk/Desktop/ITSC-Colab/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../prisma/.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.8.2",
@@ -196,7 +197,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": true,
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
