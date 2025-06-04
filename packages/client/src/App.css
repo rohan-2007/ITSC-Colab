@@ -40,3 +40,38 @@
 .read-the-docs {
   color: #888;
 }
+
+button {
+ background-color: #ffffff; 
+ color: rgb(0, 0, 0);
+ padding: 12px 24px;
+ font-size: 16px;
+ border: none;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 220px;
+}
+
+
+button:hover {
+ background-color: #80b1ed;
+}
+
+body {
+  margin: 0;
+  padding: 30px;
+  border: 10px solid #1a1a40; /* blackish-blue */
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+  height: 100vh;
+}
+
+.centered-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

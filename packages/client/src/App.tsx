@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+// import reactLogo from './assets/react.svg';
+// import viteLogo from '/vite.svg';
 import './App.css';
 
 const App = () => {
-  const [ message, setMessage ] = useState(`Loading...`);
+  const [ _message, setMessage ] = useState(`Loading...`);
 
   const PORT = 3001;
 
@@ -49,22 +49,25 @@ const App = () => {
     void fetchServerMessage();
   }, []);
 
-  return <>
-    <div>
-      <a href="https://vite.dev" target="_blank" rel="noreferrer">
-        <img src={viteLogo} className="logo" alt="Vite logo" />
-      </a>
-      <a href="https://react.dev" target="_blank" rel="noreferrer">
-        <img src={reactLogo} className="logo react" alt="React logo" />
-      </a>
-    </div>
-    <h1>UC Performance Review</h1>
-    <div className="card">
-      <p>
-        {message}
-      </p>
-    </div>
-  </>;
+  return <div>
+    <h1>Performance Review</h1>
+    <button>Login</button>
+    <button>Sign Up</button>
+    <button>Supervisor Login</button>
+    <button>Supervisor Sign Up</button>
+  </div>;
 };
 
 export default App;
+
+// import './App.css';
+// const MainScreen = () =>
+//   <div>
+//     <h1>Performance Review</h1>
+//     <button>Login</button>
+//     <button>Sign Up</button>
+//     <button>Supervisor Login</button>
+//     <button>Supervisor Sign Up</button>
+//   </div>;
+
+// export default MainScreen;
