@@ -1,5 +1,4 @@
 import { Request, Response, Router } from 'express';
-import _bcrypt from 'bcrypt';
 import { JsonObject } from '@prisma/client/runtime/library';
 import { User as _PrismaUser, Stage, User } from '../../../../generated/prisma';
 import prisma from '../prisma';
@@ -33,7 +32,7 @@ router.post(`/submitEval`, async (req: Request<unknown, unknown, EvaluationBody>
 
   res.status(201).json({
     eval: { id: newEval.id },
-    message: `User created`,
+    message: `Eval created`,
   });
   // }
   // catch(err){
