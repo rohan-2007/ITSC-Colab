@@ -1083,11 +1083,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     supervisees: number
     evaluations: number
+    supervisedEvaluations: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     supervisees?: boolean | UserCountOutputTypeCountSuperviseesArgs
     evaluations?: boolean | UserCountOutputTypeCountEvaluationsArgs
+    supervisedEvaluations?: boolean | UserCountOutputTypeCountSupervisedEvaluationsArgs
   }
 
   // Custom InputTypes
@@ -1112,6 +1114,13 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EvaluationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSupervisedEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EvaluationWhereInput
   }
 
@@ -1385,6 +1394,7 @@ export namespace Prisma {
     supervisor?: boolean | User$supervisorArgs<ExtArgs>
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
     evaluations?: boolean | User$evaluationsArgs<ExtArgs>
+    supervisedEvaluations?: boolean | User$supervisedEvaluationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1431,6 +1441,7 @@ export namespace Prisma {
     supervisor?: boolean | User$supervisorArgs<ExtArgs>
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
     evaluations?: boolean | User$evaluationsArgs<ExtArgs>
+    supervisedEvaluations?: boolean | User$supervisedEvaluationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1449,6 +1460,7 @@ export namespace Prisma {
       supervisor: Prisma.$UserPayload<ExtArgs> | null
       supervisees: Prisma.$UserPayload<ExtArgs>[]
       evaluations: Prisma.$EvaluationPayload<ExtArgs>[]
+      supervisedEvaluations: Prisma.$EvaluationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1857,6 +1869,7 @@ export namespace Prisma {
     supervisor<T extends User$supervisorArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     supervisees<T extends User$superviseesArgs<ExtArgs> = {}>(args?: Subset<T, User$superviseesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     evaluations<T extends User$evaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    supervisedEvaluations<T extends User$supervisedEvaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisedEvaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2355,6 +2368,30 @@ export namespace Prisma {
    * User.evaluations
    */
   export type User$evaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Evaluation
+     */
+    select?: EvaluationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Evaluation
+     */
+    omit?: EvaluationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EvaluationInclude<ExtArgs> | null
+    where?: EvaluationWhereInput
+    orderBy?: EvaluationOrderByWithRelationInput | EvaluationOrderByWithRelationInput[]
+    cursor?: EvaluationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EvaluationScalarFieldEnum | EvaluationScalarFieldEnum[]
+  }
+
+  /**
+   * User.supervisedEvaluations
+   */
+  export type User$supervisedEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Evaluation
      */
@@ -3474,16 +3511,19 @@ export namespace Prisma {
   export type EvaluationAvgAggregateOutputType = {
     id: number | null
     userId: number | null
+    supervisorId: number | null
   }
 
   export type EvaluationSumAggregateOutputType = {
     id: number | null
     userId: number | null
+    supervisorId: number | null
   }
 
   export type EvaluationMinAggregateOutputType = {
     id: number | null
     userId: number | null
+    supervisorId: number | null
     semester: string | null
     stage: $Enums.Stage | null
     createdAt: Date | null
@@ -3492,6 +3532,7 @@ export namespace Prisma {
   export type EvaluationMaxAggregateOutputType = {
     id: number | null
     userId: number | null
+    supervisorId: number | null
     semester: string | null
     stage: $Enums.Stage | null
     createdAt: Date | null
@@ -3500,6 +3541,7 @@ export namespace Prisma {
   export type EvaluationCountAggregateOutputType = {
     id: number
     userId: number
+    supervisorId: number
     semester: number
     stage: number
     criteria: number
@@ -3511,16 +3553,19 @@ export namespace Prisma {
   export type EvaluationAvgAggregateInputType = {
     id?: true
     userId?: true
+    supervisorId?: true
   }
 
   export type EvaluationSumAggregateInputType = {
     id?: true
     userId?: true
+    supervisorId?: true
   }
 
   export type EvaluationMinAggregateInputType = {
     id?: true
     userId?: true
+    supervisorId?: true
     semester?: true
     stage?: true
     createdAt?: true
@@ -3529,6 +3574,7 @@ export namespace Prisma {
   export type EvaluationMaxAggregateInputType = {
     id?: true
     userId?: true
+    supervisorId?: true
     semester?: true
     stage?: true
     createdAt?: true
@@ -3537,6 +3583,7 @@ export namespace Prisma {
   export type EvaluationCountAggregateInputType = {
     id?: true
     userId?: true
+    supervisorId?: true
     semester?: true
     stage?: true
     criteria?: true
@@ -3633,6 +3680,7 @@ export namespace Prisma {
   export type EvaluationGroupByOutputType = {
     id: number
     userId: number
+    supervisorId: number
     semester: string
     stage: $Enums.Stage
     criteria: JsonValue
@@ -3661,61 +3709,73 @@ export namespace Prisma {
   export type EvaluationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    supervisorId?: boolean
     semester?: boolean
     stage?: boolean
     criteria?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    supervisorId?: boolean
     semester?: boolean
     stage?: boolean
     criteria?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    supervisorId?: boolean
     semester?: boolean
     stage?: boolean
     criteria?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectScalar = {
     id?: boolean
     userId?: boolean
+    supervisorId?: boolean
     semester?: boolean
     stage?: boolean
     criteria?: boolean
     createdAt?: boolean
   }
 
-  export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "semester" | "stage" | "criteria" | "createdAt", ExtArgs["result"]["evaluation"]>
+  export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "supervisorId" | "semester" | "stage" | "criteria" | "createdAt", ExtArgs["result"]["evaluation"]>
   export type EvaluationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type EvaluationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type EvaluationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    supervisor?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $EvaluationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Evaluation"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      supervisor: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: number
+      supervisorId: number
       semester: string
       stage: $Enums.Stage
       criteria: Prisma.JsonValue
@@ -4115,6 +4175,7 @@ export namespace Prisma {
   export interface Prisma__EvaluationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    supervisor<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4146,6 +4207,7 @@ export namespace Prisma {
   interface EvaluationFieldRefs {
     readonly id: FieldRef<"Evaluation", 'Int'>
     readonly userId: FieldRef<"Evaluation", 'Int'>
+    readonly supervisorId: FieldRef<"Evaluation", 'Int'>
     readonly semester: FieldRef<"Evaluation", 'String'>
     readonly stage: FieldRef<"Evaluation", 'Stage'>
     readonly criteria: FieldRef<"Evaluation", 'Json'>
@@ -4603,6 +4665,7 @@ export namespace Prisma {
   export const EvaluationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    supervisorId: 'supervisorId',
     semester: 'semester',
     stage: 'stage',
     criteria: 'criteria',
@@ -4774,6 +4837,7 @@ export namespace Prisma {
     supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     supervisees?: UserListRelationFilter
     evaluations?: EvaluationListRelationFilter
+    supervisedEvaluations?: EvaluationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4789,6 +4853,7 @@ export namespace Prisma {
     supervisor?: UserOrderByWithRelationInput
     supervisees?: UserOrderByRelationAggregateInput
     evaluations?: EvaluationOrderByRelationAggregateInput
+    supervisedEvaluations?: EvaluationOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4807,6 +4872,7 @@ export namespace Prisma {
     supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     supervisees?: UserListRelationFilter
     evaluations?: EvaluationListRelationFilter
+    supervisedEvaluations?: EvaluationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4887,21 +4953,25 @@ export namespace Prisma {
     NOT?: EvaluationWhereInput | EvaluationWhereInput[]
     id?: IntFilter<"Evaluation"> | number
     userId?: IntFilter<"Evaluation"> | number
+    supervisorId?: IntFilter<"Evaluation"> | number
     semester?: StringFilter<"Evaluation"> | string
     stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    supervisor?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type EvaluationOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
     semester?: SortOrder
     stage?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    supervisor?: UserOrderByWithRelationInput
   }
 
   export type EvaluationWhereUniqueInput = Prisma.AtLeast<{
@@ -4910,16 +4980,19 @@ export namespace Prisma {
     OR?: EvaluationWhereInput[]
     NOT?: EvaluationWhereInput | EvaluationWhereInput[]
     userId?: IntFilter<"Evaluation"> | number
+    supervisorId?: IntFilter<"Evaluation"> | number
     semester?: StringFilter<"Evaluation"> | string
     stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    supervisor?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type EvaluationOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
     semester?: SortOrder
     stage?: SortOrder
     criteria?: SortOrder
@@ -4937,6 +5010,7 @@ export namespace Prisma {
     NOT?: EvaluationScalarWhereWithAggregatesInput | EvaluationScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Evaluation"> | number
     userId?: IntWithAggregatesFilter<"Evaluation"> | number
+    supervisorId?: IntWithAggregatesFilter<"Evaluation"> | number
     semester?: StringWithAggregatesFilter<"Evaluation"> | string
     stage?: EnumStageWithAggregatesFilter<"Evaluation"> | $Enums.Stage
     criteria?: JsonWithAggregatesFilter<"Evaluation">
@@ -4953,6 +5027,7 @@ export namespace Prisma {
     supervisor?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4966,6 +5041,7 @@ export namespace Prisma {
     createdAt?: Date | string
     supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUpdateInput = {
@@ -4978,6 +5054,7 @@ export namespace Prisma {
     supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4991,6 +5068,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -5065,11 +5143,13 @@ export namespace Prisma {
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEvaluationsInput
+    supervisor: UserCreateNestedOneWithoutSupervisedEvaluationsInput
   }
 
   export type EvaluationUncheckedCreateInput = {
     id?: number
     userId: number
+    supervisorId: number
     semester: string
     stage: $Enums.Stage
     criteria: JsonNullValueInput | InputJsonValue
@@ -5082,11 +5162,13 @@ export namespace Prisma {
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEvaluationsNestedInput
+    supervisor?: UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput
   }
 
   export type EvaluationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: StringFieldUpdateOperationsInput | string
     stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
     criteria?: JsonNullValueInput | InputJsonValue
@@ -5096,6 +5178,7 @@ export namespace Prisma {
   export type EvaluationCreateManyInput = {
     id?: number
     userId: number
+    supervisorId: number
     semester: string
     stage: $Enums.Stage
     criteria: JsonNullValueInput | InputJsonValue
@@ -5112,6 +5195,7 @@ export namespace Prisma {
   export type EvaluationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: StringFieldUpdateOperationsInput | string
     stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
     criteria?: JsonNullValueInput | InputJsonValue
@@ -5388,6 +5472,7 @@ export namespace Prisma {
   export type EvaluationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
     semester?: SortOrder
     stage?: SortOrder
     criteria?: SortOrder
@@ -5397,11 +5482,13 @@ export namespace Prisma {
   export type EvaluationAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
   }
 
   export type EvaluationMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
     semester?: SortOrder
     stage?: SortOrder
     createdAt?: SortOrder
@@ -5410,6 +5497,7 @@ export namespace Prisma {
   export type EvaluationMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
     semester?: SortOrder
     stage?: SortOrder
     createdAt?: SortOrder
@@ -5418,6 +5506,7 @@ export namespace Prisma {
   export type EvaluationSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    supervisorId?: SortOrder
   }
 
   export type EnumStageWithAggregatesFilter<$PrismaModel = never> = {
@@ -5482,6 +5571,13 @@ export namespace Prisma {
     connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
   }
 
+  export type EvaluationCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
+    createMany?: EvaluationCreateManySupervisorInputEnvelope
+    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutSupervisorInput = {
     create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
     connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
@@ -5493,6 +5589,13 @@ export namespace Prisma {
     create?: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput> | EvaluationCreateWithoutUserInput[] | EvaluationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EvaluationCreateOrConnectWithoutUserInput | EvaluationCreateOrConnectWithoutUserInput[]
     createMany?: EvaluationCreateManyUserInputEnvelope
+    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+  }
+
+  export type EvaluationUncheckedCreateNestedManyWithoutSupervisorInput = {
+    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
+    createMany?: EvaluationCreateManySupervisorInputEnvelope
     connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
   }
 
@@ -5556,6 +5659,20 @@ export namespace Prisma {
     deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
   }
 
+  export type EvaluationUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
+    upsert?: EvaluationUpsertWithWhereUniqueWithoutSupervisorInput | EvaluationUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: EvaluationCreateManySupervisorInputEnvelope
+    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    update?: EvaluationUpdateWithWhereUniqueWithoutSupervisorInput | EvaluationUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: EvaluationUpdateManyWithWhereWithoutSupervisorInput | EvaluationUpdateManyWithWhereWithoutSupervisorInput[]
+    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -5597,6 +5714,20 @@ export namespace Prisma {
     connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
     update?: EvaluationUpdateWithWhereUniqueWithoutUserInput | EvaluationUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: EvaluationUpdateManyWithWhereWithoutUserInput | EvaluationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
+  }
+
+  export type EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput = {
+    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
+    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
+    upsert?: EvaluationUpsertWithWhereUniqueWithoutSupervisorInput | EvaluationUpsertWithWhereUniqueWithoutSupervisorInput[]
+    createMany?: EvaluationCreateManySupervisorInputEnvelope
+    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+    update?: EvaluationUpdateWithWhereUniqueWithoutSupervisorInput | EvaluationUpdateWithWhereUniqueWithoutSupervisorInput[]
+    updateMany?: EvaluationUpdateManyWithWhereWithoutSupervisorInput | EvaluationUpdateManyWithWhereWithoutSupervisorInput[]
     deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
   }
 
@@ -5648,6 +5779,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutSupervisedEvaluationsInput = {
+    create?: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisedEvaluationsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type EnumStageFieldUpdateOperationsInput = {
     set?: $Enums.Stage
   }
@@ -5658,6 +5795,14 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutEvaluationsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEvaluationsInput, UserUpdateWithoutEvaluationsInput>, UserUncheckedUpdateWithoutEvaluationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput = {
+    create?: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSupervisedEvaluationsInput
+    upsert?: UserUpsertWithoutSupervisedEvaluationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSupervisedEvaluationsInput, UserUpdateWithoutSupervisedEvaluationsInput>, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5872,6 +6017,7 @@ export namespace Prisma {
     team?: TeamCreateNestedOneWithoutMembersInput
     supervisor?: UserCreateNestedOneWithoutSuperviseesInput
     evaluations?: EvaluationCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutSuperviseesInput = {
@@ -5884,6 +6030,7 @@ export namespace Prisma {
     supervisorId?: number | null
     createdAt?: Date | string
     evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutSuperviseesInput = {
@@ -5900,6 +6047,7 @@ export namespace Prisma {
     team?: TeamCreateNestedOneWithoutMembersInput
     supervisees?: UserCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutSupervisorInput = {
@@ -5912,6 +6060,7 @@ export namespace Prisma {
     createdAt?: Date | string
     supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutSupervisorInput = {
@@ -5929,10 +6078,12 @@ export namespace Prisma {
     stage: $Enums.Stage
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    supervisor: UserCreateNestedOneWithoutSupervisedEvaluationsInput
   }
 
   export type EvaluationUncheckedCreateWithoutUserInput = {
     id?: number
+    supervisorId: number
     semester: string
     stage: $Enums.Stage
     criteria: JsonNullValueInput | InputJsonValue
@@ -5946,6 +6097,33 @@ export namespace Prisma {
 
   export type EvaluationCreateManyUserInputEnvelope = {
     data: EvaluationCreateManyUserInput | EvaluationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EvaluationCreateWithoutSupervisorInput = {
+    semester: string
+    stage: $Enums.Stage
+    criteria: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutEvaluationsInput
+  }
+
+  export type EvaluationUncheckedCreateWithoutSupervisorInput = {
+    id?: number
+    userId: number
+    semester: string
+    stage: $Enums.Stage
+    criteria: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type EvaluationCreateOrConnectWithoutSupervisorInput = {
+    where: EvaluationWhereUniqueInput
+    create: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type EvaluationCreateManySupervisorInputEnvelope = {
+    data: EvaluationCreateManySupervisorInput | EvaluationCreateManySupervisorInput[]
     skipDuplicates?: boolean
   }
 
@@ -5989,6 +6167,7 @@ export namespace Prisma {
     team?: TeamUpdateOneWithoutMembersNestedInput
     supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
     evaluations?: EvaluationUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSuperviseesInput = {
@@ -6001,6 +6180,7 @@ export namespace Prisma {
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutSupervisorInput = {
@@ -6055,10 +6235,27 @@ export namespace Prisma {
     NOT?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
     id?: IntFilter<"Evaluation"> | number
     userId?: IntFilter<"Evaluation"> | number
+    supervisorId?: IntFilter<"Evaluation"> | number
     semester?: StringFilter<"Evaluation"> | string
     stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
+  }
+
+  export type EvaluationUpsertWithWhereUniqueWithoutSupervisorInput = {
+    where: EvaluationWhereUniqueInput
+    update: XOR<EvaluationUpdateWithoutSupervisorInput, EvaluationUncheckedUpdateWithoutSupervisorInput>
+    create: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput>
+  }
+
+  export type EvaluationUpdateWithWhereUniqueWithoutSupervisorInput = {
+    where: EvaluationWhereUniqueInput
+    data: XOR<EvaluationUpdateWithoutSupervisorInput, EvaluationUncheckedUpdateWithoutSupervisorInput>
+  }
+
+  export type EvaluationUpdateManyWithWhereWithoutSupervisorInput = {
+    where: EvaluationScalarWhereInput
+    data: XOR<EvaluationUpdateManyMutationInput, EvaluationUncheckedUpdateManyWithoutSupervisorInput>
   }
 
   export type UserCreateWithoutTeamInput = {
@@ -6070,6 +6267,7 @@ export namespace Prisma {
     supervisor?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutTeamInput = {
@@ -6082,6 +6280,7 @@ export namespace Prisma {
     createdAt?: Date | string
     supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
     evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
+    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutTeamInput = {
@@ -6119,6 +6318,7 @@ export namespace Prisma {
     team?: TeamCreateNestedOneWithoutMembersInput
     supervisor?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutSupervisorInput
+    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserUncheckedCreateWithoutEvaluationsInput = {
@@ -6131,11 +6331,42 @@ export namespace Prisma {
     supervisorId?: number | null
     createdAt?: Date | string
     supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
   }
 
   export type UserCreateOrConnectWithoutEvaluationsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutEvaluationsInput, UserUncheckedCreateWithoutEvaluationsInput>
+  }
+
+  export type UserCreateWithoutSupervisedEvaluationsInput = {
+    name: string
+    password: string
+    email: string
+    role: $Enums.Role
+    createdAt?: Date | string
+    team?: TeamCreateNestedOneWithoutMembersInput
+    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutSupervisorInput
+    evaluations?: EvaluationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSupervisedEvaluationsInput = {
+    id?: number
+    name: string
+    password: string
+    email: string
+    role: $Enums.Role
+    teamId?: number | null
+    supervisorId?: number | null
+    createdAt?: Date | string
+    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
+    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSupervisedEvaluationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
   }
 
   export type UserUpsertWithoutEvaluationsInput = {
@@ -6158,6 +6389,7 @@ export namespace Prisma {
     team?: TeamUpdateOneWithoutMembersNestedInput
     supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutSupervisorNestedInput
+    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEvaluationsInput = {
@@ -6170,6 +6402,43 @@ export namespace Prisma {
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
+  }
+
+  export type UserUpsertWithoutSupervisedEvaluationsInput = {
+    update: XOR<UserUpdateWithoutSupervisedEvaluationsInput, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
+    create: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSupervisedEvaluationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSupervisedEvaluationsInput, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
+  }
+
+  export type UserUpdateWithoutSupervisedEvaluationsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    team?: TeamUpdateOneWithoutMembersNestedInput
+    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
+    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSupervisedEvaluationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    teamId?: NullableIntFieldUpdateOperationsInput | number | null
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
+    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManySupervisorInput = {
@@ -6184,6 +6453,16 @@ export namespace Prisma {
 
   export type EvaluationCreateManyUserInput = {
     id?: number
+    supervisorId: number
+    semester: string
+    stage: $Enums.Stage
+    criteria: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type EvaluationCreateManySupervisorInput = {
+    id?: number
+    userId: number
     semester: string
     stage: $Enums.Stage
     criteria: JsonNullValueInput | InputJsonValue
@@ -6199,6 +6478,7 @@ export namespace Prisma {
     team?: TeamUpdateOneWithoutMembersNestedInput
     supervisees?: UserUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupervisorInput = {
@@ -6211,6 +6491,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSupervisorInput = {
@@ -6228,10 +6509,12 @@ export namespace Prisma {
     stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supervisor?: UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput
   }
 
   export type EvaluationUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: StringFieldUpdateOperationsInput | string
     stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
     criteria?: JsonNullValueInput | InputJsonValue
@@ -6240,6 +6523,33 @@ export namespace Prisma {
 
   export type EvaluationUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
+    semester?: StringFieldUpdateOperationsInput | string
+    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    criteria?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EvaluationUpdateWithoutSupervisorInput = {
+    semester?: StringFieldUpdateOperationsInput | string
+    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    criteria?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutEvaluationsNestedInput
+  }
+
+  export type EvaluationUncheckedUpdateWithoutSupervisorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    semester?: StringFieldUpdateOperationsInput | string
+    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    criteria?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EvaluationUncheckedUpdateManyWithoutSupervisorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
     semester?: StringFieldUpdateOperationsInput | string
     stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
     criteria?: JsonNullValueInput | InputJsonValue
@@ -6265,6 +6575,7 @@ export namespace Prisma {
     supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeamInput = {
@@ -6277,6 +6588,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
     evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
+    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutTeamInput = {
