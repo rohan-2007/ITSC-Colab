@@ -21,6 +21,8 @@ model User {
   supervisees   User[]        @relation("SupervisorRelation")
   evaluations   Evaluation[]
   createdAt     DateTime      @default(now())
+
+  @@map("user")
 }
 
 model Team {
