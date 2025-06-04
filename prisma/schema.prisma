@@ -20,6 +20,7 @@ model User {
   supervisorId  Int?
   supervisees   User[]        @relation("SupervisorRelation")
   evaluations   Evaluation[]
+  supervisedEvaluations Evaluation[] @relation("Supervisor")
   createdAt     DateTime      @default(now())
 
   @@map("user")
@@ -35,6 +36,8 @@ model Evaluation {
   id         Int       @id @default(autoincrement())
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
+  supervisor   User    @relation("Supervisor", fields: [supervisorId], references: [id])
+  supervisorId Int
   semester   String    // e.g., "Summer 2025"
   stage      Stage     // Start / Mid / End
   criteria   Json      // Ratings data (as JSON)

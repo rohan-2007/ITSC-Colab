@@ -139,6 +139,7 @@ exports.Prisma.TeamScalarFieldEnum = {
 exports.Prisma.EvaluationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  supervisorId: 'supervisorId',
   semester: 'semester',
   stage: 'stage',
   criteria: 'criteria',
