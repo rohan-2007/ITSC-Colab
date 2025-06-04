@@ -1,8 +1,10 @@
 import express from 'express';
+// import cookieParser from 'cookieParser';
 import cors from 'cors';
 import authRouter from './routes/auth'; // Import the router
 
 const app = express();
+// const cookieParser = cookieParser();
 const clientURL = `http://localhost:5173`;
 app.use(cors({
   origin: clientURL,
