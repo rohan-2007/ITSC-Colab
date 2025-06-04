@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
+// import cookieParser from 'cookieParser';
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
 const app = (0, express_1.default)();
+// const cookieParser = cookieParser();
 const clientURL = `http://localhost:5173`;
 app.use((0, cors_1.default)({
     origin: clientURL,

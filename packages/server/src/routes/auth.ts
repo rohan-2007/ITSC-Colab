@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser } from '../../../../generated/prisma';
+import { User as PrismaUser, Role } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
@@ -9,7 +9,7 @@ interface SignupRequestBody {
   email: string;
   name: string;
   password: string;
-  role?: `STUDENT` | `SUPERVISOR`;
+  role: Role;
 }
 
 router.post(`/signup`, async (
