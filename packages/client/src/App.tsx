@@ -45,6 +45,35 @@ const App = () => {
     }
   };
 
+  const handleLogin = async () => {
+    setIsLoading(true);
+    setMessage(`Sending login request...`);
+
+    try {
+      const response = await fetch(`http://localhost:${PORT}/login/`, {
+        body: JSON.stringify(userData),
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        throw new Error(responseText || `Login failed`);
+      }
+
+      setMessage(`Login success: ${responseText}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(`Login error: ${error.message}`);
+      } else {
+        setMessage(`An unknown error occurred.`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return <div className="centered-page">
     <h1>UC Performance Review</h1>
     <div className="button-group">
@@ -52,7 +81,9 @@ const App = () => {
       <button onClick={handleSignUp} disabled={isLoading}>
         {isLoading ? `Signing up...` : `Sign Up`}
       </button>
-      <button>Supervisor Login</button>
+      <button onClick={handleLogin} disabled={isLoading}>
+        {isLoading ? `Logging in...` : `Login`}
+      </button>
       <button>Supervisor Sign Up</button>
     </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
