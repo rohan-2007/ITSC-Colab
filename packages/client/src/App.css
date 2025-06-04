@@ -66,12 +66,9 @@ body {
   background-color: #f0f0f0;
   height: 100vh;
 }
-
-.centered-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+.button-group {
+ display: flex !important;
+ flex-direction: column !important;
+ align-items: center !important;
+ gap: 12px !important;
 }

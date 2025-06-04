@@ -45,11 +45,16 @@ const App = () => {
     }
   };
 
-  return <div>
-    <h1>Performance Review</h1>
-    <button onClick={handleSignUp} disabled={isLoading}>
-      {isLoading ? `Signing up...` : `Sign Up`}
-    </button>
+  return <div className="centered-page">
+    <h1>UC Performance Review</h1>
+    <div className="button-group">
+      <button>Login</button>
+      <button onClick={handleSignUp} disabled={isLoading}>
+        {isLoading ? `Signing up...` : `Sign Up`}
+      </button>
+      <button>Supervisor Login</button>
+      <button>Supervisor Sign Up</button>
+    </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
   </div>;
 };
