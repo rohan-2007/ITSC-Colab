@@ -29,6 +29,11 @@ export type Team = $Result.DefaultSelection<Prisma.$TeamPayload>
  */
 export type Semester = $Result.DefaultSelection<Prisma.$SemesterPayload>
 /**
+ * Model Semester
+ * 
+ */
+export type Semester = $Result.DefaultSelection<Prisma.$SemesterPayload>
+/**
  * Model Evaluation
  * 
  */
@@ -37,23 +42,7 @@ export type Evaluation = $Result.DefaultSelection<Prisma.$EvaluationPayload>
  * Model Role
  * 
  */
-<<<<<<< HEAD
-export namespace $Enums {
-  export const Role: {
-  SUPERVISOR: 'SUPERVISOR',
-  STUDENT: 'STUDENT'
-};
-
-export type Role = (typeof Role)[keyof typeof Role]
-
-}
-
-export type Role = $Enums.Role
-
-export const Role: typeof $Enums.Role
-=======
 export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
 
 /**
  * ##  Prisma Client ʲˢ
@@ -211,6 +200,16 @@ export class PrismaClient<
   get semester(): Prisma.SemesterDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.semester`: Exposes CRUD operations for the **Semester** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Semesters
+    * const semesters = await prisma.semester.findMany()
+    * ```
+    */
+  get semester(): Prisma.SemesterDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.evaluation`: Exposes CRUD operations for the **Evaluation** model.
     * Example usage:
     * ```ts
@@ -219,6 +218,16 @@ export class PrismaClient<
     * ```
     */
   get evaluation(): Prisma.EvaluationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.role`: Exposes CRUD operations for the **Role** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Roles
+    * const roles = await prisma.role.findMany()
+    * ```
+    */
+  get role(): Prisma.RoleDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.role`: Exposes CRUD operations for the **Role** model.
@@ -287,6 +296,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
+   * Prisma Client JS version: 6.8.2
+   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    * Prisma Client JS version: 6.8.2
    * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    */
@@ -672,12 +683,8 @@ export namespace Prisma {
     User: 'User',
     Team: 'Team',
     Semester: 'Semester',
-<<<<<<< HEAD
-    Evaluation: 'Evaluation'
-=======
     Evaluation: 'Evaluation',
     Role: 'Role'
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -696,11 +703,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-<<<<<<< HEAD
-      modelProps: "user" | "team" | "semester" | "evaluation"
-=======
       modelProps: "user" | "team" | "semester" | "evaluation" | "role"
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -926,6 +929,80 @@ export namespace Prisma {
           }
         }
       }
+      Semester: {
+        payload: Prisma.$SemesterPayload<ExtArgs>
+        fields: Prisma.SemesterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SemesterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SemesterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          findFirst: {
+            args: Prisma.SemesterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SemesterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          findMany: {
+            args: Prisma.SemesterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          create: {
+            args: Prisma.SemesterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          createMany: {
+            args: Prisma.SemesterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SemesterCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          delete: {
+            args: Prisma.SemesterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          update: {
+            args: Prisma.SemesterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          deleteMany: {
+            args: Prisma.SemesterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SemesterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SemesterUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          upsert: {
+            args: Prisma.SemesterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          aggregate: {
+            args: Prisma.SemesterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSemester>
+          }
+          groupBy: {
+            args: Prisma.SemesterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SemesterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SemesterCountArgs<ExtArgs>
+            result: $Utils.Optional<SemesterCountAggregateOutputType> | number
+          }
+        }
+      }
       Evaluation: {
         payload: Prisma.$EvaluationPayload<ExtArgs>
         fields: Prisma.EvaluationFieldRefs
@@ -997,6 +1074,80 @@ export namespace Prisma {
           count: {
             args: Prisma.EvaluationCountArgs<ExtArgs>
             result: $Utils.Optional<EvaluationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Role: {
+        payload: Prisma.$RolePayload<ExtArgs>
+        fields: Prisma.RoleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findFirst: {
+            args: Prisma.RoleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findMany: {
+            args: Prisma.RoleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          create: {
+            args: Prisma.RoleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          createMany: {
+            args: Prisma.RoleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RoleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          delete: {
+            args: Prisma.RoleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          update: {
+            args: Prisma.RoleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RoleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          upsert: {
+            args: Prisma.RoleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          aggregate: {
+            args: Prisma.RoleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRole>
+          }
+          groupBy: {
+            args: Prisma.RoleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoleCountArgs<ExtArgs>
+            result: $Utils.Optional<RoleCountAggregateOutputType> | number
           }
         }
       }
@@ -1161,7 +1312,9 @@ export namespace Prisma {
     user?: UserOmit
     team?: TeamOmit
     semester?: SemesterOmit
+    semester?: SemesterOmit
     evaluation?: EvaluationOmit
+    role?: RoleOmit
     role?: RoleOmit
   }
 
@@ -1272,12 +1425,14 @@ export namespace Prisma {
   export type UserAvgAggregateOutputType = {
     id: number | null
     roleId: number | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    roleId: number | null
     roleId: number | null
     teamId: number | null
     supervisorId: number | null
@@ -1289,9 +1444,11 @@ export namespace Prisma {
     password: string | null
     email: string | null
     roleId: number | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
     createdAt: Date | null
+    updatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -1301,9 +1458,11 @@ export namespace Prisma {
     password: string | null
     email: string | null
     roleId: number | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
     createdAt: Date | null
+    updatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -1313,9 +1472,11 @@ export namespace Prisma {
     password: number
     email: number
     roleId: number
+    roleId: number
     teamId: number
     supervisorId: number
     createdAt: number
+    updatedAt: number
     updatedAt: number
     _all: number
   }
@@ -1324,12 +1485,14 @@ export namespace Prisma {
   export type UserAvgAggregateInputType = {
     id?: true
     roleId?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    roleId?: true
     roleId?: true
     teamId?: true
     supervisorId?: true
@@ -1341,9 +1504,11 @@ export namespace Prisma {
     password?: true
     email?: true
     roleId?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
   }
 
@@ -1353,9 +1518,11 @@ export namespace Prisma {
     password?: true
     email?: true
     roleId?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
   }
 
@@ -1365,9 +1532,11 @@ export namespace Prisma {
     password?: true
     email?: true
     roleId?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -1464,9 +1633,11 @@ export namespace Prisma {
     password: string
     email: string
     roleId: number
+    roleId: number
     teamId: number | null
     supervisorId: number | null
     createdAt: Date
+    updatedAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -1495,9 +1666,11 @@ export namespace Prisma {
     password?: boolean
     email?: boolean
     roleId?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1507,9 +1680,11 @@ export namespace Prisma {
     password?: boolean
     email?: boolean
     roleId?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1519,9 +1694,11 @@ export namespace Prisma {
     password?: boolean
     email?: boolean
     roleId?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1531,20 +1708,19 @@ export namespace Prisma {
     password?: boolean
     email?: boolean
     roleId?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    updatedAt?: boolean
   }
 
-<<<<<<< HEAD
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "email" | "role" | "teamId" | "supervisorId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
-=======
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "email" | "roleId" | "teamId" | "supervisorId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
+    objects: {}
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1552,9 +1728,11 @@ export namespace Prisma {
       password: string
       email: string
       roleId: number
+      roleId: number
       teamId: number | null
       supervisorId: number | null
       createdAt: Date
+      updatedAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1984,9 +2162,11 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly roleId: FieldRef<"User", 'Int'>
+    readonly roleId: FieldRef<"User", 'Int'>
     readonly teamId: FieldRef<"User", 'Int'>
     readonly supervisorId: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -2381,6 +2561,8 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TeamMaxAggregateOutputType = {
@@ -2388,15 +2570,13 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TeamCountAggregateOutputType = {
     id: number
     name: number
-<<<<<<< HEAD
-    memberIDs: number
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt: number
     updatedAt: number
     _all: number
@@ -2418,6 +2598,8 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TeamMaxAggregateInputType = {
@@ -2425,15 +2607,13 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TeamCountAggregateInputType = {
     id?: true
     name?: true
-<<<<<<< HEAD
-    memberIDs?: true
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2528,10 +2708,6 @@ export namespace Prisma {
   export type TeamGroupByOutputType = {
     id: number
     name: string
-<<<<<<< HEAD
-    memberIDs: number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt: Date
     updatedAt: Date
     _count: TeamCountAggregateOutputType | null
@@ -2558,10 +2734,6 @@ export namespace Prisma {
   export type TeamSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-<<<<<<< HEAD
-    memberIDs?: boolean
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
@@ -2569,10 +2741,6 @@ export namespace Prisma {
   export type TeamSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-<<<<<<< HEAD
-    memberIDs?: boolean
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
@@ -2580,10 +2748,6 @@ export namespace Prisma {
   export type TeamSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-<<<<<<< HEAD
-    memberIDs?: boolean
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
@@ -2591,30 +2755,19 @@ export namespace Prisma {
   export type TeamSelectScalar = {
     id?: boolean
     name?: boolean
-<<<<<<< HEAD
-    memberIDs?: boolean
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-<<<<<<< HEAD
-  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "memberIDs" | "createdAt" | "updatedAt", ExtArgs["result"]["team"]>
-=======
   export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["team"]>
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
 
   export type $TeamPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Team"
     objects: {}
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-<<<<<<< HEAD
-      memberIDs: number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["team"]>
@@ -3042,10 +3195,6 @@ export namespace Prisma {
   interface TeamFieldRefs {
     readonly id: FieldRef<"Team", 'Int'>
     readonly name: FieldRef<"Team", 'String'>
-<<<<<<< HEAD
-    readonly memberIDs: FieldRef<"Team", 'Int[]'>
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     readonly createdAt: FieldRef<"Team", 'DateTime'>
     readonly updatedAt: FieldRef<"Team", 'DateTime'>
   }
@@ -3401,14 +3550,136 @@ export namespace Prisma {
 
   /**
    * Team without action
+   * Team without action
    */
+  export type TeamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
   export type TeamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Team
+     * Select specific fields to fetch from the Team
      */
+    select?: TeamSelect<ExtArgs> | null
     select?: TeamSelect<ExtArgs> | null
     /**
      * Omit specific fields from the Team
+     * Omit specific fields from the Team
+     */
+    omit?: TeamOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Semester
+   */
+
+  export type AggregateSemester = {
+    _count: SemesterCountAggregateOutputType | null
+    _avg: SemesterAvgAggregateOutputType | null
+    _sum: SemesterSumAggregateOutputType | null
+    _min: SemesterMinAggregateOutputType | null
+    _max: SemesterMaxAggregateOutputType | null
+  }
+
+  export type SemesterAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SemesterSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SemesterMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
+    isCurrent: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SemesterMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
+    isCurrent: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SemesterCountAggregateOutputType = {
+    id: number
+    name: number
+    startDate: number
+    endDate: number
+    isCurrent: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SemesterAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SemesterSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SemesterMinAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SemesterMaxAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SemesterCountAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SemesterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Semester to aggregate.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
      */
     omit?: TeamOmit<ExtArgs> | null
   }
@@ -3533,7 +3804,589 @@ export namespace Prisma {
      * 
      * Skip the first `n` Semesters.
      */
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Semesters
+    **/
+    _count?: true | SemesterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SemesterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SemesterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SemesterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SemesterMaxAggregateInputType
+  }
+
+  export type GetSemesterAggregateType<T extends SemesterAggregateArgs> = {
+        [P in keyof T & keyof AggregateSemester]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSemester[P]>
+      : GetScalarType<T[P], AggregateSemester[P]>
+  }
+
+
+
+
+  export type SemesterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SemesterWhereInput
+    orderBy?: SemesterOrderByWithAggregationInput | SemesterOrderByWithAggregationInput[]
+    by: SemesterScalarFieldEnum[] | SemesterScalarFieldEnum
+    having?: SemesterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SemesterCountAggregateInputType | true
+    _avg?: SemesterAvgAggregateInputType
+    _sum?: SemesterSumAggregateInputType
+    _min?: SemesterMinAggregateInputType
+    _max?: SemesterMaxAggregateInputType
+  }
+
+  export type SemesterGroupByOutputType = {
+    id: number
+    name: string
+    startDate: Date
+    endDate: Date
+    isCurrent: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SemesterCountAggregateOutputType | null
+    _avg: SemesterAvgAggregateOutputType | null
+    _sum: SemesterSumAggregateOutputType | null
+    _min: SemesterMinAggregateOutputType | null
+    _max: SemesterMaxAggregateOutputType | null
+  }
+
+  type GetSemesterGroupByPayload<T extends SemesterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SemesterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SemesterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SemesterGroupByOutputType[P]>
+            : GetScalarType<T[P], SemesterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SemesterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectScalar = {
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SemesterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "isCurrent" | "createdAt" | "updatedAt", ExtArgs["result"]["semester"]>
+
+  export type $SemesterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Semester"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      startDate: Date
+      endDate: Date
+      isCurrent: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["semester"]>
+    composites: {}
+  }
+
+  type SemesterGetPayload<S extends boolean | null | undefined | SemesterDefaultArgs> = $Result.GetResult<Prisma.$SemesterPayload, S>
+
+  type SemesterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SemesterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SemesterCountAggregateInputType | true
+    }
+
+  export interface SemesterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Semester'], meta: { name: 'Semester' } }
+    /**
+     * Find zero or one Semester that matches the filter.
+     * @param {SemesterFindUniqueArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SemesterFindUniqueArgs>(args: SelectSubset<T, SemesterFindUniqueArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Semester that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SemesterFindUniqueOrThrowArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SemesterFindUniqueOrThrowArgs>(args: SelectSubset<T, SemesterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Semester that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindFirstArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SemesterFindFirstArgs>(args?: SelectSubset<T, SemesterFindFirstArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Semester that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindFirstOrThrowArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SemesterFindFirstOrThrowArgs>(args?: SelectSubset<T, SemesterFindFirstOrThrowArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Semesters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Semesters
+     * const semesters = await prisma.semester.findMany()
+     * 
+     * // Get first 10 Semesters
+     * const semesters = await prisma.semester.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const semesterWithIdOnly = await prisma.semester.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SemesterFindManyArgs>(args?: SelectSubset<T, SemesterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Semester.
+     * @param {SemesterCreateArgs} args - Arguments to create a Semester.
+     * @example
+     * // Create one Semester
+     * const Semester = await prisma.semester.create({
+     *   data: {
+     *     // ... data to create a Semester
+     *   }
+     * })
+     * 
+     */
+    create<T extends SemesterCreateArgs>(args: SelectSubset<T, SemesterCreateArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Semesters.
+     * @param {SemesterCreateManyArgs} args - Arguments to create many Semesters.
+     * @example
+     * // Create many Semesters
+     * const semester = await prisma.semester.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SemesterCreateManyArgs>(args?: SelectSubset<T, SemesterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Semesters and returns the data saved in the database.
+     * @param {SemesterCreateManyAndReturnArgs} args - Arguments to create many Semesters.
+     * @example
+     * // Create many Semesters
+     * const semester = await prisma.semester.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Semesters and only return the `id`
+     * const semesterWithIdOnly = await prisma.semester.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SemesterCreateManyAndReturnArgs>(args?: SelectSubset<T, SemesterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Semester.
+     * @param {SemesterDeleteArgs} args - Arguments to delete one Semester.
+     * @example
+     * // Delete one Semester
+     * const Semester = await prisma.semester.delete({
+     *   where: {
+     *     // ... filter to delete one Semester
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SemesterDeleteArgs>(args: SelectSubset<T, SemesterDeleteArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Semester.
+     * @param {SemesterUpdateArgs} args - Arguments to update one Semester.
+     * @example
+     * // Update one Semester
+     * const semester = await prisma.semester.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SemesterUpdateArgs>(args: SelectSubset<T, SemesterUpdateArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Semesters.
+     * @param {SemesterDeleteManyArgs} args - Arguments to filter Semesters to delete.
+     * @example
+     * // Delete a few Semesters
+     * const { count } = await prisma.semester.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SemesterDeleteManyArgs>(args?: SelectSubset<T, SemesterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Semesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Semesters
+     * const semester = await prisma.semester.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SemesterUpdateManyArgs>(args: SelectSubset<T, SemesterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Semesters and returns the data updated in the database.
+     * @param {SemesterUpdateManyAndReturnArgs} args - Arguments to update many Semesters.
+     * @example
+     * // Update many Semesters
+     * const semester = await prisma.semester.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Semesters and only return the `id`
+     * const semesterWithIdOnly = await prisma.semester.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SemesterUpdateManyAndReturnArgs>(args: SelectSubset<T, SemesterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Semester.
+     * @param {SemesterUpsertArgs} args - Arguments to update or create a Semester.
+     * @example
+     * // Update or create a Semester
+     * const semester = await prisma.semester.upsert({
+     *   create: {
+     *     // ... data to create a Semester
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Semester we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SemesterUpsertArgs>(args: SelectSubset<T, SemesterUpsertArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Semesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterCountArgs} args - Arguments to filter Semesters to count.
+     * @example
+     * // Count the number of Semesters
+     * const count = await prisma.semester.count({
+     *   where: {
+     *     // ... the filter for the Semesters we want to count
+     *   }
+     * })
+    **/
+    count<T extends SemesterCountArgs>(
+      args?: Subset<T, SemesterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SemesterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Semester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SemesterAggregateArgs>(args: Subset<T, SemesterAggregateArgs>): Prisma.PrismaPromise<GetSemesterAggregateType<T>>
+
+    /**
+     * Group by Semester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SemesterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SemesterGroupByArgs['orderBy'] }
+        : { orderBy?: SemesterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SemesterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSemesterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Semester model
+   */
+  readonly fields: SemesterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Semester.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SemesterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Semester model
+   */
+  interface SemesterFieldRefs {
+    readonly id: FieldRef<"Semester", 'Int'>
+    readonly name: FieldRef<"Semester", 'String'>
+    readonly startDate: FieldRef<"Semester", 'DateTime'>
+    readonly endDate: FieldRef<"Semester", 'DateTime'>
+    readonly isCurrent: FieldRef<"Semester", 'Boolean'>
+    readonly createdAt: FieldRef<"Semester", 'DateTime'>
+    readonly updatedAt: FieldRef<"Semester", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Semester findUnique
+   */
+  export type SemesterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
@@ -4131,6 +4984,25 @@ export namespace Prisma {
   export type SemesterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Semester
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester findUniqueOrThrow
+   */
+  export type SemesterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
      */
     select?: SemesterSelect<ExtArgs> | null
     /**
@@ -4151,7 +5023,77 @@ export namespace Prisma {
      * Select specific fields to fetch from the Semester
      */
     select?: SemesterSelect<ExtArgs> | null
+    select?: SemesterSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester findFirst
+   */
+  export type SemesterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Semesters.
+     */
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester findFirstOrThrow
+   */
+  export type SemesterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
      * Omit specific fields from the Semester
      */
     omit?: SemesterOmit<ExtArgs> | null
@@ -4466,6 +5408,268 @@ export namespace Prisma {
      * Omit specific fields from the Semester
      */
     omit?: SemesterOmit<ExtArgs> | null
+     * Filter, which Semester to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Semesters.
+     */
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester findMany
+   */
+  export type SemesterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semesters to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester create
+   */
+  export type SemesterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Semester.
+     */
+    data: XOR<SemesterCreateInput, SemesterUncheckedCreateInput>
+  }
+
+  /**
+   * Semester createMany
+   */
+  export type SemesterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Semesters.
+     */
+    data: SemesterCreateManyInput | SemesterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Semester createManyAndReturn
+   */
+  export type SemesterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data used to create many Semesters.
+     */
+    data: SemesterCreateManyInput | SemesterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Semester update
+   */
+  export type SemesterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Semester.
+     */
+    data: XOR<SemesterUpdateInput, SemesterUncheckedUpdateInput>
+    /**
+     * Choose, which Semester to update.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester updateMany
+   */
+  export type SemesterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Semesters.
+     */
+    data: XOR<SemesterUpdateManyMutationInput, SemesterUncheckedUpdateManyInput>
+    /**
+     * Filter which Semesters to update
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester updateManyAndReturn
+   */
+  export type SemesterUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data used to update Semesters.
+     */
+    data: XOR<SemesterUpdateManyMutationInput, SemesterUncheckedUpdateManyInput>
+    /**
+     * Filter which Semesters to update
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester upsert
+   */
+  export type SemesterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Semester to update in case it exists.
+     */
+    where: SemesterWhereUniqueInput
+    /**
+     * In case the Semester found by the `where` argument doesn't exist, create a new Semester with this data.
+     */
+    create: XOR<SemesterCreateInput, SemesterUncheckedCreateInput>
+    /**
+     * In case the Semester was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SemesterUpdateInput, SemesterUncheckedUpdateInput>
+  }
+
+  /**
+   * Semester delete
+   */
+  export type SemesterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter which Semester to delete.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester deleteMany
+   */
+  export type SemesterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Semesters to delete
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester without action
+   */
+  export type SemesterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
   }
 
 
@@ -4486,12 +5690,14 @@ export namespace Prisma {
     userId: number | null
     supervisorId: number | null
     semesterId: number | null
+    semesterId: number | null
   }
 
   export type EvaluationSumAggregateOutputType = {
     id: number | null
     userId: number | null
     supervisorId: number | null
+    semesterId: number | null
     semesterId: number | null
   }
 
@@ -4501,7 +5707,10 @@ export namespace Prisma {
     supervisorId: number | null
     semesterId: number | null
     type: string | null
+    semesterId: number | null
+    type: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -4511,7 +5720,10 @@ export namespace Prisma {
     supervisorId: number | null
     semesterId: number | null
     type: string | null
+    semesterId: number | null
+    type: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -4521,8 +5733,11 @@ export namespace Prisma {
     supervisorId: number
     semesterId: number
     type: number
+    semesterId: number
+    type: number
     criteria: number
     createdAt: number
+    updatedAt: number
     updatedAt: number
     _all: number
   }
@@ -4533,12 +5748,14 @@ export namespace Prisma {
     userId?: true
     supervisorId?: true
     semesterId?: true
+    semesterId?: true
   }
 
   export type EvaluationSumAggregateInputType = {
     id?: true
     userId?: true
     supervisorId?: true
+    semesterId?: true
     semesterId?: true
   }
 
@@ -4548,7 +5765,10 @@ export namespace Prisma {
     supervisorId?: true
     semesterId?: true
     type?: true
+    semesterId?: true
+    type?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
   }
 
@@ -4558,7 +5778,10 @@ export namespace Prisma {
     supervisorId?: true
     semesterId?: true
     type?: true
+    semesterId?: true
+    type?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
   }
 
@@ -4568,8 +5791,11 @@ export namespace Prisma {
     supervisorId?: true
     semesterId?: true
     type?: true
+    semesterId?: true
+    type?: true
     criteria?: true
     createdAt?: true
+    updatedAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -4666,8 +5892,11 @@ export namespace Prisma {
     supervisorId: number
     semesterId: number
     type: string
+    semesterId: number
+    type: string
     criteria: JsonValue
     createdAt: Date
+    updatedAt: Date
     updatedAt: Date
     _count: EvaluationCountAggregateOutputType | null
     _avg: EvaluationAvgAggregateOutputType | null
@@ -4696,8 +5925,11 @@ export namespace Prisma {
     supervisorId?: boolean
     semesterId?: boolean
     type?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
@@ -4707,8 +5939,11 @@ export namespace Prisma {
     supervisorId?: boolean
     semesterId?: boolean
     type?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
@@ -4718,8 +5953,11 @@ export namespace Prisma {
     supervisorId?: boolean
     semesterId?: boolean
     type?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
@@ -4729,15 +5967,20 @@ export namespace Prisma {
     supervisorId?: boolean
     semesterId?: boolean
     type?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     updatedAt?: boolean
   }
 
   export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "supervisorId" | "semesterId" | "type" | "criteria" | "createdAt" | "updatedAt", ExtArgs["result"]["evaluation"]>
+  export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "supervisorId" | "semesterId" | "type" | "criteria" | "createdAt" | "updatedAt", ExtArgs["result"]["evaluation"]>
 
   export type $EvaluationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Evaluation"
+    objects: {}
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4745,8 +5988,11 @@ export namespace Prisma {
       supervisorId: number
       semesterId: number
       type: string
+      semesterId: number
+      type: string
       criteria: Prisma.JsonValue
       createdAt: Date
+      updatedAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["evaluation"]>
     composites: {}
@@ -5176,8 +6422,11 @@ export namespace Prisma {
     readonly supervisorId: FieldRef<"Evaluation", 'Int'>
     readonly semesterId: FieldRef<"Evaluation", 'Int'>
     readonly type: FieldRef<"Evaluation", 'String'>
+    readonly semesterId: FieldRef<"Evaluation", 'Int'>
+    readonly type: FieldRef<"Evaluation", 'String'>
     readonly criteria: FieldRef<"Evaluation", 'Json'>
     readonly createdAt: FieldRef<"Evaluation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Evaluation", 'DateTime'>
     readonly updatedAt: FieldRef<"Evaluation", 'DateTime'>
   }
     
@@ -5542,8 +6791,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-<<<<<<< HEAD
-=======
   }
 
 
@@ -6534,7 +7781,6 @@ export namespace Prisma {
      * Omit specific fields from the Role
      */
     omit?: RoleOmit<ExtArgs> | null
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
   }
 
 
@@ -6558,8 +7804,11 @@ export namespace Prisma {
     password: 'password',
     email: 'email',
     roleId: 'roleId',
+    roleId: 'roleId',
     teamId: 'teamId',
     supervisorId: 'supervisorId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -6570,15 +7819,24 @@ export namespace Prisma {
   export const TeamScalarFieldEnum: {
     id: 'id',
     name: 'name',
-<<<<<<< HEAD
-    memberIDs: 'memberIDs',
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
+  export const SemesterScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    isCurrent: 'isCurrent',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SemesterScalarFieldEnum = (typeof SemesterScalarFieldEnum)[keyof typeof SemesterScalarFieldEnum]
 
 
   export const SemesterScalarFieldEnum: {
@@ -6600,12 +7858,24 @@ export namespace Prisma {
     supervisorId: 'supervisorId',
     semesterId: 'semesterId',
     type: 'type',
+    semesterId: 'semesterId',
+    type: 'type',
     criteria: 'criteria',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+  export const RoleScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
   export const RoleScalarFieldEnum: {
@@ -6705,7 +7975,9 @@ export namespace Prisma {
 
   /**
    * Reference to a field of type 'Boolean'
+   * Reference to a field of type 'Boolean'
    */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
@@ -6750,9 +8022,11 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     roleId?: IntFilter<"User"> | number
+    roleId?: IntFilter<"User"> | number
     teamId?: IntNullableFilter<"User"> | number | null
     supervisorId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
@@ -6762,9 +8036,11 @@ export namespace Prisma {
     password?: SortOrder
     email?: SortOrder
     roleId?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6777,9 +8053,11 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     roleId?: IntFilter<"User"> | number
+    roleId?: IntFilter<"User"> | number
     teamId?: IntNullableFilter<"User"> | number | null
     supervisorId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }, "id" | "email">
 
@@ -6789,9 +8067,11 @@ export namespace Prisma {
     password?: SortOrder
     email?: SortOrder
     roleId?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
@@ -6809,9 +8089,11 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     roleId?: IntWithAggregatesFilter<"User"> | number
+    roleId?: IntWithAggregatesFilter<"User"> | number
     teamId?: IntNullableWithAggregatesFilter<"User"> | number | null
     supervisorId?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -6821,10 +8103,6 @@ export namespace Prisma {
     NOT?: TeamWhereInput | TeamWhereInput[]
     id?: IntFilter<"Team"> | number
     name?: StringFilter<"Team"> | string
-<<<<<<< HEAD
-    memberIDs?: IntNullableListFilter<"Team">
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
   }
@@ -6832,10 +8110,6 @@ export namespace Prisma {
   export type TeamOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-<<<<<<< HEAD
-    memberIDs?: SortOrder
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6846,10 +8120,6 @@ export namespace Prisma {
     AND?: TeamWhereInput | TeamWhereInput[]
     OR?: TeamWhereInput[]
     NOT?: TeamWhereInput | TeamWhereInput[]
-<<<<<<< HEAD
-    memberIDs?: IntNullableListFilter<"Team">
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
   }, "id" | "name">
@@ -6857,10 +8127,6 @@ export namespace Prisma {
   export type TeamOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-<<<<<<< HEAD
-    memberIDs?: SortOrder
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TeamCountOrderByAggregateInput
@@ -6876,10 +8142,6 @@ export namespace Prisma {
     NOT?: TeamScalarWhereWithAggregatesInput | TeamScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Team"> | number
     name?: StringWithAggregatesFilter<"Team"> | string
-<<<<<<< HEAD
-    memberIDs?: IntNullableListFilter<"Team">
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
   }
@@ -6957,8 +8219,11 @@ export namespace Prisma {
     supervisorId?: IntFilter<"Evaluation"> | number
     semesterId?: IntFilter<"Evaluation"> | number
     type?: StringFilter<"Evaluation"> | string
+    semesterId?: IntFilter<"Evaluation"> | number
+    type?: StringFilter<"Evaluation"> | string
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
+    updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
   }
 
@@ -6968,8 +8233,11 @@ export namespace Prisma {
     supervisorId?: SortOrder
     semesterId?: SortOrder
     type?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6982,8 +8250,11 @@ export namespace Prisma {
     supervisorId?: IntFilter<"Evaluation"> | number
     semesterId?: IntFilter<"Evaluation"> | number
     type?: StringFilter<"Evaluation"> | string
+    semesterId?: IntFilter<"Evaluation"> | number
+    type?: StringFilter<"Evaluation"> | string
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
+    updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
   }, "id">
 
@@ -6993,8 +8264,11 @@ export namespace Prisma {
     supervisorId?: SortOrder
     semesterId?: SortOrder
     type?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EvaluationCountOrderByAggregateInput
     _avg?: EvaluationAvgOrderByAggregateInput
@@ -7012,11 +8286,11 @@ export namespace Prisma {
     supervisorId?: IntWithAggregatesFilter<"Evaluation"> | number
     semesterId?: IntWithAggregatesFilter<"Evaluation"> | number
     type?: StringWithAggregatesFilter<"Evaluation"> | string
+    semesterId?: IntWithAggregatesFilter<"Evaluation"> | number
+    type?: StringWithAggregatesFilter<"Evaluation"> | string
     criteria?: JsonWithAggregatesFilter<"Evaluation">
     createdAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
-<<<<<<< HEAD
-=======
   }
 
   export type RoleWhereInput = {
@@ -7056,21 +8330,17 @@ export namespace Prisma {
     NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Role"> | number
     name?: StringWithAggregatesFilter<"Role"> | string
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
   }
 
   export type UserCreateInput = {
     name: string
     password: string
     email: string
-<<<<<<< HEAD
-    role: $Enums.Role
-=======
     roleId: number
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     teamId?: number | null
     supervisorId?: number | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7080,9 +8350,11 @@ export namespace Prisma {
     password: string
     email: string
     roleId: number
+    roleId: number
     teamId?: number | null
     supervisorId?: number | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7090,14 +8362,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-=======
     roleId?: IntFieldUpdateOperationsInput | number
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7107,9 +8376,11 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     roleId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7119,9 +8390,11 @@ export namespace Prisma {
     password: string
     email: string
     roleId: number
+    roleId: number
     teamId?: number | null
     supervisorId?: number | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7129,14 +8402,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-=======
     roleId?: IntFieldUpdateOperationsInput | number
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7146,18 +8416,16 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     roleId?: IntFieldUpdateOperationsInput | number
+    roleId?: IntFieldUpdateOperationsInput | number
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamCreateInput = {
     name: string
-<<<<<<< HEAD
-    memberIDs?: TeamCreatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7165,20 +8433,12 @@ export namespace Prisma {
   export type TeamUncheckedCreateInput = {
     id?: number
     name: string
-<<<<<<< HEAD
-    memberIDs?: TeamCreatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TeamUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    memberIDs?: TeamUpdatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7186,10 +8446,6 @@ export namespace Prisma {
   export type TeamUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    memberIDs?: TeamUpdatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7197,20 +8453,12 @@ export namespace Prisma {
   export type TeamCreateManyInput = {
     id?: number
     name: string
-<<<<<<< HEAD
-    memberIDs?: TeamCreatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TeamUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    memberIDs?: TeamUpdatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7218,10 +8466,6 @@ export namespace Prisma {
   export type TeamUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD
-    memberIDs?: TeamUpdatememberIDsInput | number[]
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7298,8 +8542,13 @@ export namespace Prisma {
     supervisorId: number
     semesterId: number
     type?: string
+    userId: number
+    supervisorId: number
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7309,8 +8558,11 @@ export namespace Prisma {
     supervisorId: number
     semesterId: number
     type?: string
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7319,8 +8571,13 @@ export namespace Prisma {
     supervisorId?: IntFieldUpdateOperationsInput | number
     semesterId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7330,8 +8587,11 @@ export namespace Prisma {
     supervisorId?: IntFieldUpdateOperationsInput | number
     semesterId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7341,8 +8601,11 @@ export namespace Prisma {
     supervisorId: number
     semesterId: number
     type?: string
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    updatedAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -7351,8 +8614,13 @@ export namespace Prisma {
     supervisorId?: IntFieldUpdateOperationsInput | number
     semesterId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7362,11 +8630,11 @@ export namespace Prisma {
     supervisorId?: IntFieldUpdateOperationsInput | number
     semesterId?: IntFieldUpdateOperationsInput | number
     type?: StringFieldUpdateOperationsInput | string
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-<<<<<<< HEAD
-=======
   }
 
   export type RoleCreateInput = {
@@ -7399,7 +8667,6 @@ export namespace Prisma {
   export type RoleUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -7461,14 +8728,17 @@ export namespace Prisma {
     password?: SortOrder
     email?: SortOrder
     roleId?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
     roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
@@ -7480,9 +8750,11 @@ export namespace Prisma {
     password?: SortOrder
     email?: SortOrder
     roleId?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7492,14 +8764,17 @@ export namespace Prisma {
     password?: SortOrder
     email?: SortOrder
     roleId?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
     roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
@@ -7580,10 +8855,6 @@ export namespace Prisma {
   export type TeamCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-<<<<<<< HEAD
-    memberIDs?: SortOrder
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7598,11 +8869,15 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TeamMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7612,6 +8887,55 @@ export namespace Prisma {
     memberIDs?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type SemesterCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SemesterMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -7692,8 +9016,11 @@ export namespace Prisma {
     supervisorId?: SortOrder
     semesterId?: SortOrder
     type?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7701,6 +9028,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
+    semesterId?: SortOrder
     semesterId?: SortOrder
   }
 
@@ -7710,7 +9038,10 @@ export namespace Prisma {
     supervisorId?: SortOrder
     semesterId?: SortOrder
     type?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7720,7 +9051,10 @@ export namespace Prisma {
     supervisorId?: SortOrder
     semesterId?: SortOrder
     type?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7728,6 +9062,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
+    semesterId?: SortOrder
     semesterId?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
@@ -7757,8 +9092,6 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD
-=======
   export type RoleCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -7771,9 +9104,14 @@ export namespace Prisma {
   export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+  export type RoleAvgOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type RoleMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
   }
@@ -7783,14 +9121,19 @@ export namespace Prisma {
   }
 
 >>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
+  export type RoleMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type RoleSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
-<<<<<<< HEAD
-  export type EnumRoleFieldUpdateOperationsInput = {
-    set?: $Enums.Role
-=======
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -7812,26 +9155,6 @@ export namespace Prisma {
     set?: Date | string
   }
 
-<<<<<<< HEAD
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type TeamCreatememberIDsInput = {
-    set: number[]
-  }
-
-  export type TeamUpdatememberIDsInput = {
-    set?: number[]
-    push?: number | number[]
-  }
-
-=======
->>>>>>> dfc8750b0f6ed0a1e975db3bd86d3af2eef16ab9
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -7971,12 +9294,20 @@ export namespace Prisma {
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
   }
