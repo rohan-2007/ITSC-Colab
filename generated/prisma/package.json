@@ -102,11 +102,6 @@
       "require": "./runtime/wasm.js",
       "import": "./runtime/wasm.mjs",
       "default": "./runtime/wasm.mjs"
-    "./runtime/wasm": {
-      "types": "./runtime/wasm.d.ts",
-      "require": "./runtime/wasm.js",
-      "import": "./runtime/wasm.mjs",
-      "default": "./runtime/wasm.mjs"
     },
     "./runtime/edge": {
       "types": "./runtime/edge.d.ts",
@@ -140,7 +135,6 @@
     },
     "./*": "./*"
   },
-  "version": "6.8.2",
   "version": "6.8.2",
   "sideEffects": false
 }

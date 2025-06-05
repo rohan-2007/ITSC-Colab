@@ -22,12 +22,8 @@ exports.$Enums = {}
 /**
  * Prisma Client JS version: 6.8.2
  * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
   client: "6.8.2",
   engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
@@ -129,16 +125,9 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   password: 'password',
   email: 'email',
-<<<<<<< HEAD
-  roleId: 'roleId',
-  roleId: 'roleId',
-=======
   role: 'role',
->>>>>>> a338cc8 (more DB fixes)
   teamId: 'teamId',
   supervisorId: 'supervisorId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -165,8 +154,6 @@ exports.Prisma.EvaluationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   supervisorId: 'supervisorId',
-  semesterId: 'semesterId',
-  type: 'type',
   semesterId: 'semesterId',
   type: 'type',
   criteria: 'criteria',

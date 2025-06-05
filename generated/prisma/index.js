@@ -37,12 +37,8 @@ exports.$Enums = {}
 /**
  * Prisma Client JS version: 6.8.2
  * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
   client: "6.8.2",
   engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
@@ -107,8 +103,6 @@ exports.Prisma.UserScalarFieldEnum = {
   supervisorId: 'supervisorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TeamScalarFieldEnum = {
@@ -133,8 +127,6 @@ exports.Prisma.EvaluationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   supervisorId: 'supervisorId',
-  semesterId: 'semesterId',
-  type: 'type',
   semesterId: 'semesterId',
   type: 'type',
   criteria: 'criteria',
@@ -208,18 +200,15 @@ const config = {
   "relativeEnvPaths": {
     "rootEnvPath": null,
     "schemaEnvPath": "../../prisma/.env"
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../prisma/.env"
   },
   "relativePath": "../../prisma",
-  "clientVersion": "6.8.2",
-  "engineVersion": "2060c79ba17c6bb9f5823312b6f6b7f4a845738e",
   "clientVersion": "6.8.2",
   "engineVersion": "2060c79ba17c6bb9f5823312b6f6b7f4a845738e",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -238,7 +227,6 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
-    "../generated/prisma",
     "../generated/prisma",
     "generated/prisma",
   ]
@@ -271,8 +259,6 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
 path.join(process.cwd(), "../generated/prisma/libquery_engine-darwin-arm64.dylib.node")
-path.join(process.cwd(), "../generated/prisma/libquery_engine-darwin-arm64.dylib.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "../generated/prisma/schema.prisma")
 path.join(process.cwd(), "../generated/prisma/schema.prisma")
