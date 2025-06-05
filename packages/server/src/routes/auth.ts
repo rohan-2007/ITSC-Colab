@@ -27,7 +27,6 @@ router.post(`/signup`, async (
 
     if (existingUser) {
       res.status(400).json({ error: `Email in use` });
-      res.status(400).json({ error: `Email in use` });
       return;
     }
 
