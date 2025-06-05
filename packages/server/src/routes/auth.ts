@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser } from '../../../../generated/prisma';
+import { User as PrismaUser, Role } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
@@ -9,7 +9,7 @@ interface SignupRequestBody {
   email: string;
   name: string;
   password: string;
-  roleId: number;
+  role: keyof typeof Role;
   supervisorId?: number;
   teamId?: number;
 }
@@ -18,7 +18,7 @@ router.post(`/signup`, async (
   req: Request<unknown, unknown, SignupRequestBody>,
   res: Response,
 ) => {
-  const { email, name, password, roleId } = req.body;
+  const { email, name, password, role, supervisorId } = req.body;
 
   try {
     const existingUser: PrismaUser | null = await prisma.user.findUnique({
@@ -27,13 +27,14 @@ router.post(`/signup`, async (
 
     if (existingUser) {
       res.status(400).json({ error: `Email in use` });
+      res.status(400).json({ error: `Email in use` });
       return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser: PrismaUser = await prisma.user.create({
-      data: { email, name, password: hashedPassword, roleId, supervisorId: null, teamId: null },
+      data: { email, name, password: hashedPassword, role, supervisorId, teamId: null },
     });
 
     res.status(201).json({

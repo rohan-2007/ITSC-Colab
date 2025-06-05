@@ -13,7 +13,7 @@ model User {
   name                String
   password            String
   email               String    @unique
-  roleId              Int
+  role                Role
   teamId              Int?
   supervisorId        Int?
   createdAt           DateTime  @default(now())
@@ -25,6 +25,7 @@ model User {
 model Team {
   id        Int       @id @default(autoincrement())
   name      String    @unique
+  memberIDs Int[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -50,9 +51,7 @@ model Evaluation {
   updatedAt     DateTime   @updatedAt
 }
 
-model Role {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  @@map("role")
+enum Role {
+  SUPERVISOR
+  STUDENT
 }

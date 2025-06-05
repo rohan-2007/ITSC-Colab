@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './App.css';
-import SignUp from './SignUp';
 
 const App: React.FC = () => {
   const [ message, setMessage ] = useState(``);
@@ -9,21 +8,29 @@ const App: React.FC = () => {
 
   const PORT = 3001;
 
-  // Dummy User Info
-  const userData = {
-    email: `efef@grgr.mgm`,
-    name: `Kyle`,
-    password: `1234`,
-    role: `STUDENT`,
-  };
+  const [ formData, setFormData ] = useState({
+    email: ``,
+    isSupervisor: false,
+    name: ``,
+    password: ``,
+    role: ``,
+    supervisorId: ``,
+    teamId: ``,
+  });
 
-  const handleSignUp = async () => {
+  async function handleSignUp() {
     setIsLoading(true);
     setMessage(`Sending signup request...`);
 
+    if (formData.isSupervisor) {
+      formData.role = `SUPERVISOR`;
+    } else {
+      formData.role = `STUDENT`;
+    }
+
     try {
       const response = await fetch(`http://localhost:${PORT}/signup/`, {
-        body: JSON.stringify(userData),
+        body: JSON.stringify(formData),
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
 
@@ -47,18 +54,18 @@ const App: React.FC = () => {
     }
   };
 
-  const userData2 = {
-    email: `efef@grgr.mgm`,
-    password: `1234`,
-  };
-
   const handleLogin = async () => {
     setIsLoading(true);
     setMessage(`Sending login request...`);
 
+    const loginData = {
+      email: formData.email,
+      password: formData.password,
+    };
+
     try {
       const response = await fetch(`http://localhost:${PORT}/login/`, {
-        body: JSON.stringify(userData2),
+        body: JSON.stringify(loginData),
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
@@ -85,6 +92,42 @@ const App: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
+  const [ errors, setErrors ] = useState({
+    email: ``,
+    name: ``,
+    password: ``,
+    supervisorId: ``,
+    teamId: ``,
+  });
+
+  const validate = () => {
+    const newErrors = {
+      email: formData.email ? `` : `Email is required.`,
+      name: formData.name ? `` : `Name is required.`,
+      password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
+      supervisorId:
+        formData.supervisorId ? `` : formData.supervisorId ? `` : `Supervisor is required.`,
+      teamId: formData.teamId ? `` : `Team is required.`,
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((e) => e === ``);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      alert(`Signed Up`);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return <div className="centered-page">
     <h1>UC Performance Review</h1>
     <div className="button-group">
@@ -94,12 +137,70 @@ const App: React.FC = () => {
       <button onClick={handleLogin} disabled={isLoading}>
         {isLoading ? `Logging in...` : `Login`}
       </button>
-      {isOpen && (
+      {isOpen &&
         <div>
-          <SignUp onSuccess={togglePopup} />
+          <div className="page">
+            <div className="signup-card">
+              <h2>Sign Up</h2>
+              <form onSubmit={handleSubmit}>
+                <span>First/Last Name:</span>
+                <input type="text" name="name" value={formData.name} onChange={handleChange} />
+                {errors.name && <div className="error">{errors.name}</div>}
+
+                <span>Password:</span>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} />
+                {errors.password && <div className="error">{errors.password}</div>}
+
+                <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} />
+                {errors.email && <div className="error">{errors.email}</div>}
+
+                <span>Are you a supervisor?</span>
+                <div className="radio-group">
+                  <span>
+                    <input
+                      type="radio"
+                      name="isSupervisor"
+                      value="true"
+                      checked={formData.isSupervisor}
+                      onChange={handleChange}
+                    />
+                    Yes
+                  </span>
+                  <span>
+                    <input
+                      type="radio"
+                      name="isSupervisor"
+                      value="false"
+                      checked={!formData.isSupervisor}
+                      onChange={handleChange}
+                    />
+                    No
+                  </span>
+                </div>
+
+                {!formData.isSupervisor &&
+                  <>
+                    <span>Supervisor ID:</span>
+                    <input
+                      type="text"
+                      name="supervisorId"
+                      value={formData.supervisorId}
+                      onChange={handleChange}
+                    />
+                    {errors.supervisorId && <div className="error">{errors.supervisorId}</div>}
+                  </>}
+
+                <span>Team Name:</span>
+                <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
+                {errors.teamId && <div className="error">{errors.teamId}</div>}
+
+                <button type="submit" onClick={handleSignUp}>Sign Up</button>
+              </form>
+            </div>
+          </div>
           <button onClick={togglePopup}>Close</button>
-        </div>
-      )}
+        </div>}
     </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
   </div>;

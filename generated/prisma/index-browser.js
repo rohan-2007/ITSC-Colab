@@ -125,7 +125,7 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   password: 'password',
   email: 'email',
-  roleId: 'roleId',
+  role: 'role',
   teamId: 'teamId',
   supervisorId: 'supervisorId',
   createdAt: 'createdAt',
@@ -135,6 +135,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.TeamScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  memberIDs: 'memberIDs',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -158,11 +159,6 @@ exports.Prisma.EvaluationScalarFieldEnum = {
   criteria: 'criteria',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.RoleScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
 };
 
 exports.Prisma.SortOrder = {
@@ -189,14 +185,16 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-
+exports.Role = exports.$Enums.Role = {
+  SUPERVISOR: 'SUPERVISOR',
+  STUDENT: 'STUDENT'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Team: 'Team',
   Semester: 'Semester',
-  Evaluation: 'Evaluation',
-  Role: 'Role'
+  Evaluation: 'Evaluation'
 };
 
 /**
