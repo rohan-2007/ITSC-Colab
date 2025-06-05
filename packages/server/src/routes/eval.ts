@@ -1,15 +1,13 @@
 import { Request, Response, Router } from 'express';
 import { JsonObject } from '@prisma/client/runtime/library';
-import { Stage } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 const router = Router();
 
 interface EvaluationBody {
-  id?: number;
   criteria: JsonObject;
-  semester: string;
-  stage: Stage;
+  evaluationType: string;
+  semesterId: number;
   supervisorId: number;
   userId: number;
 }
@@ -19,14 +17,12 @@ router.post(`/submitEval`, async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, semester, stage, userId } = req.body;
-
+    const { criteria, evaluationType, semesterId, supervisorId, userId } = req.body;
     const user = await prisma.user.findUnique({
-      include: { supervisor: true },
       where: { id: userId },
     });
 
-    if (!user || !user.supervisor) {
+    if (!user || !user.supervisorId) {
       res.status(404).json({ error: `User or supervisor not found` });
       return;
     }
@@ -34,26 +30,18 @@ router.post(`/submitEval`, async (
     const newEval = await prisma.evaluation.create({
       data: {
         criteria,
-        semester,
-        stage,
-        supervisor: { connect: { id: user.supervisor.id } },
-        user: { connect: { id: user.id } },
+        semesterId,
+        supervisorId,
+        type: evaluationType,
+        userId,
       },
-    }) as {
-      id: number;
-      createdAt: Date;
-      semester: string;
-      stage: Stage;
-      supervisorId: number;
-      userId: number;
-    };
+    });
 
     res.status(201).json({
       eval: {
         id: newEval.id,
         createdAt: newEval.createdAt,
-        semester: newEval.semester,
-        stage: newEval.stage,
+        semesterId,
         supervisorId: newEval.supervisorId,
         userId: newEval.userId,
       },
@@ -67,7 +55,7 @@ router.post(`/submitEval`, async (
 });
 
 router.get(`/getEval`, async (
-  req: Request<unknown, unknown, unknown, { evaluationId?: string, userId?: string }>,
+  req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {
   const { evaluationId, userId } = req.query;
@@ -75,12 +63,17 @@ router.get(`/getEval`, async (
   try {
     if (evaluationId) {
       const evalRecord = await prisma.evaluation.findUnique({
-        include: { supervisor: true, user: true },
-        where: { id: parseInt(evaluationId, 10) },
+        where: { id: evaluationId },
       });
 
       if (!evalRecord) {
         res.status(404).json({ error: `Evaluation not found` });
+        return;
+      }
+
+      // Authorization check, supervisor or user can access
+      if (evalRecord.userId !== userId || evalRecord.supervisorId !== userId) {
+        res.status(404).json({ error: `Access Forbidden` });
         return;
       }
 
@@ -90,9 +83,8 @@ router.get(`/getEval`, async (
 
     if (userId) {
       const evaluations = await prisma.evaluation.findMany({
-        include: { supervisor: true, user: true },
         orderBy: { createdAt: `desc` },
-        where: { userId: parseInt(userId) },
+        where: { userId },
       });
       res.status(200).json(evaluations);
       return;

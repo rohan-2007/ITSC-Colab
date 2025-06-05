@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.9.0
- * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+ * Prisma Client JS version: 6.8.2
+ * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.9.0",
-  engine: "81e4af48011447c3cc503a190e86995b66d2a28e"
+  client: "6.8.2",
+  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -125,25 +125,44 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   password: 'password',
   email: 'email',
-  role: 'role',
+  roleId: 'roleId',
   teamId: 'teamId',
   supervisorId: 'supervisorId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TeamScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SemesterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isCurrent: 'isCurrent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.EvaluationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   supervisorId: 'supervisorId',
-  semester: 'semester',
-  stage: 'stage',
+  semesterId: 'semesterId',
+  type: 'type',
   criteria: 'criteria',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
 };
 
 exports.Prisma.SortOrder = {
@@ -170,21 +189,14 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.Role = exports.$Enums.Role = {
-  STUDENT: 'STUDENT',
-  SUPERVISOR: 'SUPERVISOR'
-};
 
-exports.Stage = exports.$Enums.Stage = {
-  START: 'START',
-  MID: 'MID',
-  END: 'END'
-};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Team: 'Team',
-  Evaluation: 'Evaluation'
+  Semester: 'Semester',
+  Evaluation: 'Evaluation',
+  Role: 'Role'
 };
 
 /**
