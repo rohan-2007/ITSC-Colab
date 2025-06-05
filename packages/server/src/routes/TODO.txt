@@ -1,3 +1,0 @@
-BACKEND :
-Use this folder to seperate typescript routes: 
-app.use("/api/eval", evalRoutes); into eval.routes.ts etc...
