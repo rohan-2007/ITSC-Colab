@@ -24,40 +24,20 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Team = $Result.DefaultSelection<Prisma.$TeamPayload>
 /**
+ * Model Semester
+ * 
+ */
+export type Semester = $Result.DefaultSelection<Prisma.$SemesterPayload>
+/**
  * Model Evaluation
  * 
  */
 export type Evaluation = $Result.DefaultSelection<Prisma.$EvaluationPayload>
-
 /**
- * Enums
+ * Model Role
+ * 
  */
-export namespace $Enums {
-  export const Role: {
-  STUDENT: 'STUDENT',
-  SUPERVISOR: 'SUPERVISOR'
-};
-
-export type Role = (typeof Role)[keyof typeof Role]
-
-
-export const Stage: {
-  START: 'START',
-  MID: 'MID',
-  END: 'END'
-};
-
-export type Stage = (typeof Stage)[keyof typeof Stage]
-
-}
-
-export type Role = $Enums.Role
-
-export const Role: typeof $Enums.Role
-
-export type Stage = $Enums.Stage
-
-export const Stage: typeof $Enums.Stage
+export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -205,6 +185,16 @@ export class PrismaClient<
   get team(): Prisma.TeamDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.semester`: Exposes CRUD operations for the **Semester** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Semesters
+    * const semesters = await prisma.semester.findMany()
+    * ```
+    */
+  get semester(): Prisma.SemesterDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.evaluation`: Exposes CRUD operations for the **Evaluation** model.
     * Example usage:
     * ```ts
@@ -213,6 +203,16 @@ export class PrismaClient<
     * ```
     */
   get evaluation(): Prisma.EvaluationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.role`: Exposes CRUD operations for the **Role** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Roles
+    * const roles = await prisma.role.findMany()
+    * ```
+    */
+  get role(): Prisma.RoleDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -271,8 +271,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.9.0
-   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+   * Prisma Client JS version: 6.8.2
+   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    */
   export type PrismaVersion = {
     client: string
@@ -655,7 +655,9 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Team: 'Team',
-    Evaluation: 'Evaluation'
+    Semester: 'Semester',
+    Evaluation: 'Evaluation',
+    Role: 'Role'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -674,7 +676,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "team" | "evaluation"
+      modelProps: "user" | "team" | "semester" | "evaluation" | "role"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -826,6 +828,80 @@ export namespace Prisma {
           }
         }
       }
+      Semester: {
+        payload: Prisma.$SemesterPayload<ExtArgs>
+        fields: Prisma.SemesterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SemesterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SemesterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          findFirst: {
+            args: Prisma.SemesterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SemesterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          findMany: {
+            args: Prisma.SemesterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          create: {
+            args: Prisma.SemesterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          createMany: {
+            args: Prisma.SemesterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SemesterCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          delete: {
+            args: Prisma.SemesterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          update: {
+            args: Prisma.SemesterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          deleteMany: {
+            args: Prisma.SemesterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SemesterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SemesterUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>[]
+          }
+          upsert: {
+            args: Prisma.SemesterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SemesterPayload>
+          }
+          aggregate: {
+            args: Prisma.SemesterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSemester>
+          }
+          groupBy: {
+            args: Prisma.SemesterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SemesterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SemesterCountArgs<ExtArgs>
+            result: $Utils.Optional<SemesterCountAggregateOutputType> | number
+          }
+        }
+      }
       Evaluation: {
         payload: Prisma.$EvaluationPayload<ExtArgs>
         fields: Prisma.EvaluationFieldRefs
@@ -897,6 +973,80 @@ export namespace Prisma {
           count: {
             args: Prisma.EvaluationCountArgs<ExtArgs>
             result: $Utils.Optional<EvaluationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Role: {
+        payload: Prisma.$RolePayload<ExtArgs>
+        fields: Prisma.RoleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findFirst: {
+            args: Prisma.RoleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          findMany: {
+            args: Prisma.RoleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          create: {
+            args: Prisma.RoleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          createMany: {
+            args: Prisma.RoleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RoleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          delete: {
+            args: Prisma.RoleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          update: {
+            args: Prisma.RoleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RoleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
+          upsert: {
+            args: Prisma.RoleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>
+          }
+          aggregate: {
+            args: Prisma.RoleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRole>
+          }
+          groupBy: {
+            args: Prisma.RoleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoleCountArgs<ExtArgs>
+            result: $Utils.Optional<RoleCountAggregateOutputType> | number
           }
         }
       }
@@ -986,7 +1136,9 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     team?: TeamOmit
+    semester?: SemesterOmit
     evaluation?: EvaluationOmit
+    role?: RoleOmit
   }
 
   /* Types for Logging */
@@ -1076,85 +1228,6 @@ export namespace Prisma {
    */
 
 
-  /**
-   * Count Type UserCountOutputType
-   */
-
-  export type UserCountOutputType = {
-    supervisees: number
-    evaluations: number
-    supervisedEvaluations: number
-  }
-
-  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    supervisees?: boolean | UserCountOutputTypeCountSuperviseesArgs
-    evaluations?: boolean | UserCountOutputTypeCountEvaluationsArgs
-    supervisedEvaluations?: boolean | UserCountOutputTypeCountSupervisedEvaluationsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserCountOutputType
-     */
-    select?: UserCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountSuperviseesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EvaluationWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountSupervisedEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EvaluationWhereInput
-  }
-
-
-  /**
-   * Count Type TeamCountOutputType
-   */
-
-  export type TeamCountOutputType = {
-    members: number
-  }
-
-  export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    members?: boolean | TeamCountOutputTypeCountMembersArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * TeamCountOutputType without action
-   */
-  export type TeamCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TeamCountOutputType
-     */
-    select?: TeamCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TeamCountOutputType without action
-   */
-  export type TeamCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
-  }
-
 
   /**
    * Models
@@ -1174,12 +1247,14 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
   }
@@ -1189,10 +1264,11 @@ export namespace Prisma {
     name: string | null
     password: string | null
     email: string | null
-    role: $Enums.Role | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1200,10 +1276,11 @@ export namespace Prisma {
     name: string | null
     password: string | null
     email: string | null
-    role: $Enums.Role | null
+    roleId: number | null
     teamId: number | null
     supervisorId: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1211,22 +1288,25 @@ export namespace Prisma {
     name: number
     password: number
     email: number
-    role: number
+    roleId: number
     teamId: number
     supervisorId: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     id?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
   }
@@ -1236,10 +1316,11 @@ export namespace Prisma {
     name?: true
     password?: true
     email?: true
-    role?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1247,10 +1328,11 @@ export namespace Prisma {
     name?: true
     password?: true
     email?: true
-    role?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1258,10 +1340,11 @@ export namespace Prisma {
     name?: true
     password?: true
     email?: true
-    role?: true
+    roleId?: true
     teamId?: true
     supervisorId?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1356,10 +1439,11 @@ export namespace Prisma {
     name: string
     password: string
     email: string
-    role: $Enums.Role
+    roleId: number
     teamId: number | null
     supervisorId: number | null
     createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1386,16 +1470,11 @@ export namespace Prisma {
     name?: boolean
     password?: boolean
     email?: boolean
-    role?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
-    supervisees?: boolean | User$superviseesArgs<ExtArgs>
-    evaluations?: boolean | User$evaluationsArgs<ExtArgs>
-    supervisedEvaluations?: boolean | User$supervisedEvaluationsArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1403,12 +1482,11 @@ export namespace Prisma {
     name?: boolean
     password?: boolean
     email?: boolean
-    role?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1416,12 +1494,11 @@ export namespace Prisma {
     name?: boolean
     password?: boolean
     email?: boolean
-    role?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1429,48 +1506,28 @@ export namespace Prisma {
     name?: boolean
     password?: boolean
     email?: boolean
-    role?: boolean
+    roleId?: boolean
     teamId?: boolean
     supervisorId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "email" | "role" | "teamId" | "supervisorId" | "createdAt", ExtArgs["result"]["user"]>
-  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
-    supervisees?: boolean | User$superviseesArgs<ExtArgs>
-    evaluations?: boolean | User$evaluationsArgs<ExtArgs>
-    supervisedEvaluations?: boolean | User$supervisedEvaluationsArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
-  }
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    team?: boolean | User$teamArgs<ExtArgs>
-    supervisor?: boolean | User$supervisorArgs<ExtArgs>
-  }
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "email" | "roleId" | "teamId" | "supervisorId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {
-      team: Prisma.$TeamPayload<ExtArgs> | null
-      supervisor: Prisma.$UserPayload<ExtArgs> | null
-      supervisees: Prisma.$UserPayload<ExtArgs>[]
-      evaluations: Prisma.$EvaluationPayload<ExtArgs>[]
-      supervisedEvaluations: Prisma.$EvaluationPayload<ExtArgs>[]
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
       password: string
       email: string
-      role: $Enums.Role
+      roleId: number
       teamId: number | null
       supervisorId: number | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1865,11 +1922,6 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    team<T extends User$teamArgs<ExtArgs> = {}>(args?: Subset<T, User$teamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    supervisor<T extends User$supervisorArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    supervisees<T extends User$superviseesArgs<ExtArgs> = {}>(args?: Subset<T, User$superviseesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    evaluations<T extends User$evaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    supervisedEvaluations<T extends User$supervisedEvaluationsArgs<ExtArgs> = {}>(args?: Subset<T, User$supervisedEvaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1903,10 +1955,11 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
-    readonly role: FieldRef<"User", 'Role'>
+    readonly roleId: FieldRef<"User", 'Int'>
     readonly teamId: FieldRef<"User", 'Int'>
     readonly supervisorId: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -1923,10 +1976,6 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -1946,10 +1995,6 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1967,10 +2012,6 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -2020,10 +2061,6 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -2072,10 +2109,6 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -2119,10 +2152,6 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
@@ -2156,10 +2185,6 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2174,10 +2199,6 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -2230,10 +2251,6 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2248,10 +2265,6 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
     /**
      * The filter to search for the User to update in case it exists.
      */
@@ -2279,10 +2292,6 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -2303,116 +2312,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.team
-   */
-  export type User$teamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Team
-     */
-    select?: TeamSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Team
-     */
-    omit?: TeamOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    where?: TeamWhereInput
-  }
-
-  /**
-   * User.supervisor
-   */
-  export type User$supervisorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * User.supervisees
-   */
-  export type User$superviseesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
-  }
-
-  /**
-   * User.evaluations
-   */
-  export type User$evaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Evaluation
-     */
-    select?: EvaluationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Evaluation
-     */
-    omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    where?: EvaluationWhereInput
-    orderBy?: EvaluationOrderByWithRelationInput | EvaluationOrderByWithRelationInput[]
-    cursor?: EvaluationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EvaluationScalarFieldEnum | EvaluationScalarFieldEnum[]
-  }
-
-  /**
-   * User.supervisedEvaluations
-   */
-  export type User$supervisedEvaluationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Evaluation
-     */
-    select?: EvaluationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Evaluation
-     */
-    omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    where?: EvaluationWhereInput
-    orderBy?: EvaluationOrderByWithRelationInput | EvaluationOrderByWithRelationInput[]
-    cursor?: EvaluationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EvaluationScalarFieldEnum | EvaluationScalarFieldEnum[]
-  }
-
-  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2424,10 +2323,6 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
   }
 
 
@@ -2454,16 +2349,22 @@ export namespace Prisma {
   export type TeamMinAggregateOutputType = {
     id: number | null
     name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TeamMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TeamCountAggregateOutputType = {
     id: number
     name: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -2479,16 +2380,22 @@ export namespace Prisma {
   export type TeamMinAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TeamMaxAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TeamCountAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2581,6 +2488,8 @@ export namespace Prisma {
   export type TeamGroupByOutputType = {
     id: number
     name: string
+    createdAt: Date
+    updatedAt: Date
     _count: TeamCountAggregateOutputType | null
     _avg: TeamAvgAggregateOutputType | null
     _sum: TeamSumAggregateOutputType | null
@@ -2605,41 +2514,41 @@ export namespace Prisma {
   export type TeamSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    members?: boolean | Team$membersArgs<ExtArgs>
-    _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
 
   export type TeamSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
 
   export type TeamSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["team"]>
 
   export type TeamSelectScalar = {
     id?: boolean
     name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["team"]>
-  export type TeamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    members?: boolean | Team$membersArgs<ExtArgs>
-    _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type TeamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type TeamIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TeamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["team"]>
 
   export type $TeamPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Team"
-    objects: {
-      members: Prisma.$UserPayload<ExtArgs>[]
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["team"]>
     composites: {}
   }
@@ -3034,7 +2943,6 @@ export namespace Prisma {
    */
   export interface Prisma__TeamClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    members<T extends Team$membersArgs<ExtArgs> = {}>(args?: Subset<T, Team$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3066,6 +2974,8 @@ export namespace Prisma {
   interface TeamFieldRefs {
     readonly id: FieldRef<"Team", 'Int'>
     readonly name: FieldRef<"Team", 'String'>
+    readonly createdAt: FieldRef<"Team", 'DateTime'>
+    readonly updatedAt: FieldRef<"Team", 'DateTime'>
   }
     
 
@@ -3082,10 +2992,6 @@ export namespace Prisma {
      * Omit specific fields from the Team
      */
     omit?: TeamOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
     /**
      * Filter, which Team to fetch.
      */
@@ -3105,10 +3011,6 @@ export namespace Prisma {
      */
     omit?: TeamOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    /**
      * Filter, which Team to fetch.
      */
     where: TeamWhereUniqueInput
@@ -3126,10 +3028,6 @@ export namespace Prisma {
      * Omit specific fields from the Team
      */
     omit?: TeamOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
     /**
      * Filter, which Team to fetch.
      */
@@ -3179,10 +3077,6 @@ export namespace Prisma {
      */
     omit?: TeamOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    /**
      * Filter, which Team to fetch.
      */
     where?: TeamWhereInput
@@ -3231,10 +3125,6 @@ export namespace Prisma {
      */
     omit?: TeamOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    /**
      * Filter, which Teams to fetch.
      */
     where?: TeamWhereInput
@@ -3277,10 +3167,6 @@ export namespace Prisma {
      * Omit specific fields from the Team
      */
     omit?: TeamOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
     /**
      * The data needed to create a Team.
      */
@@ -3329,10 +3215,6 @@ export namespace Prisma {
      * Omit specific fields from the Team
      */
     omit?: TeamOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
     /**
      * The data needed to update a Team.
      */
@@ -3400,10 +3282,6 @@ export namespace Prisma {
      */
     omit?: TeamOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    /**
      * The filter to search for the Team to update in case it exists.
      */
     where: TeamWhereUniqueInput
@@ -3430,10 +3308,6 @@ export namespace Prisma {
      */
     omit?: TeamOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TeamInclude<ExtArgs> | null
-    /**
      * Filter which Team to delete.
      */
     where: TeamWhereUniqueInput
@@ -3454,30 +3328,6 @@ export namespace Prisma {
   }
 
   /**
-   * Team.members
-   */
-  export type Team$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
-  }
-
-  /**
    * Team without action
    */
   export type TeamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3489,10 +3339,1061 @@ export namespace Prisma {
      * Omit specific fields from the Team
      */
     omit?: TeamOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Semester
+   */
+
+  export type AggregateSemester = {
+    _count: SemesterCountAggregateOutputType | null
+    _avg: SemesterAvgAggregateOutputType | null
+    _sum: SemesterSumAggregateOutputType | null
+    _min: SemesterMinAggregateOutputType | null
+    _max: SemesterMaxAggregateOutputType | null
+  }
+
+  export type SemesterAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SemesterSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SemesterMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
+    isCurrent: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SemesterMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
+    isCurrent: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SemesterCountAggregateOutputType = {
+    id: number
+    name: number
+    startDate: number
+    endDate: number
+    isCurrent: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SemesterAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SemesterSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SemesterMinAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SemesterMaxAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SemesterCountAggregateInputType = {
+    id?: true
+    name?: true
+    startDate?: true
+    endDate?: true
+    isCurrent?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SemesterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Choose, which related nodes to fetch as well
+     * Filter which Semester to aggregate.
      */
-    include?: TeamInclude<ExtArgs> | null
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Semesters
+    **/
+    _count?: true | SemesterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SemesterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SemesterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SemesterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SemesterMaxAggregateInputType
+  }
+
+  export type GetSemesterAggregateType<T extends SemesterAggregateArgs> = {
+        [P in keyof T & keyof AggregateSemester]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSemester[P]>
+      : GetScalarType<T[P], AggregateSemester[P]>
+  }
+
+
+
+
+  export type SemesterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SemesterWhereInput
+    orderBy?: SemesterOrderByWithAggregationInput | SemesterOrderByWithAggregationInput[]
+    by: SemesterScalarFieldEnum[] | SemesterScalarFieldEnum
+    having?: SemesterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SemesterCountAggregateInputType | true
+    _avg?: SemesterAvgAggregateInputType
+    _sum?: SemesterSumAggregateInputType
+    _min?: SemesterMinAggregateInputType
+    _max?: SemesterMaxAggregateInputType
+  }
+
+  export type SemesterGroupByOutputType = {
+    id: number
+    name: string
+    startDate: Date
+    endDate: Date
+    isCurrent: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SemesterCountAggregateOutputType | null
+    _avg: SemesterAvgAggregateOutputType | null
+    _sum: SemesterSumAggregateOutputType | null
+    _min: SemesterMinAggregateOutputType | null
+    _max: SemesterMaxAggregateOutputType | null
+  }
+
+  type GetSemesterGroupByPayload<T extends SemesterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SemesterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SemesterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SemesterGroupByOutputType[P]>
+            : GetScalarType<T[P], SemesterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SemesterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["semester"]>
+
+  export type SemesterSelectScalar = {
+    id?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    isCurrent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SemesterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "isCurrent" | "createdAt" | "updatedAt", ExtArgs["result"]["semester"]>
+
+  export type $SemesterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Semester"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      startDate: Date
+      endDate: Date
+      isCurrent: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["semester"]>
+    composites: {}
+  }
+
+  type SemesterGetPayload<S extends boolean | null | undefined | SemesterDefaultArgs> = $Result.GetResult<Prisma.$SemesterPayload, S>
+
+  type SemesterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SemesterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SemesterCountAggregateInputType | true
+    }
+
+  export interface SemesterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Semester'], meta: { name: 'Semester' } }
+    /**
+     * Find zero or one Semester that matches the filter.
+     * @param {SemesterFindUniqueArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SemesterFindUniqueArgs>(args: SelectSubset<T, SemesterFindUniqueArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Semester that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SemesterFindUniqueOrThrowArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SemesterFindUniqueOrThrowArgs>(args: SelectSubset<T, SemesterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Semester that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindFirstArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SemesterFindFirstArgs>(args?: SelectSubset<T, SemesterFindFirstArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Semester that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindFirstOrThrowArgs} args - Arguments to find a Semester
+     * @example
+     * // Get one Semester
+     * const semester = await prisma.semester.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SemesterFindFirstOrThrowArgs>(args?: SelectSubset<T, SemesterFindFirstOrThrowArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Semesters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Semesters
+     * const semesters = await prisma.semester.findMany()
+     * 
+     * // Get first 10 Semesters
+     * const semesters = await prisma.semester.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const semesterWithIdOnly = await prisma.semester.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SemesterFindManyArgs>(args?: SelectSubset<T, SemesterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Semester.
+     * @param {SemesterCreateArgs} args - Arguments to create a Semester.
+     * @example
+     * // Create one Semester
+     * const Semester = await prisma.semester.create({
+     *   data: {
+     *     // ... data to create a Semester
+     *   }
+     * })
+     * 
+     */
+    create<T extends SemesterCreateArgs>(args: SelectSubset<T, SemesterCreateArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Semesters.
+     * @param {SemesterCreateManyArgs} args - Arguments to create many Semesters.
+     * @example
+     * // Create many Semesters
+     * const semester = await prisma.semester.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SemesterCreateManyArgs>(args?: SelectSubset<T, SemesterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Semesters and returns the data saved in the database.
+     * @param {SemesterCreateManyAndReturnArgs} args - Arguments to create many Semesters.
+     * @example
+     * // Create many Semesters
+     * const semester = await prisma.semester.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Semesters and only return the `id`
+     * const semesterWithIdOnly = await prisma.semester.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SemesterCreateManyAndReturnArgs>(args?: SelectSubset<T, SemesterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Semester.
+     * @param {SemesterDeleteArgs} args - Arguments to delete one Semester.
+     * @example
+     * // Delete one Semester
+     * const Semester = await prisma.semester.delete({
+     *   where: {
+     *     // ... filter to delete one Semester
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SemesterDeleteArgs>(args: SelectSubset<T, SemesterDeleteArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Semester.
+     * @param {SemesterUpdateArgs} args - Arguments to update one Semester.
+     * @example
+     * // Update one Semester
+     * const semester = await prisma.semester.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SemesterUpdateArgs>(args: SelectSubset<T, SemesterUpdateArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Semesters.
+     * @param {SemesterDeleteManyArgs} args - Arguments to filter Semesters to delete.
+     * @example
+     * // Delete a few Semesters
+     * const { count } = await prisma.semester.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SemesterDeleteManyArgs>(args?: SelectSubset<T, SemesterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Semesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Semesters
+     * const semester = await prisma.semester.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SemesterUpdateManyArgs>(args: SelectSubset<T, SemesterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Semesters and returns the data updated in the database.
+     * @param {SemesterUpdateManyAndReturnArgs} args - Arguments to update many Semesters.
+     * @example
+     * // Update many Semesters
+     * const semester = await prisma.semester.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Semesters and only return the `id`
+     * const semesterWithIdOnly = await prisma.semester.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SemesterUpdateManyAndReturnArgs>(args: SelectSubset<T, SemesterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Semester.
+     * @param {SemesterUpsertArgs} args - Arguments to update or create a Semester.
+     * @example
+     * // Update or create a Semester
+     * const semester = await prisma.semester.upsert({
+     *   create: {
+     *     // ... data to create a Semester
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Semester we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SemesterUpsertArgs>(args: SelectSubset<T, SemesterUpsertArgs<ExtArgs>>): Prisma__SemesterClient<$Result.GetResult<Prisma.$SemesterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Semesters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterCountArgs} args - Arguments to filter Semesters to count.
+     * @example
+     * // Count the number of Semesters
+     * const count = await prisma.semester.count({
+     *   where: {
+     *     // ... the filter for the Semesters we want to count
+     *   }
+     * })
+    **/
+    count<T extends SemesterCountArgs>(
+      args?: Subset<T, SemesterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SemesterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Semester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SemesterAggregateArgs>(args: Subset<T, SemesterAggregateArgs>): Prisma.PrismaPromise<GetSemesterAggregateType<T>>
+
+    /**
+     * Group by Semester.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SemesterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SemesterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SemesterGroupByArgs['orderBy'] }
+        : { orderBy?: SemesterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SemesterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSemesterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Semester model
+   */
+  readonly fields: SemesterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Semester.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SemesterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Semester model
+   */
+  interface SemesterFieldRefs {
+    readonly id: FieldRef<"Semester", 'Int'>
+    readonly name: FieldRef<"Semester", 'String'>
+    readonly startDate: FieldRef<"Semester", 'DateTime'>
+    readonly endDate: FieldRef<"Semester", 'DateTime'>
+    readonly isCurrent: FieldRef<"Semester", 'Boolean'>
+    readonly createdAt: FieldRef<"Semester", 'DateTime'>
+    readonly updatedAt: FieldRef<"Semester", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Semester findUnique
+   */
+  export type SemesterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester findUniqueOrThrow
+   */
+  export type SemesterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester findFirst
+   */
+  export type SemesterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Semesters.
+     */
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester findFirstOrThrow
+   */
+  export type SemesterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semester to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Semesters.
+     */
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester findMany
+   */
+  export type SemesterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter, which Semesters to fetch.
+     */
+    where?: SemesterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Semesters to fetch.
+     */
+    orderBy?: SemesterOrderByWithRelationInput | SemesterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Semesters.
+     */
+    cursor?: SemesterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Semesters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Semesters.
+     */
+    skip?: number
+    distinct?: SemesterScalarFieldEnum | SemesterScalarFieldEnum[]
+  }
+
+  /**
+   * Semester create
+   */
+  export type SemesterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Semester.
+     */
+    data: XOR<SemesterCreateInput, SemesterUncheckedCreateInput>
+  }
+
+  /**
+   * Semester createMany
+   */
+  export type SemesterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Semesters.
+     */
+    data: SemesterCreateManyInput | SemesterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Semester createManyAndReturn
+   */
+  export type SemesterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data used to create many Semesters.
+     */
+    data: SemesterCreateManyInput | SemesterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Semester update
+   */
+  export type SemesterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Semester.
+     */
+    data: XOR<SemesterUpdateInput, SemesterUncheckedUpdateInput>
+    /**
+     * Choose, which Semester to update.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester updateMany
+   */
+  export type SemesterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Semesters.
+     */
+    data: XOR<SemesterUpdateManyMutationInput, SemesterUncheckedUpdateManyInput>
+    /**
+     * Filter which Semesters to update
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester updateManyAndReturn
+   */
+  export type SemesterUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The data used to update Semesters.
+     */
+    data: XOR<SemesterUpdateManyMutationInput, SemesterUncheckedUpdateManyInput>
+    /**
+     * Filter which Semesters to update
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester upsert
+   */
+  export type SemesterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Semester to update in case it exists.
+     */
+    where: SemesterWhereUniqueInput
+    /**
+     * In case the Semester found by the `where` argument doesn't exist, create a new Semester with this data.
+     */
+    create: XOR<SemesterCreateInput, SemesterUncheckedCreateInput>
+    /**
+     * In case the Semester was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SemesterUpdateInput, SemesterUncheckedUpdateInput>
+  }
+
+  /**
+   * Semester delete
+   */
+  export type SemesterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
+    /**
+     * Filter which Semester to delete.
+     */
+    where: SemesterWhereUniqueInput
+  }
+
+  /**
+   * Semester deleteMany
+   */
+  export type SemesterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Semesters to delete
+     */
+    where?: SemesterWhereInput
+    /**
+     * Limit how many Semesters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Semester without action
+   */
+  export type SemesterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Semester
+     */
+    select?: SemesterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Semester
+     */
+    omit?: SemesterOmit<ExtArgs> | null
   }
 
 
@@ -3512,40 +4413,45 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     supervisorId: number | null
+    semesterId: number | null
   }
 
   export type EvaluationSumAggregateOutputType = {
     id: number | null
     userId: number | null
     supervisorId: number | null
+    semesterId: number | null
   }
 
   export type EvaluationMinAggregateOutputType = {
     id: number | null
     userId: number | null
     supervisorId: number | null
-    semester: string | null
-    stage: $Enums.Stage | null
+    semesterId: number | null
+    type: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type EvaluationMaxAggregateOutputType = {
     id: number | null
     userId: number | null
     supervisorId: number | null
-    semester: string | null
-    stage: $Enums.Stage | null
+    semesterId: number | null
+    type: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type EvaluationCountAggregateOutputType = {
     id: number
     userId: number
     supervisorId: number
-    semester: number
-    stage: number
+    semesterId: number
+    type: number
     criteria: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -3554,40 +4460,45 @@ export namespace Prisma {
     id?: true
     userId?: true
     supervisorId?: true
+    semesterId?: true
   }
 
   export type EvaluationSumAggregateInputType = {
     id?: true
     userId?: true
     supervisorId?: true
+    semesterId?: true
   }
 
   export type EvaluationMinAggregateInputType = {
     id?: true
     userId?: true
     supervisorId?: true
-    semester?: true
-    stage?: true
+    semesterId?: true
+    type?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type EvaluationMaxAggregateInputType = {
     id?: true
     userId?: true
     supervisorId?: true
-    semester?: true
-    stage?: true
+    semesterId?: true
+    type?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type EvaluationCountAggregateInputType = {
     id?: true
     userId?: true
     supervisorId?: true
-    semester?: true
-    stage?: true
+    semesterId?: true
+    type?: true
     criteria?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -3681,10 +4592,11 @@ export namespace Prisma {
     id: number
     userId: number
     supervisorId: number
-    semester: string
-    stage: $Enums.Stage
+    semesterId: number
+    type: string
     criteria: JsonValue
     createdAt: Date
+    updatedAt: Date
     _count: EvaluationCountAggregateOutputType | null
     _avg: EvaluationAvgAggregateOutputType | null
     _sum: EvaluationSumAggregateOutputType | null
@@ -3710,76 +4622,60 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     supervisorId?: boolean
-    semester?: boolean
-    stage?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     supervisorId?: boolean
-    semester?: boolean
-    stage?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     supervisorId?: boolean
-    semester?: boolean
-    stage?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
+    updatedAt?: boolean
   }, ExtArgs["result"]["evaluation"]>
 
   export type EvaluationSelectScalar = {
     id?: boolean
     userId?: boolean
     supervisorId?: boolean
-    semester?: boolean
-    stage?: boolean
+    semesterId?: boolean
+    type?: boolean
     criteria?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "supervisorId" | "semester" | "stage" | "criteria" | "createdAt", ExtArgs["result"]["evaluation"]>
-  export type EvaluationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type EvaluationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type EvaluationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    supervisor?: boolean | UserDefaultArgs<ExtArgs>
-  }
+  export type EvaluationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "supervisorId" | "semesterId" | "type" | "criteria" | "createdAt" | "updatedAt", ExtArgs["result"]["evaluation"]>
 
   export type $EvaluationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Evaluation"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      supervisor: Prisma.$UserPayload<ExtArgs>
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: number
       supervisorId: number
-      semester: string
-      stage: $Enums.Stage
+      semesterId: number
+      type: string
       criteria: Prisma.JsonValue
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["evaluation"]>
     composites: {}
   }
@@ -4174,8 +5070,6 @@ export namespace Prisma {
    */
   export interface Prisma__EvaluationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    supervisor<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4208,10 +5102,11 @@ export namespace Prisma {
     readonly id: FieldRef<"Evaluation", 'Int'>
     readonly userId: FieldRef<"Evaluation", 'Int'>
     readonly supervisorId: FieldRef<"Evaluation", 'Int'>
-    readonly semester: FieldRef<"Evaluation", 'String'>
-    readonly stage: FieldRef<"Evaluation", 'Stage'>
+    readonly semesterId: FieldRef<"Evaluation", 'Int'>
+    readonly type: FieldRef<"Evaluation", 'String'>
     readonly criteria: FieldRef<"Evaluation", 'Json'>
     readonly createdAt: FieldRef<"Evaluation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Evaluation", 'DateTime'>
   }
     
 
@@ -4228,10 +5123,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
     /**
      * Filter, which Evaluation to fetch.
      */
@@ -4251,10 +5142,6 @@ export namespace Prisma {
      */
     omit?: EvaluationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    /**
      * Filter, which Evaluation to fetch.
      */
     where: EvaluationWhereUniqueInput
@@ -4272,10 +5159,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
     /**
      * Filter, which Evaluation to fetch.
      */
@@ -4325,10 +5208,6 @@ export namespace Prisma {
      */
     omit?: EvaluationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    /**
      * Filter, which Evaluation to fetch.
      */
     where?: EvaluationWhereInput
@@ -4377,10 +5256,6 @@ export namespace Prisma {
      */
     omit?: EvaluationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    /**
      * Filter, which Evaluations to fetch.
      */
     where?: EvaluationWhereInput
@@ -4424,10 +5299,6 @@ export namespace Prisma {
      */
     omit?: EvaluationOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
-    /**
      * The data needed to create a Evaluation.
      */
     data: XOR<EvaluationCreateInput, EvaluationUncheckedCreateInput>
@@ -4461,10 +5332,6 @@ export namespace Prisma {
      */
     data: EvaluationCreateManyInput | EvaluationCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4479,10 +5346,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
     /**
      * The data needed to update a Evaluation.
      */
@@ -4535,10 +5398,6 @@ export namespace Prisma {
      * Limit how many Evaluations to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4553,10 +5412,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
     /**
      * The filter to search for the Evaluation to update in case it exists.
      */
@@ -4583,10 +5438,6 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EvaluationInclude<ExtArgs> | null
     /**
      * Filter which Evaluation to delete.
      */
@@ -4619,10 +5470,996 @@ export namespace Prisma {
      * Omit specific fields from the Evaluation
      */
     omit?: EvaluationOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Role
+   */
+
+  export type AggregateRole = {
+    _count: RoleCountAggregateOutputType | null
+    _avg: RoleAvgAggregateOutputType | null
+    _sum: RoleSumAggregateOutputType | null
+    _min: RoleMinAggregateOutputType | null
+    _max: RoleMaxAggregateOutputType | null
+  }
+
+  export type RoleAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RoleSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RoleMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type RoleMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type RoleCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type RoleAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type RoleSumAggregateInputType = {
+    id?: true
+  }
+
+  export type RoleMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type RoleMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type RoleCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type RoleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Choose, which related nodes to fetch as well
+     * Filter which Role to aggregate.
      */
-    include?: EvaluationInclude<ExtArgs> | null
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Roles
+    **/
+    _count?: true | RoleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RoleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RoleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoleMaxAggregateInputType
+  }
+
+  export type GetRoleAggregateType<T extends RoleAggregateArgs> = {
+        [P in keyof T & keyof AggregateRole]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRole[P]>
+      : GetScalarType<T[P], AggregateRole[P]>
+  }
+
+
+
+
+  export type RoleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleWhereInput
+    orderBy?: RoleOrderByWithAggregationInput | RoleOrderByWithAggregationInput[]
+    by: RoleScalarFieldEnum[] | RoleScalarFieldEnum
+    having?: RoleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoleCountAggregateInputType | true
+    _avg?: RoleAvgAggregateInputType
+    _sum?: RoleSumAggregateInputType
+    _min?: RoleMinAggregateInputType
+    _max?: RoleMaxAggregateInputType
+  }
+
+  export type RoleGroupByOutputType = {
+    id: number
+    name: string
+    _count: RoleCountAggregateOutputType | null
+    _avg: RoleAvgAggregateOutputType | null
+    _sum: RoleSumAggregateOutputType | null
+    _min: RoleMinAggregateOutputType | null
+    _max: RoleMaxAggregateOutputType | null
+  }
+
+  type GetRoleGroupByPayload<T extends RoleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoleGroupByOutputType[P]>
+            : GetScalarType<T[P], RoleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["role"]>
+
+  export type RoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["role"]>
+
+  export type RoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["role"]>
+
+  export type RoleSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["role"]>
+
+  export type $RolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Role"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+    }, ExtArgs["result"]["role"]>
+    composites: {}
+  }
+
+  type RoleGetPayload<S extends boolean | null | undefined | RoleDefaultArgs> = $Result.GetResult<Prisma.$RolePayload, S>
+
+  type RoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoleCountAggregateInputType | true
+    }
+
+  export interface RoleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Role'], meta: { name: 'Role' } }
+    /**
+     * Find zero or one Role that matches the filter.
+     * @param {RoleFindUniqueArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoleFindUniqueArgs>(args: SelectSubset<T, RoleFindUniqueArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Role that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoleFindUniqueOrThrowArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoleFindUniqueOrThrowArgs>(args: SelectSubset<T, RoleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Role that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindFirstArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoleFindFirstArgs>(args?: SelectSubset<T, RoleFindFirstArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Role that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindFirstOrThrowArgs} args - Arguments to find a Role
+     * @example
+     * // Get one Role
+     * const role = await prisma.role.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoleFindFirstOrThrowArgs>(args?: SelectSubset<T, RoleFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Roles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Roles
+     * const roles = await prisma.role.findMany()
+     * 
+     * // Get first 10 Roles
+     * const roles = await prisma.role.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roleWithIdOnly = await prisma.role.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoleFindManyArgs>(args?: SelectSubset<T, RoleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Role.
+     * @param {RoleCreateArgs} args - Arguments to create a Role.
+     * @example
+     * // Create one Role
+     * const Role = await prisma.role.create({
+     *   data: {
+     *     // ... data to create a Role
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoleCreateArgs>(args: SelectSubset<T, RoleCreateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Roles.
+     * @param {RoleCreateManyArgs} args - Arguments to create many Roles.
+     * @example
+     * // Create many Roles
+     * const role = await prisma.role.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoleCreateManyArgs>(args?: SelectSubset<T, RoleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Roles and returns the data saved in the database.
+     * @param {RoleCreateManyAndReturnArgs} args - Arguments to create many Roles.
+     * @example
+     * // Create many Roles
+     * const role = await prisma.role.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Roles and only return the `id`
+     * const roleWithIdOnly = await prisma.role.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RoleCreateManyAndReturnArgs>(args?: SelectSubset<T, RoleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Role.
+     * @param {RoleDeleteArgs} args - Arguments to delete one Role.
+     * @example
+     * // Delete one Role
+     * const Role = await prisma.role.delete({
+     *   where: {
+     *     // ... filter to delete one Role
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoleDeleteArgs>(args: SelectSubset<T, RoleDeleteArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Role.
+     * @param {RoleUpdateArgs} args - Arguments to update one Role.
+     * @example
+     * // Update one Role
+     * const role = await prisma.role.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoleUpdateArgs>(args: SelectSubset<T, RoleUpdateArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Roles.
+     * @param {RoleDeleteManyArgs} args - Arguments to filter Roles to delete.
+     * @example
+     * // Delete a few Roles
+     * const { count } = await prisma.role.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoleDeleteManyArgs>(args?: SelectSubset<T, RoleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Roles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Roles
+     * const role = await prisma.role.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoleUpdateManyArgs>(args: SelectSubset<T, RoleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Roles and returns the data updated in the database.
+     * @param {RoleUpdateManyAndReturnArgs} args - Arguments to update many Roles.
+     * @example
+     * // Update many Roles
+     * const role = await prisma.role.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Roles and only return the `id`
+     * const roleWithIdOnly = await prisma.role.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RoleUpdateManyAndReturnArgs>(args: SelectSubset<T, RoleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Role.
+     * @param {RoleUpsertArgs} args - Arguments to update or create a Role.
+     * @example
+     * // Update or create a Role
+     * const role = await prisma.role.upsert({
+     *   create: {
+     *     // ... data to create a Role
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Role we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoleUpsertArgs>(args: SelectSubset<T, RoleUpsertArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Roles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleCountArgs} args - Arguments to filter Roles to count.
+     * @example
+     * // Count the number of Roles
+     * const count = await prisma.role.count({
+     *   where: {
+     *     // ... the filter for the Roles we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoleCountArgs>(
+      args?: Subset<T, RoleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Role.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoleAggregateArgs>(args: Subset<T, RoleAggregateArgs>): Prisma.PrismaPromise<GetRoleAggregateType<T>>
+
+    /**
+     * Group by Role.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoleGroupByArgs['orderBy'] }
+        : { orderBy?: RoleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Role model
+   */
+  readonly fields: RoleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Role.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Role model
+   */
+  interface RoleFieldRefs {
+    readonly id: FieldRef<"Role", 'Int'>
+    readonly name: FieldRef<"Role", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Role findUnique
+   */
+  export type RoleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role findUniqueOrThrow
+   */
+  export type RoleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role findFirst
+   */
+  export type RoleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roles.
+     */
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role findFirstOrThrow
+   */
+  export type RoleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter, which Role to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roles.
+     */
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role findMany
+   */
+  export type RoleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter, which Roles to fetch.
+     */
+    where?: RoleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roles to fetch.
+     */
+    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Roles.
+     */
+    cursor?: RoleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roles.
+     */
+    skip?: number
+    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role create
+   */
+  export type RoleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Role.
+     */
+    data: XOR<RoleCreateInput, RoleUncheckedCreateInput>
+  }
+
+  /**
+   * Role createMany
+   */
+  export type RoleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Roles.
+     */
+    data: RoleCreateManyInput | RoleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Role createManyAndReturn
+   */
+  export type RoleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * The data used to create many Roles.
+     */
+    data: RoleCreateManyInput | RoleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Role update
+   */
+  export type RoleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Role.
+     */
+    data: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
+    /**
+     * Choose, which Role to update.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role updateMany
+   */
+  export type RoleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Roles.
+     */
+    data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyInput>
+    /**
+     * Filter which Roles to update
+     */
+    where?: RoleWhereInput
+    /**
+     * Limit how many Roles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Role updateManyAndReturn
+   */
+  export type RoleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * The data used to update Roles.
+     */
+    data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyInput>
+    /**
+     * Filter which Roles to update
+     */
+    where?: RoleWhereInput
+    /**
+     * Limit how many Roles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Role upsert
+   */
+  export type RoleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Role to update in case it exists.
+     */
+    where: RoleWhereUniqueInput
+    /**
+     * In case the Role found by the `where` argument doesn't exist, create a new Role with this data.
+     */
+    create: XOR<RoleCreateInput, RoleUncheckedCreateInput>
+    /**
+     * In case the Role was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
+  }
+
+  /**
+   * Role delete
+   */
+  export type RoleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Filter which Role to delete.
+     */
+    where: RoleWhereUniqueInput
+  }
+
+  /**
+   * Role deleteMany
+   */
+  export type RoleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Roles to delete
+     */
+    where?: RoleWhereInput
+    /**
+     * Limit how many Roles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Role without action
+   */
+  export type RoleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
   }
 
 
@@ -4645,10 +6482,11 @@ export namespace Prisma {
     name: 'name',
     password: 'password',
     email: 'email',
-    role: 'role',
+    roleId: 'roleId',
     teamId: 'teamId',
     supervisorId: 'supervisorId',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4656,23 +6494,47 @@ export namespace Prisma {
 
   export const TeamScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
+  export const SemesterScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    isCurrent: 'isCurrent',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SemesterScalarFieldEnum = (typeof SemesterScalarFieldEnum)[keyof typeof SemesterScalarFieldEnum]
 
 
   export const EvaluationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
     supervisorId: 'supervisorId',
-    semester: 'semester',
-    stage: 'stage',
+    semesterId: 'semesterId',
+    type: 'type',
     criteria: 'criteria',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+  export const RoleScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4749,20 +6611,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Role'
-   */
-  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
-    
-
-
-  /**
-   * Reference to a field of type 'Role[]'
-   */
-  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -4777,16 +6625,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Stage'
+   * Reference to a field of type 'Boolean'
    */
-  export type EnumStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Stage'>
-    
-
-
-  /**
-   * Reference to a field of type 'Stage[]'
-   */
-  export type ListEnumStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Stage[]'>
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -4829,15 +6670,11 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
-    role?: EnumRoleFilter<"User"> | $Enums.Role
+    roleId?: IntFilter<"User"> | number
     teamId?: IntNullableFilter<"User"> | number | null
     supervisorId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
-    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
-    supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    supervisees?: UserListRelationFilter
-    evaluations?: EvaluationListRelationFilter
-    supervisedEvaluations?: EvaluationListRelationFilter
+    updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4845,15 +6682,11 @@ export namespace Prisma {
     name?: SortOrder
     password?: SortOrder
     email?: SortOrder
-    role?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    team?: TeamOrderByWithRelationInput
-    supervisor?: UserOrderByWithRelationInput
-    supervisees?: UserOrderByRelationAggregateInput
-    evaluations?: EvaluationOrderByRelationAggregateInput
-    supervisedEvaluations?: EvaluationOrderByRelationAggregateInput
+    updatedAt?: SortOrder
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4864,15 +6697,11 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    role?: EnumRoleFilter<"User"> | $Enums.Role
+    roleId?: IntFilter<"User"> | number
     teamId?: IntNullableFilter<"User"> | number | null
     supervisorId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
-    team?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
-    supervisor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    supervisees?: UserListRelationFilter
-    evaluations?: EvaluationListRelationFilter
-    supervisedEvaluations?: EvaluationListRelationFilter
+    updatedAt?: DateTimeFilter<"User"> | Date | string
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4880,10 +6709,11 @@ export namespace Prisma {
     name?: SortOrder
     password?: SortOrder
     email?: SortOrder
-    role?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -4899,10 +6729,11 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
-    role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
+    roleId?: IntWithAggregatesFilter<"User"> | number
     teamId?: IntNullableWithAggregatesFilter<"User"> | number | null
     supervisorId?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type TeamWhereInput = {
@@ -4911,13 +6742,15 @@ export namespace Prisma {
     NOT?: TeamWhereInput | TeamWhereInput[]
     id?: IntFilter<"Team"> | number
     name?: StringFilter<"Team"> | string
-    members?: UserListRelationFilter
+    createdAt?: DateTimeFilter<"Team"> | Date | string
+    updatedAt?: DateTimeFilter<"Team"> | Date | string
   }
 
   export type TeamOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    members?: UserOrderByRelationAggregateInput
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -4926,12 +6759,15 @@ export namespace Prisma {
     AND?: TeamWhereInput | TeamWhereInput[]
     OR?: TeamWhereInput[]
     NOT?: TeamWhereInput | TeamWhereInput[]
-    members?: UserListRelationFilter
+    createdAt?: DateTimeFilter<"Team"> | Date | string
+    updatedAt?: DateTimeFilter<"Team"> | Date | string
   }, "id" | "name">
 
   export type TeamOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: TeamCountOrderByAggregateInput
     _avg?: TeamAvgOrderByAggregateInput
     _max?: TeamMaxOrderByAggregateInput
@@ -4945,6 +6781,72 @@ export namespace Prisma {
     NOT?: TeamScalarWhereWithAggregatesInput | TeamScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Team"> | number
     name?: StringWithAggregatesFilter<"Team"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
+  }
+
+  export type SemesterWhereInput = {
+    AND?: SemesterWhereInput | SemesterWhereInput[]
+    OR?: SemesterWhereInput[]
+    NOT?: SemesterWhereInput | SemesterWhereInput[]
+    id?: IntFilter<"Semester"> | number
+    name?: StringFilter<"Semester"> | string
+    startDate?: DateTimeFilter<"Semester"> | Date | string
+    endDate?: DateTimeFilter<"Semester"> | Date | string
+    isCurrent?: BoolFilter<"Semester"> | boolean
+    createdAt?: DateTimeFilter<"Semester"> | Date | string
+    updatedAt?: DateTimeFilter<"Semester"> | Date | string
+  }
+
+  export type SemesterOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: SemesterWhereInput | SemesterWhereInput[]
+    OR?: SemesterWhereInput[]
+    NOT?: SemesterWhereInput | SemesterWhereInput[]
+    startDate?: DateTimeFilter<"Semester"> | Date | string
+    endDate?: DateTimeFilter<"Semester"> | Date | string
+    isCurrent?: BoolFilter<"Semester"> | boolean
+    createdAt?: DateTimeFilter<"Semester"> | Date | string
+    updatedAt?: DateTimeFilter<"Semester"> | Date | string
+  }, "id" | "name">
+
+  export type SemesterOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SemesterCountOrderByAggregateInput
+    _avg?: SemesterAvgOrderByAggregateInput
+    _max?: SemesterMaxOrderByAggregateInput
+    _min?: SemesterMinOrderByAggregateInput
+    _sum?: SemesterSumOrderByAggregateInput
+  }
+
+  export type SemesterScalarWhereWithAggregatesInput = {
+    AND?: SemesterScalarWhereWithAggregatesInput | SemesterScalarWhereWithAggregatesInput[]
+    OR?: SemesterScalarWhereWithAggregatesInput[]
+    NOT?: SemesterScalarWhereWithAggregatesInput | SemesterScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Semester"> | number
+    name?: StringWithAggregatesFilter<"Semester"> | string
+    startDate?: DateTimeWithAggregatesFilter<"Semester"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"Semester"> | Date | string
+    isCurrent?: BoolWithAggregatesFilter<"Semester"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Semester"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Semester"> | Date | string
   }
 
   export type EvaluationWhereInput = {
@@ -4954,24 +6856,22 @@ export namespace Prisma {
     id?: IntFilter<"Evaluation"> | number
     userId?: IntFilter<"Evaluation"> | number
     supervisorId?: IntFilter<"Evaluation"> | number
-    semester?: StringFilter<"Evaluation"> | string
-    stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
+    semesterId?: IntFilter<"Evaluation"> | number
+    type?: StringFilter<"Evaluation"> | string
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    supervisor?: XOR<UserScalarRelationFilter, UserWhereInput>
+    updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
   }
 
   export type EvaluationOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-    semester?: SortOrder
-    stage?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    supervisor?: UserOrderByWithRelationInput
+    updatedAt?: SortOrder
   }
 
   export type EvaluationWhereUniqueInput = Prisma.AtLeast<{
@@ -4981,22 +6881,22 @@ export namespace Prisma {
     NOT?: EvaluationWhereInput | EvaluationWhereInput[]
     userId?: IntFilter<"Evaluation"> | number
     supervisorId?: IntFilter<"Evaluation"> | number
-    semester?: StringFilter<"Evaluation"> | string
-    stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
+    semesterId?: IntFilter<"Evaluation"> | number
+    type?: StringFilter<"Evaluation"> | string
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    supervisor?: XOR<UserScalarRelationFilter, UserWhereInput>
+    updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
   }, "id">
 
   export type EvaluationOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-    semester?: SortOrder
-    stage?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: EvaluationCountOrderByAggregateInput
     _avg?: EvaluationAvgOrderByAggregateInput
     _max?: EvaluationMaxOrderByAggregateInput
@@ -5011,23 +6911,61 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Evaluation"> | number
     userId?: IntWithAggregatesFilter<"Evaluation"> | number
     supervisorId?: IntWithAggregatesFilter<"Evaluation"> | number
-    semester?: StringWithAggregatesFilter<"Evaluation"> | string
-    stage?: EnumStageWithAggregatesFilter<"Evaluation"> | $Enums.Stage
+    semesterId?: IntWithAggregatesFilter<"Evaluation"> | number
+    type?: StringWithAggregatesFilter<"Evaluation"> | string
     criteria?: JsonWithAggregatesFilter<"Evaluation">
     createdAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
+  }
+
+  export type RoleWhereInput = {
+    AND?: RoleWhereInput | RoleWhereInput[]
+    OR?: RoleWhereInput[]
+    NOT?: RoleWhereInput | RoleWhereInput[]
+    id?: IntFilter<"Role"> | number
+    name?: StringFilter<"Role"> | string
+  }
+
+  export type RoleOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type RoleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: RoleWhereInput | RoleWhereInput[]
+    OR?: RoleWhereInput[]
+    NOT?: RoleWhereInput | RoleWhereInput[]
+  }, "id" | "name">
+
+  export type RoleOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: RoleCountOrderByAggregateInput
+    _avg?: RoleAvgOrderByAggregateInput
+    _max?: RoleMaxOrderByAggregateInput
+    _min?: RoleMinOrderByAggregateInput
+    _sum?: RoleSumOrderByAggregateInput
+  }
+
+  export type RoleScalarWhereWithAggregatesInput = {
+    AND?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
+    OR?: RoleScalarWhereWithAggregatesInput[]
+    NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Role"> | number
+    name?: StringWithAggregatesFilter<"Role"> | string
   }
 
   export type UserCreateInput = {
     name: string
     password: string
     email: string
-    role: $Enums.Role
+    roleId: number
+    teamId?: number | null
+    supervisorId?: number | null
     createdAt?: Date | string
-    team?: TeamCreateNestedOneWithoutMembersInput
-    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
-    supervisees?: UserCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
+    updatedAt?: Date | string
   }
 
   export type UserUncheckedCreateInput = {
@@ -5035,26 +6973,22 @@ export namespace Prisma {
     name: string
     password: string
     email: string
-    role: $Enums.Role
+    roleId: number
     teamId?: number | null
     supervisorId?: number | null
     createdAt?: Date | string
-    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
+    updatedAt?: Date | string
   }
 
   export type UserUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    roleId?: IntFieldUpdateOperationsInput | number
+    teamId?: NullableIntFieldUpdateOperationsInput | number | null
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    team?: TeamUpdateOneWithoutMembersNestedInput
-    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
-    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateInput = {
@@ -5062,13 +6996,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    roleId?: IntFieldUpdateOperationsInput | number
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateManyInput = {
@@ -5076,18 +7008,22 @@ export namespace Prisma {
     name: string
     password: string
     email: string
-    role: $Enums.Role
+    roleId: number
     teamId?: number | null
     supervisorId?: number | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    roleId?: IntFieldUpdateOperationsInput | number
+    teamId?: NullableIntFieldUpdateOperationsInput | number | null
+    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -5095,111 +7031,230 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    roleId?: IntFieldUpdateOperationsInput | number
     teamId?: NullableIntFieldUpdateOperationsInput | number | null
     supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamCreateInput = {
     name: string
-    members?: UserCreateNestedManyWithoutTeamInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TeamUncheckedCreateInput = {
     id?: number
     name: string
-    members?: UserUncheckedCreateNestedManyWithoutTeamInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TeamUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    members?: UserUpdateManyWithoutTeamNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    members?: UserUncheckedUpdateManyWithoutTeamNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamCreateManyInput = {
     id?: number
     name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TeamUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SemesterCreateInput = {
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isCurrent?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SemesterUncheckedCreateInput = {
+    id?: number
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isCurrent?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SemesterUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SemesterUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SemesterCreateManyInput = {
+    id?: number
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isCurrent?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SemesterUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SemesterUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EvaluationCreateInput = {
-    semester: string
-    stage: $Enums.Stage
+    userId: number
+    supervisorId: number
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutEvaluationsInput
-    supervisor: UserCreateNestedOneWithoutSupervisedEvaluationsInput
+    updatedAt?: Date | string
   }
 
   export type EvaluationUncheckedCreateInput = {
     id?: number
     userId: number
     supervisorId: number
-    semester: string
-    stage: $Enums.Stage
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type EvaluationUpdateInput = {
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutEvaluationsNestedInput
-    supervisor?: UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EvaluationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EvaluationCreateManyInput = {
     id?: number
     userId: number
     supervisorId: number
-    semester: string
-    stage: $Enums.Stage
+    semesterId: number
+    type?: string
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type EvaluationUpdateManyMutationInput = {
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    userId?: IntFieldUpdateOperationsInput | number
+    supervisorId?: IntFieldUpdateOperationsInput | number
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EvaluationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
+    semesterId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleCreateInput = {
+    name: string
+  }
+
+  export type RoleUncheckedCreateInput = {
+    id?: number
+    name: string
+  }
+
+  export type RoleUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RoleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RoleCreateManyInput = {
+    id?: number
+    name: string
+  }
+
+  export type RoleUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RoleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5228,13 +7283,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type EnumRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
-  }
-
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -5257,39 +7305,9 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type TeamNullableScalarRelationFilter = {
-    is?: TeamWhereInput | null
-    isNot?: TeamWhereInput | null
-  }
-
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
-  }
-
-  export type EvaluationListRelationFilter = {
-    every?: EvaluationWhereInput
-    some?: EvaluationWhereInput
-    none?: EvaluationWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
-  }
-
-  export type UserOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type EvaluationOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -5297,14 +7315,16 @@ export namespace Prisma {
     name?: SortOrder
     password?: SortOrder
     email?: SortOrder
-    role?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
   }
@@ -5314,10 +7334,11 @@ export namespace Prisma {
     name?: SortOrder
     password?: SortOrder
     email?: SortOrder
-    role?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -5325,14 +7346,16 @@ export namespace Prisma {
     name?: SortOrder
     password?: SortOrder
     email?: SortOrder
-    role?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    roleId?: SortOrder
     teamId?: SortOrder
     supervisorId?: SortOrder
   }
@@ -5371,16 +7394,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoleFilter<$PrismaModel>
-    _max?: NestedEnumRoleFilter<$PrismaModel>
-  }
-
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -5414,6 +7427,8 @@ export namespace Prisma {
   export type TeamCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TeamAvgOrderByAggregateInput = {
@@ -5423,22 +7438,70 @@ export namespace Prisma {
   export type TeamMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TeamMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TeamSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type EnumStageFilter<$PrismaModel = never> = {
-    equals?: $Enums.Stage | EnumStageFieldRefInput<$PrismaModel>
-    in?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    not?: NestedEnumStageFilter<$PrismaModel> | $Enums.Stage
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type SemesterCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SemesterMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    isCurrent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SemesterSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5464,59 +7527,49 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type EvaluationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-    semester?: SortOrder
-    stage?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     criteria?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EvaluationAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
+    semesterId?: SortOrder
   }
 
   export type EvaluationMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-    semester?: SortOrder
-    stage?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EvaluationMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-    semester?: SortOrder
-    stage?: SortOrder
+    semesterId?: SortOrder
+    type?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EvaluationSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     supervisorId?: SortOrder
-  }
-
-  export type EnumStageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Stage | EnumStageFieldRefInput<$PrismaModel>
-    in?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    not?: NestedEnumStageWithAggregatesFilter<$PrismaModel> | $Enums.Stage
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumStageFilter<$PrismaModel>
-    _max?: NestedEnumStageFilter<$PrismaModel>
+    semesterId?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5545,132 +7598,31 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
-  export type TeamCreateNestedOneWithoutMembersInput = {
-    create?: XOR<TeamCreateWithoutMembersInput, TeamUncheckedCreateWithoutMembersInput>
-    connectOrCreate?: TeamCreateOrConnectWithoutMembersInput
-    connect?: TeamWhereUniqueInput
+  export type RoleCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
   }
 
-  export type UserCreateNestedOneWithoutSuperviseesInput = {
-    create?: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSuperviseesInput
-    connect?: UserWhereUniqueInput
+  export type RoleAvgOrderByAggregateInput = {
+    id?: SortOrder
   }
 
-  export type UserCreateNestedManyWithoutSupervisorInput = {
-    create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
-    createMany?: UserCreateManySupervisorInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  export type RoleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
   }
 
-  export type EvaluationCreateNestedManyWithoutUserInput = {
-    create?: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput> | EvaluationCreateWithoutUserInput[] | EvaluationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutUserInput | EvaluationCreateOrConnectWithoutUserInput[]
-    createMany?: EvaluationCreateManyUserInputEnvelope
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+  export type RoleMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
   }
 
-  export type EvaluationCreateNestedManyWithoutSupervisorInput = {
-    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
-    createMany?: EvaluationCreateManySupervisorInputEnvelope
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-  }
-
-  export type UserUncheckedCreateNestedManyWithoutSupervisorInput = {
-    create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
-    createMany?: UserCreateManySupervisorInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type EvaluationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput> | EvaluationCreateWithoutUserInput[] | EvaluationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutUserInput | EvaluationCreateOrConnectWithoutUserInput[]
-    createMany?: EvaluationCreateManyUserInputEnvelope
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-  }
-
-  export type EvaluationUncheckedCreateNestedManyWithoutSupervisorInput = {
-    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
-    createMany?: EvaluationCreateManySupervisorInputEnvelope
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
+  export type RoleSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
-  }
-
-  export type EnumRoleFieldUpdateOperationsInput = {
-    set?: $Enums.Role
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
-  export type TeamUpdateOneWithoutMembersNestedInput = {
-    create?: XOR<TeamCreateWithoutMembersInput, TeamUncheckedCreateWithoutMembersInput>
-    connectOrCreate?: TeamCreateOrConnectWithoutMembersInput
-    upsert?: TeamUpsertWithoutMembersInput
-    disconnect?: TeamWhereInput | boolean
-    delete?: TeamWhereInput | boolean
-    connect?: TeamWhereUniqueInput
-    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutMembersInput, TeamUpdateWithoutMembersInput>, TeamUncheckedUpdateWithoutMembersInput>
-  }
-
-  export type UserUpdateOneWithoutSuperviseesNestedInput = {
-    create?: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSuperviseesInput
-    upsert?: UserUpsertWithoutSuperviseesInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSuperviseesInput, UserUpdateWithoutSuperviseesInput>, UserUncheckedUpdateWithoutSuperviseesInput>
-  }
-
-  export type UserUpdateManyWithoutSupervisorNestedInput = {
-    create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutSupervisorInput | UserUpsertWithWhereUniqueWithoutSupervisorInput[]
-    createMany?: UserCreateManySupervisorInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutSupervisorInput | UserUpdateWithWhereUniqueWithoutSupervisorInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutSupervisorInput | UserUpdateManyWithWhereWithoutSupervisorInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type EvaluationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput> | EvaluationCreateWithoutUserInput[] | EvaluationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutUserInput | EvaluationCreateOrConnectWithoutUserInput[]
-    upsert?: EvaluationUpsertWithWhereUniqueWithoutUserInput | EvaluationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: EvaluationCreateManyUserInputEnvelope
-    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    update?: EvaluationUpdateWithWhereUniqueWithoutUserInput | EvaluationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: EvaluationUpdateManyWithWhereWithoutUserInput | EvaluationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
-  }
-
-  export type EvaluationUpdateManyWithoutSupervisorNestedInput = {
-    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
-    upsert?: EvaluationUpsertWithWhereUniqueWithoutSupervisorInput | EvaluationUpsertWithWhereUniqueWithoutSupervisorInput[]
-    createMany?: EvaluationCreateManySupervisorInputEnvelope
-    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    update?: EvaluationUpdateWithWhereUniqueWithoutSupervisorInput | EvaluationUpdateWithWhereUniqueWithoutSupervisorInput[]
-    updateMany?: EvaluationUpdateManyWithWhereWithoutSupervisorInput | EvaluationUpdateManyWithWhereWithoutSupervisorInput[]
-    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -5689,120 +7641,12 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUncheckedUpdateManyWithoutSupervisorNestedInput = {
-    create?: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput> | UserCreateWithoutSupervisorInput[] | UserUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisorInput | UserCreateOrConnectWithoutSupervisorInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutSupervisorInput | UserUpsertWithWhereUniqueWithoutSupervisorInput[]
-    createMany?: UserCreateManySupervisorInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutSupervisorInput | UserUpdateWithWhereUniqueWithoutSupervisorInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutSupervisorInput | UserUpdateManyWithWhereWithoutSupervisorInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
-  export type EvaluationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput> | EvaluationCreateWithoutUserInput[] | EvaluationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutUserInput | EvaluationCreateOrConnectWithoutUserInput[]
-    upsert?: EvaluationUpsertWithWhereUniqueWithoutUserInput | EvaluationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: EvaluationCreateManyUserInputEnvelope
-    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    update?: EvaluationUpdateWithWhereUniqueWithoutUserInput | EvaluationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: EvaluationUpdateManyWithWhereWithoutUserInput | EvaluationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
-  }
-
-  export type EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput = {
-    create?: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput> | EvaluationCreateWithoutSupervisorInput[] | EvaluationUncheckedCreateWithoutSupervisorInput[]
-    connectOrCreate?: EvaluationCreateOrConnectWithoutSupervisorInput | EvaluationCreateOrConnectWithoutSupervisorInput[]
-    upsert?: EvaluationUpsertWithWhereUniqueWithoutSupervisorInput | EvaluationUpsertWithWhereUniqueWithoutSupervisorInput[]
-    createMany?: EvaluationCreateManySupervisorInputEnvelope
-    set?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    disconnect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    delete?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    connect?: EvaluationWhereUniqueInput | EvaluationWhereUniqueInput[]
-    update?: EvaluationUpdateWithWhereUniqueWithoutSupervisorInput | EvaluationUpdateWithWhereUniqueWithoutSupervisorInput[]
-    updateMany?: EvaluationUpdateManyWithWhereWithoutSupervisorInput | EvaluationUpdateManyWithWhereWithoutSupervisorInput[]
-    deleteMany?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
-  }
-
-  export type UserCreateNestedManyWithoutTeamInput = {
-    create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
-    createMany?: UserCreateManyTeamInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type UserUncheckedCreateNestedManyWithoutTeamInput = {
-    create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
-    createMany?: UserCreateManyTeamInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type UserUpdateManyWithoutTeamNestedInput = {
-    create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutTeamInput | UserUpsertWithWhereUniqueWithoutTeamInput[]
-    createMany?: UserCreateManyTeamInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutTeamInput | UserUpdateWithWhereUniqueWithoutTeamInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutTeamInput | UserUpdateManyWithWhereWithoutTeamInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type UserUncheckedUpdateManyWithoutTeamNestedInput = {
-    create?: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput> | UserCreateWithoutTeamInput[] | UserUncheckedCreateWithoutTeamInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTeamInput | UserCreateOrConnectWithoutTeamInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutTeamInput | UserUpsertWithWhereUniqueWithoutTeamInput[]
-    createMany?: UserCreateManyTeamInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutTeamInput | UserUpdateWithWhereUniqueWithoutTeamInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutTeamInput | UserUpdateManyWithWhereWithoutTeamInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutEvaluationsInput = {
-    create?: XOR<UserCreateWithoutEvaluationsInput, UserUncheckedCreateWithoutEvaluationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutEvaluationsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutSupervisedEvaluationsInput = {
-    create?: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisedEvaluationsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumStageFieldUpdateOperationsInput = {
-    set?: $Enums.Stage
-  }
-
-  export type UserUpdateOneRequiredWithoutEvaluationsNestedInput = {
-    create?: XOR<UserCreateWithoutEvaluationsInput, UserUncheckedCreateWithoutEvaluationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutEvaluationsInput
-    upsert?: UserUpsertWithoutEvaluationsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEvaluationsInput, UserUpdateWithoutEvaluationsInput>, UserUncheckedUpdateWithoutEvaluationsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput = {
-    create?: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSupervisedEvaluationsInput
-    upsert?: UserUpsertWithoutSupervisedEvaluationsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSupervisedEvaluationsInput, UserUpdateWithoutSupervisedEvaluationsInput>, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5828,13 +7672,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedEnumRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
@@ -5903,16 +7740,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoleFilter<$PrismaModel>
-    _max?: NestedEnumRoleFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -5954,21 +7781,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumStageFilter<$PrismaModel = never> = {
-    equals?: $Enums.Stage | EnumStageFieldRefInput<$PrismaModel>
-    in?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    not?: NestedEnumStageFilter<$PrismaModel> | $Enums.Stage
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedEnumStageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Stage | EnumStageFieldRefInput<$PrismaModel>
-    in?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Stage[] | ListEnumStageFieldRefInput<$PrismaModel>
-    not?: NestedEnumStageWithAggregatesFilter<$PrismaModel> | $Enums.Stage
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumStageFilter<$PrismaModel>
-    _max?: NestedEnumStageFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -5992,613 +7815,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type TeamCreateWithoutMembersInput = {
-    name: string
-  }
-
-  export type TeamUncheckedCreateWithoutMembersInput = {
-    id?: number
-    name: string
-  }
-
-  export type TeamCreateOrConnectWithoutMembersInput = {
-    where: TeamWhereUniqueInput
-    create: XOR<TeamCreateWithoutMembersInput, TeamUncheckedCreateWithoutMembersInput>
-  }
-
-  export type UserCreateWithoutSuperviseesInput = {
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    createdAt?: Date | string
-    team?: TeamCreateNestedOneWithoutMembersInput
-    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
-    evaluations?: EvaluationCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserUncheckedCreateWithoutSuperviseesInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    teamId?: number | null
-    supervisorId?: number | null
-    createdAt?: Date | string
-    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserCreateOrConnectWithoutSuperviseesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
-  }
-
-  export type UserCreateWithoutSupervisorInput = {
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    createdAt?: Date | string
-    team?: TeamCreateNestedOneWithoutMembersInput
-    supervisees?: UserCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserUncheckedCreateWithoutSupervisorInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    teamId?: number | null
-    createdAt?: Date | string
-    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserCreateOrConnectWithoutSupervisorInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput>
-  }
-
-  export type UserCreateManySupervisorInputEnvelope = {
-    data: UserCreateManySupervisorInput | UserCreateManySupervisorInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type EvaluationCreateWithoutUserInput = {
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    supervisor: UserCreateNestedOneWithoutSupervisedEvaluationsInput
-  }
-
-  export type EvaluationUncheckedCreateWithoutUserInput = {
-    id?: number
-    supervisorId: number
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type EvaluationCreateOrConnectWithoutUserInput = {
-    where: EvaluationWhereUniqueInput
-    create: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput>
-  }
-
-  export type EvaluationCreateManyUserInputEnvelope = {
-    data: EvaluationCreateManyUserInput | EvaluationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type EvaluationCreateWithoutSupervisorInput = {
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutEvaluationsInput
-  }
-
-  export type EvaluationUncheckedCreateWithoutSupervisorInput = {
-    id?: number
-    userId: number
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type EvaluationCreateOrConnectWithoutSupervisorInput = {
-    where: EvaluationWhereUniqueInput
-    create: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput>
-  }
-
-  export type EvaluationCreateManySupervisorInputEnvelope = {
-    data: EvaluationCreateManySupervisorInput | EvaluationCreateManySupervisorInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type TeamUpsertWithoutMembersInput = {
-    update: XOR<TeamUpdateWithoutMembersInput, TeamUncheckedUpdateWithoutMembersInput>
-    create: XOR<TeamCreateWithoutMembersInput, TeamUncheckedCreateWithoutMembersInput>
-    where?: TeamWhereInput
-  }
-
-  export type TeamUpdateToOneWithWhereWithoutMembersInput = {
-    where?: TeamWhereInput
-    data: XOR<TeamUpdateWithoutMembersInput, TeamUncheckedUpdateWithoutMembersInput>
-  }
-
-  export type TeamUpdateWithoutMembersInput = {
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type TeamUncheckedUpdateWithoutMembersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type UserUpsertWithoutSuperviseesInput = {
-    update: XOR<UserUpdateWithoutSuperviseesInput, UserUncheckedUpdateWithoutSuperviseesInput>
-    create: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSuperviseesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSuperviseesInput, UserUncheckedUpdateWithoutSuperviseesInput>
-  }
-
-  export type UserUpdateWithoutSuperviseesInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    team?: TeamUpdateOneWithoutMembersNestedInput
-    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
-    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutSuperviseesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    teamId?: NullableIntFieldUpdateOperationsInput | number | null
-    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUpsertWithWhereUniqueWithoutSupervisorInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutSupervisorInput, UserUncheckedUpdateWithoutSupervisorInput>
-    create: XOR<UserCreateWithoutSupervisorInput, UserUncheckedCreateWithoutSupervisorInput>
-  }
-
-  export type UserUpdateWithWhereUniqueWithoutSupervisorInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutSupervisorInput, UserUncheckedUpdateWithoutSupervisorInput>
-  }
-
-  export type UserUpdateManyWithWhereWithoutSupervisorInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutSupervisorInput>
-  }
-
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: IntFilter<"User"> | number
-    name?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
-    email?: StringFilter<"User"> | string
-    role?: EnumRoleFilter<"User"> | $Enums.Role
-    teamId?: IntNullableFilter<"User"> | number | null
-    supervisorId?: IntNullableFilter<"User"> | number | null
-    createdAt?: DateTimeFilter<"User"> | Date | string
-  }
-
-  export type EvaluationUpsertWithWhereUniqueWithoutUserInput = {
-    where: EvaluationWhereUniqueInput
-    update: XOR<EvaluationUpdateWithoutUserInput, EvaluationUncheckedUpdateWithoutUserInput>
-    create: XOR<EvaluationCreateWithoutUserInput, EvaluationUncheckedCreateWithoutUserInput>
-  }
-
-  export type EvaluationUpdateWithWhereUniqueWithoutUserInput = {
-    where: EvaluationWhereUniqueInput
-    data: XOR<EvaluationUpdateWithoutUserInput, EvaluationUncheckedUpdateWithoutUserInput>
-  }
-
-  export type EvaluationUpdateManyWithWhereWithoutUserInput = {
-    where: EvaluationScalarWhereInput
-    data: XOR<EvaluationUpdateManyMutationInput, EvaluationUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type EvaluationScalarWhereInput = {
-    AND?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
-    OR?: EvaluationScalarWhereInput[]
-    NOT?: EvaluationScalarWhereInput | EvaluationScalarWhereInput[]
-    id?: IntFilter<"Evaluation"> | number
-    userId?: IntFilter<"Evaluation"> | number
-    supervisorId?: IntFilter<"Evaluation"> | number
-    semester?: StringFilter<"Evaluation"> | string
-    stage?: EnumStageFilter<"Evaluation"> | $Enums.Stage
-    criteria?: JsonFilter<"Evaluation">
-    createdAt?: DateTimeFilter<"Evaluation"> | Date | string
-  }
-
-  export type EvaluationUpsertWithWhereUniqueWithoutSupervisorInput = {
-    where: EvaluationWhereUniqueInput
-    update: XOR<EvaluationUpdateWithoutSupervisorInput, EvaluationUncheckedUpdateWithoutSupervisorInput>
-    create: XOR<EvaluationCreateWithoutSupervisorInput, EvaluationUncheckedCreateWithoutSupervisorInput>
-  }
-
-  export type EvaluationUpdateWithWhereUniqueWithoutSupervisorInput = {
-    where: EvaluationWhereUniqueInput
-    data: XOR<EvaluationUpdateWithoutSupervisorInput, EvaluationUncheckedUpdateWithoutSupervisorInput>
-  }
-
-  export type EvaluationUpdateManyWithWhereWithoutSupervisorInput = {
-    where: EvaluationScalarWhereInput
-    data: XOR<EvaluationUpdateManyMutationInput, EvaluationUncheckedUpdateManyWithoutSupervisorInput>
-  }
-
-  export type UserCreateWithoutTeamInput = {
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    createdAt?: Date | string
-    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
-    supervisees?: UserCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserUncheckedCreateWithoutTeamInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    supervisorId?: number | null
-    createdAt?: Date | string
-    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
-    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserCreateOrConnectWithoutTeamInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput>
-  }
-
-  export type UserCreateManyTeamInputEnvelope = {
-    data: UserCreateManyTeamInput | UserCreateManyTeamInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithWhereUniqueWithoutTeamInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutTeamInput, UserUncheckedUpdateWithoutTeamInput>
-    create: XOR<UserCreateWithoutTeamInput, UserUncheckedCreateWithoutTeamInput>
-  }
-
-  export type UserUpdateWithWhereUniqueWithoutTeamInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutTeamInput, UserUncheckedUpdateWithoutTeamInput>
-  }
-
-  export type UserUpdateManyWithWhereWithoutTeamInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutTeamInput>
-  }
-
-  export type UserCreateWithoutEvaluationsInput = {
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    createdAt?: Date | string
-    team?: TeamCreateNestedOneWithoutMembersInput
-    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
-    supervisees?: UserCreateNestedManyWithoutSupervisorInput
-    supervisedEvaluations?: EvaluationCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserUncheckedCreateWithoutEvaluationsInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    teamId?: number | null
-    supervisorId?: number | null
-    createdAt?: Date | string
-    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
-    supervisedEvaluations?: EvaluationUncheckedCreateNestedManyWithoutSupervisorInput
-  }
-
-  export type UserCreateOrConnectWithoutEvaluationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutEvaluationsInput, UserUncheckedCreateWithoutEvaluationsInput>
-  }
-
-  export type UserCreateWithoutSupervisedEvaluationsInput = {
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    createdAt?: Date | string
-    team?: TeamCreateNestedOneWithoutMembersInput
-    supervisor?: UserCreateNestedOneWithoutSuperviseesInput
-    supervisees?: UserCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutSupervisedEvaluationsInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    teamId?: number | null
-    supervisorId?: number | null
-    createdAt?: Date | string
-    supervisees?: UserUncheckedCreateNestedManyWithoutSupervisorInput
-    evaluations?: EvaluationUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutSupervisedEvaluationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
-  }
-
-  export type UserUpsertWithoutEvaluationsInput = {
-    update: XOR<UserUpdateWithoutEvaluationsInput, UserUncheckedUpdateWithoutEvaluationsInput>
-    create: XOR<UserCreateWithoutEvaluationsInput, UserUncheckedCreateWithoutEvaluationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutEvaluationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutEvaluationsInput, UserUncheckedUpdateWithoutEvaluationsInput>
-  }
-
-  export type UserUpdateWithoutEvaluationsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    team?: TeamUpdateOneWithoutMembersNestedInput
-    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
-    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
-    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutEvaluationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    teamId?: NullableIntFieldUpdateOperationsInput | number | null
-    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
-    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUpsertWithoutSupervisedEvaluationsInput = {
-    update: XOR<UserUpdateWithoutSupervisedEvaluationsInput, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
-    create: XOR<UserCreateWithoutSupervisedEvaluationsInput, UserUncheckedCreateWithoutSupervisedEvaluationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSupervisedEvaluationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSupervisedEvaluationsInput, UserUncheckedUpdateWithoutSupervisedEvaluationsInput>
-  }
-
-  export type UserUpdateWithoutSupervisedEvaluationsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    team?: TeamUpdateOneWithoutMembersNestedInput
-    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
-    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutSupervisedEvaluationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    teamId?: NullableIntFieldUpdateOperationsInput | number | null
-    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateManySupervisorInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    teamId?: number | null
-    createdAt?: Date | string
-  }
-
-  export type EvaluationCreateManyUserInput = {
-    id?: number
-    supervisorId: number
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type EvaluationCreateManySupervisorInput = {
-    id?: number
-    userId: number
-    semester: string
-    stage: $Enums.Stage
-    criteria: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type UserUpdateWithoutSupervisorInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    team?: TeamUpdateOneWithoutMembersNestedInput
-    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutSupervisorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    teamId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateManyWithoutSupervisorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    teamId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EvaluationUpdateWithoutUserInput = {
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisor?: UserUpdateOneRequiredWithoutSupervisedEvaluationsNestedInput
-  }
-
-  export type EvaluationUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    supervisorId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EvaluationUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    supervisorId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EvaluationUpdateWithoutSupervisorInput = {
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutEvaluationsNestedInput
-  }
-
-  export type EvaluationUncheckedUpdateWithoutSupervisorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EvaluationUncheckedUpdateManyWithoutSupervisorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
-    semester?: StringFieldUpdateOperationsInput | string
-    stage?: EnumStageFieldUpdateOperationsInput | $Enums.Stage
-    criteria?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserCreateManyTeamInput = {
-    id?: number
-    name: string
-    password: string
-    email: string
-    role: $Enums.Role
-    supervisorId?: number | null
-    createdAt?: Date | string
-  }
-
-  export type UserUpdateWithoutTeamInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisor?: UserUpdateOneWithoutSuperviseesNestedInput
-    supervisees?: UserUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutTeamInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    supervisees?: UserUncheckedUpdateManyWithoutSupervisorNestedInput
-    evaluations?: EvaluationUncheckedUpdateManyWithoutUserNestedInput
-    supervisedEvaluations?: EvaluationUncheckedUpdateManyWithoutSupervisorNestedInput
-  }
-
-  export type UserUncheckedUpdateManyWithoutTeamInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    supervisorId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
