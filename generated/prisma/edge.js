@@ -169,7 +169,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/gatesa/ITSC-Colab-15/generated/prisma",
+      "value": "/Users/singhr/ITSC-Colab/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -183,7 +183,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/gatesa/ITSC-Colab-15/prisma/schema.prisma",
+    "sourceFilePath": "/Users/singhr/ITSC-Colab/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

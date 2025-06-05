@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './App.css';
+import SignUp from './SignUp';
 
-const App = () => {
+const App: React.FC = () => {
   const [ message, setMessage ] = useState(``);
   const [ isLoading, setIsLoading ] = useState(false);
+  const [ isOpen, setIsOpen ] = useState(false);
 
   const PORT = 3001;
 
@@ -79,15 +81,25 @@ const App = () => {
     }
   };
 
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+
   return <div className="centered-page">
     <h1>UC Performance Review</h1>
     <div className="button-group">
-      <button onClick={handleSignUp} disabled={isLoading}>
+      <button onClick={togglePopup} disabled={isLoading}>
         {isLoading ? `Signing up...` : `Sign Up`}
       </button>
       <button onClick={handleLogin} disabled={isLoading}>
         {isLoading ? `Logging in...` : `Login`}
       </button>
+      {isOpen && (
+        <div>
+          <SignUp onSuccess={togglePopup} />
+          <button onClick={togglePopup}>Close</button>
+        </div>
+      )}
     </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
   </div>;

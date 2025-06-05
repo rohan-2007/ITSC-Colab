@@ -2,7 +2,11 @@
 import React, { useState } from 'react';
 import './App.css';
 
-const SignUp = () => {
+interface SignUpFormData {
+  onSuccess: () => void;
+}
+
+const SignUp: React.FC<SignUpFormData> = ({ onSuccess }) => {
   const [ formData, setFormData ] = useState({
     email: ``,
     isSupervisor: ``, // "yes" or "no"
@@ -51,6 +55,7 @@ const SignUp = () => {
     }));
   };
 
+  
   return <div className="page">
     <div className="signup-card">
       <h2>Sign Up</h2>
