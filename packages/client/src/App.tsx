@@ -4,7 +4,8 @@ import './App.css';
 const App: React.FC = () => {
   const [ message, setMessage ] = useState(``);
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ isOpen, setIsOpen ] = useState(false);
+  const [ isOpenSignup, setIsOpenSignup ] = useState(false);
+  const [ isOpenLogin, setIsOpenLogin ] = useState(false);
 
   const PORT = 3001;
 
@@ -88,9 +89,29 @@ const App: React.FC = () => {
     }
   };
 
-  const togglePopup = () => {
-    setIsOpen(!isOpen);
+  const togglePopupSignup = () => {
+    setIsOpenSignup(!isOpenSignup);
+    if (!isOpenSignup) {
+      document.getElementById(`signupMainBtn`)!.style.display = `none`;
+      document.getElementById(`loginMainBtn`)!.style.display = `none`;
+    } else {
+      document.getElementById(`signupMainBtn`)!.style.display = `block`;
+      document.getElementById(`loginMainBtn`)!.style.display = `block`;
+    }
   };
+
+  const togglePopupLogin = () => {
+    setIsOpenLogin(!isOpenLogin);
+    if (!isOpenLogin) {
+      document.getElementById(`loginMainBtn`)!.style.display = `none`;
+      document.getElementById(`signupMainBtn`)!.style.display = `none`;
+    } else {
+      document.getElementById(`loginMainBtn`)!.style.display = `block`;
+      document.getElementById(`signupMainBtn`)!.style.display = `block`;
+    }
+  };
+
+
 
   const [ errors, setErrors ] = useState({
     email: ``,
@@ -131,13 +152,13 @@ const App: React.FC = () => {
   return <div className="centered-page">
     <h1>UC Performance Review</h1>
     <div className="button-group">
-      <button onClick={togglePopup} disabled={isLoading}>
+      <button id="signupMainBtn" onClick={togglePopupSignup} disabled={isLoading}>
         {isLoading ? `Signing up...` : `Sign Up`}
       </button>
-      <button onClick={handleLogin} disabled={isLoading}>
+      <button id="loginMainBtn" onClick={togglePopupLogin} disabled={isLoading}>
         {isLoading ? `Logging in...` : `Login`}
       </button>
-      {isOpen &&
+      {isOpenSignup &&
         <div>
           <div className="page">
             <div className="signup-card">
@@ -196,10 +217,33 @@ const App: React.FC = () => {
                 {errors.teamId && <div className="error">{errors.teamId}</div>}
 
                 <button type="submit" onClick={handleSignUp}>Sign Up</button>
+                <button onClick={togglePopupSignup}>Close</button>
               </form>
             </div>
           </div>
-          <button onClick={togglePopup}>Close</button>
+        </div>}
+      {isOpenLogin &&
+        <div>
+          <div className="page">
+            <div className="signup-card">
+              <h2>Login</h2>
+              <form onSubmit={handleSubmit}>
+      
+
+                <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} />
+                {errors.email && <div className="error">{errors.email}</div>}
+              
+                <span>Password:</span>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} />
+                {errors.password && <div className="error">{errors.password}</div>}
+
+
+                <button type="submit" onClick={handleSignUp}>Sign Up</button>
+                <button onClick={togglePopupLogin}>Close</button>
+              </form>
+            </div>
+          </div>
         </div>}
     </div>
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
