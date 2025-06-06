@@ -33,6 +33,7 @@ const App: React.FC = () => {
     try {
       const response = await fetch(`http://localhost:${PORT}/signup/`, {
         body: JSON.stringify(formData),
+        credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
 
@@ -69,6 +70,7 @@ const App: React.FC = () => {
     try {
       const response = await fetch(`http://localhost:${PORT}/login/`, {
         body: JSON.stringify(loginData),
+        credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });

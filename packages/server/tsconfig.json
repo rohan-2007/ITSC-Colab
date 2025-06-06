@@ -12,6 +12,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "es6",
+    "typeRoots": ["./node_modules/@types", "./types"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -19,6 +20,7 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src"
+    "src",
+    "types/express-session/index.d.ts"
   ]
 }

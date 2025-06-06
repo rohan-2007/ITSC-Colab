@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { JsonObject } from '@prisma/client/runtime/library';
 import { Semester } from '../../../../generated/prisma';
 import prisma from '../prisma';
+import { requireAuth } from './auth';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ interface EvaluationBody {
   userId: number;
 }
 
-router.post(`/submitEval`, async (
+router.post(`/submitEval`, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
 ): Promise<void> => {
@@ -55,7 +56,7 @@ router.post(`/submitEval`, async (
   }
 });
 
-router.get(`/getEval`, async (
+router.get(`/getEval`, requireAuth, async (
   req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {

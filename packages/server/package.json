@@ -16,7 +16,9 @@
     "@eslint/compat": "^1.2.9",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.27.0",
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.18",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.15.24",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -33,7 +35,9 @@
   },
   "dependencies": {
     "@types/express": "^5.0.2",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-session": "^1.18.1"
   }
 }
