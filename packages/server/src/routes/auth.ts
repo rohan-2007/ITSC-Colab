@@ -10,20 +10,42 @@ interface SignupRequestBody {
   name: string;
   password: string;
   role: keyof typeof Role;
-  supervisorId?: number;
-  teamId?: number;
+  supervisorEmail?: string;
+  teamName?: string;
 }
 
 router.post(`/signup`, async (
   req: Request<unknown, unknown, SignupRequestBody>,
   res: Response,
 ) => {
-  const { email, name, password, role, supervisorId } = req.body;
+  const { email, name, password, role, supervisorEmail, teamName } = req.body;
 
   try {
     const existingUser: PrismaUser | null = await prisma.user.findUnique({
       where: { email },
     });
+
+    let supervisorId: number | null = null;
+    let teamId: number | null = null;
+
+    if (supervisorEmail && typeof supervisorEmail === `string`) {
+      const supervisor = await prisma.user.findUnique({ where: { email: supervisorEmail } });
+      if (!supervisor) {
+        res.status(400).json({ error: `Supervisor with email '${ supervisorEmail }' not found` });
+        return;
+      }
+      supervisorId = supervisor.id;
+    }
+
+    // Validate team
+    if (teamName && typeof teamName === `string`) {
+      const team = await prisma.team.findUnique({ where: { name: teamName } });
+      if (!team) {
+        res.status(400).json({ error: `Team with name '${ teamName }' not found` });
+        return;
+      }
+      teamId = team.id;
+    }
 
     if (!Object.values(Role).includes(role as Role)) {
       res.status(400).json({ error: `Invalid role` });
@@ -36,9 +58,8 @@ router.post(`/signup`, async (
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const teamIdRaw = req.body.teamId || -1;
     const supervisorIdClean = Number(supervisorId);
-    const teamIdClean = Number(teamIdRaw);
+    const teamIdClean = Number(teamId);
 
     const newUser: PrismaUser = await prisma.user.create({
       data: {
