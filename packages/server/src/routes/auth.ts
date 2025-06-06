@@ -25,15 +25,30 @@ router.post(`/signup`, async (
       where: { email },
     });
 
+    if (!Object.values(Role).includes(role as Role)) {
+      res.status(400).json({ error: `Invalid role` });
+      return;
+    }
+
     if (existingUser) {
       res.status(400).json({ error: `Email in use` });
       return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const teamIdRaw = req.body.teamId || -1;
+    const supervisorIdClean = Number(supervisorId);
+    const teamIdClean = Number(teamIdRaw);
 
     const newUser: PrismaUser = await prisma.user.create({
-      data: { email, name, password: hashedPassword, role, supervisorId, teamId: null },
+      data: {
+        email,
+        name,
+        password: hashedPassword,
+        role,
+        supervisorId: supervisorIdClean,
+        teamId: teamIdClean,
+      },
     });
 
     res.status(201).json({

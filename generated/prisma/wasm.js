@@ -140,21 +140,11 @@ exports.Prisma.TeamScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SemesterScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  isCurrent: 'isCurrent',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.EvaluationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   supervisorId: 'supervisorId',
-  semesterId: 'semesterId',
+  semester: 'semester',
   type: 'type',
   criteria: 'criteria',
   createdAt: 'createdAt',
@@ -190,10 +180,15 @@ exports.Role = exports.$Enums.Role = {
   STUDENT: 'STUDENT'
 };
 
+exports.Semester = exports.$Enums.Semester = {
+  SPRING: 'SPRING',
+  SUMMER: 'SUMMER',
+  FALL: 'FALL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Team: 'Team',
-  Semester: 'Semester',
   Evaluation: 'Evaluation'
 };
 
