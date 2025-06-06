@@ -161,7 +161,7 @@ const App: React.FC = () => {
           <div className="page">
             <div className="signup-card">
               <h2>Sign Up</h2>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSignUp}>
                 <span>First/Last Name:</span>
                 <input type="text" name="name" value={formData.name} onChange={handleChange} />
                 {errors.name && <div className="error">{errors.name}</div>}
@@ -225,8 +225,7 @@ const App: React.FC = () => {
           <div className="page">
             <div className="signup-card">
               <h2>Login</h2>
-              <form onSubmit={handleSubmit}>
-
+              <form onSubmit={handleLogin}>
                 <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} />
                 {errors.email && <div className="error">{errors.email}</div>}
