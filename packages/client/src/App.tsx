@@ -20,6 +20,7 @@ const App: React.FC = () => {
   });
 
   async function handleSignUp() {
+    validate();
     setIsLoading(true);
     setMessage(`Sending signup request...`);
 
@@ -56,6 +57,7 @@ const App: React.FC = () => {
   };
 
   const handleLogin = async () => {
+    validate();
     setIsLoading(true);
     setMessage(`Sending login request...`);
 
@@ -134,9 +136,6 @@ const App: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      alert(`Signed Up`);
-    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -226,7 +225,6 @@ const App: React.FC = () => {
             <div className="signup-card">
               <h2>Login</h2>
               <form onSubmit={handleSubmit}>
-
                 <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} />
                 {errors.email && <div className="error">{errors.email}</div>}
