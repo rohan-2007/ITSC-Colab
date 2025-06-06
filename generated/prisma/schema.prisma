@@ -41,7 +41,7 @@ model Evaluation {
   userId       Int
   supervisorId Int
   semester     Semester
-  type         String   @default("SELF")
+  type         Role
   criteria     Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

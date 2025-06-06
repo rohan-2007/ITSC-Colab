@@ -3228,7 +3228,7 @@ export namespace Prisma {
     userId: number | null
     supervisorId: number | null
     semester: $Enums.Semester | null
-    type: string | null
+    type: $Enums.Role | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3238,7 +3238,7 @@ export namespace Prisma {
     userId: number | null
     supervisorId: number | null
     semester: $Enums.Semester | null
-    type: string | null
+    type: $Enums.Role | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3391,7 +3391,7 @@ export namespace Prisma {
     userId: number
     supervisorId: number
     semester: $Enums.Semester
-    type: string
+    type: $Enums.Role
     criteria: JsonValue
     createdAt: Date
     updatedAt: Date
@@ -3470,7 +3470,7 @@ export namespace Prisma {
       userId: number
       supervisorId: number
       semester: $Enums.Semester
-      type: string
+      type: $Enums.Role
       criteria: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
@@ -3901,7 +3901,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Evaluation", 'Int'>
     readonly supervisorId: FieldRef<"Evaluation", 'Int'>
     readonly semester: FieldRef<"Evaluation", 'Semester'>
-    readonly type: FieldRef<"Evaluation", 'String'>
+    readonly type: FieldRef<"Evaluation", 'Role'>
     readonly criteria: FieldRef<"Evaluation", 'Json'>
     readonly createdAt: FieldRef<"Evaluation", 'DateTime'>
     readonly updatedAt: FieldRef<"Evaluation", 'DateTime'>
@@ -4607,7 +4607,7 @@ export namespace Prisma {
     userId?: IntFilter<"Evaluation"> | number
     supervisorId?: IntFilter<"Evaluation"> | number
     semester?: EnumSemesterFilter<"Evaluation"> | $Enums.Semester
-    type?: StringFilter<"Evaluation"> | string
+    type?: EnumRoleFilter<"Evaluation"> | $Enums.Role
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
@@ -4632,7 +4632,7 @@ export namespace Prisma {
     userId?: IntFilter<"Evaluation"> | number
     supervisorId?: IntFilter<"Evaluation"> | number
     semester?: EnumSemesterFilter<"Evaluation"> | $Enums.Semester
-    type?: StringFilter<"Evaluation"> | string
+    type?: EnumRoleFilter<"Evaluation"> | $Enums.Role
     criteria?: JsonFilter<"Evaluation">
     createdAt?: DateTimeFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeFilter<"Evaluation"> | Date | string
@@ -4662,7 +4662,7 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"Evaluation"> | number
     supervisorId?: IntWithAggregatesFilter<"Evaluation"> | number
     semester?: EnumSemesterWithAggregatesFilter<"Evaluation"> | $Enums.Semester
-    type?: StringWithAggregatesFilter<"Evaluation"> | string
+    type?: EnumRoleWithAggregatesFilter<"Evaluation"> | $Enums.Role
     criteria?: JsonWithAggregatesFilter<"Evaluation">
     createdAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
@@ -4806,7 +4806,7 @@ export namespace Prisma {
     userId: number
     supervisorId: number
     semester: $Enums.Semester
-    type?: string
+    type: $Enums.Role
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4817,7 +4817,7 @@ export namespace Prisma {
     userId: number
     supervisorId: number
     semester: $Enums.Semester
-    type?: string
+    type: $Enums.Role
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4827,7 +4827,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4838,7 +4838,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4849,7 +4849,7 @@ export namespace Prisma {
     userId: number
     supervisorId: number
     semester: $Enums.Semester
-    type?: string
+    type: $Enums.Role
     criteria: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4859,7 +4859,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4870,7 +4870,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     supervisorId?: IntFieldUpdateOperationsInput | number
     semester?: EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     criteria?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

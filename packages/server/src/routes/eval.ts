@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { JsonObject } from '@prisma/client/runtime/library';
-import { Semester } from '../../../../generated/prisma';
+import { Role, Semester } from '../../../../generated/prisma';
 import prisma from '../prisma';
 import { requireAuth } from './auth';
 
@@ -8,7 +8,7 @@ const router = Router();
 
 interface EvaluationBody {
   criteria: JsonObject;
-  evaluationType: string;
+  evaluationType: keyof typeof Role;
   semester: keyof typeof Semester;
   supervisorId: number;
   userId: number;
