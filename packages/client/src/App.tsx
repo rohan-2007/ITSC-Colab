@@ -111,8 +111,6 @@ const App: React.FC = () => {
     }
   };
 
-
-
   const [ errors, setErrors ] = useState({
     email: ``,
     name: ``,
@@ -228,18 +226,16 @@ const App: React.FC = () => {
             <div className="signup-card">
               <h2>Login</h2>
               <form onSubmit={handleSubmit}>
-      
 
                 <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} />
                 {errors.email && <div className="error">{errors.email}</div>}
-              
+
                 <span>Password:</span>
                 <input type="password" name="password" value={formData.password} onChange={handleChange} />
                 {errors.password && <div className="error">{errors.password}</div>}
 
-
-                <button type="submit" onClick={handleSignUp}>Sign Up</button>
+                <button type="submit" onClick={handleLogin}>Login</button>
                 <button onClick={togglePopupLogin}>Close</button>
               </form>
             </div>

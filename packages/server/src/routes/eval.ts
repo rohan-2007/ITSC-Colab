@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { JsonObject } from '@prisma/client/runtime/library';
+import { Semester } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 const router = Router();
@@ -7,7 +8,7 @@ const router = Router();
 interface EvaluationBody {
   criteria: JsonObject;
   evaluationType: string;
-  semesterId: number;
+  semester: keyof typeof Semester;
   supervisorId: number;
   userId: number;
 }
@@ -17,7 +18,7 @@ router.post(`/submitEval`, async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, evaluationType, semesterId, supervisorId, userId } = req.body;
+    const { criteria, evaluationType, semester, supervisorId, userId } = req.body;
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -30,7 +31,7 @@ router.post(`/submitEval`, async (
     const newEval = await prisma.evaluation.create({
       data: {
         criteria,
-        semesterId,
+        semester,
         supervisorId,
         type: evaluationType,
         userId,
@@ -41,7 +42,7 @@ router.post(`/submitEval`, async (
       eval: {
         id: newEval.id,
         createdAt: newEval.createdAt,
-        semesterId,
+        semester,
         supervisorId: newEval.supervisorId,
         userId: newEval.userId,
       },

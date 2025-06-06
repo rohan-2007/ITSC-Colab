@@ -30,21 +30,17 @@ model Team {
   updatedAt DateTime @updatedAt
 }
 
-model Semester {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  startDate DateTime
-  endDate   DateTime
-  isCurrent Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Semester {
+  SPRING
+  SUMMER
+  FALL
 }
 
 model Evaluation {
   id           Int      @id @default(autoincrement())
   userId       Int
   supervisorId Int
-  semesterId   Int
+  semester     Semester
   type         String   @default("SELF")
   criteria     Json
   createdAt    DateTime @default(now())
