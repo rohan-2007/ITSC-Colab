@@ -9,3 +9,4 @@ README.md
 /generated/prisma/
 /.vscode/
 /packages/client/node_modules/
+generated/
