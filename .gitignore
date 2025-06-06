@@ -6,7 +6,3 @@ README.md
 /packages/server/.env
 /packages/server/dist/
 /prisma/.env
-/generated/prisma/
-/.vscode/
-/packages/client/node_modules/
-generated/

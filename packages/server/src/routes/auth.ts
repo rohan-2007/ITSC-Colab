@@ -1,7 +1,15 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Role } from '../../../../generated/prisma';
 import prisma from '../prisma';
+// middleware auth
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session.userId) {
+    res.status(401).json({ error: `Not authenticated` });
+    return;
+  }
+  next();
+};
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const router = Router();
@@ -71,7 +79,7 @@ router.post(`/signup`, async (
         teamId: teamIdClean,
       },
     });
-
+    req.session.userId = newUser.id;
     res.status(201).json({
       message: `User created`,
       user: { id: newUser.id, email: newUser.email, name: newUser.name },
@@ -110,13 +118,50 @@ router.post(`/login`, async (
       res.status(401).json({ error: `Invalid credentials` });
       return;
     }
-
+    req.session.userId = user.id;
     res.status(200).json({
       message: `Login successful`,
       user: { id: user.id, name: user.name },
     });
   } catch (err) {
     console.error(`Login error:`, err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: `Internal server error` });
+    }
+  }
+});
+
+interface UserInfoBody {
+  userId: number;
+}
+
+router.post(`/me`, requireAuth, async (
+  req: Request<unknown, unknown, UserInfoBody>,
+  res: Response,
+) => {
+  const { userId } = req.body;
+
+  try {
+    const user: PrismaUser | null = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      res.status(404).json({ error: `User not found` });
+      return;
+    }
+
+    if (user.id !== req.session.userId) {
+      res.status(403).json({ error: `Forbidden` });
+      return;
+    }
+
+    res.status(200).json({
+      message: `Fetched user info`,
+      user: { email: user.email, name: user.name, role: user.role, userId: user.id },
+    });
+  } catch (err) {
+    console.error(`Fetch error:`, err);
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
