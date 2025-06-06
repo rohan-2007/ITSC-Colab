@@ -20,7 +20,7 @@ const App: React.FC = () => {
   });
 
   async function handleSignUp() {
-    validate();
+    validateSignUp();
     setIsLoading(true);
     setMessage(`Sending signup request...`);
 
@@ -57,7 +57,7 @@ const App: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    validate();
+    validateLogin();
     setIsLoading(true);
     setMessage(`Sending login request...`);
 
@@ -113,7 +113,7 @@ const App: React.FC = () => {
     }
   };
 
-  const [ errors, setErrors ] = useState({
+  const [ signupErrors, setSignupErrors ] = useState({
     email: ``,
     name: ``,
     password: ``,
@@ -121,7 +121,12 @@ const App: React.FC = () => {
     teamId: ``,
   });
 
-  const validate = () => {
+  const [ loginErrors, setLoginErrors ] = useState({
+    email: ``,
+    password: ``,
+  });
+
+  const validateSignUp = () => {
     const newErrors = {
       email: formData.email ? `` : `Email is required.`,
       name: formData.name ? `` : `Name is required.`,
@@ -130,7 +135,16 @@ const App: React.FC = () => {
         formData.supervisorId ? `` : formData.supervisorId ? `` : `Supervisor is required.`,
       teamId: formData.teamId ? `` : `Team is required.`,
     };
-    setErrors(newErrors);
+    setSignupErrors(newErrors);
+    return Object.values(newErrors).every((e) => e === ``);
+  };
+
+  const validateLogin = () => {
+    const newErrors = {
+      email: formData.email ? `` : `Email is required.`,
+      password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
+    };
+    setLoginErrors(newErrors);
     return Object.values(newErrors).every((e) => e === ``);
   };
 
@@ -163,15 +177,15 @@ const App: React.FC = () => {
               <form onSubmit={handleSubmit}>
                 <span>First/Last Name:</span>
                 <input type="text" name="name" value={formData.name} onChange={handleChange} />
-                {errors.name && <div className="error">{errors.name}</div>}
+                {signupErrors.name && <div className="error">{signupErrors.name}</div>}
 
                 <span>Password:</span>
                 <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                {errors.password && <div className="error">{errors.password}</div>}
+                {signupErrors.password && <div className="error">{signupErrors.password}</div>}
 
                 <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                {errors.email && <div className="error">{errors.email}</div>}
+                {signupErrors.email && <div className="error">{signupErrors.email}</div>}
 
                 <span>Are you a supervisor?</span>
                 <div className="radio-group">
@@ -206,12 +220,12 @@ const App: React.FC = () => {
                       value={formData.supervisorId}
                       onChange={handleChange}
                     />
-                    {errors.supervisorId && <div className="error">{errors.supervisorId}</div>}
+                    {signupErrors.supervisorId && <div className="error">{signupErrors.supervisorId}</div>}
                   </>}
 
                 <span>Team Name:</span>
                 <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
-                {errors.teamId && <div className="error">{errors.teamId}</div>}
+                {signupErrors.teamId && <div className="error">{signupErrors.teamId}</div>}
 
                 <button type="submit" onClick={handleSignUp}>Sign Up</button>
                 <button onClick={togglePopupSignup}>Close</button>
@@ -227,11 +241,11 @@ const App: React.FC = () => {
               <form onSubmit={handleSubmit}>
                 <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                {errors.email && <div className="error">{errors.email}</div>}
+                {loginErrors.email && <div className="error">{loginErrors.email}</div>}
 
                 <span>Password:</span>
                 <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                {errors.password && <div className="error">{errors.password}</div>}
+                {loginErrors.password && <div className="error">{loginErrors.password}</div>}
 
                 <button type="submit" onClick={handleLogin}>Login</button>
                 <button onClick={togglePopupLogin}>Close</button>
