@@ -9,11 +9,14 @@ import cors from 'cors';
 import authRouter from './routes/auth'; // Import the router
 
 const app = express();
-// const cookieParser = cookieParser();
-const clientURL = `http://localhost:5173`;
+const clientURLs = [
+  `http://localhost:5173`,
+  `http://10.244.14.191:5173`,
+];
+
 app.use(cors({
   credentials: true,
-  origin: clientURL,
+  origin: clientURLs,
 }));
 const PORT = 3001;
 
@@ -47,7 +50,7 @@ app.use(express.json()); // Use JSON middleware you slugs
 app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, `0.0.0.0`, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server running on http://localhost:${ PORT }`);
+  console.log(`Server running on http://0.0.0.0:${ PORT } (likely 10.244.14.191)`);
 });
