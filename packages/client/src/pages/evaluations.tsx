@@ -3,17 +3,67 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useState } from 'react';
+import React, { JSX, useEffect, useRef, useState } from 'react';
 import './evaluations.css';
 
 const Evaluations: React.FC = () => {
+  // interface DropdownProps {
+  //   onSelect: (value: string) => void;
+  //   options: string[];
+  // }
+
+  // const [ isOpenSemesterSelect, setIsOpenSemesterSelect ] = useState(false);
+  // const [ selectedValue, setSelectedValue ] = useState(``);
+  // const dropdownRef = useRef<HTMLDivElement>(null);
+  const toggleDropdown = () => setIsOpenSemesterSelect((prev) => !prev);
+  const closeDropdown = () => setShowDropDown(false);
+
+  // const handleSelect = (value: string) => {
+  //   setSelectedValue(value);
+  //   onselect(value);
+  //   setIsOpenSemesterSelect(false);
+  // };
+
+  // const handleClickOutside = (event: MouseEvent) => {
+  //   if ()
+  // }
+
   const PORT = 3001;
+
+  const currentDate = () => {
+    const date = new Date();
+    return date;
+  };
+
+  const assignSemester = () => {
+    const today: Date = currentDate();
+    const dateOnly = today.toLocaleDateString(`en-GB`);
+    const year = today.getFullYear().toString();
+    const summerStart = `12/05/${year}`;
+    const summerEnd = `09/08/${year}`;
+    const fallStart = `25/08/${year}`;
+    const fallEnd = `05/12/${year}`;
+    const springStart = `12/01/${year + 1}`;
+    const springEnd = `24/04/${year + 1}`;
+
+    if (dateOnly >= summerStart && dateOnly <= summerEnd) {
+      return `SUMMER`;
+    } else if (dateOnly >= fallStart && dateOnly <= fallEnd) {
+      return `FALL`;
+    } else if (dateOnly >= springStart && dateOnly <= springEnd) {
+      return `SPRING`;
+    }
+    return `UNKNOWN`;
+  };
 
   const handleEvalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    currentDate();
     console.log(`f`);
     console.log(`criteria1: ${criteria1}`);
     console.log(`criteria2: ${criteria2}`);
+    console.log(`criteria3: ${criteria3}`);
+    console.log(`criteria4: ${criteria4}`);
 
     try {
       const res = await fetch(`http://localhost:${PORT}/me/`, {
@@ -31,9 +81,11 @@ const Evaluations: React.FC = () => {
         criteria: {
           criteria1,
           criteria2,
+          criteria3,
+          criteria4,
         },
         evaluationType: resJson.user.role,
-        semester: `FALL`,
+        semester: assignSemester(),
         supervisorId: resJson.user.supervisorId,
         userId: resJson.user.userId,
       };
@@ -61,8 +113,87 @@ const Evaluations: React.FC = () => {
   const [ criteria3, setCriteria3 ] = useState(`starting`);
   const [ criteria4, setCriteria4 ] = useState(`starting`);
 
+  const [ showDropDown, setShowDropDown ] = useState(false);
+  const [ selectedSemester, setSelectedSemester ] = useState(``);
+
+  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === `Enter` || e.key === ` `) {
+  //     toggleDropdown();
+  //   } else if (e.key === `Escape`) {
+  //     closeDropdown();
+  //   }
+  // };
+
+  const semesters = [ `SPRING`, `FALL`, `SUMMER` ];
+
+  const [ isOpenSemesterSelect, setIsOpenSemesterSelect ] = useState(true);
+
+  // const toggleDropdown = () => setIsOpen(prev => !prev);
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === `Enter` || event.key === ` `) {
+      toggleDropdown();
+    } else if (event.key === `Escape`) {
+      setIsOpenSemesterSelect(false);
+    }
+  };
+
+  const onClickHandler = (semester: string): void => {
+    setSelectedSemester(semester);
+  };
+
+  useEffect(() => {
+    setShowDropDown(showDropDown);
+  }, [ showDropDown ]);
+
   return <div className="evalContainer">
+
+    <div
+      tabIndex={0}
+      onClick={toggleDropdown}
+      onKeyDown={handleKeyDown}
+      role="button"
+      aria-expanded={isOpenSemesterSelect}
+      aria-haspopup="listbox"
+    >
+      Select Option
+    </div>
+    {isOpenSemesterSelect &&
+      <ul role="listbox">
+        {semesters.map((option, index) =>
+          <li
+            // key={index}
+            role="option"
+            tabIndex={0}
+            aria-selected={selectedSemester === option}
+            onClick={() => onClickHandler(option)}
+            onKeyDown={(e) => {
+              if (e.key === `Enter` || e.key === ` `) {
+                onClickHandler(option);
+              }
+            }}
+          >
+            {option}
+          </li>)}
+      </ul>}
+
     <form>
+
+      {/* <div tabIndex={0} onKeyDown={handleKeyDown} className={showDropDown ? `dropdown` : `dropdown active`}>
+        {semesters.map(
+          (city: string, index: number): JSX.Element =>
+            <p
+              key={index}
+              onClick={(): void => {
+                onClickHandler(city);
+              }}
+              onKeyDown={handleKeyDown}
+            >
+              {city}
+            </p>,
+        )}
+      </div> */}
+
       <fieldset className="criteria">
         <legend>Critical Thinking/Problem Solving:</legend>
         <label className="evaluation-btn">
@@ -201,31 +332,6 @@ const Evaluations: React.FC = () => {
 
       <button type="submit" onClick={handleEvalSubmit}>Submit</button>
     </form>
-
-    {/* <span>Teamwork:</span>
-      <div className="evaluation-btn-group">
-        <div className="evaluation-btn">
-          Starting
-        </div>
-        <div className="evaluation-btn">
-          In Progress
-        </div>
-        <div className="evaluation-btn">
-          Competitive
-        </div>
-      </div>
-      <span>Personal Disposition:</span>
-      <div className="evaluation-btn-group">
-        <div className="evaluation-btn">
-          Starting
-        </div>
-        <div className="evaluation-btn">
-          In Progress
-        </div>
-        <div className="evaluation-btn">
-          Competitive
-        </div>
-      </div> */}
   </div>;
 };
 
