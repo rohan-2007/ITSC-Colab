@@ -13,7 +13,8 @@ import Evaluations from './pages/evaluations';
 const App: React.FC = () =>
   <Layout>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
