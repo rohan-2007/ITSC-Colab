@@ -3,10 +3,9 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import About from './pages/About';
-import NotFoundPage from './pages/Contact';
+import NotFoundPage from './pages/PastEvaluations';
 import Layout from './layouts/Layout';
-import Contact from './pages/Contact';
+import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
 import Evaluations from './pages/evaluations';
 
@@ -15,8 +14,7 @@ const App: React.FC = () =>
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="/contact" element={<PastEvaluations />} />
       <Route path="/login" element={<Login />} />
       <Route path="/evaluations" element={<Evaluations />} />
       <Route path="*" element={<NotFoundPage />} />
