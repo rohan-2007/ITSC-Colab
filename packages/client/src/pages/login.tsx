@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FormEvent, useState } from 'react';
 import './login.css';
 
@@ -87,7 +88,7 @@ const Login: React.FC = () => {
         const responseJson = await response.json();
 
         setMessage(`Login success: ${responseText}`);
-        setProfileText(`Hi, ${responseJson.user.name}`) 
+        setProfileText(`Hi, ${responseJson.user.name}`);
       } catch (error) {
         if (error instanceof Error) {
           setMessage(`Login error: ${error.message}`);
@@ -171,106 +172,105 @@ const Login: React.FC = () => {
 
   return <div className="centered-page">
     {!isOpenSignup && !isOpenLogin &&
-    <div>
-      <h1>UC Performance Review</h1>
-      <div className="button-group">
-        <button id="signupMainBtn" onClick={togglePopupSignup} disabled={isLoading}>
-          {isLoading ? `Signing up...` : `Sign Up`}
-        </button>
-        <button id="loginMainBtn" onClick={togglePopupLogin} disabled={isLoading}>
-          {isLoading ? `Logging in...` : `Login`}
-        </button>
+      <div>
+        <h1>UC Performance Review</h1>
+        <div className="button-group">
+          <button id="signupMainBtn" onClick={togglePopupSignup} disabled={isLoading}>
+            {isLoading ? `Signing up...` : `Sign Up`}
+          </button>
+          <button id="loginMainBtn" onClick={togglePopupLogin} disabled={isLoading}>
+            {isLoading ? `Logging in...` : `Login`}
+          </button>
         </div>
       </div>}
-      {isOpenSignup &&
-        // <div>
-          <div className="page">
-            <div className="signup-card">
-              <h2>Sign Up</h2>
-              <form onSubmit={handleSubmit}>
-                <span>First/Last Name:</span>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} />
-                {signupErrors.name && <div className="error">{signupErrors.name}</div>}
+    {isOpenSignup &&
+    // <div>
+      <div className="page">
+        <div className="signup-card">
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSubmit}>
+            <span>First/Last Name:</span>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} />
+            {signupErrors.name && <div className="error">{signupErrors.name}</div>}
 
-                <span>Password:</span>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                {signupErrors.password && <div className="error">{signupErrors.password}</div>}
+            <span>Password:</span>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} />
+            {signupErrors.password && <div className="error">{signupErrors.password}</div>}
 
-                <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                {signupErrors.email && <div className="error">{signupErrors.email}</div>}
+            <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} />
+            {signupErrors.email && <div className="error">{signupErrors.email}</div>}
 
-                
-                <div className="radio-group">
-                  <span>Are you a supervisor?</span>
-                  <span>
-                    <input
-                      type="radio"
-                      name="isSupervisor"
-                      value="true"
-                      checked={formData.isSupervisor}
-                      onChange={handleChange}
-                    />
-                    Yes
-                  </span>
-                  <span>
-                    <input
-                      type="radio"
-                      name="isSupervisor"
-                      value="false"
-                      checked={!formData.isSupervisor}
-                      onChange={handleChange}
-                    />
-                    No
-                  </span>
-                </div>
-
-                {!formData.isSupervisor &&
-                  <>
-                    <span>Supervisor ID:</span>
-                    <input
-                      type="text"
-                      name="supervisorId"
-                      value={formData.supervisorId}
-                      onChange={handleChange}
-                    />
-                    {signupErrors.supervisorId && <div className="error">{signupErrors.supervisorId}</div>}
-                  </>}
-
-                <span>Team Name:</span>
-                <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
-                {signupErrors.teamId && <div className="error">{signupErrors.teamId}</div>}
-
-                <div className='submit-signup-login-group'>
-                  <button type="submit" onClick={handleSignUp}>Sign Up</button>
-                  <button onClick={togglePopupSignup}>Close</button>
-                </div>
-              </form>
+            <div className="radio-group">
+              <span>Are you a supervisor?</span>
+              <span>
+                <input
+                  type="radio"
+                  name="isSupervisor"
+                  value="true"
+                  checked={formData.isSupervisor}
+                  onChange={handleChange}
+                />
+                Yes
+              </span>
+              <span>
+                <input
+                  type="radio"
+                  name="isSupervisor"
+                  value="false"
+                  checked={!formData.isSupervisor}
+                  onChange={handleChange}
+                />
+                No
+              </span>
             </div>
-          {/* </div> */}
-        </div>}
-      {isOpenLogin &&
-        <div>
-          <div className="page">
-            <div className="signup-card">
-              <h2>Login</h2>
-              <form onSubmit={handleSubmit}>
-                <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                {loginErrors.email && <div className="error">{loginErrors.email}</div>}
 
-                <span>Password:</span>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} />
-                {loginErrors.password && <div className="error">{loginErrors.password}</div>}
+            {!formData.isSupervisor &&
+              <>
+                <span>Supervisor ID:</span>
+                <input
+                  type="text"
+                  name="supervisorId"
+                  value={formData.supervisorId}
+                  onChange={handleChange}
+                />
+                {signupErrors.supervisorId && <div className="error">{signupErrors.supervisorId}</div>}
+              </>}
 
-                <div className='submit-signup-login-group'>
-                  <button type="submit" onClick={handleLogin}>Login</button>
-                  <button onClick={togglePopupLogin}>Close</button>
-                </div>
-              </form>
+            <span>Team Name:</span>
+            <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
+            {signupErrors.teamId && <div className="error">{signupErrors.teamId}</div>}
+
+            <div className="submit-signup-login-group">
+              <button type="submit" onClick={handleSignUp}>Sign Up</button>
+              <button onClick={togglePopupSignup}>Close</button>
             </div>
+          </form>
+        </div>
+        {/* </div> */}
+      </div>}
+    {isOpenLogin &&
+      <div>
+        <div className="page">
+          <div className="signup-card">
+            <h2>Login</h2>
+            <form onSubmit={handleSubmit}>
+              <span>{formData.isSupervisor ? `Supervisor Email:` : `UC Email:`}</span>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} />
+              {loginErrors.email && <div className="error">{loginErrors.email}</div>}
+
+              <span>Password:</span>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} />
+              {loginErrors.password && <div className="error">{loginErrors.password}</div>}
+
+              <div className="submit-signup-login-group">
+                <button type="submit" onClick={handleLogin}>Login</button>
+                <button onClick={togglePopupLogin}>Close</button>
+              </div>
+            </form>
           </div>
-        </div>}
+        </div>
+      </div>}
     <div style={{ color: `gray`, marginTop: `1rem` }}>{message}</div>
   </div>;
 };
