@@ -139,8 +139,6 @@ router.post(`/me`, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
-  const { returnData } = req.body;
-
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
       where: { id: req.session.userId },
@@ -155,11 +153,13 @@ router.post(`/me`, requireAuth, async (
       res.status(403).json({ error: `Forbidden` });
       return;
     }
-    if (returnData) {
-      res.status(200).json({
-        message: `Fetched user info`,
-        user: { email: user.email, name: user.name, role: user.role, userId: user.id },
-      });
+    if (req.body) {
+      if (req.body.returnData) {
+        res.status(200).json({
+          message: `Fetched user info`,
+          user: { email: user.email, name: user.name, role: user.role, userId: user.id },
+        });
+      }
     } else {
       res.status(200).json({
         message: `User session found`,

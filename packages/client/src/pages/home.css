@@ -1,155 +1,34 @@
-.home-container {
- display: flex;
- flex-direction: column;
- min-height: 100vh;
- font-family: Arial, sans-serif;
+.user-stats {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+  gap: 40px;
 }
 
-
-
-
-.navbar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 16px 40px;
-background-color: white;
-border-bottom: 4px solid #f44336;
-width: 100vw;
+.stat {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px 30px;
+  border-radius: 10px;
+  width: 140px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
 }
 
-
-.nav-left,
-.nav-center,
-.nav-right {
- flex: 1;
- display: flex;
- align-items: center;
+.stat h2 {
+  font-size: 28px;
+  margin: 0;
+  color: #f44336;
 }
 
-
-.nav-left {
- justify-content: flex-start;
+.stat p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
 }
 
-
-.nav-center {
- justify-content: center;
+.quick-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
-
-
-.nav-right {
- flex-direction: column;
- align-items: flex-end;
-}
-
-
-.logo {
- height: 70px;
-}
-
-
-.nav-button {
- background-color: black;
- color: white;
- padding: 10px 20px;
- border: none;
- border-radius: 7px;
- font-weight: bold;
- cursor: pointer;
-}
-
-
-.logout-button {
- margin-top: 4px;
- background: none;
- border: none;
- color: #000;
- text-decoration: underline;
- cursor: pointer;
-}
-
-
-.main-content {
- flex: 1;
- text-align: center;
- padding: 60px 20px;
-}
-
-
-.main-content h1 {
- font-size: 32px;
- margin-bottom: 20px;
-}
-
-
-.main-content p {
- max-width: 600px;
- margin: 0 auto;
- line-height: 1.6;
- font-size: 16px;
-}
-
-
-.footer {
- border-top: 6px solid #d63031;
- padding: 20px;
-}
-
-
-.footer-content {
- display: flex;
- justify-content: space-between;
- align-items: flex-start;
-}
-
-
-.footer-left {
- flex: 1;
-}
-
-
-.footer-center {
- flex: 2;
- text-align: center;
-}
-
-
-.footer-logo {
- height: 130px;
-}
-
-
-.footer-links {
- margin-bottom: 100px;
- margin-right: 630px;
-}
-
-
-.footer-links a {
- margin: 0 10px;
- text-decoration: none;
- color: black;
- font-size: 14px;
-}
-
-
-.footer-bottom {
- font-size: 12px;
- color: gray;
- margin-left: -630px;
-}
-
-
-.footer-bottom a {
- margin-left: 10px;
- color: gray;
- text-decoration: none;
-}
-
-
-* {
- background-color: white;
-}
-
-

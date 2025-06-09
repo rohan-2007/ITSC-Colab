@@ -1,36 +1,82 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 // We can get rid of the links at the footer but if u find a use, then use it
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import fetchUrl from '../testingUrl';
 import './home.css';
 
-const Home: React.FC = () =>
-  <div className="home-container">
-    <header className="navbar">
-      <div className="nav-left">
-        <img src="/ITSC_LOGO.png" alt="ITSC Logo" className="logo" />
-      </div>
-      <div className="nav-center">
-        <button className="nav-button">Evaluations</button>
-      </div>
-      <div className="nav-right">
-        <span>Welcome User!</span>
-        <button className="logout-button">Log out</button>
-      </div>
-    </header>
+interface User {
+  email: string;
+  evalsCompleted: number;
+  name: string;
+  role: string;
+}
 
-    <main className="main-content" />
+const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [ user ] = useState<User>({
+    email: `Loading...`,
+    evalsCompleted: 0,
+    name: `Loading...`,
+    role: `Loading...`,
+  });
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        // eslint-disable-next-line no-console
+        console.log(`Checking session...`);
+        const response = await fetch(`${fetchUrl}/me/`, {
+          body: JSON.stringify({ requestData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        if (jsonData.sessionActive) {
+          user.email = jsonData.user.email;
+          user.name = jsonData.user.name;
+          user.role = jsonData.user.role;
+          // eslint-disable-next-line no-console
+          console.log(`User data fetched successfully:`, jsonData.user);
+        } else {
+          await navigate(`/login`);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Session check failed:`, error);
+      }
+    };
+
+    void checkSession();
+  }, [ navigate, user ]);
+
+  return <div className="home-container">
+    <main className="main-content">
+      <h1>Welcome back, {user.name}!</h1>
+      <p>Role: {user.role}</p>
+      <p>Email: {user.email}</p>
+      <section className="user-stats">
+        <div className="stat">
+          <h2>{user.evalsCompleted}</h2>
+          <p>Evaluations Completed</p>
+        </div>
+      </section>
+    </main>
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-left">
           <img src="/PR_LOGO.png" alt="Performance Review Logo" className="footer-logo" />
         </div>
         <div className="footer-center">
-          <div className="footer-links">
-            <a href="#">Link one</a>
-            <a href="#">Link two</a>
-            <a href="#">Link three</a>
-            <a href="#">Link four</a>
-          </div>
           <div className="footer-bottom">
             © 2025 Your Website. All rights reserved.
             <a href="#">Privacy Policy</a>
@@ -40,4 +86,5 @@ const Home: React.FC = () =>
       </div>
     </footer>
   </div>;
+};
 export default Home;

@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import './evaluations.css';
+import fetchUrl from '../testingUrl';
 
 const Evaluations: React.FC = () => {
   // interface DropdownProps {
@@ -93,7 +94,7 @@ const Evaluations: React.FC = () => {
     console.log(`criteria4: ${criteria4}`);
 
     try {
-      const res = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/me/`, {
+      const res = await fetch(`${fetchUrl}/me/`, {
         credentials: `include`,
         method: `POST`,
       });
@@ -119,7 +120,7 @@ const Evaluations: React.FC = () => {
 
       console.log(`bbbbb${evalData}`);
 
-      const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/submitEval/`, {
+      const response = await fetch(`${fetchUrl}/submitEval/`, {
         body: JSON.stringify(evalData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },

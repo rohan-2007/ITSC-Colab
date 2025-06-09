@@ -11,7 +11,8 @@ import authRouter from './routes/auth'; // Import the router
 const app = express();
 const clientURLs = [
   `http://localhost:5173`,
-  `http://10.244.14.191:5173`,
+  // REMOVE THIS ONE after testing
+  `https://*.ngrok-free.app`,
 ];
 
 app.use(cors({
@@ -26,12 +27,14 @@ const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+app.set(`trust proxy`, 1);
+
 export const sessionMiddleware = session({
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    sameSite: `lax`,
-    secure: process.env.NODE_ENV === `production`,
+    sameSite: `none`,
+    secure: true, // process.env.NODE_ENV === `production`
   },
   resave: false,
   saveUninitialized: false,

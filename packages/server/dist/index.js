@@ -12,23 +12,27 @@ dotenv_1.default.config();
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
 const app = (0, express_1.default)();
-// const cookieParser = cookieParser();
-const clientURL = `http://localhost:5173`;
+const clientURLs = [
+    `http://localhost:5173`,
+    // REMOVE THIS ONE after testing
+    `https://*.ngrok-free.app`,
+];
 app.use((0, cors_1.default)({
     credentials: true,
-    origin: clientURL,
+    origin: clientURLs,
 }));
 const PORT = 3001;
 const PgSession = (0, connect_pg_simple_1.default)(express_session_1.default);
 const pgPool = new pg_1.Pool({
     connectionString: process.env.DATABASE_URL,
 });
+app.set(`trust proxy`, 1);
 exports.sessionMiddleware = (0, express_session_1.default)({
     cookie: {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        sameSite: `lax`,
-        secure: process.env.NODE_ENV === `production`,
+        sameSite: `none`,
+        secure: true,
     },
     resave: false,
     saveUninitialized: false,
@@ -47,6 +51,6 @@ app.use(exports.sessionMiddleware); // Session storage
 app.use(auth_1.default);
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on ${PORT}`);
 });
 //# sourceMappingURL=index.js.map

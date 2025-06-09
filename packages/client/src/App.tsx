@@ -12,7 +12,7 @@ import Evaluations from './pages/evaluations';
 const App: React.FC = () =>
   <Layout>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<PastEvaluations />} />
       <Route path="/login" element={<Login />} />
