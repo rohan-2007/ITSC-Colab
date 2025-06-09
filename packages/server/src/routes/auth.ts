@@ -133,18 +133,17 @@ router.post(`/login`, async (
 
 interface UserInfoBody {
   returnData?: boolean;
-  userId: number;
 }
 
 router.post(`/me`, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
-  const { returnData, userId } = req.body;
+  const { returnData } = req.body;
 
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: req.session.userId },
     });
 
     if (!user) {
