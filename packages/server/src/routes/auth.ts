@@ -132,6 +132,7 @@ router.post(`/login`, async (
 });
 
 interface UserInfoBody {
+  returnData?: boolean;
   userId: number;
 }
 
@@ -139,7 +140,7 @@ router.post(`/me`, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
-  const { userId } = req.body;
+  const { returnData, userId } = req.body;
 
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
@@ -155,11 +156,17 @@ router.post(`/me`, requireAuth, async (
       res.status(403).json({ error: `Forbidden` });
       return;
     }
-
-    res.status(200).json({
-      message: `Fetched user info`,
-      user: { email: user.email, name: user.name, role: user.role, userId: user.id },
-    });
+    if (returnData) {
+      res.status(200).json({
+        message: `Fetched user info`,
+        user: { email: user.email, name: user.name, role: user.role, userId: user.id },
+      });
+    } else {
+      res.status(200).json({
+        message: `User session found`,
+        sessionActive: true,
+      });
+    }
   } catch (err) {
     console.error(`Fetch error:`, err);
     if (!res.headersSent) {
