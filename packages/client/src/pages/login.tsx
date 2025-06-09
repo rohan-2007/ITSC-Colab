@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FormEvent, useState } from 'react';
 import './login.css';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [ message, setMessage ] = useState(``);
@@ -9,7 +11,36 @@ const Login: React.FC = () => {
   const [ isOpenLogin, setIsOpenLogin ] = useState(false);
   const [ profileText, setProfileText ] = useState(``);
 
+  const navigate = useNavigate();
   const PORT = 3001;
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch(`http://10.244.14.191:${PORT}/me/`, {
+          body: JSON.stringify({ requestData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        if (jsonData.sessionActive) {
+          await navigate(`/home`);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Session check failed:`, error);
+      }
+    };
+
+    void checkSession();
+  }, [ navigate ]);
 
   const [ formData, setFormData ] = useState({
     email: ``,
@@ -33,7 +64,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/signup/`, {
+      const response = await fetch(`http://10.244.14.191:${PORT}/signup/`, {
         body: JSON.stringify(formData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -72,22 +103,17 @@ const Login: React.FC = () => {
       };
 
       try {
-        const response = await fetch(`http://localhost:${PORT}/login/`, {
+        const response = await fetch(`http://10.244.14.191:${PORT}/login/`, {
           body: JSON.stringify(loginData),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
         });
 
-        const responseText = await response.text();
-
-        if (!response.ok) {
-          throw new Error(responseText || `Login failed`);
-        }
-
         const responseJson = await response.json();
 
-        setMessage(`Login success: ${responseText}`);
+        alert(`Login success: ${responseJson.message}`);
+        void navigate(`/home`);
         setProfileText(`Hi, ${responseJson.user.name}`);
       } catch (error) {
         if (error instanceof Error) {
