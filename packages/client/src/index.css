@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss"; */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,6 +15,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,#root,body {
+  display: flex;
+  justify-content: center;   /* Center horizontally */
+  align-items: center;       /* Center vertically */
+  height: 100%;             /* Full viewport height */
+  width: 100%;              /* Full viewport width */
+  background: linear-gradient(#ffffff 60%, #edc6c6 100%);
+  /* background-color: aqua; */
+}
+
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -24,14 +35,17 @@ a:hover {
   color: #535bf2;
 }
 
-body {
+/* body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: rgb(152, 185, 212);
-}
+  justify-content: center;  
+  align-items: center;  
+  
+  width: 100%;
+  height: 100%;
+  background-color: rgb(31, 85, 129);
+  background: linear-gradient(#ffffff 60%, #edc6c6 100%);
+} */
 
 h1 {
   font-size: 3.2em;
