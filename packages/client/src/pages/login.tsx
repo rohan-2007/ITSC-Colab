@@ -3,6 +3,7 @@ import React, { FormEvent, useState } from 'react';
 import './login.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import fetchUrl from '../testingUrl';
 
 const Login: React.FC = () => {
   const [ message, setMessage ] = useState(``);
@@ -17,7 +18,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/me/`, {
+        const response = await fetch(`${fetchUrl}/me/`, {
           body: JSON.stringify({ requestData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
@@ -64,7 +65,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/signup/`, {
+      const response = await fetch(`${fetchUrl}/signup/`, {
         body: JSON.stringify(formData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -103,7 +104,7 @@ const Login: React.FC = () => {
       };
 
       try {
-        const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/login/`, {
+        const response = await fetch(`${fetchUrl}/login/`, {
           body: JSON.stringify(loginData),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
