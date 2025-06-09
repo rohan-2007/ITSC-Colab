@@ -35,30 +35,57 @@ const Evaluations: React.FC = () => {
     return date;
   };
 
-  const assignSemester = () => {
-    const today: Date = currentDate();
-    const dateOnly = today.toLocaleDateString(`en-GB`);
-    const year = today.getFullYear().toString();
-    const summerStart = `12/05/${year}`;
-    const summerEnd = `09/08/${year}`;
-    const fallStart = `25/08/${year}`;
-    const fallEnd = `05/12/${year}`;
-    const springStart = `12/01/${year + 1}`;
-    const springEnd = `24/04/${year + 1}`;
+  // const assignSemester = () => {
+  //   const today: Date = currentDate();
+  //   today.setHours(0, 0, 0, 0);
+  //   // const dateOnly = today.toLocaleDateString(`en-GB`);
+  //   const year = today.getFullYear();
+  //   const summerStart = new Date(year, 5, 12); // June 12
+  //   const summerEnd = new Date(year, 7, 9); // August 9
+  //   const fallStart = new Date(year, 7, 25); // August 25
+  //   const fallEnd = new Date(year, 11, 5); // December 5
+  //   const springStart = new Date(year + 1, 0, 12); // January 12 of next year
+  //   const springEnd = new Date(year + 1, 3, 24); // April 24 of next year
 
-    if (dateOnly >= summerStart && dateOnly <= summerEnd) {
+  //   console.log(`summerStart: ${summerStart.toDateString()}`);
+  //   console.log(`Today: ${today}`);
+
+  //   if (today >= summerStart && today <= summerEnd) {
+  //     return `SUMMER`;
+  //   } else if (today >= fallStart && today <= fallEnd) {
+  //     return `FALL`;
+  //   } else if (today >= springStart && today <= springEnd) {
+  //     return `SPRING`;
+  //   }
+  //   return `UNKNOWN`;
+  // };
+
+  const assignSemester = (): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight
+
+    const year = today.getFullYear();
+    const summerStart = new Date(year, 4, 12); // May 12
+    const summerEnd = new Date(year, 7, 9); // August 9
+    const fallStart = new Date(year, 7, 25); // August 25
+    const fallEnd = new Date(year, 11, 5); // December 5
+    const springStart = new Date(year, 0, 12); // January 12 of next year
+    const springEnd = new Date(year, 3, 24); // April 24 of next year
+
+    if (today >= summerStart && today <= summerEnd) {
       return `SUMMER`;
-    } else if (dateOnly >= fallStart && dateOnly <= fallEnd) {
+    } else if (today >= fallStart && today <= fallEnd) {
       return `FALL`;
-    } else if (dateOnly >= springStart && dateOnly <= springEnd) {
+    } else if (today >= springStart && today <= springEnd) {
       return `SPRING`;
     }
+    console.log(`unknown semester`, today < summerStart, today > summerEnd);
     return `UNKNOWN`;
   };
 
   const handleEvalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    currentDate();
+    // currentDate();
     console.log(`f`);
     console.log(`criteria1: ${criteria1}`);
     console.log(`criteria2: ${criteria2}`);
@@ -66,7 +93,7 @@ const Evaluations: React.FC = () => {
     console.log(`criteria4: ${criteria4}`);
 
     try {
-      const res = await fetch(`http://localhost:${PORT}/me/`, {
+      const res = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/me/`, {
         credentials: `include`,
         method: `POST`,
       });
@@ -85,14 +112,14 @@ const Evaluations: React.FC = () => {
           criteria4,
         },
         evaluationType: resJson.user.role,
-        semester: assignSemester(),
+        semester: selectedSemester,
         supervisorId: resJson.user.supervisorId,
         userId: resJson.user.userId,
       };
 
       console.log(`bbbbb${evalData}`);
 
-      const response = await fetch(`http://localhost:${PORT}/submitEval/`, {
+      const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/submitEval/`, {
         body: JSON.stringify(evalData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -114,7 +141,7 @@ const Evaluations: React.FC = () => {
   const [ criteria4, setCriteria4 ] = useState(`starting`);
 
   const [ showDropDown, setShowDropDown ] = useState(false);
-  const [ selectedSemester, setSelectedSemester ] = useState(``);
+  const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
 
   // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   //   if (e.key === `Enter` || e.key === ` `) {
@@ -156,12 +183,13 @@ const Evaluations: React.FC = () => {
       aria-expanded={isOpenSemesterSelect}
       aria-haspopup="listbox"
     >
-      Select Option
+      {selectedSemester || `Select Semester`}
     </div>
     {isOpenSemesterSelect &&
       <ul role="listbox">
         {semesters.map((option, index) =>
           <li
+            className="semester-option"
             // key={index}
             role="option"
             tabIndex={0}

@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch(`http://10.244.14.191:${PORT}/me/`, {
+        const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/me/`, {
           body: JSON.stringify({ requestData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://10.244.14.191:${PORT}/signup/`, {
+      const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/signup/`, {
         body: JSON.stringify(formData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
       };
 
       try {
-        const response = await fetch(`http://10.244.14.191:${PORT}/login/`, {
+        const response = await fetch(`https://36ef-129-137-96-4.ngrok-free.app/login/`, {
           body: JSON.stringify(loginData),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },

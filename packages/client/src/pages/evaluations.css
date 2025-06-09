@@ -26,3 +26,7 @@
   display: flex;
   justify-content: space-around;
 }
+
+.semester-option {
+  list-style-type: none;
+}
