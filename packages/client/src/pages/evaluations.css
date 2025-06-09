@@ -1,0 +1,28 @@
+/* body {
+  width: 100%;
+  background-color: aqua;
+} */
+
+.evalContainer {
+  /* position: relative; */
+  background-color: rgb(131, 131, 133);
+  width: 80%;
+  height: 50%;
+  /* justify-content: center; */
+  margin: 100px auto;
+  text-align: center;
+  align-items: center;
+  display: block;
+  /* top: 200px; */
+}
+
+/* .evaluation-btn-group {
+  display: flex;
+  justify-content: space-around;
+  margin: 5px;
+} */
+
+.criteria {
+  display: flex;
+  justify-content: space-around;
+}

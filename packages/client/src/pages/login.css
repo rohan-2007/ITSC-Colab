@@ -1,0 +1,127 @@
+body {
+  background-color: aqua;
+}
+
+/* .card {
+  padding: 2em;
+} */
+
+button {
+ background-color: #ffffff; 
+ color: rgb(0, 0, 0);
+ padding: 12px 24px;
+ font-size: 16px;
+ border: 1px solid black;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+}
+
+button:hover {
+ background-color: #80b1ed;
+}
+
+.centered-page{
+  display: flex;
+  flex-direction: column;
+ justify-content: center;
+ align-items: center;
+  width:100vw;
+ height: fit-content;
+}
+
+.centered-page h1 {
+  text-align: center;
+}
+
+.button-group {
+ display: flex !important;
+ flex-direction: column !important;
+ align-items: center !important;
+ gap: 12px !important;
+ width:100vw;
+ /* height: 100vh; */
+}
+
+.page {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: fit-content;
+ width: 100vw;
+ 
+}
+
+.signup-card {
+ margin-top: 50px;
+ background-color: white;
+ padding: 1rem;
+ width: 300px;
+ border-radius: 10px;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+ height: fit-content;
+ width: 20vw;
+}
+
+.submit-signup-login-group {
+  display: flex;
+  justify-content:space-around;
+}
+
+.signup-card h2 {
+ margin: 0rem;
+ text-align: center;
+ color: #1a1a40;
+}
+
+.signup-card form {
+ display: flex;
+ flex-direction: column;
+}
+
+/* .signup-card label {
+ margin-bottom: 4px;
+ font-weight: 500;
+} */
+
+.signup-card input {
+ margin-bottom: 12px;
+ padding: 8px;
+ border: 1px solid #ccc;
+ border-radius: 4px;
+}
+
+.signup-card button {
+ padding: 10px;
+ background-color: #1a1a40;
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+}
+
+.signup-card button:hover {
+ background-color: #333366;
+}
+
+.error {
+ color: red;
+ font-size: 0.8rem;
+ margin-top: -10px;
+ margin-bottom: 10px;
+}
+
+
+.radio-group {
+ display: flex;
+ justify-content: center;
+ gap: 1rem;
+ margin-bottom: 12px;
+}
+
+
+.radio-group label {
+ font-weight: normal;
+}
