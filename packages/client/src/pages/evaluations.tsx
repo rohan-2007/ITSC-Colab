@@ -166,7 +166,7 @@ const Evaluations: React.FC = () => {
       </fieldset>
 
       <fieldset className="criteria">
-        <legend>Personal Disposition</legend>
+        <legend>Personal Disposition:</legend>
         <label className="evaluation-btn">
           <input
             type="radio"
