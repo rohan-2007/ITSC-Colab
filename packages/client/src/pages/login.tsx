@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FormEvent, useState } from 'react';
 import './login.css';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [ message, setMessage ] = useState(``);
@@ -8,6 +10,36 @@ const Login: React.FC = () => {
   const [ isOpenSignup, setIsOpenSignup ] = useState(false);
   const [ isOpenLogin, setIsOpenLogin ] = useState(false);
   const [ profileText, setProfileText ] = useState(``);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch(`http://localhost:${PORT}/me/`, {
+          body: JSON.stringify({ requestData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        if (jsonData.sessionActive) {
+          await navigate(`/home`);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Session check failed:`, error);
+      }
+    };
+
+    void checkSession();
+  }, [ navigate ]);
 
   const PORT = 3001;
 
@@ -79,15 +111,10 @@ const Login: React.FC = () => {
           method: `POST`,
         });
 
-        const responseText = await response.text();
-
-        if (!response.ok) {
-          throw new Error(responseText || `Login failed`);
-        }
-
         const responseJson = await response.json();
 
-        setMessage(`Login success: ${responseText}`);
+        alert(`Login success: ${responseJson.message}`);
+        void navigate(`/home`);
         setProfileText(`Hi, ${responseJson.user.name}`);
       } catch (error) {
         if (error instanceof Error) {
