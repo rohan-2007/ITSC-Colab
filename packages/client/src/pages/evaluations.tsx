@@ -57,7 +57,9 @@ const Evaluations: React.FC = () => {
 
   const [ message, setMessage ] = useState(``);
   const [ criteria1, setCriteria1 ] = useState(`starting`);
-  const [ criteria2, setCriteria2 ] = useState(`competitive`);
+  const [ criteria2, setCriteria2 ] = useState(`starting`);
+  const [ criteria3, setCriteria3 ] = useState(`starting`);
+  const [ criteria4, setCriteria4 ] = useState(`starting`);
 
   return <div className="evalContainer">
     <form>
@@ -124,6 +126,74 @@ const Evaluations: React.FC = () => {
             value="competitive"
             checked={criteria2 === `competitive`}
             onChange={(e) => setCriteria2(e.target.value)}
+          />
+          Competitive
+        </label>
+      </fieldset>
+
+      <fieldset className="criteria">
+        <legend>Teamwork:</legend>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria3"
+            value="starting"
+            checked={criteria3 === `starting`}
+            onChange={(e) => setCriteria3(e.target.value)}
+          />
+          Starting
+        </label>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria3"
+            value="inProgress"
+            checked={criteria3 === `inProgress`}
+            onChange={(e) => setCriteria3(e.target.value)}
+          />
+          In Progress
+        </label>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria3"
+            value="competitive"
+            checked={criteria3 === `competitive`}
+            onChange={(e) => setCriteria3(e.target.value)}
+          />
+          Competitive
+        </label>
+      </fieldset>
+
+      <fieldset className="criteria">
+        <legend>Personal Disposition:</legend>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria4"
+            value="starting"
+            checked={criteria4 === `starting`}
+            onChange={(e) => setCriteria4(e.target.value)}
+          />
+          Starting
+        </label>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria4"
+            value="inProgress"
+            checked={criteria4 === `inProgress`}
+            onChange={(e) => setCriteria4(e.target.value)}
+          />
+          In Progress
+        </label>
+        <label className="evaluation-btn">
+          <input
+            type="radio"
+            name="criteria4"
+            value="competitive"
+            checked={criteria4 === `competitive`}
+            onChange={(e) => setCriteria4(e.target.value)}
           />
           Competitive
         </label>
