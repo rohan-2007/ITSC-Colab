@@ -12,11 +12,12 @@ const Login: React.FC = () => {
   const [ profileText, setProfileText ] = useState(``);
 
   const navigate = useNavigate();
+  const PORT = 3001;
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch(`http://localhost:${PORT}/me/`, {
+        const response = await fetch(`http://10.244.14.191:${PORT}/me/`, {
           body: JSON.stringify({ requestData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
@@ -41,8 +42,6 @@ const Login: React.FC = () => {
     void checkSession();
   }, [ navigate ]);
 
-  const PORT = 3001;
-
   const [ formData, setFormData ] = useState({
     email: ``,
     isSupervisor: false,
@@ -65,7 +64,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/signup/`, {
+      const response = await fetch(`http://10.244.14.191:${PORT}/signup/`, {
         body: JSON.stringify(formData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -104,7 +103,7 @@ const Login: React.FC = () => {
       };
 
       try {
-        const response = await fetch(`http://localhost:${PORT}/login/`, {
+        const response = await fetch(`http://10.244.14.191:${PORT}/login/`, {
           body: JSON.stringify(loginData),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
