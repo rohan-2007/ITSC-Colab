@@ -24,8 +24,8 @@ router.post(`/submitEval`, requireAuth, async (
       where: { id: userId },
     });
 
-    if (!user || !user.supervisorId) {
-      res.status(404).json({ error: `User or supervisor not found` });
+    if (!user) {
+      res.status(404).json({ error: `User not found` });
       return;
     }
 
