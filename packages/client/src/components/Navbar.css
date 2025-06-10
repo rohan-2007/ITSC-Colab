@@ -1,35 +1,41 @@
 /* src/components/Navbar.css */
 .navbar {
- height: fit-content;
- width: 100%;
- /* padding: 0.4rem; */
- display: flex;
- justify-content:flex-start; /* pushes content to the left */
- align-items: center;
- position: fixed; /* optional: makes it stick to the top */
- top: 0;
- left: 0;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
- border-bottom: 4px solid #f44336;
+  height: fit-content;
+  width: 100%;
+  padding: 0.4rem; /* Padding already set */
+  display: flex;
+  justify-content: flex-start; /* pushes content to the left */
+  align-items: center;
+  position: fixed; /* Makes it stick to the top */
+  top: 0;
+  left: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-bottom: 4px solid #f44336;
+  background-color: white; /* Ensure navbar has a background */
+  z-index: 1000; /* Ensure it stays on top of other content */
 }
 
+.nav-links {
+  margin-left: 2rem; /* Increased margin for better spacing from logo, matches image */
+  display: flex;
+  gap: 1.5rem; /* Space between links */
+}
 
 .nav-links a {
- margin-left: 1rem;
- text-decoration: none;
- color: #333;
- font-weight: 500;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 0.5rem 0; /* Add some vertical padding for clickable area */
+  transition: color 0.2s ease-in-out;
 }
-
 
 .nav-links a:hover {
- color: #007bff;
+  color: #f44336; /* Hover color changed to red for consistency */
 }
 
-
 .navbar-logo {
- height: 4em;
- padding: 0.4em 2em;
- will-change: filter;
- transition: filter 300ms;
+  height: 4em;
+  padding: 0.4em 2em; /* Keep existing padding */
+  will-change: filter;
+  transition: filter 300ms;
 }
