@@ -66,7 +66,6 @@ router.post(`/signup`, async (
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const supervisorIdClean = Number(supervisorId);
     const teamIdClean = Number(teamId);
 
     const newUser: PrismaUser = await prisma.user.create({
@@ -75,7 +74,7 @@ router.post(`/signup`, async (
         name,
         password: hashedPassword,
         role,
-        supervisorId: supervisorIdClean,
+        supervisorId,
         teamId: teamIdClean,
       },
     });
@@ -161,9 +160,16 @@ router.post(`/me`, requireAuth, async (
         const teamName = team ? team.name : null;
         const teamId = team ? team.id : null;
         const createdAt = user.createdAt.toISOString();
+        const { id, email, name, role } = user;
+        const supervisorId = user.supervisorId || null;
+        const supervisor = await prisma.user.findUnique({
+          where: { id: supervisorId || -1 },
+        });
+        const supervisorName = supervisor ? supervisor.name : `Not Assigned`;
+
         res.status(200).json({
           message: `Fetched user info`,
-          user: { id: user.id, createdAt, email: user.email, name: user.name, role: user.role, teamId, teamName },
+          user: { id, createdAt, email, name, role, supervisorId, supervisorName, teamId, teamName },
         });
       } else {
         res.status(200).json({
