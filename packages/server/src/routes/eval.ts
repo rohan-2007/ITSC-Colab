@@ -10,7 +10,7 @@ interface EvaluationBody {
   criteria: JsonObject;
   evaluationType: keyof typeof Role;
   semester: keyof typeof Semester;
-  supervisorId: number;
+  supervisorId?: number;
   userId: number;
 }
 
@@ -33,7 +33,7 @@ router.post(`/submitEval`, requireAuth, async (
       data: {
         criteria,
         semester,
-        supervisorId,
+        supervisorId: supervisorId || null,
         type: evaluationType,
         userId,
       },
