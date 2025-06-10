@@ -3,7 +3,7 @@ import React, { FormEvent, useState } from 'react';
 import './login.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchUrl from '../testingUrl';
+const fetchUrl = `http://localhost:${3001}`;
 
 const Login: React.FC = () => {
   const [ message, setMessage ] = useState(``);

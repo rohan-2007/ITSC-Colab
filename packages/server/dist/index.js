@@ -32,7 +32,7 @@ exports.sessionMiddleware = (0, express_session_1.default)({
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         sameSite: `none`,
-        secure: true,
+        secure: true, // process.env.NODE_ENV === `production`
     },
     resave: false,
     saveUninitialized: false,
@@ -47,10 +47,20 @@ app.get(`/`, (_req, res) => {
     res.send(`Welcome from TypeScript backend!`);
 });
 app.use(express_1.default.json()); // Use JSON middleware you slugs
-app.use(exports.sessionMiddleware); // Session storage
-app.use(auth_1.default);
-app.listen(PORT, () => {
+app.use((req, res, next) => {
     // eslint-disable-next-line no-console
-    console.log(`Server running on ${PORT}`);
+    console.log(`[MIDDLEWARE] Before session`);
+    next();
+});
+app.use(exports.sessionMiddleware); // Session storage
+app.use((req, res, next) => {
+    // eslint-disable-next-line no-console
+    console.log(`[MIDDLEWARE] After session`);
+    next();
+});
+app.use(auth_1.default);
+app.listen(PORT, `0.0.0.0`, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server running on http://0.0.0.0:${PORT} (likely 10.244.14.191)`);
 });
 //# sourceMappingURL=index.js.map

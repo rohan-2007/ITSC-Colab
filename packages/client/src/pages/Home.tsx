@@ -3,9 +3,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchUrl from '../testingUrl';
 import './home.css';
-
+const fetchUrl = `http://localhost:${3001}`;
 interface User {
   email: string;
   evalsCompleted: number;
@@ -27,13 +26,15 @@ const Home: React.FC = () => {
     const checkSession = async () => {
       try {
         // eslint-disable-next-line no-console
-        console.log(`Checking session...`);
+        console.log(`Checking session...`, `fetchUrl:`, fetchUrl);
         const response = await fetch(`${fetchUrl}/me/`, {
           body: JSON.stringify({ requestData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
         });
+        // eslint-disable-next-line no-console
+        console.log(`Response status:`, response.status);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

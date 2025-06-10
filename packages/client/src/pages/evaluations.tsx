@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import './evaluations.css';
-import fetchUrl from '../testingUrl';
+const fetchUrl = `http://localhost:${3001}`;
 
 const Evaluations: React.FC = () => {
   // interface DropdownProps {
