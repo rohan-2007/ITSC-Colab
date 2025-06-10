@@ -17,6 +17,11 @@ const Profile: React.FC = () => {
 
       // eslint-disable-next-line no-console
       console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+
+      const userName = resJson.user.name || `N/A`;
+      const userEmail = resJson.user.email || `N/A`;
+      const userRole = resJson.user.role || `N/A`;
+      const userSupervisor = resJson.user.supervisorName || `N/A`;
     } catch (err) {
       if (err instanceof Error) {
         throw new Error(`Failed to fetch user info: ${err.message}`);
