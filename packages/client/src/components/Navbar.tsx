@@ -13,6 +13,7 @@ const Navbar: React.FC = () =>
       <Link to="/evaluations">Evaluations</Link>
       <Link to="/contact">Past Evaluations</Link>
       <Link to="/login">Login</Link>
+      <Link to="/profile">Profile</Link>
     </nav>
     <div />
   </header>;
