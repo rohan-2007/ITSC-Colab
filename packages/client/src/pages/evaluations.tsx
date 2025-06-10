@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import './evaluations.css';
-const fetchUrl = `http://localhost:${3001}`;
+const fetchUrl = `http://localhost:3001`;
 
 const Evaluations: React.FC = () => {
   // interface DropdownProps {
@@ -93,6 +93,7 @@ const Evaluations: React.FC = () => {
 
     try {
       const res = await fetch(`${fetchUrl}/me/`, {
+        body: JSON.stringify({ returnData: true }),
         credentials: `include`,
         headers: {
           'Content-Type': `application/json`,
@@ -117,7 +118,7 @@ const Evaluations: React.FC = () => {
         evaluationType: resJson.user.role,
         semester: selectedSemester,
         supervisorId: resJson.user.supervisorId,
-        userId: resJson.user.userId,
+        userId: resJson.user.id,
       };
 
       console.log(`bbbbb`, JSON.stringify(evalData, null, 2));
