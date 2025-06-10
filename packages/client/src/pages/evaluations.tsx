@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import './evaluations.css';
+import { useNavigate } from 'react-router-dom';
 const fetchUrl = `http://localhost:3001`;
 
 const Evaluations: React.FC = () => {
@@ -176,6 +177,12 @@ const Evaluations: React.FC = () => {
   const [ isOpenNewEval, setIsOpenNewEval ] = useState(false);
   const toggleNewEval = () => setIsOpenNewEval((prev) => !prev);
 
+  const navigate = useNavigate();
+
+  const viewPastEvalPage = async () => {
+    await navigate(`/past_evaluations`);
+  };
+
   useEffect(() => {
     setShowDropDown(showDropDown);
   }, [ showDropDown ]);
@@ -184,9 +191,11 @@ const Evaluations: React.FC = () => {
 
     <h1>Evaluations</h1>
 
-    <h3>Here, you can add your evaluations. To view past evaluations, click "Past Evaluations" on the top.</h3>
+    <h3>Here, you can add your evaluations. To view past evaluations, click "View Past Evaluations".</h3>
 
-    <button className="add-eval-button" onClick={toggleNewEval}>Add Evaluation</button>
+    <button className="eval-button" onClick={toggleNewEval}>Add Evaluation</button>
+
+    <button className="eval-button" onClick={viewPastEvalPage}>View Past Evaluations</button>
 
     {isOpenNewEval &&
       <div className="evalContainer">

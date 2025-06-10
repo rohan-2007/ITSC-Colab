@@ -35,8 +35,9 @@
   text-align: center;
 }
 
-.add-eval-button {
+.eval-button {
   text-align: center;
   width: 20%;
-  
+  margin: 2em;
+  height: 4em;
 }
