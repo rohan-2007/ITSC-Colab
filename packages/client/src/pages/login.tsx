@@ -49,7 +49,7 @@ const Login: React.FC = () => {
     name: ``,
     password: ``,
     role: ``,
-    supervisorId: ``,
+    supervisorEmail: ``,
     teamId: ``,
   });
 
@@ -154,7 +154,7 @@ const Login: React.FC = () => {
     email: ``,
     name: ``,
     password: ``,
-    supervisorId: ``,
+    supervisorEmail: ``,
     teamId: ``,
   });
 
@@ -168,8 +168,8 @@ const Login: React.FC = () => {
       email: formData.email ? `` : `Email is required.`,
       name: formData.name ? `` : `Name is required.`,
       password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
-      supervisorId:
-        formData.supervisorId ? `` : formData.supervisorId ? `` : `Supervisor is required.`,
+      supervisorEmail:
+        formData.supervisorEmail ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
       teamId: formData.teamId ? `` : `Team is required.`,
     };
     setSignupErrors(newErrors);
@@ -254,14 +254,14 @@ const Login: React.FC = () => {
 
             {!formData.isSupervisor &&
               <>
-                <span>Supervisor ID:</span>
+                <span>Supervisor Email:</span>
                 <input
                   type="text"
-                  name="supervisorId"
-                  value={formData.supervisorId}
+                  name="supervisorEmail"
+                  value={formData.supervisorEmail}
                   onChange={handleChange}
                 />
-                {signupErrors.supervisorId && <div className="error">{signupErrors.supervisorId}</div>}
+                {signupErrors.supervisorEmail && <div className="error">{signupErrors.supervisorEmail}</div>}
               </>}
 
             <span>Team Name:</span>
