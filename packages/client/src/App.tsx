@@ -8,6 +8,7 @@ import Layout from './layouts/Layout';
 import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
 import Evaluations from './pages/evaluations';
+import Profile from './pages/Profile';
 
 const App: React.FC = () =>
   <Layout>
@@ -16,6 +17,7 @@ const App: React.FC = () =>
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<PastEvaluations />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
