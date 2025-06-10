@@ -26,13 +26,12 @@ const PgSession = (0, connect_pg_simple_1.default)(express_session_1.default);
 const pgPool = new pg_1.Pool({
     connectionString: process.env.DATABASE_URL,
 });
-app.set(`trust proxy`, 1);
 exports.sessionMiddleware = (0, express_session_1.default)({
     cookie: {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        sameSite: `none`,
-        secure: true, // process.env.NODE_ENV === `production`
+        sameSite: `lax`,
+        secure: process.env.NODE_ENV === `production`,
     },
     resave: false,
     saveUninitialized: false,
@@ -47,20 +46,10 @@ app.get(`/`, (_req, res) => {
     res.send(`Welcome from TypeScript backend!`);
 });
 app.use(express_1.default.json()); // Use JSON middleware you slugs
-app.use((req, res, next) => {
-    // eslint-disable-next-line no-console
-    console.log(`[MIDDLEWARE] Before session`);
-    next();
-});
 app.use(exports.sessionMiddleware); // Session storage
-app.use((req, res, next) => {
-    // eslint-disable-next-line no-console
-    console.log(`[MIDDLEWARE] After session`);
-    next();
-});
 app.use(auth_1.default);
-app.listen(PORT, `0.0.0.0`, () => {
+app.listen(PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server running on http://0.0.0.0:${PORT} (likely 10.244.14.191)`);
+    console.log(`Server running on http://localhost${PORT}`);
 });
 //# sourceMappingURL=index.js.map
