@@ -12,8 +12,6 @@ import evalRouter from './routes/eval'; // Import the evaluation router
 const app = express();
 const clientURLs = [
   `http://localhost:5173`,
-  // REMOVE THIS ONE after testing
-  `https://*.ngrok-free.app`,
 ];
 
 app.use(cors({

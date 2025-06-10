@@ -11,6 +11,7 @@ dotenv_1.default.config();
 // import cookieParser from 'cookieParser';
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
+const eval_1 = tslib_1.__importDefault(require("./routes/eval")); // Import the evaluation router
 const app = (0, express_1.default)();
 const clientURLs = [
     `http://localhost:5173`,
@@ -48,6 +49,7 @@ app.get(`/`, (_req, res) => {
 app.use(express_1.default.json()); // Use JSON middleware you slugs
 app.use(exports.sessionMiddleware); // Session storage
 app.use(auth_1.default);
+app.use(eval_1.default);
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`Server running on http://localhost${PORT}`);

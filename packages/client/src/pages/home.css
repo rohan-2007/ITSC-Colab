@@ -1,34 +1,301 @@
+/* General Layout & Background */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw; /* Ensures content area extends full viewport height */
+  background-color: #f0f2f5; /* Light background for the page */
+  font-family: 'Inter', sans-serif; /* Modern font */
+  color: #333;
+  /* Add padding to account for fixed Navbar and Footer */
+  padding-top: 80px; /* Adjust this value based on your Navbar's height */
+  padding-bottom: 120px; /* Adjust this value based on your Footer's height */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1; /* Allows main content to grow and push footer down if not fixed */
+  padding: 20px; /* Reduced overall padding since .home-container has top/bottom padding */
+  max-width: 1200px; /* Max width for content */
+  margin: 0 auto; /* Center the content */
+  width: 100%;
+  display: grid; /* Using CSS Grid for a more structured layout */
+  gap: 30px; /* Space between sections */
+  grid-template-areas:
+    'header header'
+    'profile stats'
+    'actions actions'; /* Define areas for layout */
+  grid-template-columns: 1fr 1fr; /* Two columns for profile and stats */
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    grid-template-areas:
+      'header'
+      'profile'
+      'stats'
+      'actions';
+    grid-template-columns: 1fr; /* Single column layout on smaller screens */
+    padding: 15px;
+  }
+}
+
+/* Loading, Error, No User States */
+.loading-state,
+.error-state,
+.no-user-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80vh; /* Center vertically on page */
+  padding: 20px;
+}
+
+.loading-state h1,
+.error-state h1,
+.no-user-state h1 {
+  color: #f44336; /* Using a primary color for emphasis */
+  margin-bottom: 15px;
+}
+
+.error-state p,
+.no-user-state p {
+  color: #555;
+  font-size: 1.1em;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 15px; /* Space between title and semester info */
+}
+
+.dashboard-header h1 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.current-semester-info {
+  background-color: #e0f7fa; /* Light blue background */
+  padding: 10px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.semester-label {
+  font-weight: 600;
+  color: #00796b; /* Teal color */
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+.semester-value {
+  font-weight: 700;
+  color: #004d40; /* Darker teal */
+  font-size: 1.1em;
+}
+
+/* Profile Quick Info Section */
+.profile-quick-info {
+  grid-area: profile;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; /* Slight offset for visual balance */
+  display: flex; /* Use flex to push the button to the bottom */
+  flex-direction: column;
+}
+
+.profile-quick-info h2 {
+  font-size: 1.6em;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f44336; /* Accent border */
+  padding-bottom: 10px;
+  display: inline-block; /* Make border only as wide as text */
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+  font-size: 1.1em;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #555;
+  flex-basis: 30%; /* Allocate space for label */
+  min-width: 70px; /* Ensure labels don't get too small */
+}
+
+.info-value {
+  color: #333;
+  flex-grow: 1;
+}
+
+.profile-actions {
+  margin-top: auto; /* Pushes content above it to the top, pushing this to bottom */
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+/* User Stats Section */
+.user-stats-section {
+  grid-area: stats;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; /* Slight offset for visual balance */
+}
+
+.user-stats-section h2 {
+  font-size: 1.6em;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f44336; /* Accent border */
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
 .user-stats {
   display: flex;
-  justify-content: center;
-  margin: 30px 0;
-  gap: 40px;
+  flex-wrap: wrap; /* Allow stats to wrap */
+  justify-content: space-around; /* Distribute items with space */
+  gap: 20px; /* Smaller gap between stats */
+  margin: 0;
 }
 
 .stat {
   background: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 20px 30px;
+  border: 1px solid #eee; /* Lighter border */
+  padding: 25px 20px; /* More padding */
   border-radius: 10px;
-  width: 140px;
+  min-width: 150px; /* Ensure stat box has minimum width */
   text-align: center;
-  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* Stronger shadow */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  flex: 1; /* Allow flex items to grow and shrink */
+  min-height: 100px; /* Consistent height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
 }
 
 .stat h2 {
-  font-size: 28px;
-  margin: 0;
-  color: #f44336;
+  font-size: 2.8em; /* Larger number */
+  margin: 0 0 5px 0; /* Adjust margin */
+  color: #f44336; /* Primary accent color */
 }
 
 .stat p {
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: 0;
+  font-size: 0.95em; /* Slightly larger text */
   color: #555;
+  font-weight: 500;
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+  grid-area: actions;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+}
+
+.quick-actions-section h2 {
+  font-size: 1.6em;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f44336;
+  padding-bottom: 10px;
+  display: inline-block;
 }
 
 .quick-actions {
-  margin-top: 20px;
   display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap */
+  gap: 15px; /* Space between buttons */
+  justify-content: center; /* Center buttons */
+  margin-top: 15px; /* Add some top margin */
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none; /* For button-like links if using <a> */
+  display: inline-flex; /* Ensure consistent spacing if content varies */
+  align-items: center;
   justify-content: center;
+}
+
+.btn.small-btn {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  border-radius: 6px;
+}
+
+.primary-btn {
+  background-color: #f44336; /* Red */
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background-color: #d32f2f; /* Darker red */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.secondary-btn {
+  background-color: #4CAF50; /* Green */
+  color: #ffffff;
+}
+
+.secondary-btn:hover {
+  background-color: #388E3C; /* Darker green */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.tertiary-btn {
+  background-color: #007bff; /* Blue */
+  color: #ffffff;
+}
+
+.tertiary-btn:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }

@@ -139,18 +139,10 @@ router.post(`/me`, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
-  // eslint-disable-next-line no-console
-  console.time(`/me total`);
   try {
-    // eslint-disable-next-line no-console
-    console.log(`[${ new Date().toISOString() }] /me hit`);
-    // eslint-disable-next-line no-console
-    console.time(`findUnique user`);
     const user: PrismaUser | null = await prisma.user.findUnique({
       where: { id: req.session.userId },
     });
-    // eslint-disable-next-line no-console
-    console.timeEnd(`findUnique user`);
 
     if (!user) {
       res.status(404).json({ error: `User not found` });
@@ -163,9 +155,14 @@ router.post(`/me`, requireAuth, async (
     }
     if (req.body) {
       if (req.body.returnData) {
+        const team = await prisma.team.findUnique({
+          where: { id: user.teamId || -1 },
+        });
+        const teamName = team ? team.name : null;
+        const teamId = team ? team.id : null;
         res.status(200).json({
           message: `Fetched user info`,
-          user: { email: user.email, name: user.name, role: user.role, userId: user.id },
+          user: { email: user.email, name: user.name, role: user.role, teamId, teamName, userId: user.id },
         });
       } else {
         res.status(200).json({
@@ -187,8 +184,6 @@ router.post(`/me`, requireAuth, async (
       res.status(500).json({ error: `Internal server error` });
     }
   }
-  // eslint-disable-next-line no-console
-  console.timeEnd(`/me total`);
 });
 
 export default router;
