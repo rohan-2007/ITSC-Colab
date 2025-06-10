@@ -4,6 +4,7 @@ import { User as PrismaUser, Role } from '../../../../generated/prisma';
 import prisma from '../prisma';
 // middleware auth
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  console.log("in requireAuth");
   if (!req.session.userId) {
     res.status(401).json({ error: `Not authenticated` });
     return;
@@ -152,23 +153,29 @@ router.post(`/me`, requireAuth, async (
     // eslint-disable-next-line no-console
     console.timeEnd(`findUnique user`);
 
+    console.log("after user fetch");
+
     if (!user) {
+      console.log("User not found");
       res.status(404).json({ error: `User not found` });
       return;
     }
 
     if (user.id !== req.session.userId) {
+      console.log("Forbidden");
       res.status(403).json({ error: `Forbidden` });
       return;
     }
     if (req.body) {
+      console.log("llllll", req.body.returnData);
       if (req.body.returnData) {
         res.status(200).json({
           message: `Fetched user info`,
-          user: { email: user.email, name: user.name, role: user.role, userId: user.id },
+          user: { email: user.email, name: user.name, role: user.role,supervisorId:user.supervisorId, userId: user.id },
         });
       }
     } else {
+      console.log("user session found");
       res.status(200).json({
         message: `User session found`,
         sessionActive: true,
