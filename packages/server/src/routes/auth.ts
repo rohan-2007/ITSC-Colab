@@ -139,10 +139,18 @@ router.post(`/me`, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
+  // eslint-disable-next-line no-console
+  console.time(`/me total`);
   try {
+    // eslint-disable-next-line no-console
+    console.log(`[${ new Date().toISOString() }] /me hit`);
+    // eslint-disable-next-line no-console
+    console.time(`findUnique user`);
     const user: PrismaUser | null = await prisma.user.findUnique({
       where: { id: req.session.userId },
     });
+    // eslint-disable-next-line no-console
+    console.timeEnd(`findUnique user`);
 
     if (!user) {
       res.status(404).json({ error: `User not found` });
@@ -172,6 +180,8 @@ router.post(`/me`, requireAuth, async (
       res.status(500).json({ error: `Internal server error` });
     }
   }
+  // eslint-disable-next-line no-console
+  console.timeEnd(`/me total`);
 });
 
 export default router;

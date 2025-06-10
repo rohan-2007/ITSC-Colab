@@ -27,14 +27,12 @@ const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-app.set(`trust proxy`, 1);
-
 export const sessionMiddleware = session({
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    sameSite: `none`,
-    secure: true, // process.env.NODE_ENV === `production`
+    sameSite: `lax`,
+    secure: process.env.NODE_ENV === `production`,
   },
   resave: false,
   saveUninitialized: false,
@@ -53,7 +51,7 @@ app.use(express.json()); // Use JSON middleware you slugs
 app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
 
-app.listen(PORT, `0.0.0.0`, () => {
+app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server running on http://0.0.0.0:${ PORT } (likely 10.244.14.191)`);
+  console.log(`Server running on http://localhost${ PORT }`);
 });
