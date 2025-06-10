@@ -15,8 +15,6 @@ const eval_1 = tslib_1.__importDefault(require("./routes/eval")); // Import the 
 const app = (0, express_1.default)();
 const clientURLs = [
     `http://localhost:5173`,
-    // REMOVE THIS ONE after testing
-    `https://*.ngrok-free.app`,
 ];
 app.use((0, cors_1.default)({
     credentials: true,
