@@ -93,24 +93,31 @@ const Evaluations: React.FC = () => {
     console.log(`criteria3: ${criteria3}`);
     console.log(`criteria4: ${criteria4}`);
 
+    console.log(fetchUrl);
+
     try {
-      const res = await fetch(`${fetchUrl}/me/`, {
+      const res = await fetch(`http://localhost:3001/me/`, {
+        body: JSON.stringify({ returnData: true }),
         credentials: `include`,
         method: `POST`,
+        headers: {
+    'Content-Type': 'application/json',
+  },
       });
 
       const resJson = await res.json();
       if (!res.ok) {
+        console.log('Response not ok, throwing error');
         throw new Error(resJson.message || `user session not found`);
       }
-      console.log(`abba: ${resJson}`);
-
+      console.log(`resJson: ` , JSON.stringify(resJson, null, 2));
+      console.log('Before evalData creation');
       const evalData = {
         criteria: {
-          criteria1,
-          criteria2,
-          criteria3,
-          criteria4,
+          "criteria1":criteria1,
+          "criteria2":criteria2,
+          "criteria3":criteria3,
+          "criteria4":criteria4,
         },
         evaluationType: resJson.user.role,
         semester: selectedSemester,
@@ -118,9 +125,9 @@ const Evaluations: React.FC = () => {
         userId: resJson.user.userId,
       };
 
-      console.log(`bbbbb${evalData}`);
+      console.log(`bbbbb` + JSON.stringify(evalData,null,2));
 
-      const response = await fetch(`${fetchUrl}/submitEval/`, {
+      const response = await fetch(`http://localhost:3001/submitEval/`, {
         body: JSON.stringify(evalData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },

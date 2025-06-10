@@ -16,11 +16,12 @@
 }
 
 html,#root,body {
+  margin:auto;
   display: flex;
   justify-content: center;   /* Center horizontally */
   align-items: center;       /* Center vertically */
   height: 100%;             /* Full viewport height */
-  width: 100%;              /* Full viewport width */
+  width: 90%;              /* Full viewport width */
   background: linear-gradient(#ffffff 60%, #edc6c6 100%);
   /* background-color: aqua; */
 }

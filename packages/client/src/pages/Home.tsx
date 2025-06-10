@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 // We can get rid of the links at the footer but if u find a use, then use it
 import React from 'react';
 import { useEffect, useState } from 'react';
@@ -28,6 +27,7 @@ const Home: React.FC = () => {
       try {
         // eslint-disable-next-line no-console
         console.log(`Checking session...`);
+        console.log(`fetchUrl: ${fetchUrl}`);
         const response = await fetch(`${fetchUrl}/me/`, {
           body: JSON.stringify({ requestData: true }),
           credentials: `include`,
@@ -71,7 +71,7 @@ const Home: React.FC = () => {
         </div>
       </section>
     </main>
-    <footer className="footer">
+    {/* <footer className="footer">
       <div className="footer-content">
         <div className="footer-left">
           <img src="/PR_LOGO.png" alt="Performance Review Logo" className="footer-logo" />
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </footer> */}
   </div>;
 };
 export default Home;
