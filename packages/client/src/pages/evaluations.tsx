@@ -118,7 +118,7 @@ const Evaluations: React.FC = () => {
         evaluationType: resJson.user.role,
         semester: selectedSemester,
         supervisorId: resJson.user.role === `SUPERVISOR` ? resJson.user.userId : resJson.user.supervisorId,
-        userId: resJson.user.userId,
+        userId: resJson.user.id,
       };
 
       console.log(`bbbbb`, JSON.stringify(evalData, null, 2));

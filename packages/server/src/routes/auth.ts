@@ -162,7 +162,7 @@ router.post(`/me`, requireAuth, async (
         const teamId = team ? team.id : null;
         res.status(200).json({
           message: `Fetched user info`,
-          user: { email: user.email, name: user.name, role: user.role, teamId, teamName, userId: user.id },
+          user: { id: user.id, email: user.email, name: user.name, role: user.role, teamId, teamName },
         });
       } else {
         res.status(200).json({
