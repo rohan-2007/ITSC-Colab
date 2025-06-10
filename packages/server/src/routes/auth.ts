@@ -167,12 +167,19 @@ router.post(`/me`, requireAuth, async (
           message: `Fetched user info`,
           user: { email: user.email, name: user.name, role: user.role, userId: user.id },
         });
+      } else {
+        res.status(200).json({
+          message: `User session found, no data requested`,
+          sessionActive: true,
+        });
+        return;
       }
     } else {
       res.status(200).json({
         message: `User session found`,
         sessionActive: true,
       });
+      return;
     }
   } catch (err) {
     console.error(`Fetch error:`, err);
