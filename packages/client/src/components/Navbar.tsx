@@ -11,8 +11,6 @@ const Navbar: React.FC = () =>
     <nav className="nav-links">
       <Link to="/">Home</Link>
       <Link to="/evaluations">Evaluations</Link>
-      <Link to="/contact">Past Evaluations</Link>
-      <Link to="/login">Login</Link>
       <Link to="/profile">Profile</Link>
     </nav>
     <div />
