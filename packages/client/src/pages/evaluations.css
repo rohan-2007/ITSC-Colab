@@ -30,3 +30,12 @@
 .semester-option {
   list-style-type: none;
 }
+
+.evaluations-page {
+  text-align: center;
+}
+
+.add-eval-button {
+  text-align: center;
+  width: 20%
+}

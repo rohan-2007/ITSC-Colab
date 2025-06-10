@@ -179,9 +179,13 @@ const Evaluations: React.FC = () => {
     setShowDropDown(showDropDown);
   }, [ showDropDown ]);
 
-  return <div>
+  return <div className="evaluations-page">
 
-    <button onClick={toggleNewEval}>Add Evaluation</button>
+    <h1>Evaluations</h1>
+
+    <h3>Here, you can add your evaluations. To view past evaluations, click "Past Evaluations" on the top.</h3>
+
+    <button className="add-eval-button" onClick={toggleNewEval}>Add Evaluation</button>
 
     {isOpenNewEval &&
       <div className="evalContainer">
