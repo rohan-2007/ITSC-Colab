@@ -29,14 +29,12 @@ const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-app.set(`trust proxy`, 1);
-
 export const sessionMiddleware = session({
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    sameSite: `none`,
-    secure: true, // process.env.NODE_ENV === `production`
+    sameSite: `lax`,
+    secure: process.env.NODE_ENV === `production`,
   },
   resave: false,
   saveUninitialized: false,
