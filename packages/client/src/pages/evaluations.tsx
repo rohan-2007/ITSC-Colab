@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -99,25 +97,25 @@ const Evaluations: React.FC = () => {
       const res = await fetch(`http://localhost:3001/me/`, {
         body: JSON.stringify({ returnData: true }),
         credentials: `include`,
-        method: `POST`,
         headers: {
-    'Content-Type': 'application/json',
-  },
+          'Content-Type': `application/json`,
+        },
+        method: `POST`,
       });
 
       const resJson = await res.json();
       if (!res.ok) {
-        console.log('Response not ok, throwing error');
+        console.log(`Response not ok, throwing error`);
         throw new Error(resJson.message || `user session not found`);
       }
-      console.log(`resJson: ` , JSON.stringify(resJson, null, 2));
-      console.log('Before evalData creation');
+      console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+      console.log(`Before evalData creation`);
       const evalData = {
         criteria: {
-          "criteria1":criteria1,
-          "criteria2":criteria2,
-          "criteria3":criteria3,
-          "criteria4":criteria4,
+          criteria1,
+          criteria2,
+          criteria3,
+          criteria4,
         },
         evaluationType: resJson.user.role,
         semester: selectedSemester,
@@ -125,7 +123,7 @@ const Evaluations: React.FC = () => {
         userId: resJson.user.userId,
       };
 
-      console.log(`bbbbb` + JSON.stringify(evalData,null,2));
+      console.log(`bbbbb`, JSON.stringify(evalData, null, 2));
 
       const response = await fetch(`http://localhost:3001/submitEval/`, {
         body: JSON.stringify(evalData),
@@ -177,197 +175,206 @@ const Evaluations: React.FC = () => {
     setSelectedSemester(semester);
   };
 
+  const [ isOpenNewEval, setIsOpenNewEval ] = useState(false);
+  const toggleNewEval = () => setIsOpenNewEval((prev) => !prev);
+
   useEffect(() => {
     setShowDropDown(showDropDown);
   }, [ showDropDown ]);
 
-  return <div className="evalContainer">
+  return <div>
 
-    <div
-      tabIndex={0}
-      onClick={toggleDropdown}
-      onKeyDown={handleKeyDown}
-      role="button"
-      aria-expanded={isOpenSemesterSelect}
-      aria-haspopup="listbox"
-    >
-      {selectedSemester || `Select Semester`}
-    </div>
-    {isOpenSemesterSelect &&
-      <ul role="listbox">
-        {semesters.map((option, index) =>
-          <li
-            className="semester-option"
-            // key={index}
-            role="option"
-            tabIndex={0}
-            aria-selected={selectedSemester === option}
-            onClick={() => onClickHandler(option)}
-            onKeyDown={(e) => {
-              if (e.key === `Enter` || e.key === ` `) {
-                onClickHandler(option);
-              }
-            }}
-          >
-            {option}
-          </li>)}
-      </ul>}
+    <button onClick={toggleNewEval}>Add Evaluation</button>
 
-    <form>
+    {isOpenNewEval &&
+      <div className="evalContainer">
 
-      {/* <div tabIndex={0} onKeyDown={handleKeyDown} className={showDropDown ? `dropdown` : `dropdown active`}>
-        {semesters.map(
-          (city: string, index: number): JSX.Element =>
-            <p
-              key={index}
-              onClick={(): void => {
-                onClickHandler(city);
-              }}
-              onKeyDown={handleKeyDown}
-            >
-              {city}
-            </p>,
-        )}
-      </div> */}
+        <div
+          tabIndex={0}
+          onClick={toggleDropdown}
+          onKeyDown={handleKeyDown}
+          role="button"
+          aria-expanded={isOpenSemesterSelect}
+          aria-haspopup="listbox"
+        >
+          {selectedSemester || `Select Semester`}
+        </div>
+        {isOpenSemesterSelect &&
+          <ul role="listbox">
+            {semesters.map((option, index) =>
+              <li
+                className="semester-option"
+                // key={index}
+                role="option"
+                tabIndex={0}
+                aria-selected={selectedSemester === option}
+                onClick={() => onClickHandler(option)}
+                onKeyDown={(e) => {
+                  if (e.key === `Enter` || e.key === ` `) {
+                    onClickHandler(option);
+                  }
+                }}
+              >
+                {option}
+              </li>)}
+          </ul>}
 
-      <fieldset className="criteria">
-        <legend>Critical Thinking/Problem Solving:</legend>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria1"
-            value="starting"
-            checked={criteria1 === `starting`}
-            onChange={(e) => setCriteria1(e.target.value)}
-          />
-          Starting
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria1"
-            value="inProgress"
-            checked={criteria1 === `inProgress`}
-            onChange={(e) => setCriteria1(e.target.value)}
-          />
-          In Progress
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria1"
-            value="competitive"
-            checked={criteria1 === `competitive`}
-            onChange={(e) => setCriteria1(e.target.value)}
-          />
-          Competitive
-        </label>
-      </fieldset>
+        <form>
 
-      <fieldset className="criteria">
-        <legend>Technical Proficiency:</legend>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria2"
-            value="starting"
-            checked={criteria2 === `starting`}
-            onChange={(e) => setCriteria2(e.target.value)}
-          />
-          Starting
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria2"
-            value="inProgress"
-            checked={criteria2 === `inProgress`}
-            onChange={(e) => setCriteria2(e.target.value)}
-          />
-          In Progress
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria2"
-            value="competitive"
-            checked={criteria2 === `competitive`}
-            onChange={(e) => setCriteria2(e.target.value)}
-          />
-          Competitive
-        </label>
-      </fieldset>
+          {/* <div tabIndex={0} onKeyDown={handleKeyDown} className={showDropDown ? `dropdown` : `dropdown active`}>
+            {semesters.map(
+              (city: string, index: number): JSX.Element =>
+                <p
+                  key={index}
+                  onClick={(): void => {
+                    onClickHandler(city);
+                  }}
+                  onKeyDown={handleKeyDown}
+                >
+                  {city}
+                </p>,
+            )}
+          </div> */}
 
-      <fieldset className="criteria">
-        <legend>Teamwork:</legend>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria3"
-            value="starting"
-            checked={criteria3 === `starting`}
-            onChange={(e) => setCriteria3(e.target.value)}
-          />
-          Starting
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria3"
-            value="inProgress"
-            checked={criteria3 === `inProgress`}
-            onChange={(e) => setCriteria3(e.target.value)}
-          />
-          In Progress
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria3"
-            value="competitive"
-            checked={criteria3 === `competitive`}
-            onChange={(e) => setCriteria3(e.target.value)}
-          />
-          Competitive
-        </label>
-      </fieldset>
+          <fieldset className="criteria">
+            <legend>Critical Thinking/Problem Solving:</legend>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria1"
+                value="starting"
+                checked={criteria1 === `starting`}
+                onChange={(e) => setCriteria1(e.target.value)}
+              />
+              Starting
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria1"
+                value="inProgress"
+                checked={criteria1 === `inProgress`}
+                onChange={(e) => setCriteria1(e.target.value)}
+              />
+              In Progress
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria1"
+                value="competitive"
+                checked={criteria1 === `competitive`}
+                onChange={(e) => setCriteria1(e.target.value)}
+              />
+              Competitive
+            </label>
+          </fieldset>
 
-      <fieldset className="criteria">
-        <legend>Personal Disposition:</legend>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria4"
-            value="starting"
-            checked={criteria4 === `starting`}
-            onChange={(e) => setCriteria4(e.target.value)}
-          />
-          Starting
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria4"
-            value="inProgress"
-            checked={criteria4 === `inProgress`}
-            onChange={(e) => setCriteria4(e.target.value)}
-          />
-          In Progress
-        </label>
-        <label className="evaluation-btn">
-          <input
-            type="radio"
-            name="criteria4"
-            value="competitive"
-            checked={criteria4 === `competitive`}
-            onChange={(e) => setCriteria4(e.target.value)}
-          />
-          Competitive
-        </label>
-      </fieldset>
+          <fieldset className="criteria">
+            <legend>Technical Proficiency:</legend>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria2"
+                value="starting"
+                checked={criteria2 === `starting`}
+                onChange={(e) => setCriteria2(e.target.value)}
+              />
+              Starting
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria2"
+                value="inProgress"
+                checked={criteria2 === `inProgress`}
+                onChange={(e) => setCriteria2(e.target.value)}
+              />
+              In Progress
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria2"
+                value="competitive"
+                checked={criteria2 === `competitive`}
+                onChange={(e) => setCriteria2(e.target.value)}
+              />
+              Competitive
+            </label>
+          </fieldset>
 
-      <button type="submit" onClick={handleEvalSubmit}>Submit</button>
-    </form>
+          <fieldset className="criteria">
+            <legend>Teamwork:</legend>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria3"
+                value="starting"
+                checked={criteria3 === `starting`}
+                onChange={(e) => setCriteria3(e.target.value)}
+              />
+              Starting
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria3"
+                value="inProgress"
+                checked={criteria3 === `inProgress`}
+                onChange={(e) => setCriteria3(e.target.value)}
+              />
+              In Progress
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria3"
+                value="competitive"
+                checked={criteria3 === `competitive`}
+                onChange={(e) => setCriteria3(e.target.value)}
+              />
+              Competitive
+            </label>
+          </fieldset>
+
+          <fieldset className="criteria">
+            <legend>Personal Disposition:</legend>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria4"
+                value="starting"
+                checked={criteria4 === `starting`}
+                onChange={(e) => setCriteria4(e.target.value)}
+              />
+              Starting
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria4"
+                value="inProgress"
+                checked={criteria4 === `inProgress`}
+                onChange={(e) => setCriteria4(e.target.value)}
+              />
+              In Progress
+            </label>
+            <label className="evaluation-btn">
+              <input
+                type="radio"
+                name="criteria4"
+                value="competitive"
+                checked={criteria4 === `competitive`}
+                onChange={(e) => setCriteria4(e.target.value)}
+              />
+              Competitive
+            </label>
+          </fieldset>
+
+          <button type="submit" onClick={handleEvalSubmit}>Submit</button>
+        </form>
+      </div>}
   </div>;
 };
 
