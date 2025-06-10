@@ -160,9 +160,10 @@ router.post(`/me`, requireAuth, async (
         });
         const teamName = team ? team.name : null;
         const teamId = team ? team.id : null;
+        const createdAt = user.createdAt.toISOString();
         res.status(200).json({
           message: `Fetched user info`,
-          user: { id: user.id, email: user.email, name: user.name, role: user.role, teamId, teamName },
+          user: { id: user.id, createdAt, email: user.email, name: user.name, role: user.role, teamId, teamName },
         });
       } else {
         res.status(200).json({
