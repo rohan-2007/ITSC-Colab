@@ -7,6 +7,7 @@ dotenv.config();
 // import cookieParser from 'cookieParser';
 import cors from 'cors';
 import authRouter from './routes/auth'; // Import the router
+import evalRouter from './routes/eval'; // Import the evaluation router
 
 const app = express();
 const clientURLs = [
@@ -50,6 +51,7 @@ app.get(`/`, (_req, res) => {
 app.use(express.json()); // Use JSON middleware you slugs
 app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
+app.use(evalRouter);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
