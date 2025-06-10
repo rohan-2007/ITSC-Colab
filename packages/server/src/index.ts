@@ -4,9 +4,11 @@ import pgSession from 'connect-pg-simple';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
+console.log('Loaded DATABASE_URL:', process.env.DATABASE_URL);
 // import cookieParser from 'cookieParser';
 import cors from 'cors';
 import authRouter from './routes/auth'; // Import the router
+import evalRouter from "./routes/eval";
 
 const app = express();
 const clientURLs = [
@@ -52,8 +54,9 @@ app.get(`/`, (_req, res) => {
 app.use(express.json()); // Use JSON middleware you slugs
 app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
+app.use(evalRouter);
 
-app.listen(PORT, `0.0.0.0`, () => {
+app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server running on http://0.0.0.0:${ PORT } (likely 10.244.14.191)`);
+  console.log(`Server is running on http://localhost:${ PORT }`);
 });
