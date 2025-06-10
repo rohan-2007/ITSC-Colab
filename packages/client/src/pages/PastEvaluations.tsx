@@ -3,45 +3,44 @@
 import React from 'react';
 import './PastEvaluations.css';
 
-const PastEvaluations: React.FC = async () => {
-  // const getPastEvals = async () => {
-  const res = await fetch(`http://localhost:3001/me/`, {
-    body: JSON.stringify({ returnData: true }),
-    credentials: `include`,
-    headers: {
-      'Content-Type': `application/json`,
-    },
-    method: `POST`,
-  });
+const PastEvaluations: React.FC = () =>
+// const getPastEvals = async () => {
+// const res = await fetch(`http://localhost:3001/me/`, {
+//   body: JSON.stringify({ returnData: true }),
+//   credentials: `include`,
+//   headers: {
+//     'Content-Type': `application/json`,
+//   },
+//   method: `POST`,
+// });
 
-  const resJson = await res.json();
-  // if (!res.ok) {
-  //   console.log(`Response not ok, throwing error`);
-  //   throw new Error(resJson.message || `user session not found`);
-  // }
-  // console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+// const resJson = await res.json();
+// if (!res.ok) {
+//   console.log(`Response not ok, throwing error`);
+//   throw new Error(resJson.message || `user session not found`);
+// }
+// console.log(`resJson: `, JSON.stringify(resJson, null, 2));
 
-  // try {
-  //   const userId = resJson.user.id;
-  // } catch (error) {
-  //   throw new Error(resJson.message || `user session not found`);
-  // }
+// try {
+//   const userId = resJson.user.id;
+// } catch (error) {
+//   throw new Error(resJson.message || `user session not found`);
+// }
 
-  const userId = resJson.user.id;
+// const userId = resJson.user.id;
 
-  const pastEvals = await fetch(`http://localhost:3001/getEval`, {
-    body: JSON.stringify({ userId }),
-    credentials: `include`,
-    headers: { 'Content-Type': `application/json` },
-    method: `POST`,
-  });
+// const pastEvals = await fetch(`http://localhost:3001/getEval`, {
+//   body: JSON.stringify({ userId }),
+//   credentials: `include`,
+//   headers: { 'Content-Type': `application/json` },
+//   method: `POST`,
+// });
 
-  // eslint-disable-next-line no-console
-  console.log(pastEvals);
-  // return pastEvals;
-  // };
+// console.log(pastEvals);
+// return pastEvals;
+// };
 
-  return <>
+  <>
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
@@ -76,6 +75,4 @@ const PastEvaluations: React.FC = async () => {
       </div>
     </div>
   </>;
-};
-
 export default PastEvaluations;

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import NotFoundPage from './pages/PastEvaluations';
+// import NotFoundPage from './pages/PastEvaluations';
 import Layout from './layouts/Layout';
 import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
@@ -21,7 +21,7 @@ const App: React.FC = () =>
       <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="*" element={<NotFoundPage />} />
+      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
 export default App;
