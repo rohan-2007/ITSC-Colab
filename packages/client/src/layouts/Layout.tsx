@@ -15,7 +15,7 @@ const Layout: React.FC<Props> = ({ children }) =>
     <header style={{ display: `block` }}>
       <Navbar />
     </header>
-    <main style={{ display: `block`, height: `fit-content`, width: `100%` }}>{children}</main>
+    <main style={{ display: `block`, height: `100%`, width: `100%` }}>{children}</main>
     <footer style={{ display: `block` }}>
       <Footer />
     </footer>

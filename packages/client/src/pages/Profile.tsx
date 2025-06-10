@@ -1,9 +1,36 @@
 import React from 'react';
+import './Profile.css';
 
 const Profile: React.FC = () => {
-  const fetchUserInfo = () => `Fetch user info called`;
+  const fetchUserInfo = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/me/`, {
+        body: JSON.stringify({ returnData: true }),
+        credentials: `include`,
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+
+      // eslint-disable-next-line no-console
+      console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(`Failed to fetch user info: ${err.message}`);
+      } else {
+        throw new Error(`Failed to fetch user info: Unknown error`);
+      }
+    }
+    // evaluationType: resJson.user.role,
+    // semester: selectedSemester,
+    // supervisorId: resJson.user.role === `SUPERVISOR` ? resJson.user.userId : resJson.user.supervisorId,
+    // userId: resJson.user.id,
+  };
   fetchUserInfo();
-  return <div>
+  return <div className="profile-container">
     <h1>Profile</h1>
     <div className="profile-div">
       <div className="left-profile-info">
@@ -18,7 +45,6 @@ const Profile: React.FC = () => {
         <p>Team: Name</p>
         <button>Change Team</button>
       </div>
-      <div className="left-profile-info" />
     </div>
   </div>;
 };
