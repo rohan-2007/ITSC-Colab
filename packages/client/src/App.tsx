@@ -9,6 +9,7 @@ import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
 import Evaluations from './pages/evaluations';
 import Profile from './pages/Profile';
+import Contact from './pages/Contact';
 
 const App: React.FC = () =>
   <Layout>
@@ -19,6 +20,7 @@ const App: React.FC = () =>
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </Layout>;
