@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-// We can get rid of the links at the footer but if u find a use, then use it
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './home.css';
+
 const fetchUrl = `http://localhost:${3001}`;
+
 interface User {
   email: string;
   evalsCompleted: number;
@@ -15,50 +16,80 @@ interface User {
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const [ user ] = useState<User>({
-    email: `Loading...`,
-    evalsCompleted: 0,
-    name: `Loading...`,
-    role: `Loading...`,
-  });
+  const [ user, setUser ] = useState<User | null>(null);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ error, setError ] = useState<string | null>(null);
 
   useEffect(() => {
     const checkSession = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        // eslint-disable-next-line no-console
-        console.log(`Checking session...`, `fetchUrl:`, fetchUrl);
         const response = await fetch(`${fetchUrl}/me/`, {
-          body: JSON.stringify({ requestData: true }),
+          body: JSON.stringify({ returnData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
         });
-        // eslint-disable-next-line no-console
-        console.log(`Response status:`, response.status);
 
         if (!response.ok) {
+          await navigate(`/login`);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const jsonData = await response.json();
 
-        if (jsonData.sessionActive) {
-          user.email = jsonData.user.email;
-          user.name = jsonData.user.name;
-          user.role = jsonData.user.role;
-          // eslint-disable-next-line no-console
-          console.log(`User data fetched successfully:`, jsonData.user);
+        if (jsonData && jsonData.user) {
+          setUser({
+            email: jsonData.user.email,
+            evalsCompleted: jsonData.user.evalsCompleted || 0,
+            name: jsonData.user.name,
+            role: jsonData.user.role,
+          });
         } else {
           await navigate(`/login`);
         }
-      } catch (error) {
+      } catch (err) {
         // eslint-disable-next-line no-console
-        console.error(`Session check failed:`, error);
+        console.error(`[Home useEffect] Session check failed:`, err);
+        setError(`Failed to load user data. Please try again.`);
+        await navigate(`/login`);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     void checkSession();
-  }, [ navigate, user ]);
+  }, [ navigate ]);
+
+  if (isLoading) {
+    return <div className="home-container">
+      <main className="main-content">
+        <h1>Loading user data...</h1>
+        <p>Please wait.</p>
+      </main>
+    </div>;
+  }
+
+  if (error) {
+    return <div className="home-container">
+      <main className="main-content">
+        <h1>Error</h1>
+        <p>{error}</p>
+        <button onClick={() => navigate(`/login`)}>Go to Login</button>
+      </main>
+    </div>;
+  }
+
+  if (!user) {
+    return <div className="home-container">
+      <main className="main-content">
+        <h1>User data not available.</h1>
+        <p>Attempting to redirect...</p>
+      </main>
+    </div>;
+  }
 
   return <div className="home-container">
     <main className="main-content">
@@ -88,4 +119,5 @@ const Home: React.FC = () => {
     </footer>
   </div>;
 };
+
 export default Home;
