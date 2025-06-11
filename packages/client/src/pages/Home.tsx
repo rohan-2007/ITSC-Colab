@@ -60,7 +60,6 @@ const Home: React.FC = () => {
 
         if (!response.ok) {
           await navigate(`/login`);
-          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const jsonData = await response.json();

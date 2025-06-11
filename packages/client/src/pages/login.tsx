@@ -25,10 +25,6 @@ const Login: React.FC = () => {
           method: `POST`,
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const jsonData = await response.json();
 
         if (jsonData.sessionActive) {

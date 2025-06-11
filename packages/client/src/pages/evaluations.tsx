@@ -98,7 +98,6 @@ const Evaluations: React.FC = () => {
 
         if (!response.ok) {
           await navigate(`/login`);
-          throw new Error(`HTTP error! status: ${response.status}`);
         }
       } catch (err) {
         // eslint-disable-next-line no-console
