@@ -66,7 +66,9 @@ router.get(`/getEval`, requireAuth, async (
 ): Promise<void> => {
   // eslint-disable-next-line no-console
   console.log(`in getEval`);
-  const { evaluationId, userId } = req.query;
+  // const { evaluationId, userId } = req.query;
+  const evaluationId = req.query.evaluationId ? Number(req.query.evaluationId) : undefined;
+  const userId = req.query.userId ? Number(req.query.userId) : undefined;
   // eslint-disable-next-line no-console
   console.log(`${ evaluationId } ${ userId }`);
 
@@ -97,7 +99,7 @@ router.get(`/getEval`, requireAuth, async (
       // eslint-disable-next-line no-console
       console.log(`in userId${ userId }`);
       const evaluations = await prisma.evaluation.findMany({
-        orderBy: { createdAt: `desc` },
+        // orderBy: { createdAt: `desc` },
         where: { studentId: userId },
       });
 
