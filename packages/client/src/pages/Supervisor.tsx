@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Supervisor.css';
-
+const fetchUrl = `http://localhost:${3001}`;
 interface Student {
+  id: number;
+  email: string;
   name: string;
   password: string;
 }
@@ -17,12 +19,7 @@ interface Team {
 }
 
 const Supervisor: React.FC = () => {
-  const [ students, setStudents ] = useState<Student[]>(
-    Array.from({ length: 10 }, (_, i) => ({
-      name: `Student ${i + 1}`,
-      password: `pass${i + 1}`,
-    })),
-  );
+  const [ students, setStudents ] = useState<Student[]>([]);
 
   const [ teams, setTeams ] = useState<Team[]>(
     Array.from({ length: 1 }, (_, i) => ({
@@ -36,18 +33,51 @@ const Supervisor: React.FC = () => {
 
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ teamSearch, setTeamSearch ] = useState(``);
-  const [ modalOpen, setModalOpen ] = useState(false);
+  const [ studentInfoModalOpen, setStudentInfoModalOpen ] = useState(false);
   const [ teamEditModalOpen, setTeamEditModalOpen ] = useState(false);
-  const [ selectedStudentIndex, setSelectedStudentIndex ] = useState<number | null>(null);
+  const [ _selectedStudentIndex, setSelectedStudentIndex ] = useState<number | null>(null);
   const [ selectedTeamIndex, setSelectedTeamIndex ] = useState<number | null>(null);
-  const [ newPassword, setNewPassword ] = useState(``);
+  const [ editedStudent, setEditedStudent ] = useState<{
+    email: string;
+    name: string;
+    newPassword?: string;
+    userId: number;
+  } | null>(null);
   const [ editedTeamName, setEditedTeamName ] = useState(``);
-  const [ showPasswordMap, setShowPasswordMap ] = useState<Record<number, boolean>>({});
 
-  const openPasswordModal = (index: number) => {
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await fetch(`${fetchUrl}/students/`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch students`);
+      }
+
+      const jsonData = await response.json();
+
+      if (jsonData && jsonData.students) {
+        const users = jsonData.students as Student[];
+        setStudents(users);
+      }
+    };
+
+    void fetchStudents();
+  }, []);
+
+  const openStudentInfoModal = (index: number) => {
     setSelectedStudentIndex(index);
-    setNewPassword(students[index].password);
-    setModalOpen(true);
+    setEditedStudent({
+      email: students[index].email,
+      name: students[index].name,
+      newPassword: ``,
+      userId: students[index].id,
+    });
+    setStudentInfoModalOpen(true);
   };
 
   const openEditTeamModal = (index: number) => {
@@ -56,25 +86,37 @@ const Supervisor: React.FC = () => {
     setTeamEditModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedStudentIndex(null);
-    setNewPassword(``);
-  };
-
   const closeTeamModal = () => {
     setTeamEditModalOpen(false);
     setSelectedTeamIndex(null);
     setEditedTeamName(``);
   };
 
-  const savePassword = () => {
-    if (selectedStudentIndex !== null && newPassword.trim() !== ``) {
-      setStudents((prev) =>
-        prev.map((s, i) =>
-          i === selectedStudentIndex ? { ...s, password: newPassword.trim() } : s));
+  const closeStudentInfoModal = () => {
+    setStudentInfoModalOpen(false);
+    setSelectedStudentIndex(null);
+  };
+
+  const saveStudentInfo = async () => {
+    // eslint-disable-next-line no-console
+    console.log(`Saving student info:`, editedStudent);
+
+    const res = await fetch(`${fetchUrl}/setUserInfo/`, {
+      body: JSON.stringify(editedStudent),
+      credentials: `include`,
+      headers: { 'Content-Type': `application/json` },
+      method: `POST`,
+    });
+    if (!res.ok) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to set user info`);
     }
-    closeModal();
+
+    const jsonData = await res.json();
+    // eslint-disable-next-line no-console
+    console.log(`Saved student info:`, jsonData);
+
+    closeStudentInfoModal();
   };
 
   const saveTeamName = () => {
@@ -91,10 +133,6 @@ const Supervisor: React.FC = () => {
       setTeams((prev) => prev.filter((_, i) => i !== selectedTeamIndex));
       closeTeamModal();
     }
-  };
-
-  const togglePasswordVisibility = (index: number) => {
-    setShowPasswordMap((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   const toggleTeamDropdown = (index: number) => {
@@ -166,33 +204,15 @@ const Supervisor: React.FC = () => {
         />
         <div className="scroll-box student-list">
           {filteredStudents.map((student, index) =>
+            // Each student row now has the student name and a single "Change Info" button.
             <div className="student-row" key={index}>
-              <button className="item-button">{student.name}</button>
-              <div className="password-tools">
-                <div className="password-wrapper">
-                  <input
-                    type={showPasswordMap[index] ? `text` : `password`}
-                    value={student.password}
-                    readOnly
-                    className="password-input"
-                  />
-                  <span
-                    className="password-toggle"
-                    onClick={() => togglePasswordVisibility(index)}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <img
-                      src={showPasswordMap[index] ? `/eye.png` : `/eye-slash.png`}
-                      alt={showPasswordMap[index] ? `Hide password` : `Show password`}
-                    />
-                  </span>
-                </div>
-                <button
-                  onClick={() => openPasswordModal(index)}
-                  className="change-password-button"
-                >Change</button>
-              </div>
+              <span className="student-name">{student.name}</span>
+              <button
+                onClick={() => openStudentInfoModal(index)}
+                className="change-info-button"
+              >
+                Change Info
+              </button>
             </div>)}
         </div>
       </div>
@@ -258,19 +278,48 @@ const Supervisor: React.FC = () => {
       </div>
     </div>
 
-    {modalOpen &&
-      <div className="modal-overlay" onClick={closeModal}>
-        <div className="modal" onClick={(e) => e.stopPropagation()}>
-          <h3>Change Password</h3>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="modal-input"
-          />
+    {studentInfoModalOpen &&
+      <div className="modal-overlay" onClick={closeStudentInfoModal}>
+        <div className="modal student-info-modal" onClick={(e) => e.stopPropagation()}>
+          <h3>Edit Student Information</h3>
+
+          <div className="modal-form-group">
+            <label htmlFor="studentName">Student Name</label>
+            <input
+              id="studentName"
+              type="text"
+              value={editedStudent?.name || ``}
+              onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, name: e.target.value } : null)}
+              className="modal-input"
+            />
+          </div>
+
+          <div className="modal-form-group">
+            <label htmlFor="studentEmail">Email</label>
+            <input
+              id="studentEmail"
+              type="email"
+              value={editedStudent?.email || ``}
+              onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, email: e.target.value } : null)}
+              className="modal-input"
+            />
+          </div>
+
+          <div className="modal-form-group">
+            <label htmlFor="studentPassword">New Password</label>
+            <input
+              id="studentPassword"
+              type="password"
+              placeholder="Leave blank to keep current"
+              value={editedStudent?.newPassword || ``}
+              onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, newPassword: e.target.value } : null)}
+              className="modal-input"
+            />
+          </div>
+
           <div className="modal-buttons">
-            <button onClick={savePassword} className="modal-save">Save</button>
-            <button onClick={closeModal} className="modal-cancel">Cancel</button>
+            <button onClick={saveStudentInfo} className="modal-save">Save</button>
+            <button onClick={closeStudentInfoModal} className="modal-cancel">Cancel</button>
           </div>
         </div>
       </div>}
