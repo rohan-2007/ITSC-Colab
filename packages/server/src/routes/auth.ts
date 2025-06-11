@@ -130,6 +130,24 @@ router.post(`/login`, async (
   }
 });
 
+router.post(`/logout`, (req: Request, res: Response) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(`Session destruction failed:`, err);
+      return res.status(500).json({ message: `Could not log out` });
+    }
+
+    res.clearCookie(`connect.sid`, {
+      httpOnly: true,
+      path: `/`,
+      sameSite: `lax`,
+      secure: process.env.NODE_ENV === `production`,
+    });
+
+    return res.sendStatus(204);
+  });
+});
+
 interface UserInfoBody {
   returnData?: boolean;
 }

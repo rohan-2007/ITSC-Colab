@@ -12,10 +12,17 @@ const Navbar: React.FC = () =>
       <Link to="/">Home</Link>
       <Link to="/evaluations">Evaluations</Link>
       <Link to="/profile">Profile</Link>
-      <Link to="/past">Profile</Link>
-      <Link to="/past_evaluations">Past Evaluations</Link>
       <Link to="/contact">Contact</Link>
     </nav>
-    <div />
+    <button
+      className="logout-btn"
+      onClick={async () => {
+        await fetch(`http://localhost:3001/logout/`, {
+          credentials: `include`,
+          method: `POST`,
+        });
+        window.location.reload();
+      }}
+    >Log Out</button>
   </header>;
 export default Navbar;
