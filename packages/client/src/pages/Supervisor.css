@@ -4,6 +4,17 @@
  flex-direction: column;
  gap: 2rem;
  font-family: 'Segoe UI', sans-serif;
+ margin-bottom: 50px;
+ height: auto;
+ width: 100vw;
+}
+h1, p {
+  text-align: center;
+  margin: 10;
+}
+
+h1 {
+  margin-top: 20px;
 }
 
 
