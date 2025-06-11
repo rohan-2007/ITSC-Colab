@@ -29,7 +29,7 @@ router.post(`/submitEval`, requireAuth, async (
       return;
     }
 
-    if (Number(req.session.id) !== studentId || supervisorId) {
+    if (Number(req.session.userId) !== studentId && Number(req.session.userId) !== supervisorId) {
       res.status(404).json({ error: `You cannot submit an evaluation you are not part of! ` });
     }
 
