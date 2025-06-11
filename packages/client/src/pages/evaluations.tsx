@@ -99,12 +99,10 @@ const Evaluations: React.FC = () => {
         if (!response.ok) {
           await navigate(`/login`);
           throw new Error(`HTTP error! status: ${response.status}`);
-        } else {
-          await navigate(`/login`);
         }
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error(`[Home useEffect] Session check failed:`, err);
+        console.error(`[Evaluations useEffect] Session check failed:`, err);
         await navigate(`/login`);
       } finally {
         setIsLoading(false);
