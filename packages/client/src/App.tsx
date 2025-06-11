@@ -10,6 +10,7 @@ import Login from './pages/login';
 import Evaluations from './pages/evaluations';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
+import Supervisor from './pages/Supervisor';
 
 const App: React.FC = () =>
   <Layout>
@@ -21,6 +22,7 @@ const App: React.FC = () =>
       <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/supervisor" element={<Supervisor />} />
       {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
