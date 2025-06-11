@@ -194,49 +194,51 @@ const PastEvaluations: React.FC = () => {
 
     {pastEvals?.length ?
       pastEvals.map((evaluation: PastEval) =>
-        <section className="past-evals-container">
-          <h2>Your Profile</h2>
-          <div className="rubric-table-wrapper">
-            <table className="rubric-table">
-              <thead>
-                <tr>
-                  <th>Criteria</th>
-                  <th>Starting</th>
-                  <th>In Progress</th>
-                  <th>Competitive</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rubricData.map((criterion) =>
-                  <tr key={criterion.id}>
-                    <td className="criteria-column">
-                      <strong>{criterion.title}</strong>
-                      <ul>
-                        {criterion.subCriteria.map((sub, index) =>
-                          <li key={index}>{sub}</li>)}
-                      </ul>
-                    </td>
-                    {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
-                      (level) =>
-                        <td
-                          key={level}
-                          className={`level-cell ${
-                            (evaluation.criteria as unknown as Selections)?.[criterion.id] === level ? `selected` : ``
-                          }`}
-                          // onClick={() => handleSelect(criterion.id, level)}
-                        >
-                          <div className="level-text">
-                            {criterion.levels[level]}
-                          </div>
-                        </td>,
+        evaluation.type === `STUDENT` ?
+          <section className="past-evals-container">
+            <h2>Your Profile</h2>
+            <div className="rubric-table-wrapper">
+              <table className="rubric-table">
+                <thead>
+                  <tr>
+                    <th>Criteria</th>
+                    <th>Starting</th>
+                    <th>In Progress</th>
+                    <th>Competitive</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rubricData.map((criterion) =>
+                    <tr key={criterion.id}>
+                      <td className="criteria-column">
+                        <strong>{criterion.title}</strong>
+                        <ul>
+                          {criterion.subCriteria.map((sub, index) =>
+                            <li key={index}>{sub}</li>)}
+                        </ul>
+                      </td>
+                      {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
+                        (level) =>
+                          <td
+                            key={level}
+                            className={`level-cell ${
+                              (evaluation.criteria as unknown as Selections)?.[criterion.id] === level ? `selected` : ``
+                            }`}
+                            // onClick={() => handleSelect(criterion.id, level)}
+                          >
+                            <div className="level-text">
+                              {criterion.levels[level]}
+                            </div>
+                          </td>,
 
-                    )}
-                  </tr>)}
-              </tbody>
-            </table>
-          </div>
-        </section>) :
-      <p>No items found</p>}
+                      )}
+                    </tr>)}
+                </tbody>
+              </table>
+            </div>
+          </section> :
+          null) :
+      null}
 
   </>;
 };
