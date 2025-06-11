@@ -131,8 +131,8 @@ const Evaluations: React.FC = () => {
         supervisorId: user.supervisorId,
         userId: user.id,
       };
-
-      console.log("eval object client : " + JSON.stringify(evalData,null,2))
+      // eslint-disable-next-line no-console
+      console.log(`eval object client : ${JSON.stringify(evalData, null, 2)}`);
 
       const response = await fetch(`${fetchUrl}/submitEval/`, {
         body: JSON.stringify(evalData),

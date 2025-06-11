@@ -3,7 +3,6 @@ import { JsonObject } from '@prisma/client/runtime/library';
 import { Role, Semester } from '../../../../generated/prisma';
 import prisma from '../prisma';
 import { requireAuth } from './auth';
-import { json } from 'stream/consumers';
 
 const router = Router();
 
@@ -61,14 +60,16 @@ router.get(`/getEval`, requireAuth, async (
   req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {
-
-  console.log("in getEval");
+  // eslint-disable-next-line no-console
+  console.log(`in getEval`);
   const { evaluationId, userId } = req.query;
-  console.log(evaluationId + " " + userId);
+  // eslint-disable-next-line no-console
+  console.log(`${ evaluationId } ${ userId }`);
 
   try {
     if (evaluationId) {
-      console.log("evaluationId");
+      // eslint-disable-next-line no-console
+      console.log(`evaluationId`);
       const evalRecord = await prisma.evaluation.findUnique({
         where: { id: evaluationId },
       });
@@ -89,15 +90,17 @@ router.get(`/getEval`, requireAuth, async (
     }
 
     if (userId) {
-      console.log("in userId" + userId);
+      // eslint-disable-next-line no-console
+      console.log(`in userId${ userId }`);
       const evaluations = await prisma.evaluation.findMany({
         orderBy: { createdAt: `desc` },
         where: { studentId: userId },
       });
 
-      console.log(`evals: ` + evaluations);
-      if(!evaluations){
-        res.status(404).json({ error: `evaluation records not found`});
+      // eslint-disable-next-line no-console
+      console.log(`evals: ${ JSON.stringify(evaluations) }`);
+      if (!evaluations) {
+        res.status(404).json({ error: `evaluation records not found` });
       }
 
       res.status(200).json(evaluations);
