@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable @stylistic/max-len */
 // FOR REFERENCE THE SCROLL ITEMS WILL ONLY SHOW 1 BUT WILL ADD MORE AS THEY ADD EVALUATIONS FOR EXAMPLE, 1 evaluation equals 1 button, however if they have 2 it will show 2 buttons.
 import React, { useEffect, useState } from 'react';
@@ -63,6 +64,9 @@ const PastEvaluations: React.FC = () => {
   }
 
   const [ pastEvals, setPastEvals ] = useState<PastEval[]>([]);
+  const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<PastEval[]>([]);
+  const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<PastEval[]>([]);
+  const [ evaluationsReady, setEvaluationsReady ] = useState(false);
 
   const getPastEvals = async () => {
     // eslint-disable-next-line no-console
@@ -120,6 +124,18 @@ const PastEvaluations: React.FC = () => {
       try {
         const evals = await getPastEvals();
         setPastEvals(evals);
+        const studentEvals = evals.filter(
+          (entry) => entry.type === `STUDENT`,
+        );
+        const supervisorEvals = evals.filter(
+          (entry) => entry.type === `SUPERVISOR`,
+        );
+        setFilteredStudentEvals(studentEvals);
+        // eslint-disable-next-line no-console
+        console.log(`Filtered student evaluations: `, filteredStudentEvals);
+        setFilteredSupervisorEvals(supervisorEvals);
+        // eslint-disable-next-line no-console
+        console.log(`Filtered supervisor evaluations: `, supervisorEvals);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
@@ -128,6 +144,25 @@ const PastEvaluations: React.FC = () => {
 
     void fetchPastEvals();
   }, []);
+
+  useEffect(() => {
+    if (filteredStudentEvals.length && filteredSupervisorEvals.length) {
+      setEvaluationsReady(true);
+    }
+  }, [ filteredStudentEvals, filteredSupervisorEvals ]);
+
+  if (!evaluationsReady) {
+    return <div>Loading...</div>;
+  }
+
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.log(`Updated filteredStudentEvals:`, filteredStudentEvals);
+  //   // eslint-disable-next-line no-console
+  //   console.log(`Updated filteredSupervisorEvals:`, filteredSupervisorEvals);
+  // }, [ filteredStudentEvals, filteredSupervisorEvals ]);
+
+  // console.log(`filtered student evals`, filteredStudentEvals);
 
   // const pastEvals = getPastEvals();
 
@@ -192,9 +227,12 @@ const PastEvaluations: React.FC = () => {
       </div>
     </div>
 
-    {pastEvals?.length ?
-      pastEvals.map((evaluation: PastEval) =>
-        evaluation.type === `STUDENT` ?
+    {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
+      filteredStudentEvals.map((evaluation: PastEval, evalIndex) => {
+        const supervisorEval = filteredSupervisorEvals[evalIndex];
+        // eslint-disable-next-line no-console
+        console.log(`supervisorEval: `, supervisorEval);
+        return (
           <section className="past-evals-container">
             <h2>Your Profile</h2>
             <div className="rubric-table-wrapper">
@@ -218,27 +256,38 @@ const PastEvaluations: React.FC = () => {
                         </ul>
                       </td>
                       {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
-                        (level) =>
-                          <td
-                            key={level}
-                            className={`level-cell ${
-                              (evaluation.criteria as unknown as Selections)?.[criterion.id] === level ? `selected` : ``
-                            }`}
-                            // onClick={() => handleSelect(criterion.id, level)}
-                          >
-                            <div className="level-text">
-                              {criterion.levels[level]}
-                            </div>
-                          </td>,
 
+                        (level) => {
+                          let cellClass = `level-cell`;
+
+                          // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
+                          if ((evaluation.criteria as unknown as Selections)?.[criterion.id] === level && (supervisorEval.criteria as unknown as Selections)?.[criterion.id] === level) {
+                            cellClass += ` both-selected`;
+                          } else if ((evaluation.criteria as unknown as Selections)?.[criterion.id] === level) {
+                            cellClass += ` student-selected`;
+                          } else if ((supervisorEval.criteria as unknown as Selections)?.[criterion.id] === level) {
+                            cellClass += ` supervisor-selected`;
+                          } else {
+                            cellClass = String(cellClass);
+                          }
+                          return (
+                            <td
+                              key={level}
+                              className={cellClass}
+                              // onClick={() => handleSelect(criterion.id, level)}
+                            >
+                              <div className="level-text">
+                                {criterion.levels[level]}
+                              </div>
+                            </td>);
+                        },
                       )}
                     </tr>)}
                 </tbody>
               </table>
             </div>
-          </section> :
-          null) :
-      null}
+          </section>);
+      }) : null}
 
   </>;
 };

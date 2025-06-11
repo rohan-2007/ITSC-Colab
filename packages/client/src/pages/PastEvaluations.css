@@ -138,3 +138,18 @@ html, body, #root {
   height: auto;
   width: auto;
 }
+
+.level-cell.student-selected {
+  background-color: #4CAF50;
+  border-color: #388E3C;
+}
+
+.level-cell.supervisor-selected {
+  background-color: #110de9;
+  border-color: #0501f5;
+}
+
+.level-cell.both-selected {
+  background-color: #d70de9;
+  border-color: #df03f4;
+}
