@@ -33,5 +33,6 @@ header {
 
 .main-content-area {
   flex: 1;
+  background-color: #f0f2f5;
   /* background-color: aqua; */
 }

@@ -117,25 +117,6 @@ const Profile: React.FC = () => {
         <p className="profile-email">{user.email}</p>
       </div>
 
-      <div className="profile-card profile-organization-card">
-        <h3>Organizational Details</h3>
-        <div className="profile-info-item">
-          <span className="info-label">Supervisor</span>
-          <span className="info-value">{user.supervisorName}</span>
-        </div>
-        <button className="btn small-btn tertiary-btn" disabled>
-          Change Supervisor
-        </button>
-
-        <div className="profile-info-item">
-          <span className="info-label">Team</span>
-          <span className="info-value">{user.teamName}</span>
-        </div>
-        <button className="btn small-btn tertiary-btn" disabled>
-          Change Team
-        </button>
-      </div>
-
       <div className="profile-card profile-account-card">
         <h3>Account Information</h3>
         <div className="profile-info-item">
@@ -156,6 +137,14 @@ const Profile: React.FC = () => {
         <div className="profile-info-item">
           <span className="info-label">Member ID</span>
           <span className="info-value">#{user.id}</span>
+        </div>
+        <div className="profile-info-item">
+          <span className="info-label">Supervisor</span>
+          <span className="info-value">{user.supervisorName}</span>
+        </div>
+        <div className="profile-info-item">
+          <span className="info-label">Team</span>
+          <span className="info-value">{user.teamName}</span>
         </div>
       </div>
 
