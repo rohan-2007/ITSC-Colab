@@ -120,3 +120,21 @@ html, body, #root {
  transform: scale(1.08);
  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.past-evals-container {
+  /* grid-area: profile; */
+  width: auto;
+  height: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; /* Slight offset for visual balance */
+  display: flex; /* Use flex to push the button to the bottom */
+  flex-direction: column;
+}
+
+.past-evals-container * {
+  height: auto;
+  width: auto;
+}
