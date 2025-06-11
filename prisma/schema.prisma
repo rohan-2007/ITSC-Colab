@@ -38,7 +38,7 @@ enum Semester {
 
 model Evaluation {
   id            Int       @id @default(autoincrement())
-  userId        Int
+  studentId     Int
   supervisorId  Int?
   semester      Semester
   type          Role
