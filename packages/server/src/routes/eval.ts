@@ -29,6 +29,10 @@ router.post(`/submitEval`, requireAuth, async (
       return;
     }
 
+    if (Number(req.session.id) !== studentId || supervisorId) {
+      res.status(404).json({ error: `You cannot submit an evaluation you are not part of! ` });
+    }
+
     const newEval = await prisma.evaluation.create({
       data: {
         criteria,
