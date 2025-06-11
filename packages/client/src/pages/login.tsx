@@ -236,7 +236,7 @@ const Login: React.FC = () => {
                   name="isSupervisor"
                   value="true"
                   checked={formData.isSupervisor}
-                  onChange={handleChange}
+                  onChange={() => setFormData((prev) => ({ ...prev, isSupervisor: true }))}
                 />
                 Yes
               </span>
@@ -246,7 +246,7 @@ const Login: React.FC = () => {
                   name="isSupervisor"
                   value="false"
                   checked={!formData.isSupervisor}
-                  onChange={handleChange}
+                  onChange={() => setFormData((prev) => ({ ...prev, isSupervisor: false }))}
                 />
                 No
               </span>
