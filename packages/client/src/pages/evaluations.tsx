@@ -1,4 +1,3 @@
-// src/pages/Evaluations.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './evaluations.css';
@@ -12,6 +11,7 @@ interface User {
   id: number;
   role: `STUDENT` | `SUPERVISOR`;
   supervisorId: number | null;
+  supervisorName: string;
 }
 
 const rubricData = [
@@ -77,13 +77,41 @@ const Evaluations: React.FC = () => {
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ isFormVisible, setIsFormVisible ] = useState(false);
+  const [ isPreModalVisible, setIsPMVisible ] = useState(false);
   const [ selections, setSelections ] = useState<Selections>(
     rubricData.reduce((acc, cr) => ({ ...acc, [cr.id]: `starting` }), {}),
   );
   const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
   const [ message, setMessage ] = useState(``);
+  const [ studentEvalId, setStudentEvalId ] = useState(0);
 
   useEffect(() => {
+    const checkSession = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(`${fetchUrl}/me/`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          await navigate(`/login`);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+          await navigate(`/login`);
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(`[Home useEffect] Session check failed:`, err);
+        await navigate(`/login`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void checkSession();
     const fetchUser = async () => {
       try {
         const response = await fetch(`${fetchUrl}/me/`, {
@@ -100,6 +128,7 @@ const Evaluations: React.FC = () => {
           id: data.user.id,
           role: data.user.role,
           supervisorId: data.user.supervisorId || null,
+          supervisorName: data.user.supervisorName,
         });
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -128,9 +157,15 @@ const Evaluations: React.FC = () => {
         criteria: selections,
         evaluationType: user.role,
         semester: selectedSemester,
+        studentId: user.id,
         supervisorId: user.supervisorId,
-        userId: user.id,
+        type: user.role,
       };
+      if (user.role === `SUPERVISOR`) {
+        evalData.studentId = studentEvalId;
+        evalData.supervisorId = user.id;
+      }
+
       // eslint-disable-next-line no-console
       console.log(`eval object client : ${JSON.stringify(evalData, null, 2)}`);
 
@@ -147,6 +182,7 @@ const Evaluations: React.FC = () => {
       }
 
       setMessage(`Evaluation submitted successfully!`);
+      setTimeout(() => setMessage(``), 3000);
       setIsFormVisible(false);
     } catch (err) {
       if (err instanceof Error) {
@@ -170,22 +206,100 @@ const Evaluations: React.FC = () => {
     </header>}
 
     <div className="action-button-group">
-      <button
-        className="btn primary-btn large-btn"
-        onClick={() => setIsFormVisible((prev) => !prev)}
-      >
-        {isFormVisible ? `Close Evaluation Form` : `Start New Evaluation`}
-      </button>
-      <button
-        className="btn secondary-btn large-btn"
-        onClick={() => navigate(`/past_evaluations`)}
-      >
-        View Past Evaluations
-      </button>
+      <div className="dashboard-card">
+        <h2>{user?.role === `STUDENT` ? `Start a Self-Evaluation` : `Start a Supervisor Evaluation`}</h2>
+        <div className="team-info">
+          <strong>Supervisor:</strong>
+          {` `}
+          {user?.supervisorName || `N/A`}
+          <br />
+        </div>
+        <button
+          className="btn primary-btn large-btn"
+          onClick={() => setIsPMVisible((prev) => !prev)}
+        >
+          {isFormVisible ? `Close Evaluation Form` : `Start New Evaluation`}
+        </button>
+      </div>
+
+      <div className="dashboard-card">
+        <h2>Review Past Evaluations</h2>
+        <p> Access and review all your previously submitted evaluations,
+          along with any evaluations submitted for you.</p>
+        <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
+          View Past Evaluations</button>
+      </div>
     </div>
 
-    {isFormVisible &&
-      <div className="evaluation-form-container">
+    {isPreModalVisible && <div id="pre-eval-modal" className="modal-overlay">
+      <div className="modal-content">
+        <div id="pre-eval-content">
+          {user?.role === `STUDENT` &&
+            <>
+              <h2>Start Self-Evaluation</h2>
+              <p>
+                You are about to begin a new self-evaluation for the
+                <strong> {assignSemester()}</strong>
+                <br />
+                semester. Your responses will be shared with your supervisor,
+                {` `}
+                {user.supervisorName}
+                , upon submission.
+              </p>
+              <p>Please click "Proceed" to continue.</p>
+            </>}
+          {user?.role === `SUPERVISOR` &&
+            <>
+              <h2>Start Supervisor Evaluation</h2>
+              <p>You are about to begin a new evaluation for a student. Please enter the student's ID to proceed.</p>
+              <div className="form-group">
+                <label htmlFor="student-id">Student ID</label>
+                <input
+                  type="text"
+                  id="student-id"
+                  placeholder="e.g., 12345678"
+                  required
+                  onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setStudentEvalId(Number(e.target.value));
+                  }}
+                />
+
+              </div>
+            </>}
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn secondary-btn"
+            style={{ backgroundColor: `#757575` }}
+            data-modal-id="pre-eval-modal"
+            onClick={() => {
+              setIsPMVisible((prev) => !prev);
+            }}
+          >Cancel
+          </button>
+          <button
+            id="proceed-to-eval-btn"
+            className="btn primary-btn"
+            style={{ backgroundColor: `#4CAF50` }}
+            onClick={() => {
+              setIsFormVisible((prev) => !prev);
+              setIsPMVisible((prev) => !prev);
+            }}
+          >Proceed to Evaluation</button>
+        </div>
+      </div>
+    </div>}
+
+    {isFormVisible && <div
+      id="evaluation-modal"
+      className="modal-overlay"
+    >
+      <div
+        className="modal-content"
+        style={{ height: `80%`, overflow: `scroll` }}
+      >
+        <div className="modal-close">X</div>
         <form onSubmit={handleSubmit}>
           <div className="form-header">
             <h2>
@@ -245,20 +359,31 @@ const Evaluations: React.FC = () => {
             </table>
           </div>
 
-          <div className="form-footer">
-            <button type="submit" className="btn primary-btn green" style={{ backgroundColor: `#4CAF50` }}>
-              Submit Evaluation
+          <div className="modal-footer">
+            {message && <p className="submission-message">{message}</p>}
+            <button
+              type="button"
+              className="btn secondary-btn"
+              style={{ backgroundColor: `#757575` }}
+              data-modal-id="evaluation-modal"
+              onClick={() => {
+                setIsFormVisible((prev) => !prev);
+              }}
+            >
+              Cancel
             </button>
             <button
+              type="submit"
               className="btn primary-btn"
-              onClick={() => setIsFormVisible((prev) => !prev)}
-            >
-              Close Evaluation Form
-            </button>
-            {message && <p className="submission-message">{message}</p>}
+              style={{ backgroundColor: `#4CAF50` }}
+            >Submit Evaluation</button>
           </div>
         </form>
-      </div>}
+      </div>
+    </div>}
+    <div className="center-text">
+      {message && <p className="submission-message">{message}</p>}
+    </div>
   </div>;
 };
 

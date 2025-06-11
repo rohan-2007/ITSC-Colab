@@ -31,15 +31,91 @@
 
 .action-button-group {
   display: flex;
+  /* Changed from grid to flex */
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 30px;
+  /* This centers the flex items */
   flex-wrap: wrap;
+  /* Allows cards to wrap on smaller screens */
+  gap: 30px;
+  max-width: 1200px;
+  /* Ensures the container itself is constrained */
+  margin: 0 auto;
+  /* Centers the whole container */
+}
+
+.dashboard-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  /* Fixed width for consistency */
+  max-width: 100%;
+}
+
+.dashboard-card h2 {
+  font-size: 1.8em;
+  color: #2c3e50;
+  margin-top: 0;
+  border-bottom: 2px solid #f44336;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.dashboard-card p {
+  color: #555;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.team-info {
+  background-color: #f9f9f9;
+  border-left: 4px solid #007bff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+}
+
+.team-info strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.team-info ul {
+  padding-left: 20px;
+  margin: 0;
+  color: #555;
+}
+
+.dashboard-card .btn {
+  width: 100%;
+  margin-top: auto;
+}
+
+.btn {
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn.large-btn {
   padding: 15px 30px;
   font-size: 1.1em;
+}
+
+.primary-btn {
+  background-color: #f44336;
+  color: #ffffff;
 }
 
 .evaluation-form-container {
@@ -49,6 +125,93 @@
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- NEW: Modal Styles --- */
+.modal-overlay {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.3s;
+  width: 75%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-close {
+  overflow: visible;
+  color: #aaa;
+  background-color: rgba(21, 21, 21, 0.9);
+  border: none;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 100%;
+  min-width:40px;
+  min-height:40px;
+  text-align: center;
+}
+
+.modal-close:hover {
+  background-color: rgba(81, 81, 81, 1);
+}
+
+/* Pre-Evaluation Modal Styles */
+#pre-eval-modal .modal-content {
+  max-width: 600px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: calc(100% - 24px);
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+/* Main Evaluation Modal Styles */
+#evaluation-modal .modal-content {
+  max-width: 1200px;
 }
 
 .form-header {
@@ -84,7 +247,6 @@
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1em;
-  background-color: #fff;
 }
 
 .rubric-table-wrapper {
@@ -158,19 +320,21 @@
   font-weight: 500;
 }
 
-.form-footer {
-  text-align: right;
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
   margin-top: 20px;
 }
 
 .submission-message {
-  margin-top: 15px;
+  margin: 0;
   font-weight: 500;
   color: #007bff;
-}
-
-.form-footer button {
-  font-size: 1.1em;
+  flex-grow: 1;
+  text-align: left;
 }
 
 /* Reusable Button Styles */
@@ -192,6 +356,7 @@
   color: #ffffff;
   margin: 10px;
 }
+
 .primary-btn:hover {
   background-color: #d32f2f;
   transform: translateY(-2px);
@@ -202,10 +367,17 @@
   background-color: #007bff;
   color: #ffffff;
 }
+
 .secondary-btn:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.green {background-color: #388E3C;}
+.center-text {
+  margin: 20px;
+  font-size: 25px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+}

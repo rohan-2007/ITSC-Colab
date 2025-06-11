@@ -51,7 +51,7 @@ app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
 app.use(evalRouter);
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found', path: req.path });
+  res.status(404).json({ error: `Route not found`, path: req.path });
 });
 
 app.listen(PORT, () => {
