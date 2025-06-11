@@ -128,9 +128,11 @@ const Evaluations: React.FC = () => {
         criteria: selections,
         evaluationType: user.role,
         semester: selectedSemester,
-        supervisorId: user.role === `SUPERVISOR` ? user.id : user.supervisorId,
+        supervisorId: user.supervisorId,
         userId: user.id,
       };
+
+      console.log("eval object client : " + JSON.stringify(evalData,null,2))
 
       const response = await fetch(`${fetchUrl}/submitEval/`, {
         body: JSON.stringify(evalData),

@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ children }) =>
-  <div>
+  <div className='layout-container'>
     <header>
       <Navbar />
     </header>
