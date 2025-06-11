@@ -3,8 +3,80 @@
 import React from 'react';
 import './PastEvaluations.css';
 
-const PastEvaluations: React.FC = () =>
-  <>
+const PastEvaluations: React.FC = () => {
+  const getPastEvals = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/me/`, {
+        body: JSON.stringify({ returnData: true }),
+        credentials: `include`,
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        method: `POST`,
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const resJson = await res.json();
+
+      // eslint-disable-next-line no-console
+      console.log(`user data: `, JSON.stringify(resJson, null, 2));
+
+      const userId = resJson.user.id;
+
+      const pastEvals = await fetch(`http://localhost:3001/getEval/?userId=${userId}`, {
+        credentials: `include`,
+        method: `GET`,
+      });
+
+      if (!pastEvals.ok) {
+        throw new Error(`HTTP error! status: ${pastEvals.status}`);
+      }
+
+      const pastEvalsJson = await pastEvals.json();
+
+      // eslint-disable-next-line no-console
+      console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
+    } catch (err) {
+      if (err instanceof Error) {
+        // console.log(`user fetch error: ${err.message}`);
+        throw new Error(`user fetch error: ${err.message}`);
+      } else {
+        // console.log(`an unknown user fetch error`);
+        throw new Error(`an unknown user fetch error`);
+      }
+    }
+  };
+  void getPastEvals();
+  // const resJson = await res.json();
+  // if (!res.ok) {
+  //   console.log(`Response not ok, throwing error`);
+  //   throw new Error(resJson.message || `user session not found`);
+  // }
+  // console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+
+  // try {
+  //   const userId = resJson.user.id;
+  // } catch (error) {
+  //   throw new Error(resJson.message || `user session not found`);
+  // }
+
+  // const userId = resJson.user.id;
+
+  // const pastEvals = await fetch(`http://localhost:3001/getEval`, {
+  //   body: JSON.stringify({ userId }),
+  //   credentials: `include`,
+  //   headers: { 'Content-Type': `application/json` },
+  //   method: `POST`,
+  // });
+
+  // console.log(pastEvals);
+  // return pastEvals;
+  // };
+
+  return <>
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
@@ -39,4 +111,5 @@ const PastEvaluations: React.FC = () =>
       </div>
     </div>
   </>;
+};
 export default PastEvaluations;

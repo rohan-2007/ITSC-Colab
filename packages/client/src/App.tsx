@@ -3,12 +3,13 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import NotFoundPage from './pages/PastEvaluations';
+// import NotFoundPage from './pages/PastEvaluations';
 import Layout from './layouts/Layout';
 import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
 import Evaluations from './pages/evaluations';
 import Profile from './pages/Profile';
+import Contact from './pages/Contact';
 
 const App: React.FC = () =>
   <Layout>
@@ -19,7 +20,8 @@ const App: React.FC = () =>
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="/contact" element={<Contact />} />
+      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
 export default App;
