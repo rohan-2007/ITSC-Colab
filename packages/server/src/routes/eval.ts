@@ -10,8 +10,8 @@ interface EvaluationBody {
   criteria: JsonObject;
   evaluationType: keyof typeof Role;
   semester: keyof typeof Semester;
+  studentId: number;
   supervisorId?: number;
-  userId: number;
 }
 
 router.post(`/submitEval`, requireAuth, async (
@@ -19,9 +19,9 @@ router.post(`/submitEval`, requireAuth, async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, evaluationType, semester, supervisorId, userId } = req.body;
+    const { criteria, evaluationType, semester, studentId, supervisorId } = req.body;
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: studentId },
     });
 
     if (!user) {
@@ -33,9 +33,9 @@ router.post(`/submitEval`, requireAuth, async (
       data: {
         criteria,
         semester,
+        studentId,
         supervisorId: supervisorId || null,
         type: evaluationType,
-        userId,
       },
     });
 
@@ -44,8 +44,8 @@ router.post(`/submitEval`, requireAuth, async (
         id: newEval.id,
         createdAt: newEval.createdAt,
         semester,
-        supervisorId: newEval.supervisorId,
-        userId: newEval.userId,
+        studentId,
+        supervisorId,
       },
       message: `Evaluation submitted successfully`,
     });
@@ -74,7 +74,7 @@ router.get(`/getEval`, requireAuth, async (
       }
 
       // Authorization check, supervisor or user can access
-      if (evalRecord.userId !== userId || evalRecord.supervisorId !== userId) {
+      if (evalRecord.studentId !== userId || evalRecord.supervisorId !== userId) {
         res.status(404).json({ error: `Access Forbidden` });
         return;
       }
@@ -86,7 +86,7 @@ router.get(`/getEval`, requireAuth, async (
     if (userId) {
       const evaluations = await prisma.evaluation.findMany({
         orderBy: { createdAt: `desc` },
-        where: { userId },
+        where: { studentId: userId },
       });
       res.status(200).json(evaluations);
       return;
