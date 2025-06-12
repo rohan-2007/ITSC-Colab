@@ -93,7 +93,9 @@ const Evaluations: React.FC = () => {
   const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
   const [ message, setMessage ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
-  const [ evalStatus ] = useState({ studentCompleted: false, supervisorCompleted: false });
+  const [ canStartSelfEval, setCanSelfEval ] = useState(true);
+
+  // This state is our single source of truth for all statuses.
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, {
     studentCompleted: boolean;
     supervisorCompleted: boolean;
@@ -190,6 +192,7 @@ const Evaluations: React.FC = () => {
           if (data) {
             // Update the status for just this one user in our map
             setStudentsEvalStatus((prev) => ({ ...prev, [studentId]: data }));
+            setCanSelfEval(Boolean(!data.studentCompleted));
           }
         }
       } catch (err) {
@@ -200,44 +203,42 @@ const Evaluations: React.FC = () => {
     if (user && user.role === `STUDENT`) {
       void fetchEvalStatusForCurrentUser(user.id);
     }
-
-    if (user?.role === `SUPERVISOR` && students.length > 0) {
-      const fetchAllStatuses = async () => {
-      // Create an array of fetch promises, one for each student
-        const statusPromises = students.map((student) =>
-          fetch(
-            `${fetchUrl}/evalStatus?studentId=${student.id}&semester=${assignSemester()}&year=${currentYear}`,
-            { credentials: `include` },
-          )
-            .then((res) => res.ok ? res.json() : { studentCompleted: false, supervisorCompleted: false })
-            .then((data) => ({
-              id: student.id,
-              status: data,
-            })));
-
-        // Wait for all fetch requests to complete
-        const results = await Promise.all(statusPromises);
-
-        // Transform the array of results into a lookup object (our state shape)
-        const statusMap = results.reduce((acc, result) => {
-          acc[result.id] = result.status;
-          return acc;
-        }, {} as typeof studentsEvalStatus);
-
-        // Update the state with the statuses for all students
-        setStudentsEvalStatus(statusMap);
-      };
-
-      void fetchAllStatuses();
-    }
   }, [ navigate ]);
 
   const handleSelect = (criterionId: string, level: PerformanceLevel) => {
     setSelections((prev) => ({ ...prev, [criterionId]: level }));
   };
 
-  const hasUserCompletedEval =
-    user?.role === `STUDENT` && evalStatus.studentCompleted;
+  // Fetch all statuses for supervisor's students
+  const fetchAllStatuses = async () => {
+    setSelectedStudentId(null);
+    if (user?.role !== `SUPERVISOR` || students.length === 0) {
+      return;
+    }
+    // Create an array of fetch promises, one for each student
+    const statusPromises = students.map((student) =>
+      fetch(
+        `${fetchUrl}/evalStatus?studentId=${student.id}&semester=${assignSemester()}&year=${currentYear}`,
+        { credentials: `include` },
+      )
+        .then((res) => res.ok ? res.json() : { studentCompleted: false, supervisorCompleted: false })
+        .then((data) => ({
+          id: student.id,
+          status: data,
+        })));
+
+    // Wait for all fetch requests to complete
+    const results = await Promise.all(statusPromises);
+
+    // Transform the array of results into a lookup object (our state shape)
+    const statusMap = results.reduce((acc, result) => {
+      acc[result.id] = result.status;
+      return acc;
+    }, {} as typeof studentsEvalStatus);
+
+    // Update the state with the statuses for all students
+    setStudentsEvalStatus(statusMap);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -316,7 +317,10 @@ const Evaluations: React.FC = () => {
         </div>
         <button
           className="btn primary-btn large-btn"
-          onClick={() => setIsPMVisible((prev) => !prev)}
+          onClick={async () => {
+            setIsPMVisible((prev) => !prev);
+            await fetchAllStatuses();
+          }}
         >
           {isFormVisible ? `Close Evaluation Form` : `Start New Evaluation`}
         </button>
@@ -337,11 +341,11 @@ const Evaluations: React.FC = () => {
           {user?.role === `STUDENT` &&
             <>
               <h2>Start Self-Evaluation</h2>
-              {hasUserCompletedEval &&
+              {canStartSelfEval &&
                 <p className="completion-message">
                   You have already completed your evaluation for this semester.
                 </p>}
-              {!hasUserCompletedEval &&
+              {!canStartSelfEval &&
                 <>
                   <p>
                     You are about to begin a new self-evaluation for the
@@ -445,6 +449,7 @@ const Evaluations: React.FC = () => {
               setIsFormVisible((prev) => !prev);
               setIsPMVisible((prev) => !prev);
             }}
+            disabled={!canStartSelfEval}
           >Proceed to Evaluation</button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Supervisor.css';
 const fetchUrl = `http://localhost:${3001}`;
 interface Student {
@@ -45,7 +46,28 @@ const Supervisor: React.FC = () => {
   } | null>(null);
   const [ editedTeamName, setEditedTeamName ] = useState(``);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch(`${fetchUrl}/me/`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          await navigate(`/login`);
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(`[Evaluations useEffect] Session check failed:`, err);
+        await navigate(`/login`);
+      }
+    };
+
+    void checkSession();
     const fetchStudents = async () => {
       const response = await fetch(`${fetchUrl}/students/`, {
         credentials: `include`,
@@ -67,7 +89,7 @@ const Supervisor: React.FC = () => {
     };
 
     void fetchStudents();
-  }, []);
+  }, [ navigate ]);
 
   const openStudentInfoModal = (index: number) => {
     setSelectedStudentIndex(index);
