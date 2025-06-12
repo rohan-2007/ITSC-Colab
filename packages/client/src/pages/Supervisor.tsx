@@ -192,7 +192,7 @@ const Supervisor: React.FC = () => {
       <h1>Supervisor Console</h1>
       <p>Manage team members, student assignments and passwords, as well as other info.</p>
     </header>
-    <div className="main-content">
+    <div className="main-content-2">
       <div className="card">
         <h2>Manage Student Information</h2>
         <input
