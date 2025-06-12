@@ -107,29 +107,6 @@ const Evaluations: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    const checkSession = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await fetch(`${fetchUrl}/me/`, {
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-
-        if (!response.ok) {
-          await navigate(`/login`);
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(`[Evaluations useEffect] Session check failed:`, err);
-        await navigate(`/login`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void checkSession();
     const fetchUser = async () => {
       try {
         const response = await fetch(`${fetchUrl}/me/`, {
@@ -151,7 +128,6 @@ const Evaluations: React.FC = () => {
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(`Failed to fetch user data: ${err instanceof Error ? err.message : String(err)}`);
-        await navigate(`/login`);
       } finally {
         setIsLoading(false);
       }

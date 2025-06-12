@@ -11,18 +11,48 @@ import Evaluations from './pages/evaluations';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Supervisor from './pages/Supervisor';
+import RequireRole, { RequireAuth } from './components/RequireRole';
 
 const App: React.FC = () =>
   <Layout>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/past_evaluations" element={<PastEvaluations />} />
+      <Route
+        path="/home"
+        element={<RequireAuth>
+          <Home />
+        </RequireAuth>}
+      />
+      <Route
+        path="/past_evaluations"
+        element={<RequireAuth>
+          <PastEvaluations />
+        </RequireAuth>}
+      />
       <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/evaluations" element={<Evaluations />} />
+      <Route
+        path="/profile"
+        element={<RequireAuth>
+          <Profile />
+        </RequireAuth>}
+      />
+      <Route
+        path="/evaluations"
+        element={
+          <RequireAuth>
+            <Evaluations />
+          </RequireAuth>
+        }
+      />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/supervisor" element={<Supervisor />} />
+      <Route
+        path="/supervisor"
+        element={
+          <RequireRole allowedRoles={[ `SUPERVISOR` ]}>
+            <Supervisor />
+          </RequireRole>
+        }
+      />
       {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
