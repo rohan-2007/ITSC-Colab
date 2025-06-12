@@ -91,9 +91,14 @@ const PastEvaluations: React.FC = () => {
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<PastEval[]>([]);
   const [ evaluationsReady, setEvaluationsReady ] = useState(false);
   const [ selectedSemester, setSelectedSemester ] = useState(`SPRING`);
+  const [ selectedYear, setSelectedYear ] = useState(2025);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
+  };
+
+  const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(parseInt(event.target.value, 10));
   };
 
   const getPastEvals = async () => {
@@ -191,8 +196,8 @@ const PastEvaluations: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(`filteredStudentEvals`, filteredStudentEvals);
-  console.log(`filteredStudentSemesterEvals`, filteredStudentSemesterEvals);
+  // console.log(`filteredStudentEvals`, filteredStudentEvals);
+  // console.log(`filteredStudentSemesterEvals`, filteredStudentSemesterEvals);
 
   // const timestamp = new Date((filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0] : filteredSupervisorSemesterEvals[0]).createdAt);
   // const year = timestamp.getFullYear();
@@ -248,10 +253,10 @@ const PastEvaluations: React.FC = () => {
 
       <div className="right-section">
         <label htmlFor="semester" className="semester-label">Year:</label>
-        <select id="semester" className="dropdown">
-          <option value="spring">Spring</option>
-          <option value="fall">Fall</option>
-          <option value="summer">Summer</option>
+        <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
         </select>
       </div>
     </div>
