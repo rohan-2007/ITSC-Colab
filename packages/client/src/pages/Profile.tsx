@@ -53,8 +53,6 @@ const Profile: React.FC = () => {
             teamId: jsonData.user.teamId || null,
             teamName: jsonData.user.teamName || `Not Assigned`,
           });
-        } else {
-          await navigate(`/login`);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -62,7 +60,6 @@ const Profile: React.FC = () => {
         } else {
           setError(`An unknown error occurred while fetching your profile.`);
         }
-        await navigate(`/login`);
       } finally {
         setIsLoading(false);
       }

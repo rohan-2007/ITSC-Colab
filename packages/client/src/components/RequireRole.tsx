@@ -54,3 +54,45 @@ const RequireRole: React.FC<RequireRoleProps> = ({ allowedRoles, children }) => 
 };
 
 export default RequireRole;
+export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [ loading, setLoading ] = useState(true);
+  const [ authenticated, setAuthenticated ] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/me/`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!res.ok) {
+          throw new Error(`Unauthorized`);
+        }
+
+        const data = await res.json();
+        if (data?.user) {
+          setAuthenticated(true);
+        } else {
+          await navigate(`/login`);
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e);
+        await navigate(`/login`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void checkAuth();
+  }, [ navigate ]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return authenticated ? children : null;
+};
