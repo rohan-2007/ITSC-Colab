@@ -94,6 +94,8 @@ const PastEvaluations: React.FC = () => {
   const [ selectedYear, setSelectedYear ] = useState(2025);
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
+  const [ user, setUser ] = useState<User | null>(null);
+  // const [ isLoading, setIsLoading ] = useState(true);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
@@ -131,6 +133,13 @@ const PastEvaluations: React.FC = () => {
 
       const userId = resJson.user.id;
 
+      setUser({
+        id: resJson.user.id,
+        role: resJson.user.role,
+        supervisorId: resJson.user.supervisorId || null,
+        supervisorName: resJson.user.supervisorName,
+      });
+
       const evalResponse = await fetch(`http://localhost:3001/getEval/?userId=${userId}`, {
         credentials: `include`,
         method: `GET`,
@@ -161,6 +170,33 @@ const PastEvaluations: React.FC = () => {
   // console.log(selectedSemester);
 
   useEffect(() => {
+    // const fetchUser = async () => {
+    //   try {
+    //     const response = await fetch(`${fetchUrl}/me/`, {
+    //       body: JSON.stringify({ returnData: true }),
+    //       credentials: `include`,
+    //       headers: { 'Content-Type': `application/json` },
+    //       method: `POST`,
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error(`Session not found. Please log in.`);
+    //     }
+    //     const data = await response.json();
+    //     setUser({
+    //       id: data.user.id,
+    //       role: data.user.role,
+    //       supervisorId: data.user.supervisorId || null,
+    //       supervisorName: data.user.supervisorName,
+    //     });
+    //   } catch (err) {
+    //     // eslint-disable-next-line no-console
+    //     console.error(`Failed to fetch user data: ${err instanceof Error ? err.message : String(err)}`);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
+    // void fetchUser();
+
     const fetchPastEvals = async () => {
       try {
         const evals = await getPastEvals();
@@ -203,12 +239,12 @@ const PastEvaluations: React.FC = () => {
   }, [ selectedSemester, selectedYear ]);
 
   useEffect(() => {
-    if (filteredStudentEvals.length && filteredSupervisorEvals.length) {
+    if (filteredStudentEvals.length || filteredSupervisorEvals.length) {
       setEvaluationsReady(true);
     }
   }, [ filteredStudentEvals, filteredSupervisorEvals ]);
 
-  if (!evaluationsReady) {
+  if (!evaluationsReady && !user?.role === `SUPERVISOR`) {
     return <div>Loading...</div>;
   }
 
@@ -255,7 +291,20 @@ const PastEvaluations: React.FC = () => {
   // return pastEvals;
   // };
 
+  interface User {
+    id: number;
+    role: `STUDENT` | `SUPERVISOR`;
+    supervisorId: number | null;
+    supervisorName: string;
+  }
+
   return <>
+    {user?.role === `SUPERVISOR` &&
+      <div id="pre-eval-modal" className="modal-overlay">
+        <div className="modal-content">
+          <h1>Hello</h1>
+        </div>
+      </div>}
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
