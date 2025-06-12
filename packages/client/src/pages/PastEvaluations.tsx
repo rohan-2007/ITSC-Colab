@@ -61,6 +61,7 @@ const PastEvaluations: React.FC = () => {
     supervisorId: number | null;
     type: string;
     updatedAt: string;
+    year: number;
   }
 
   // interface CSSProperties {
@@ -128,7 +129,8 @@ const PastEvaluations: React.FC = () => {
 
       const pastEvalsJson: PastEval[] = await evalResponse.json();
 
-      // console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
+      // eslint-disable-next-line no-console
+      console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
 
       return pastEvalsJson;
     } catch (err) {
@@ -177,7 +179,7 @@ const PastEvaluations: React.FC = () => {
     };
 
     void fetchPastEvals();
-  }, [ selectedSemester, pastEvals ]);
+  }, [ selectedSemester ]);
 
   useEffect(() => {
     if (filteredStudentEvals.length && filteredSupervisorEvals.length) {
@@ -189,8 +191,11 @@ const PastEvaluations: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const timestamp = new Date((filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0] : filteredSupervisorSemesterEvals[0]).createdAt);
-  const year = timestamp.getFullYear();
+  console.log(`filteredStudentEvals`, filteredStudentEvals);
+  console.log(`filteredStudentSemesterEvals`, filteredStudentSemesterEvals);
+
+  // const timestamp = new Date((filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0] : filteredSupervisorSemesterEvals[0]).createdAt);
+  // const year = timestamp.getFullYear();
 
   // useEffect(() => {
   //   // eslint-disable-next-line no-console
@@ -237,7 +242,7 @@ const PastEvaluations: React.FC = () => {
             (filteredStudentEvals.length > filteredSupervisorEvals.length ? filteredStudentEvals : filteredSupervisorEvals).map((evalItem: PastEval) =>
               // const timestamp = new Date(evalItem.createdAt);
               // const year = timestamp.getFullYear();
-              <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {year}</button>) : null}
+              <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {evalItem.year}</button>) : null}
         </div>
       </div>
 
@@ -263,7 +268,7 @@ const PastEvaluations: React.FC = () => {
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
       filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}
     <section className="past-evals-container">
-      <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {year}</h2>
+      <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].year : filteredSupervisorSemesterEvals[0].year}</h2>
       <div className="rubric-table-wrapper">
         <table className="rubric-table">
           <thead>
