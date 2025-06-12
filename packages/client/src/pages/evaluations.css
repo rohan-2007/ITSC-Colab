@@ -1,4 +1,5 @@
 /* src/pages/evaluations.css */
+/* General Page Styles */
 .evaluations-page {
   padding: 20px;
   padding-top: 120px;
@@ -29,18 +30,14 @@
   margin-top: 5px;
 }
 
+/* Dashboard & Action Cards */
 .action-button-group {
   display: flex;
-  /* Changed from grid to flex */
   justify-content: center;
-  /* This centers the flex items */
   flex-wrap: wrap;
-  /* Allows cards to wrap on smaller screens */
   gap: 30px;
   max-width: 1200px;
-  /* Ensures the container itself is constrained */
   margin: 0 auto;
-  /* Centers the whole container */
 }
 
 .dashboard-card {
@@ -51,7 +48,6 @@
   display: flex;
   flex-direction: column;
   width: 400px;
-  /* Fixed width for consistency */
   max-width: 100%;
 }
 
@@ -84,15 +80,196 @@
   color: #333;
 }
 
-.team-info ul {
-  padding-left: 20px;
-  margin: 0;
-  color: #555;
+/* --- MODAL STYLES (REFINED) --- */
+.modal-overlay {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.dashboard-card .btn {
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.3s;
   width: 100%;
-  margin-top: auto;
+  max-width: 650px; /* A good width for the pre-eval modal */
+  /* --- KEY FIX: REMOVED FORCED CENTERING --- */
+  /* text-align is now left by default, which is what we want for forms/tables */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close {
+  color: #aaa;
+  background-color: rgba(21, 21, 21, 0.9);
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+.modal-close:hover {
+  background-color: rgba(81, 81, 81, 1);
+  color: white;
+}
+
+/* --- PRE-EVAL MODAL CONTENT (REFINED) --- */
+#pre-eval-modal .modal-content h2,
+#pre-eval-modal .modal-content > p {
+  text-align: center; /* Center only the title and main paragraph */
+}
+
+#pre-eval-modal .modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.6em;
+  color: #2c3e50;
+}
+
+#pre-eval-modal .modal-content > p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left; /* Ensure label is left-aligned */
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  box-sizing: border-box; /* Important for 100% width to work correctly */
+}
+
+/* --- NEW AND IMPROVED STUDENT SELECTION TABLE --- */
+.student-table-container {
+  max-height: 250px; /* Control scroll height */
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.student-select-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.student-select-table th,
+.student-select-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+.student-select-table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Define column widths for better layout */
+.student-select-table th:nth-child(1) { width: 15%; } /* ID */
+.student-select-table th:nth-child(2) { width: 35%; } /* Name */
+.student-select-table th:nth-child(3) { width: 35%; } /* Email */
+.student-select-table th:nth-child(4) { width: 15%; text-align: center; } /* Action */
+
+.student-select-table td:nth-child(4) {
+  text-align: center;
+}
+
+.student-select-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.student-select-table tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.student-select-table tbody tr:hover {
+  background-color: #f0f2f5;
+}
+
+/* This is the visual feedback for the selected row! */
+.student-select-table tbody tr.selected {
+  background-color: #d1e7dd; /* A pleasant light green */
+  color: #0f5132;
+  font-weight: 500;
+}
+
+.no-students-message {
+  text-align: center;
+  font-style: italic;
+  padding: 25px;
+  color: #6c757d;
+}
+
+/* The new 'Select' button inside the table */
+.btn.select-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 6px 14px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+}
+.btn.select-btn:hover {
+  background-color: #0056b3;
+}
+.selected .btn.select-btn {
+  background-color: #198754; /* Change button color on selected row */
+  border-color: #198754;
+}
+
+/* --- FOOTER & BUTTONS (REFINED) --- */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
 }
 
 .btn {
@@ -108,9 +285,12 @@
   justify-content: center;
 }
 
-.btn.large-btn {
-  padding: 15px 30px;
-  font-size: 1.1em;
+.btn:disabled {
+  background-color: #cccccc !important;
+  color: #666666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .primary-btn {
@@ -118,100 +298,33 @@
   color: #ffffff;
 }
 
-.evaluation-form-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.primary-btn:hover:not(:disabled) {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* --- NEW: Modal Styles --- */
-.modal-overlay {
-  display: flex;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-  align-items: center;
-  justify-content: center;
+/* --- NEW: Button styles to match your screenshot --- */
+.btn.btn-success {
+  background-color: #4CAF50; /* The green from your image */
+  color: white;
+}
+.btn.btn-success:hover:not(:disabled) {
+  background-color: #45a049;
 }
 
-.modal-content {
-  background-color: #ffffff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-  animation: fadeIn 0.3s;
-  width: 75%;
+.btn.btn-cancel {
+  background-color: #757575; /* The grey from your image */
+  color: white;
+}
+.btn.btn-cancel:hover:not(:disabled) {
+  background-color: #616161;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.modal-close {
-  overflow: visible;
-  color: #aaa;
-  background-color: rgba(21, 21, 21, 0.9);
-  border: none;
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 100%;
-  min-width:40px;
-  min-height:40px;
-  text-align: center;
-}
-
-.modal-close:hover {
-  background-color: rgba(81, 81, 81, 1);
-}
-
-/* Pre-Evaluation Modal Styles */
-#pre-eval-modal .modal-content {
-  max-width: 600px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  
-}
-
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.form-group input {
-  width: calc(100% - 24px);
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1em;
-}
-
-/* Main Evaluation Modal Styles */
+/* --- Main Evaluation Form Styles (Unchanged but included for completeness) --- */
 #evaluation-modal .modal-content {
   max-width: 1200px;
+  text-align: left;
 }
 
 .form-header {
@@ -380,4 +493,47 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.student-row-centered {
+  text-align: center;
+}
+
+.student-name-large {
+  width: 90%;
+  background-color:rgb(222, 222, 222);
+}
+.student-name-large.selected {
+  background-color: darkGray;
+}
+
+.dashboard-card .btn {
+  width: 100%;
+  margin-top: auto; /* Pushes button to the bottom of the card */
+}
+
+/* 2. Make Modal Footer buttons a consistent size */
+/* This gives buttons in the modal footer (e.g., Cancel, Proceed) */
+/* a uniform width for a cleaner, more balanced look. */
+.modal-footer .btn {
+  min-width: 140px; /* Adjust this value as needed */
+  justify-content: center;
+}
+
+/* 3. Ensure your custom Cancel/Success buttons in the modal use the new sizing */
+/* We'll re-apply your specific styles with the new .btn- class names */
+.modal-footer .btn.btn-cancel {
+  background-color: #757575;
+  color: white;
+}
+.modal-footer .btn.btn-cancel:hover:not(:disabled) {
+  background-color: #616161;
+}
+
+.modal-footer .btn.btn-success {
+  background-color: #4CAF50;
+  color: white;
+}
+.modal-footer .btn.btn-success:hover:not(:disabled) {
+  background-color: #45a049;
 }
