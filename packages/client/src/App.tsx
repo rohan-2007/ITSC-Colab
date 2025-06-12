@@ -19,9 +19,9 @@ const App: React.FC = () =>
       <Route path="/" element={<Home />} />
       <Route
         path="/home"
-        element={<RequireAuth>
+        element={
           <Home />
-        </RequireAuth>}
+        }
       />
       <Route
         path="/past_evaluations"
@@ -32,9 +32,7 @@ const App: React.FC = () =>
       <Route path="/login" element={<Login />} />
       <Route
         path="/profile"
-        element={<RequireAuth>
-          <Profile />
-        </RequireAuth>}
+        element={<Profile />}
       />
       <Route
         path="/evaluations"
