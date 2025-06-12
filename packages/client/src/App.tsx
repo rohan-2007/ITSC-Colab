@@ -11,6 +11,7 @@ import Evaluations from './pages/evaluations';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Supervisor from './pages/Supervisor';
+import RequireRole from './components/RequireRole';
 
 const App: React.FC = () =>
   <Layout>
@@ -22,7 +23,14 @@ const App: React.FC = () =>
       <Route path="/profile" element={<Profile />} />
       <Route path="/evaluations" element={<Evaluations />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/supervisor" element={<Supervisor />} />
+      <Route
+        path="/supervisor"
+        element={
+          <RequireRole allowedRoles={[ `SUPERVISOR` ]}>
+            <Supervisor />
+          </RequireRole>
+        }
+      />
       {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
