@@ -109,8 +109,8 @@ const Login: React.FC = () => {
 
         const responseJson = await response.json();
 
-        alert(`Login success: ${responseJson.message}`);
         void navigate(`/home`);
+        window.location.reload();
         setProfileText(`Hi, ${responseJson.user.name}`);
       } catch (error) {
         if (error instanceof Error) {

@@ -378,3 +378,19 @@ button:hover {
  color: #111827 !important;
  border-color: #d1d5db !important;
 }
+
+.team-name-span {
+  flex: 1;
+  font-weight: 600;
+  padding: 0.25rem 0;
+}
+
+.edit-team-button,
+.toggle-button {
+  margin-left: 0.5rem;
+  background: #e5e7eb;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser } from '../../../../generated/prisma';
+import { User as PrismaUser, Team } from '../../../../generated/prisma';
 import prisma from '../prisma';
 
 // middleware auth
@@ -94,6 +94,112 @@ router.post(`/setUserInfo`, requireAuth, async (
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
+  }
+});
+
+router.post(`/teams`, requireAuth, async (
+  req: Request<unknown, unknown>,
+  res: Response,
+) => {
+  try {
+    const user: PrismaUser | null = await prisma.user.findUnique({
+      where: { id: req.session.userId },
+    });
+
+    if (!user || user.role !== `SUPERVISOR`) {
+      res.status(404).json({ error: `User not a supervisor or not found` });
+      return;
+    }
+    const teams: Team[] = await prisma.team.findMany();
+
+    res.status(200).json({
+      message: `Fetched teams`,
+      teams,
+    });
+  } catch (err) {
+    console.error(`Fetch error:`, err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: `Internal server error` });
+    }
+  }
+});
+
+interface TeamInfoChange {
+  id: number;
+  memberIDs: number[];
+  name: string;
+}
+
+router.post(`/setTeamInfo`, requireAuth, async (
+  req: Request<unknown, unknown, TeamInfoChange>,
+  res: Response,
+) => {
+  const { id, memberIDs, name } = req.body;
+  try {
+    const team: Team | null = await prisma.team.findUnique({
+      where: { id },
+    });
+
+    if (!team) {
+      res.status(404).json({ error: `Team not found` });
+      return;
+    }
+
+    await prisma.team.update({
+      data: {
+        memberIDs,
+        name,
+      },
+      where: { id },
+    });
+
+    res.status(200).json({
+      message: `Successfully set team info!`,
+      team,
+    });
+  } catch (err) {
+    console.error(`Fetch error:`, err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: `Internal server error` });
+    }
+  }
+});
+
+interface NewTeamRequest {
+  memberIDs: number[];
+  name: string;
+}
+
+router.post(`/createTeam`, requireAuth, async (
+  req: Request<unknown, unknown, NewTeamRequest>,
+  res: Response,
+) => {
+  const { memberIDs, name } = req.body;
+  try {
+    const newTeam = await prisma.team.create({
+      data: {
+        memberIDs,
+        name,
+      },
+    });
+    res.status(201).json({ message: `Team created`, team: newTeam });
+  } catch (err) {
+    console.error(`Create team error:`, err);
+    res.status(500).json({ error: `Internal server error` });
+  }
+});
+
+router.delete(`/deleteTeam/:id`, requireAuth, async (
+  req: Request<{ id: string }, unknown>,
+  res: Response,
+) => {
+  const id = Number(req.params.id);
+  try {
+    await prisma.team.delete({ where: { id } });
+    res.status(200).json({ message: `Team deleted` });
+  } catch (err) {
+    console.error(`Delete team error:`, err);
+    res.status(500).json({ error: `Internal server error` });
   }
 });
 

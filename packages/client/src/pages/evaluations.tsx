@@ -155,31 +155,30 @@ const Evaluations: React.FC = () => {
     };
 
     void fetchStudents();
-
-    const fetchEvalStatusForCurrentUser = async (studentId: number) => {
-      try {
-        const response = await fetch(
-          `${fetchUrl}/evalStatus?studentId=${studentId}&semester=${assignSemester()}&year=${currentYear}`, {
-            credentials: `include`,
-          },
-        );
-        if (response.ok) {
-          const data = await response.json();
-          if (data) {
-            // Update the status for just this one user in our map
-            setStudentsEvalStatus((prev) => ({ ...prev, [studentId]: data }));
-            setCanSelfEval(Boolean(!data.studentCompleted));
-          }
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to fetch evaluation status:`, err);
-      }
-    };
-    if (user && user.role === `STUDENT`) {
-      void fetchEvalStatusForCurrentUser(user.id);
-    }
   }, [ navigate ]);
+
+  const fetchEvalStatusForCurrentUser = async (studentId: number) => {
+    try {
+      const response = await fetch(
+        `${fetchUrl}/evalStatus?studentId=${studentId}&semester=${assignSemester()}&year=${currentYear}`, {
+          credentials: `include`,
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          // Update the status for just this one user in our map
+          setStudentsEvalStatus((prev) => ({ ...prev, [studentId]: data }));
+          setCanSelfEval(Boolean(!data.studentCompleted));
+          // eslint-disable-next-line no-console
+          console.log(canStartSelfEval);
+        }
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch evaluation status:`, err);
+    }
+  };
 
   const handleSelect = (criterionId: string, level: PerformanceLevel) => {
     setSelections((prev) => ({ ...prev, [criterionId]: level }));
@@ -296,6 +295,9 @@ const Evaluations: React.FC = () => {
           onClick={async () => {
             setIsPMVisible((prev) => !prev);
             await fetchAllStatuses();
+            if (user) {
+              await fetchEvalStatusForCurrentUser(user.id);
+            }
           }}
         >
           {isFormVisible ? `Close Evaluation Form` : `Start New Evaluation`}
@@ -317,11 +319,11 @@ const Evaluations: React.FC = () => {
           {user?.role === `STUDENT` &&
             <>
               <h2>Start Self-Evaluation</h2>
-              {canStartSelfEval &&
+              {!canStartSelfEval &&
                 <p className="completion-message">
                   You have already completed your evaluation for this semester.
                 </p>}
-              {!canStartSelfEval &&
+              {canStartSelfEval &&
                 <>
                   <p>
                     You are about to begin a new self-evaluation for the
