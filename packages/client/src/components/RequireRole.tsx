@@ -17,6 +17,7 @@ const RequireRole: React.FC<RequireRoleProps> = ({ allowedRoles, children }) => 
     const checkRole = async () => {
       try {
         const res = await fetch(`http://localhost:3001/me/`, {
+          body: JSON.stringify({ returnData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
@@ -63,6 +64,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
     const checkAuth = async () => {
       try {
         const res = await fetch(`http://localhost:3001/me/`, {
+          body: JSON.stringify({ returnData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,

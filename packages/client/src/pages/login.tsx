@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     const checkSession = async () => {
       try {
         const response = await fetch(`${fetchUrl}/me/`, {
-          body: JSON.stringify({ requestData: true }),
+          body: JSON.stringify({ returnData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
