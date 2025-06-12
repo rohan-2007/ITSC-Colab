@@ -1,20 +1,13 @@
-/* .main-content-area { */
-  /*
-    This pushes the content down from the top (to clear
-    the Navbar) and up from the bottom (to clear the Footer).
-  */
-  /* padding-top: 90px;
-  padding-bottom: 90px; */
-
+.main-content-area {
   /*
     Ensures that on pages with little content, the main area still takes up
     the full height of the screen, keeping the footer at the very bottom.
   */
-  /* min-height: 100vh; */
+  min-height: 100vh;
 
   /* Includes padding in the element's total width and height calculation. */
-  /* box-sizing: border-box;
-} */
+  box-sizing: border-box;
+}
 
 .layout-container {
   display: flex;

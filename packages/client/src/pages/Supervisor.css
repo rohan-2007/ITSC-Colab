@@ -18,10 +18,24 @@ h1 {
 }
 
 
-.main-content {
+.main-content-2 {
  display: flex;
  flex-direction: row;
  gap: 2rem;
+   flex: 1; /* Allows main content to grow and push footer down if not fixed */
+  padding: 20px; /* Reduced overall padding since .home-container has top/bottom padding */
+  max-width: 1200px; /* Max width for content */
+  margin: 0 auto; /* Center the content */
+  width: 100%;
+  height: 100vh;
+  display: grid; /* Using CSS Grid for a more structured layout */
+  gap: 30px; /* Space between sections */
+  grid-template-areas:
+    'header header'
+    'profile stats'
+    'actions actions'; /* Define areas for layout */
+  grid-template-columns: 1fr 1fr; /* Two columns for profile and stats */
+
 }
 
 

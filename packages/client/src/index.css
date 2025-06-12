@@ -17,12 +17,11 @@
 
 html,#root,body {
   display: flex;
-  justify-content: center;   /* Center horizontally */
-  align-items: center;       /* Center vertically */
-  height: 100%;             /* Full viewport height */
-  width: 100%;              /* Full viewport width */
+  justify-content: center; 
+  align-items: center;     
+  height: 100%;         
+  width: 100%;  
   background-color: #f0f2f5;
-  /* background-color: aqua; */
 }
 
 
