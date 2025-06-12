@@ -169,7 +169,7 @@ const PastEvaluations: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const timestamp = new Date(filteredStudentSemesterEvals[0].createdAt);
+  const timestamp = new Date((filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0] : filteredSupervisorSemesterEvals[0]).createdAt);
   const year = timestamp.getFullYear();
 
   // useEffect(() => {
@@ -213,8 +213,8 @@ const PastEvaluations: React.FC = () => {
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
-          {filteredStudentEvals.length > 0 ?
-            filteredStudentEvals.map((evalItem: PastEval) =>
+          {filteredStudentEvals.length > 0 || filteredSupervisorEvals.length > 0 ?
+            (filteredStudentEvals.length > filteredSupervisorEvals.length ? filteredStudentEvals : filteredSupervisorEvals).map((evalItem: PastEval) =>
               // const timestamp = new Date(evalItem.createdAt);
               // const year = timestamp.getFullYear();
               <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {year}</button>) : null}
@@ -243,7 +243,7 @@ const PastEvaluations: React.FC = () => {
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
       filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}
     <section className="past-evals-container">
-      <h2>{filteredStudentSemesterEvals[0].semester} {year}</h2>
+      <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {year}</h2>
       <div className="rubric-table-wrapper">
         <table className="rubric-table">
           <thead>
@@ -270,11 +270,11 @@ const PastEvaluations: React.FC = () => {
                     let cellClass = `display-cell`;
 
                     // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
-                    if ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                    if ((filteredStudentSemesterEvals[0] && filteredSupervisorSemesterEvals[0]) && ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
                       cellClass += ` both-selected`;
-                    } else if ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                    } else if (filteredStudentSemesterEvals[0] && ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
                       cellClass += ` student-selected`;
-                    } else if ((filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                    } else if (filteredSupervisorSemesterEvals[0] && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
                       cellClass += ` supervisor-selected`;
                     } else {
                       cellClass = String(cellClass);
