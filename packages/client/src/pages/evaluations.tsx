@@ -419,7 +419,7 @@ const Evaluations: React.FC = () => {
             }}
           >Cancel
           </button>
-          <button
+          {canStartSelfEval && <button
             id="proceed-to-eval-btn"
             className="btn btn-success"
             style={{ backgroundColor: `#4CAF50` }}
@@ -427,8 +427,7 @@ const Evaluations: React.FC = () => {
               setIsFormVisible((prev) => !prev);
               setIsPMVisible((prev) => !prev);
             }}
-            disabled={!canStartSelfEval}
-          >Proceed to Evaluation</button>
+          >Proceed to Evaluation</button>}
         </div>
       </div>
     </div>}
