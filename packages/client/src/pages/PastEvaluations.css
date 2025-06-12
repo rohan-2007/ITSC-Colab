@@ -142,13 +142,13 @@ html, body, #root {
 }
 
 .display-cell.student-selected {
-  background-color: #4CAF50;
-  border-color: #388E3C;
+  background-color: var(--studentBgColor);
+  border-color: var(--studentBorderColor);
 }
 
 .display-cell.supervisor-selected {
-  background-color: #ed091c;
-  border-color: #f50115;
+  background-color: var(--supervisorBgColor);
+  border-color: var(--supervisorBorderColor);
 }
 
 .display-cell.both-selected {
