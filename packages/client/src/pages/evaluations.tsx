@@ -72,18 +72,37 @@ const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `UNKNOWN` => {
   return `UNKNOWN`;
 };
 
+interface Student {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+}
+
 const Evaluations: React.FC = () => {
   const navigate = useNavigate();
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ isFormVisible, setIsFormVisible ] = useState(false);
   const [ isPreModalVisible, setIsPMVisible ] = useState(false);
+  const [ studentSearch, setStudentSearch ] = useState(``);
+  const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ selections, setSelections ] = useState<Selections>(
     rubricData.reduce((acc, cr) => ({ ...acc, [cr.id]: `starting` }), {}),
   );
   const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
   const [ message, setMessage ] = useState(``);
-  const [ studentEvalId, setStudentEvalId ] = useState(0);
+  const [ students, setStudents ] = useState<Student[]>([]);
+  const [ evalStatus ] = useState({ studentCompleted: false, supervisorCompleted: false });
+  const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, {
+    studentCompleted: boolean;
+    supervisorCompleted: boolean;
+  }>>({});
+
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(studentSearch.toLowerCase()));
+
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -136,11 +155,89 @@ const Evaluations: React.FC = () => {
       }
     };
     void fetchUser();
+
+    const fetchStudents = async () => {
+      const response = await fetch(`${fetchUrl}/students/`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch students`);
+      }
+
+      const jsonData = await response.json();
+
+      if (jsonData && jsonData.students) {
+        const users = jsonData.students as Student[];
+        setStudents(users);
+      }
+    };
+
+    void fetchStudents();
+
+    const fetchEvalStatusForCurrentUser = async (studentId: number) => {
+      try {
+        const response = await fetch(
+          `${fetchUrl}/evalStatus?studentId=${studentId}&semester=${assignSemester()}&year=${currentYear}`, {
+            credentials: `include`,
+          },
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            // Update the status for just this one user in our map
+            setStudentsEvalStatus((prev) => ({ ...prev, [studentId]: data }));
+          }
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch evaluation status:`, err);
+      }
+    };
+    if (user && user.role === `STUDENT`) {
+      void fetchEvalStatusForCurrentUser(user.id);
+    }
+
+    if (user?.role === `SUPERVISOR` && students.length > 0) {
+      const fetchAllStatuses = async () => {
+      // Create an array of fetch promises, one for each student
+        const statusPromises = students.map((student) =>
+          fetch(
+            `${fetchUrl}/evalStatus?studentId=${student.id}&semester=${assignSemester()}&year=${currentYear}`,
+            { credentials: `include` },
+          )
+            .then((res) => res.ok ? res.json() : { studentCompleted: false, supervisorCompleted: false })
+            .then((data) => ({
+              id: student.id,
+              status: data,
+            })));
+
+        // Wait for all fetch requests to complete
+        const results = await Promise.all(statusPromises);
+
+        // Transform the array of results into a lookup object (our state shape)
+        const statusMap = results.reduce((acc, result) => {
+          acc[result.id] = result.status;
+          return acc;
+        }, {} as typeof studentsEvalStatus);
+
+        // Update the state with the statuses for all students
+        setStudentsEvalStatus(statusMap);
+      };
+
+      void fetchAllStatuses();
+    }
   }, [ navigate ]);
 
   const handleSelect = (criterionId: string, level: PerformanceLevel) => {
     setSelections((prev) => ({ ...prev, [criterionId]: level }));
   };
+
+  const hasUserCompletedEval =
+    user?.role === `STUDENT` && evalStatus.studentCompleted;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,9 +254,15 @@ const Evaluations: React.FC = () => {
         studentId: user.id,
         supervisorId: user.supervisorId,
         type: user.role,
+        year: new Date().getFullYear(),
       };
       if (user.role === `SUPERVISOR`) {
-        evalData.studentId = studentEvalId;
+        if (selectedStudentId !== null) {
+          evalData.studentId = selectedStudentId;
+        } else {
+          setMessage(`Error: Please select a student before submitting the evaluation.`);
+          return;
+        }
         evalData.supervisorId = user.id;
       }
 
@@ -234,40 +337,99 @@ const Evaluations: React.FC = () => {
           {user?.role === `STUDENT` &&
             <>
               <h2>Start Self-Evaluation</h2>
-              <p>
-                You are about to begin a new self-evaluation for the
-                <strong> {assignSemester()}</strong>
-                <br />
-                semester. Your responses will be shared with your supervisor,
-                {` `}
-                {user.supervisorName}
-                , upon submission.
-              </p>
-              <p>Please click "Proceed" to continue.</p>
+              {hasUserCompletedEval &&
+                <p className="completion-message">
+                  You have already completed your evaluation for this semester.
+                </p>}
+              {!hasUserCompletedEval &&
+                <>
+                  <p>
+                    You are about to begin a new self-evaluation for the
+                    <strong> {assignSemester()}</strong>
+                    <br />
+                    semester. Your responses will be shared with your supervisor,
+                    {` `}
+                    {user.supervisorName}
+                    , upon submission.
+                  </p>
+                  <p>Please click "Proceed" to continue.</p>
+                </>}
             </>}
+
           {user?.role === `SUPERVISOR` &&
             <>
+              {/* This content is now properly centered by its own CSS */}
               <h2>Start Supervisor Evaluation</h2>
-              <p>You are about to begin a new evaluation for a student. Please enter the student's ID to proceed.</p>
+              <p>
+                You are about to begin a new evaluation for a student.
+                Please choose a student from the list below to proceed.
+              </p>
+
+              {/* Search Input for the table */}
               <div className="form-group">
-                <label htmlFor="student-id">Student ID</label>
+                <label htmlFor="student-search">Search Students:</label>
                 <input
+                  id="student-search"
                   type="text"
-                  id="student-id"
-                  placeholder="e.g., 12345678"
-                  required
-                  onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setStudentEvalId(Number(e.target.value));
+                  placeholder="e.g., Alice Johnson"
+                  value={studentSearch}
+                  onChange={(e) => {
+                    setStudentSearch(e.target.value);
+                    setSelectedStudentId(null); // Deselect student when search changes
                   }}
                 />
+              </div>
 
+              <div className="student-table-container">
+                <table className="student-select-table">
+                  <thead>
+                    <tr>
+                      <th>Student ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Action</th>
+                      {` `}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.length > 0 ?
+                      filteredStudents.map((student) => {
+                        const status = studentsEvalStatus[student.id];
+                        // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
+                        const isCompleted = status ? status.supervisorCompleted : false;
+                        return <tr
+                          key={student.id}
+                          className={selectedStudentId === student.id ? `selected` : ``}
+                        >
+                          <td>{student.id}</td>
+                          <td>{student.name}</td>
+                          <td>{student.email}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn select-btn"
+                              onClick={() => setSelectedStudentId(student.id)}
+                              disabled={isCompleted}
+                            >
+                              {isCompleted ? `Completed` : `Select`}
+                            </button>
+                          </td>
+                        </tr>;
+                      }) :
+                      <tr>
+                        <td colSpan={4} className="no-students-message">
+                          No students found.
+                        </td>
+                      </tr>}
+                  </tbody>
+                </table>
               </div>
             </>}
         </div>
         <div className="modal-footer">
           <button
             type="button"
-            className="btn secondary-btn"
+            className="btn btn-cancel"
             style={{ backgroundColor: `#757575` }}
             data-modal-id="pre-eval-modal"
             onClick={() => {
@@ -277,7 +439,7 @@ const Evaluations: React.FC = () => {
           </button>
           <button
             id="proceed-to-eval-btn"
-            className="btn primary-btn"
+            className="btn btn-success"
             style={{ backgroundColor: `#4CAF50` }}
             onClick={() => {
               setIsFormVisible((prev) => !prev);
@@ -296,7 +458,6 @@ const Evaluations: React.FC = () => {
         className="modal-content"
         style={{ height: `80%`, overflow: `scroll` }}
       >
-        <div className="modal-close">X</div>
         <form onSubmit={handleSubmit}>
           <div className="form-header">
             <h2>

@@ -40,11 +40,14 @@ model Evaluation {
   id            Int       @id @default(autoincrement())
   studentId     Int
   supervisorId  Int?
+  year          Int
   semester      Semester
   type          Role
   criteria      Json
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+
+  @@unique([studentId, semester, year, type])
 }
 
 enum Role {

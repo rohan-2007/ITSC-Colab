@@ -12,6 +12,7 @@ interface EvaluationBody {
   semester: keyof typeof Semester;
   studentId: number;
   supervisorId?: number;
+  year: number;
 }
 
 router.post(`/submitEval`, requireAuth, async (
@@ -19,7 +20,7 @@ router.post(`/submitEval`, requireAuth, async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, evaluationType, semester, studentId, supervisorId } = req.body;
+    const { criteria, evaluationType, semester, studentId, supervisorId, year } = req.body;
     const user = await prisma.user.findUnique({
       where: { id: studentId },
     });
@@ -40,6 +41,7 @@ router.post(`/submitEval`, requireAuth, async (
         studentId,
         supervisorId: supervisorId || null,
         type: evaluationType,
+        year,
       },
     });
 
@@ -115,6 +117,35 @@ router.get(`/getEval`, requireAuth, async (
     console.error(`Get evaluation error:`, error);
     res.status(500).json({ error: `Internal server error` });
   }
+});
+
+router.get(`/evalStatus`, requireAuth, async (req, res) => {
+  const { semester, studentId, year } = req.query;
+
+  const evaluations = await prisma.evaluation.findMany({
+    where: {
+      semester: semester as Semester,
+      studentId: Number(studentId),
+      year: Number(year),
+    },
+  });
+
+  let studentCompleted = false;
+  let supervisorCompleted = false;
+
+  for (const ev of evaluations) {
+    if (ev.type === `STUDENT`) {
+      studentCompleted = true;
+    }
+    if (ev.type === `SUPERVISOR`) {
+      supervisorCompleted = true;
+    }
+  }
+
+  res.status(200).json({
+    studentCompleted,
+    supervisorCompleted,
+  });
 });
 
 export default router;
