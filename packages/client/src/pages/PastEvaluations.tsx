@@ -101,6 +101,10 @@ const PastEvaluations: React.FC = () => {
     setSelectedYear(parseInt(event.target.value, 10));
   };
 
+  useEffect(() => {
+    console.log(selectedYear);
+  }, [ selectedYear ]);
+
   const getPastEvals = async () => {
     // console.log(`getPastEvals`);
     try {
@@ -273,7 +277,7 @@ const PastEvaluations: React.FC = () => {
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
       filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}
     <section className="past-evals-container">
-      <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].year : filteredSupervisorSemesterEvals[0].year}</h2>
+      {/* <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].year : filteredSupervisorSemesterEvals[0].year}</h2> */}
       <div className="rubric-table-wrapper">
         <table className="rubric-table">
           <thead>
