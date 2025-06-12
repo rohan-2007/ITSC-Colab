@@ -12,6 +12,7 @@ interface Student {
 }
 
 interface Team {
+  id?: number;
   assignedStudents: string[];
   expanded: boolean;
   name: string;
@@ -67,28 +68,60 @@ const Supervisor: React.FC = () => {
       }
     };
 
-    void checkSession();
-    const fetchStudents = async () => {
-      const response = await fetch(`${fetchUrl}/students/`, {
+    const fetchData = async () => {
+      // First fetch students
+      const studentsResponse = await fetch(`${fetchUrl}/students/`, {
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
 
-      if (!response.ok) {
+      if (!studentsResponse.ok) {
         // eslint-disable-next-line no-console
         console.error(`Failed to fetch students`);
+        return;
       }
 
-      const jsonData = await response.json();
+      const studentsData = await studentsResponse.json();
+      let fetchedStudents: Student[] = [];
 
-      if (jsonData && jsonData.students) {
-        const users = jsonData.students as Student[];
-        setStudents(users);
+      if (studentsData && studentsData.students) {
+        fetchedStudents = studentsData.students as Student[];
+        setStudents(fetchedStudents);
+      }
+
+      // Then fetch teams (now that we have students)
+      const teamsResponse = await fetch(`${fetchUrl}/teams`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      const teamsData = await teamsResponse.json();
+
+      if (teamsResponse.ok && teamsData.teams) {
+        interface TeamFromApi {
+          id: number;
+          memberIDs: number[];
+          name: string;
+        }
+        const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => ({
+          id: team.id,
+          assignedStudents: fetchedStudents
+            .filter((s) => team.memberIDs.includes(s.id))
+            .map((s) => s.name),
+          expanded: false,
+          name: team.name,
+          search: ``,
+          showAssigned: false,
+        }));
+
+        setTeams(newTeams);
       }
     };
 
-    void fetchStudents();
+    void checkSession();
+    void fetchData();
   }, [ navigate ]);
 
   const openStudentInfoModal = (index: number) => {
@@ -141,26 +174,60 @@ const Supervisor: React.FC = () => {
     closeStudentInfoModal();
   };
 
-  const saveTeamName = () => {
-    if (selectedTeamIndex !== null && editedTeamName.trim() !== ``) {
-      setTeams((prev) =>
-        prev.map((team, i) =>
-          i === selectedTeamIndex ? { ...team, name: editedTeamName.trim() } : team));
+  const saveTeamName = async () => {
+    if (selectedTeamIndex === null || editedTeamName.trim() === ``) {
+      return;
     }
+
+    const team = teams[selectedTeamIndex];
+    const updatedTeam = { ...team, name: editedTeamName.trim() };
+    const memberIDs = students
+      .filter((s) => updatedTeam.assignedStudents.includes(s.name))
+      .map((s) => s.id);
+
+    if (team.id) {
+    // Update existing team
+      await fetch(`${fetchUrl}/setTeamInfo`, {
+        body: JSON.stringify({ id: team.id, memberIDs, name: updatedTeam.name }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+    } else {
+    // Create new team
+      const res = await fetch(`${fetchUrl}/createTeam`, {
+        body: JSON.stringify({ memberIDs, name: updatedTeam.name }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+      const json = await res.json();
+      if (res.ok) {
+        updatedTeam.id = json.team.id;
+      }
+    }
+
+    setTeams((prev) =>
+      prev.map((t, i) => i === selectedTeamIndex ? updatedTeam : t));
     closeTeamModal();
   };
 
-  const deleteTeam = () => {
-    if (selectedTeamIndex !== null) {
-      setTeams((prev) => prev.filter((_, i) => i !== selectedTeamIndex));
-      closeTeamModal();
+  const deleteTeam = async () => {
+    if (selectedTeamIndex === null) {
+      return;
     }
-  };
 
-  const toggleTeamDropdown = (index: number) => {
-    setTeams((prev) =>
-      prev.map((team, i) =>
-        i === index ? { ...team, expanded: !team.expanded } : { ...team, expanded: false }));
+    const team = teams[selectedTeamIndex];
+
+    if (team.id) {
+      await fetch(`${fetchUrl}/deleteTeam/${team.id}`, {
+        credentials: `include`,
+        method: `DELETE`,
+      });
+    }
+
+    setTeams((prev) => prev.filter((_, i) => i !== selectedTeamIndex));
+    closeTeamModal();
   };
 
   const toggleAssignedDropdown = (index: number) => {
@@ -255,9 +322,7 @@ const Supervisor: React.FC = () => {
           {filteredTeams.map((team, index) =>
             <div key={index} className="team-section">
               <div className="student-row">
-                <button className="item-button" onClick={() => toggleTeamDropdown(index)}>
-                  {team.name}
-                </button>
+                <span className="team-name-span">{team.name}</span>
                 <div className="team-tools">
                   <button className="edit-team-button" onClick={() => openEditTeamModal(index)}>✎</button>
                   <button className="toggle-button" onClick={() => toggleAssignedDropdown(index)}>
@@ -346,16 +411,37 @@ const Supervisor: React.FC = () => {
         </div>
       </div>}
 
-    {teamEditModalOpen &&
+    {teamEditModalOpen && selectedTeamIndex !== null &&
       <div className="modal-overlay" onClick={closeTeamModal}>
         <div className="modal" onClick={(e) => e.stopPropagation()}>
-          <h3>Edit Team Name</h3>
+          <h3>Edit Team</h3>
+
+          <label htmlFor="teamName">Team Name</label>
           <input
+            id="teamName"
             type="text"
             value={editedTeamName}
             onChange={(e) => setEditedTeamName(e.target.value)}
             className="modal-input"
           />
+
+          <div className="modal-form-group">
+            <h3>Assign Students</h3>
+            <div className="dropdown-scroll">
+              {students.map((student) => {
+                const isChecked = teams[selectedTeamIndex].assignedStudents.includes(student.name);
+                return <label key={student.id} className="dropdown-item">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
+                  />
+                  {student.name}
+                </label>;
+              })}
+            </div>
+          </div>
+
           <div className="modal-buttons">
             <button onClick={saveTeamName} className="modal-save">Save</button>
             <button onClick={closeTeamModal} className="modal-cancel">Cancel</button>
@@ -363,6 +449,7 @@ const Supervisor: React.FC = () => {
           </div>
         </div>
       </div>}
+
   </div>;
 };
 
