@@ -63,6 +63,26 @@ const PastEvaluations: React.FC = () => {
     updatedAt: string;
   }
 
+  // interface CSSProperties {
+  //   [key: `--${string}`]: string | number;
+  // }
+
+  const studentBgColor = `#95f542`;
+  const studentBorderColor = `#97f04a`;
+  const supervisorBgColor = `#f76d68`;
+  const supervisorBorderColor = `#e36864`;
+  const bothBgColor = `#f2c763`;
+  const bothBorderColor = `#e0bb63`;
+
+  const dynamicStyles: React.CSSProperties = {
+    '--bothBgColor': bothBgColor,
+    '--bothBorderColor': bothBorderColor,
+    '--studentBgColor': studentBgColor,
+    '--studentBorderColor': studentBorderColor,
+    '--supervisorBgColor': supervisorBgColor,
+    '--supervisorBorderColor': supervisorBorderColor,
+  } as React.CSSProperties;
+
   const [ pastEvals, setPastEvals ] = useState<PastEval[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<PastEval[]>([]);
   const [ filteredStudentSemesterEvals, setFilteredStudentSemesterEvals ] = useState<PastEval[]>([]);
@@ -282,6 +302,7 @@ const PastEvaluations: React.FC = () => {
                     return (
                       <td
                         key={level}
+                        style={dynamicStyles}
                         className={cellClass}
                         // onClick={() => handleSelect(criterion.id, level)}
                       >
