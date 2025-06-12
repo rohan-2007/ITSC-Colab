@@ -92,6 +92,8 @@ const PastEvaluations: React.FC = () => {
   const [ evaluationsReady, setEvaluationsReady ] = useState(false);
   const [ selectedSemester, setSelectedSemester ] = useState(`SPRING`);
   const [ selectedYear, setSelectedYear ] = useState(2025);
+  const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
+  const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
@@ -99,7 +101,13 @@ const PastEvaluations: React.FC = () => {
 
   const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(parseInt(event.target.value, 10));
+    setSelectedSemester(filteredStudentYearEvals ? filteredStudentYearEvals[0].semester : filteredSupervisorYearEvals[0].semester);
   };
+
+  useEffect(() => {
+    // console.log(selectedYear);
+    // handleSelectedSemester(filteredStudentYearEvals ? filteredStudentYearEvals[0].semester : filteredSupervisorYearEvals[0].semester);
+  }, [ selectedYear ]);
 
   const getPastEvals = async () => {
     // console.log(`getPastEvals`);
@@ -172,19 +180,27 @@ const PastEvaluations: React.FC = () => {
 
         // console.log(`Filtered supervisor evaluations: `, supervisorEvals);
         setFilteredStudentSemesterEvals(studentEvals.filter(
-          (entry) => entry.semester === selectedSemester,
+          (entry) => entry.semester === selectedSemester && entry.year === selectedYear,
         ));
         setFilteredSupervisorSemesterEvals(supervisorEvals.filter(
-          (entry) => entry.semester === selectedSemester,
+          (entry) => entry.semester === selectedSemester && entry.year === selectedYear,
+        ));
+
+        setFilteredStudentYearEvals(studentEvals.filter(
+          (entry) => entry.year === selectedYear,
+        ));
+        setFilteredSupervisorYearEvals(supervisorEvals.filter(
+          (entry) => entry.year === selectedYear,
         ));
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
       }
+      console.log(`here`);
     };
 
     void fetchPastEvals();
-  }, [ selectedSemester ]);
+  }, [ selectedSemester, selectedYear ]);
 
   useEffect(() => {
     if (filteredStudentEvals.length && filteredSupervisorEvals.length) {
@@ -243,8 +259,8 @@ const PastEvaluations: React.FC = () => {
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
-          {filteredStudentEvals.length > 0 || filteredSupervisorEvals.length > 0 ?
-            (filteredStudentEvals.length > filteredSupervisorEvals.length ? filteredStudentEvals : filteredSupervisorEvals).map((evalItem: PastEval) =>
+          {filteredStudentYearEvals.length > 0 || filteredSupervisorYearEvals.length > 0 ?
+            (filteredStudentYearEvals.length > filteredSupervisorYearEvals.length ? filteredStudentYearEvals : filteredSupervisorYearEvals).map((evalItem: PastEval) =>
               // const timestamp = new Date(evalItem.createdAt);
               // const year = timestamp.getFullYear();
               <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {evalItem.year}</button>) : null}
@@ -273,7 +289,7 @@ const PastEvaluations: React.FC = () => {
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
       filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}
     <section className="past-evals-container">
-      <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].year : filteredSupervisorSemesterEvals[0].year}</h2>
+      {/* <h2>{filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].semester : filteredSupervisorSemesterEvals[0].semester} {filteredStudentSemesterEvals[0] ? filteredStudentSemesterEvals[0].year : filteredSupervisorSemesterEvals[0].year}</h2> */}
       <div className="rubric-table-wrapper">
         <table className="rubric-table">
           <thead>
