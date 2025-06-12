@@ -64,18 +64,16 @@ router.get(`/getEval`, requireAuth, async (
   req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {
-  // eslint-disable-next-line no-console
-  console.log(`in getEval`);
+  // console.log(`in getEval`);
   // const { evaluationId, userId } = req.query;
   const evaluationId = req.query.evaluationId ? Number(req.query.evaluationId) : undefined;
   const userId = req.query.userId ? Number(req.query.userId) : undefined;
-  // eslint-disable-next-line no-console
-  console.log(`${ evaluationId } ${ userId }`);
+
+  // console.log(`${ evaluationId } ${ userId }`);
 
   try {
     if (evaluationId) {
-      // eslint-disable-next-line no-console
-      console.log(`evaluationId`);
+      // console.log(`evaluationId`);
       const evalRecord = await prisma.evaluation.findUnique({
         where: { id: evaluationId },
       });
@@ -96,15 +94,13 @@ router.get(`/getEval`, requireAuth, async (
     }
 
     if (userId) {
-      // eslint-disable-next-line no-console
-      console.log(`in userId${ userId }`);
+      // console.log(`in userId${ userId }`);
       const evaluations = await prisma.evaluation.findMany({
         // orderBy: { createdAt: `desc` },
         where: { studentId: userId },
       });
 
-      // eslint-disable-next-line no-console
-      console.log(`evals: ${ JSON.stringify(evaluations) }`);
+      // console.log(`evals: ${ JSON.stringify(evaluations) }`);
       if (!evaluations) {
         res.status(404).json({ error: `evaluation records not found` });
       }

@@ -65,12 +65,18 @@ const PastEvaluations: React.FC = () => {
 
   const [ pastEvals, setPastEvals ] = useState<PastEval[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<PastEval[]>([]);
+  const [ filteredStudentSemesterEvals, setFilteredStudentSemesterEvals ] = useState<PastEval[]>([]);
+  const [ filteredSupervisorSemesterEvals, setFilteredSupervisorSemesterEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<PastEval[]>([]);
   const [ evaluationsReady, setEvaluationsReady ] = useState(false);
+  const [ selectedSemester, setSelectedSemester ] = useState(`SPRING`);
+
+  const handleSelectedSemester = (semester: string) => {
+    setSelectedSemester(semester);
+  };
 
   const getPastEvals = async () => {
-    // eslint-disable-next-line no-console
-    console.log(`getPastEvals`);
+    // console.log(`getPastEvals`);
     try {
       const res = await fetch(`http://localhost:3001/me/`, {
         body: JSON.stringify({ returnData: true }),
@@ -87,8 +93,7 @@ const PastEvaluations: React.FC = () => {
 
       const resJson = await res.json();
 
-      // eslint-disable-next-line no-console
-      console.log(`user data: `, JSON.stringify(resJson, null, 2));
+      // console.log(`user data: `, JSON.stringify(resJson, null, 2));
 
       const userId = resJson.user.id;
 
@@ -103,8 +108,7 @@ const PastEvaluations: React.FC = () => {
 
       const pastEvalsJson: PastEval[] = await evalResponse.json();
 
-      // eslint-disable-next-line no-console
-      console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
+      // console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
 
       return pastEvalsJson;
     } catch (err) {
@@ -119,23 +123,33 @@ const PastEvaluations: React.FC = () => {
   };
   // void getPastEvals();
 
+  // console.log(selectedSemester);
+
   useEffect(() => {
     const fetchPastEvals = async () => {
       try {
         const evals = await getPastEvals();
         setPastEvals(evals);
         const studentEvals = evals.filter(
+          // (entry) => entry.type === `STUDENT` && entry.semester === `${selectedSemester}`,
           (entry) => entry.type === `STUDENT`,
         );
         const supervisorEvals = evals.filter(
+          // (entry) => entry.type === `SUPERVISOR` && entry.semester === `${selectedSemester}`,
           (entry) => entry.type === `SUPERVISOR`,
         );
         setFilteredStudentEvals(studentEvals);
-        // eslint-disable-next-line no-console
-        console.log(`Filtered student evaluations: `, filteredStudentEvals);
+
+        // console.log(`Filtered student evaluations: `, filteredStudentEvals);
         setFilteredSupervisorEvals(supervisorEvals);
-        // eslint-disable-next-line no-console
-        console.log(`Filtered supervisor evaluations: `, supervisorEvals);
+
+        // console.log(`Filtered supervisor evaluations: `, supervisorEvals);
+        setFilteredStudentSemesterEvals(studentEvals.filter(
+          (entry) => entry.semester === selectedSemester,
+        ));
+        setFilteredSupervisorSemesterEvals(supervisorEvals.filter(
+          (entry) => entry.semester === selectedSemester,
+        ));
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
@@ -143,7 +157,7 @@ const PastEvaluations: React.FC = () => {
     };
 
     void fetchPastEvals();
-  }, []);
+  }, [ selectedSemester, pastEvals ]);
 
   useEffect(() => {
     if (filteredStudentEvals.length && filteredSupervisorEvals.length) {
@@ -154,6 +168,9 @@ const PastEvaluations: React.FC = () => {
   if (!evaluationsReady) {
     return <div>Loading...</div>;
   }
+
+  const timestamp = new Date(filteredStudentSemesterEvals[0].createdAt);
+  const year = timestamp.getFullYear();
 
   // useEffect(() => {
   //   // eslint-disable-next-line no-console
@@ -196,20 +213,16 @@ const PastEvaluations: React.FC = () => {
     <div className="top-bar">
       <div className="left-section">
         <div className="horizontal-scroll">
-          <button className="scroll-item">1</button>
-          <button className="scroll-item">2</button>
-          <button className="scroll-item">3</button>
-          <button className="scroll-item">4</button>
-          <button className="scroll-item">5</button>
-          <button className="scroll-item">6</button>
-          <button className="scroll-item">7</button>
-          <button className="scroll-item">8</button>
-          <button className="scroll-item">9</button>
+          {filteredStudentEvals.length > 0 ?
+            filteredStudentEvals.map((evalItem: PastEval) =>
+              // const timestamp = new Date(evalItem.createdAt);
+              // const year = timestamp.getFullYear();
+              <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {year}</button>) : null}
         </div>
       </div>
 
       <div className="right-section">
-        <label htmlFor="semester" className="semester-label">Semester:</label>
+        <label htmlFor="semester" className="semester-label">Year:</label>
         <select id="semester" className="dropdown">
           <option value="spring">Spring</option>
           <option value="fall">Fall</option>
@@ -227,67 +240,62 @@ const PastEvaluations: React.FC = () => {
       </div>
     </div>
 
-    {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
-      filteredStudentEvals.map((evaluation: PastEval, evalIndex) => {
-        const supervisorEval = filteredSupervisorEvals[evalIndex];
-        // eslint-disable-next-line no-console
-        console.log(`supervisorEval: `, supervisorEval);
-        return (
-          <section className="past-evals-container">
-            <h2>Your Profile</h2>
-            <div className="rubric-table-wrapper">
-              <table className="rubric-table">
-                <thead>
-                  <tr>
-                    <th>Criteria</th>
-                    <th>Starting</th>
-                    <th>In Progress</th>
-                    <th>Competitive</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rubricData.map((criterion) =>
-                    <tr key={criterion.id}>
-                      <td className="criteria-column">
-                        <strong>{criterion.title}</strong>
-                        <ul>
-                          {criterion.subCriteria.map((sub, index) =>
-                            <li key={index}>{sub}</li>)}
-                        </ul>
-                      </td>
-                      {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
+    {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
+      filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}
+    <section className="past-evals-container">
+      <h2>{filteredStudentSemesterEvals[0].semester} {year}</h2>
+      <div className="rubric-table-wrapper">
+        <table className="rubric-table">
+          <thead>
+            <tr>
+              <th>Criteria</th>
+              <th>Starting</th>
+              <th>In Progress</th>
+              <th>Competitive</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rubricData.map((criterion) =>
+              <tr key={criterion.id}>
+                <td className="criteria-column">
+                  <strong>{criterion.title}</strong>
+                  <ul>
+                    {criterion.subCriteria.map((sub, index) =>
+                      <li key={index}>{sub}</li>)}
+                  </ul>
+                </td>
+                {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
 
-                        (level) => {
-                          let cellClass = `level-cell`;
+                  (level) => {
+                    let cellClass = `display-cell`;
 
-                          // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
-                          if ((evaluation.criteria as unknown as Selections)?.[criterion.id] === level && (supervisorEval.criteria as unknown as Selections)?.[criterion.id] === level) {
-                            cellClass += ` both-selected`;
-                          } else if ((evaluation.criteria as unknown as Selections)?.[criterion.id] === level) {
-                            cellClass += ` student-selected`;
-                          } else if ((supervisorEval.criteria as unknown as Selections)?.[criterion.id] === level) {
-                            cellClass += ` supervisor-selected`;
-                          } else {
-                            cellClass = String(cellClass);
-                          }
-                          return (
-                            <td
-                              key={level}
-                              className={cellClass}
-                              // onClick={() => handleSelect(criterion.id, level)}
-                            >
-                              <div className="level-text">
-                                {criterion.levels[level]}
-                              </div>
-                            </td>);
-                        },
-                      )}
-                    </tr>)}
-                </tbody>
-              </table>
-            </div>
-          </section>);
-      }) : null}
+                    // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
+                    if ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                      cellClass += ` both-selected`;
+                    } else if ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                      cellClass += ` student-selected`;
+                    } else if ((filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                      cellClass += ` supervisor-selected`;
+                    } else {
+                      cellClass = String(cellClass);
+                    }
+                    return (
+                      <td
+                        key={level}
+                        className={cellClass}
+                        // onClick={() => handleSelect(criterion.id, level)}
+                      >
+                        <div className="level-text">
+                          {criterion.levels[level]}
+                        </div>
+                      </td>);
+                  },
+                )}
+              </tr>)}
+          </tbody>
+        </table>
+      </div>
+    </section>
 
   </>;
 };

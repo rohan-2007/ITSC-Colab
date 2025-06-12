@@ -96,13 +96,15 @@ html, body, #root {
  display: flex;
  overflow-x: auto;
  overflow-y: hidden;
- max-width: 650px;
+ width: 70vh;
  padding-bottom: 4px;
  white-space: nowrap;
  scrollbar-color: #aaa #f0f0f0;
 }
 
 .scroll-item {
+ width: 50%;
+ text-align: center;
  flex: 0 0 auto;
  padding: 6px 12px;
  background-color: #ddd;
@@ -139,17 +141,17 @@ html, body, #root {
   width: auto;
 }
 
-.level-cell.student-selected {
+.display-cell.student-selected {
   background-color: #4CAF50;
   border-color: #388E3C;
 }
 
-.level-cell.supervisor-selected {
-  background-color: #110de9;
-  border-color: #0501f5;
+.display-cell.supervisor-selected {
+  background-color: #ed091c;
+  border-color: #f50115;
 }
 
-.level-cell.both-selected {
-  background-color: #d70de9;
-  border-color: #df03f4;
+.display-cell.both-selected {
+  background-color: #e9a00d;
+  border-color: #f5a504;
 }
