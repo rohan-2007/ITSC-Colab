@@ -403,12 +403,14 @@ const PastEvaluations: React.FC = () => {
     </div>
 
     {/* <div className="past-evaluations-container">
+>>>>>>> 0d0790eb8238005079f4bdc25be2d7be6bc5aa35
       <div className="eval-form">
         <h2>Eval form</h2>
         <div className="info-box">Team: these will automatically fill to whatever they are whenever forms actually get submitted later </div>
         <div className="info-box">Supervisor: these will automatically fill to whatever they are whenever forms actually get submitted later </div>
         <div className="form-contents"> The actual form will go here</div>
       </div>
+
     </div> */}
 
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
@@ -471,4 +473,5 @@ const PastEvaluations: React.FC = () => {
 
   </>;
 };
+
 export default PastEvaluations;

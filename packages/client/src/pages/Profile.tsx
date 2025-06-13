@@ -152,10 +152,6 @@ const Profile: React.FC = () => {
               <span className="info-label">Email</span>
               <span className="info-value">{user.email}</span>
             </div>
-            <div className="profile-info-item">
-              <span className="info-label">Password</span>
-              <span className="info-value">••••••••</span>
-            </div>
           </>}
       </div>
 
@@ -164,7 +160,6 @@ const Profile: React.FC = () => {
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
             <button className="btn secondary-btn" disabled>Edit Profile</button>
-            <button className="btn tertiary-btn" disabled>Change Password</button>
             <button className="btn destructive-btn" disabled>Delete Account</button>
           </div>
         </div>}
