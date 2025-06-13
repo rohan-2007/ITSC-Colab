@@ -3,7 +3,7 @@
     Ensures that on pages with little content, the main area still takes up
     the full height of the screen, keeping the footer at the very bottom.
   */
-  min-height: 100vh;
+  min-height: 80vh;
 
   /* Includes padding in the element's total width and height calculation. */
   box-sizing: border-box;
@@ -27,5 +27,6 @@ header {
 .main-content-area {
   flex: 1;
   background-color: #f0f2f5;
+  overflow: scroll;
   /* background-color: aqua; */
 }
