@@ -77,6 +77,11 @@ const PastEvaluations: React.FC = () => {
     password: string;
   }
 
+  // interface LegendItem {
+  //   color: string;
+  //   label: string;
+  // }
+
   // interface CSSProperties {
   //   [key: `--${string}`]: string | number;
   // }
@@ -96,6 +101,12 @@ const PastEvaluations: React.FC = () => {
     '--supervisorBgColor': supervisorBgColor,
     '--supervisorBorderColor': supervisorBorderColor,
   } as React.CSSProperties;
+
+  const legendColors = [
+    { color: studentBgColor, label: `Student` },
+    { color: supervisorBgColor, label: `Supervisor` },
+    { color: bothBgColor, label: `Supervisor and Student` },
+  ];
 
   const [ pastEvals, setPastEvals ] = useState<PastEval[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<PastEval[]>([]);
@@ -338,6 +349,21 @@ const PastEvaluations: React.FC = () => {
           {distinctYears.map((year) =>
             <option value={year}>{year}</option>)}
         </select>
+      </div>
+
+      <div className="legend-outer">
+        {legendColors.map((item, index) =>
+          <div key={index} className="legend-item-container">
+            <div
+              style={{
+                backgroundColor: item.color,
+                height: `16px`,
+                marginRight: `8px`,
+                width: `16px`,
+              }}
+            />
+            <span>{item.label}</span>
+          </div>)}
       </div>
 
       <div className="right-section">
