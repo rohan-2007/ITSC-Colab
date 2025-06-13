@@ -139,20 +139,9 @@ const Profile: React.FC = () => {
         </div>
         <div className="profile-info-item">
           <span className="info-label">Team</span>
-          <span className="info-value">{user.teamNames}</span>
+          <span className="info-value">
+            {user.teamNames && user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}</span>
         </div>
-
-        {user.role === `SUPERVISOR` &&
-          <>
-            <div className="profile-info-item">
-              <span className="info-label">Username</span>
-              <span className="info-value">{user.name}</span>
-            </div>
-            <div className="profile-info-item">
-              <span className="info-label">Email</span>
-              <span className="info-value">{user.email}</span>
-            </div>
-          </>}
       </div>
 
       {user.role === `SUPERVISOR` &&
@@ -160,6 +149,7 @@ const Profile: React.FC = () => {
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
             <button className="btn secondary-btn" disabled>Edit Profile</button>
+            <button className="btn tertiary-btn" disabled>Change Password</button>
             <button className="btn destructive-btn" disabled>Delete Account</button>
           </div>
         </div>}
