@@ -77,6 +77,7 @@ interface Student {
   email: string;
   name: string;
   password: string;
+  supervisorId: number;
 }
 
 const Evaluations: React.FC = () => {
@@ -149,8 +150,12 @@ const Evaluations: React.FC = () => {
       const jsonData = await response.json();
 
       if (jsonData && jsonData.students) {
-        const users = jsonData.students as Student[];
-        setStudents(users);
+        const allStudents = jsonData.students as Student[];
+        const tempFilteredStudents = allStudents.filter(
+          (student) => student.supervisorId === user?.id,
+        );
+
+        setStudents(tempFilteredStudents);
       }
     };
 
