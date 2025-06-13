@@ -308,8 +308,12 @@ const Evaluations: React.FC = () => {
         <h2>Review Past Evaluations</h2>
         <p> Access and review all your previously submitted evaluations,
           along with any evaluations submitted for you.</p>
-        <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
-          View Past Evaluations</button>
+        {user?.role === `STUDENT` &&
+          <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
+            View Past Evaluations</button>}
+        {user?.role === `SUPERVISOR` &&
+          <button className="btn secondary-btn" onClick={() => navigate(`/student_select`)}>
+            View Past Student Evaluations</button>}
       </div>
     </div>
 

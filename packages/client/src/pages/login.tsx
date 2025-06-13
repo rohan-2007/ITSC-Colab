@@ -100,7 +100,7 @@ const Login: React.FC = () => {
       };
 
       try {
-        const response = await fetch(`${fetchUrl}/login/`, {
+        const response = await fetch(`http://localhost:3001/login/`, {
           body: JSON.stringify(loginData),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },

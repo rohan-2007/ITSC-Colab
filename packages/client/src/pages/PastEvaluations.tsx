@@ -64,6 +64,13 @@ const PastEvaluations: React.FC = () => {
     year: number;
   }
 
+  interface Student {
+    id: number;
+    email: string;
+    name: string;
+    password: string;
+  }
+
   // interface CSSProperties {
   //   [key: `--${string}`]: string | number;
   // }
@@ -95,6 +102,9 @@ const PastEvaluations: React.FC = () => {
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
+  const [ studentSearch, setStudentSearch ] = useState(``);
+  const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
+  const [ students, setStudents ] = useState<Student[]>([]);
   // const [ isLoading, setIsLoading ] = useState(true);
 
   const handleSelectedSemester = (semester: string) => {
@@ -305,7 +315,71 @@ const PastEvaluations: React.FC = () => {
     {user?.role === `SUPERVISOR` &&
       <div id="pre-eval-modal" className="modal-overlay">
         <div className="modal-content">
-          <h1>Hello</h1>
+          <h1>Select student</h1>
+          {/* <h2>Start Supervisor Evaluation</h2> */}
+          <p>
+            Choose which student you want to view an evalaution for:
+          </p>
+
+          {/* Search Input for the table */}
+          <div className="form-group">
+            <label htmlFor="student-search">Search Students:</label>
+            <input
+              id="student-search"
+              type="text"
+              placeholder="e.g., Alice Johnson"
+              value={studentSearch}
+              onChange={(e) => {
+                setStudentSearch(e.target.value);
+                setSelectedStudentId(null); // Deselect student when search changes
+              }}
+            />
+          </div>
+
+          <div className="student-table-container">
+            <table className="student-select-table">
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Action</th>
+                  {` `}
+                </tr>
+              </thead>
+              {/* <tbody>
+                {filteredStudents.length > 0 ?
+                  filteredStudents.map((student) => {
+                    const status = studentsEvalStatus[student.id];
+                    // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
+                    const isCompleted = status ? status.supervisorCompleted : false;
+                    return <tr
+                      key={student.id}
+                      className={selectedStudentId === student.id ? `selected` : ``}
+                    >
+                      <td>{student.id}</td>
+                      <td>{student.name}</td>
+                      <td>{student.email}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn select-btn"
+                          onClick={() => setSelectedStudentId(student.id)}
+                          disabled={isCompleted}
+                        >
+                          {isCompleted ? `Completed` : `Select`}
+                        </button>
+                      </td>
+                    </tr>;
+                  }) :
+                  <tr>
+                    <td colSpan={4} className="no-students-message">
+                      No students found.
+                    </td>
+                  </tr>}
+              </tbody> */}
+            </table>
+          </div>
         </div>
       </div>}
     <div className="top-bar">
