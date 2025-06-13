@@ -141,16 +141,29 @@ const Profile: React.FC = () => {
           <span className="info-label">Team</span>
           <span className="info-value">{user.teamNames}</span>
         </div>
+
+        {user.role === `SUPERVISOR` &&
+          <>
+            <div className="profile-info-item">
+              <span className="info-label">Username</span>
+              <span className="info-value">{user.name}</span>
+            </div>
+            <div className="profile-info-item">
+              <span className="info-label">Email</span>
+              <span className="info-value">{user.email}</span>
+            </div>
+          </>}
       </div>
 
-      <div className="profile-card profile-actions-card">
-        <h3>Account Actions</h3>
-        <div className="profile-actions-buttons">
-          <button className="btn secondary-btn" disabled>Edit Profile</button>
-          <button className="btn tertiary-btn" disabled>Change Password</button>
-          <button className="btn destructive-btn" disabled>Delete Account</button>
-        </div>
-      </div>
+      {user.role === `SUPERVISOR` &&
+        <div className="profile-card profile-actions-card">
+          <h3>Account Actions</h3>
+          <div className="profile-actions-buttons">
+            <button className="btn secondary-btn" disabled>Edit Profile</button>
+
+            <button className="btn destructive-btn" disabled>Delete Account</button>
+          </div>
+        </div>}
     </main>
   </div>;
 };
