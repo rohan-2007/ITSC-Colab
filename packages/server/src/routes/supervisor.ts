@@ -29,7 +29,7 @@ router.post(`/students`, requireAuth, async (
       return;
     }
     const students = await prisma.user.findMany({
-      where: { supervisorId: user.id },
+      where: { supervisorId: { not: null } },
     });
     res.status(200).json({
       message: `Fetched students`,
@@ -112,11 +112,14 @@ router.post(`/teams`, requireAuth, async (
     }
     const teams = await prisma.team.findMany({ include: { members: true } });
 
-    const formattedTeams = teams.map((team) => ({
-      id: team.id,
-      memberIDs: team.members.map((m) => m.id),
-      name: team.name,
-    }));
+    const formattedTeams = teams.map((team) => {
+      const members = team.members as Array<{ id: number }>;
+      return {
+        id: team.id,
+        memberIDs: members.map((m) => m.id),
+        name: team.name,
+      };
+    });
 
     res.status(200).json({ teams: formattedTeams });
   } catch (err) {
