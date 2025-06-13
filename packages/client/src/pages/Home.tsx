@@ -142,7 +142,7 @@ const Home: React.FC = () => {
         {user.teamNames &&
           <div className="info-item">
             <span className="info-label">Teams:</span>
-            <span className="info-value">{user.teamNames}</span>
+            <span className="info-value">{user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}</span>
           </div>}
         {/* Optional: Add a link to profile settings or detailed view */}
         <div className="profile-actions">
