@@ -14,10 +14,13 @@ model User {
   password            String
   email               String    @unique
   role                Role
-  teamId              Int?
   supervisorId        Int?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+
+  teams               Team[]        @relation("UserTeams")
+  evaluationsGiven    Evaluation[]  @relation("SupervisorEvaluations")
+  evaluationsReceived Evaluation[]  @relation("StudentEvaluations")
 
   @@map("user")
 }
@@ -25,7 +28,7 @@ model User {
 model Team {
   id        Int       @id @default(autoincrement())
   name      String    @unique
-  memberIDs Int[]
+  members User[] @relation("UserTeams")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -38,13 +41,18 @@ enum Semester {
 
 model Evaluation {
   id            Int       @id @default(autoincrement())
-  userId        Int
+  studentId     Int
+  student       User      @relation("StudentEvaluations", fields: [studentId], references: [id])
   supervisorId  Int?
+  supervisor    User?     @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
+  year          Int
   semester      Semester
   type          Role
   criteria      Json
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+
+  @@unique([studentId, semester, year, type])
 }
 
 enum Role {

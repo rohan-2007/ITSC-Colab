@@ -8,6 +8,7 @@ dotenv.config();
 import cors from 'cors';
 import authRouter from './routes/auth'; // Import the router
 import evalRouter from './routes/eval'; // Import the evaluation router
+import supervisorRouter from './routes/supervisor';
 
 const app = express();
 const clientURLs = [
@@ -50,8 +51,12 @@ app.use(express.json()); // Use JSON middleware you slugs
 app.use(sessionMiddleware); // Session storage
 app.use(authRouter);
 app.use(evalRouter);
+app.use(supervisorRouter);
+app.use((req, res) => {
+  res.status(404).json({ error: `Route not found`, path: req.path });
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server running on http://localhost${ PORT }`);
+  console.log(`Server running on http://localhost:${ PORT }`);
 });

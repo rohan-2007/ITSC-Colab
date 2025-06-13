@@ -1,8 +1,11 @@
+
+
 /* General Layout & Background */
 .home-container {
   display: flex;
   flex-direction: column;
   width: 100vw; /* Ensures content area extends full viewport height */
+  height: 100vh;
   background-color: #f0f2f5; /* Light background for the page */
   font-family: 'Inter', sans-serif; /* Modern font */
   color: #333;
@@ -19,6 +22,7 @@
   max-width: 1200px; /* Max width for content */
   margin: 0 auto; /* Center the content */
   width: 100%;
+  height: 100vh;
   display: grid; /* Using CSS Grid for a more structured layout */
   gap: 30px; /* Space between sections */
   grid-template-areas:
@@ -95,10 +99,11 @@
 }
 
 .semester-label {
-  font-weight: 600;
-  color: #00796b; /* Teal color */
+  /* text-align: center; */
+  /* font-weight: 600; */
+  /* color: #00796b; Teal color */
   font-size: 0.9em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .semester-value {

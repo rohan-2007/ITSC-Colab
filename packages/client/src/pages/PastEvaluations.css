@@ -1,0 +1,159 @@
+html, body, #root {
+ margin: 0;
+ padding: 0;
+ width: 100%;
+}
+
+.top-bar {
+ position: fixed;
+ top: 85px;
+ left: 0;
+ right: 0;
+ z-index: 1000;
+ width: 100%;
+ display: flex;
+ justify-content: space-between;
+ padding: 10px 40px;
+ box-sizing: border-box;
+ border-bottom: 2px solid rgb(0, 0, 0);
+ background-color: white;
+}
+
+.left-section {
+ display: flex;
+ flex-direction: row;
+ gap: 10px;
+ align-items: center;
+}
+
+.right-section {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+.number-button {
+ padding: 6px;
+ font-size: 16px;
+ cursor: pointer;
+ background-color: rgb(179, 179, 179);
+}
+
+.semester-label {
+ /* font-weight: bold; */
+ font-size: 20px;
+ /* margin-right: 8px;
+ margin-bottom: 10px; */
+}
+
+.dropdown {
+ padding: 6px 30px 6px 12px;
+ min-width: 140px;
+ font-size: 16px;
+ border: 1px solid #999;
+ border-radius: 6px;
+ background-color: #f9f9f9;
+ background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon fill='%23666' points='70,100 20,40 120,40'/%3E%3C/svg%3E");
+ background-repeat: no-repeat;
+ background-position: right 10px center;
+ background-size: 10px;
+ appearance: none;
+ transition: all 0.2s ease-in-out;
+}
+
+.dropdown:focus {
+ outline: none;
+ border-color: #555;
+ box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+ background-color: #fff;
+}
+
+.past-evaluations-container {
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ margin-top: 40px;
+}
+
+.eval-form {
+ max-width: 300px;
+ width: 100%;
+ text-align: center;
+}
+
+.eval-form h2 {
+ margin-bottom: 20px;
+}
+
+.info-box {
+ border: 1px solid #ccc;
+ padding: 10px;
+ margin-bottom: 15px;
+ background-color: #fff;
+ text-align: left;
+}
+
+.horizontal-scroll {
+ display: flex;
+ overflow-x: auto;
+ overflow-y: hidden;
+ width: 70vh;
+ padding-bottom: 4px;
+ white-space: nowrap;
+ scrollbar-color: #aaa #f0f0f0;
+ justify-content: right;
+}
+
+.scroll-item {
+ width: 25%;
+ text-align: center;
+ flex: 0 0 auto;
+ padding: 6px 12px;
+ background-color: #ddd;
+ margin: 10px;
+ white-space: nowrap;
+ border-radius: 4px;
+ font-size: 14px;
+ transition: all 0.2s ease;
+ cursor: pointer;
+ border: none;
+}
+
+.scroll-item:hover {
+ background-color: #c4c4c4;
+ transform: scale(1.08);
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.past-evals-container {
+  /* grid-area: profile; */
+  width: auto;
+  height: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; /* Slight offset for visual balance */
+  display: flex; /* Use flex to push the button to the bottom */
+  flex-direction: column;
+}
+
+.past-evals-container * {
+  height: auto;
+  width: auto;
+}
+
+.display-cell.student-selected {
+  background-color: var(--studentBgColor);
+  /* border-color: var(--studentBorderColor); */
+}
+
+.display-cell.supervisor-selected {
+  background-color: var(--supervisorBgColor);
+  /* border-color: var(--supervisorBorderColor); */
+}
+
+.display-cell.both-selected {
+  background-color:var(--bothBgColor);
+  /* border-color: #f5a504; */
+}

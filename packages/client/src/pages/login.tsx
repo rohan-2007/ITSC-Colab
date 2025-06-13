@@ -19,15 +19,11 @@ const Login: React.FC = () => {
     const checkSession = async () => {
       try {
         const response = await fetch(`${fetchUrl}/me/`, {
-          body: JSON.stringify({ requestData: true }),
+          body: JSON.stringify({ returnData: true }),
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
 
         const jsonData = await response.json();
 
@@ -49,8 +45,8 @@ const Login: React.FC = () => {
     name: ``,
     password: ``,
     role: ``,
-    supervisorId: ``,
-    teamId: ``,
+    supervisorEmail: ``,
+    teamName: ``,
   });
 
   async function handleSignUp() {
@@ -113,8 +109,8 @@ const Login: React.FC = () => {
 
         const responseJson = await response.json();
 
-        alert(`Login success: ${responseJson.message}`);
         void navigate(`/home`);
+        window.location.reload();
         setProfileText(`Hi, ${responseJson.user.name}`);
       } catch (error) {
         if (error instanceof Error) {
@@ -154,8 +150,7 @@ const Login: React.FC = () => {
     email: ``,
     name: ``,
     password: ``,
-    supervisorId: ``,
-    teamId: ``,
+    supervisorEmail: ``,
   });
 
   const [ loginErrors, setLoginErrors ] = useState({
@@ -168,9 +163,8 @@ const Login: React.FC = () => {
       email: formData.email ? `` : `Email is required.`,
       name: formData.name ? `` : `Name is required.`,
       password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
-      supervisorId:
-        formData.supervisorId ? `` : formData.supervisorId ? `` : `Supervisor is required.`,
-      teamId: formData.teamId ? `` : `Team is required.`,
+      supervisorEmail:
+        formData.supervisorEmail ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
     };
     setSignupErrors(newErrors);
     return Object.values(newErrors).every((e) => e === ``);
@@ -236,7 +230,7 @@ const Login: React.FC = () => {
                   name="isSupervisor"
                   value="true"
                   checked={formData.isSupervisor}
-                  onChange={handleChange}
+                  onChange={() => setFormData((prev) => ({ ...prev, isSupervisor: true }))}
                 />
                 Yes
               </span>
@@ -246,7 +240,7 @@ const Login: React.FC = () => {
                   name="isSupervisor"
                   value="false"
                   checked={!formData.isSupervisor}
-                  onChange={handleChange}
+                  onChange={() => setFormData((prev) => ({ ...prev, isSupervisor: false }))}
                 />
                 No
               </span>
@@ -254,19 +248,18 @@ const Login: React.FC = () => {
 
             {!formData.isSupervisor &&
               <>
-                <span>Supervisor ID:</span>
+                <span>Supervisor Email:</span>
                 <input
                   type="text"
-                  name="supervisorId"
-                  value={formData.supervisorId}
+                  name="supervisorEmail"
+                  value={formData.supervisorEmail}
                   onChange={handleChange}
                 />
-                {signupErrors.supervisorId && <div className="error">{signupErrors.supervisorId}</div>}
+                {signupErrors.supervisorEmail && <div className="error">{signupErrors.supervisorEmail}</div>}
               </>}
 
             <span>Team Name:</span>
-            <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
-            {signupErrors.teamId && <div className="error">{signupErrors.teamId}</div>}
+            <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} />
 
             <div className="submit-signup-login-group">
               <button type="submit" onClick={handleSignUp}>Sign Up</button>

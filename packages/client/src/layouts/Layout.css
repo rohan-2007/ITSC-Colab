@@ -1,0 +1,31 @@
+.main-content-area {
+  /*
+    Ensures that on pages with little content, the main area still takes up
+    the full height of the screen, keeping the footer at the very bottom.
+  */
+  min-height: 100vh;
+
+  /* Includes padding in the element's total width and height calculation. */
+  box-sizing: border-box;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header,
+footer {
+  flex-shrink: 0;
+}
+
+header {
+  margin-bottom: 90px;
+}
+
+.main-content-area {
+  flex: 1;
+  background-color: #f0f2f5;
+  /* background-color: aqua; */
+}

@@ -1,56 +1,158 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
+const fetchUrl = `http://localhost:3001`;
+
+interface UserProfile {
+  id: number;
+  createdAt: string;
+  email: string;
+  name: string;
+  role: `SUPERVISOR` | `STUDENT` | `N/A`;
+  supervisorId: number | null;
+  supervisorName: string | null;
+  teamNames: string | null;
+}
+
 const Profile: React.FC = () => {
-  const fetchUserInfo = async () => {
-    try {
-      const res = await fetch(`http://localhost:3001/me/`, {
-        body: JSON.stringify({ returnData: true }),
-        credentials: `include`,
-        headers: {
-          'Content-Type': `application/json`,
-        },
-        method: `POST`,
-      });
+  const navigate = useNavigate();
+  const [ user, setUser ] = useState<UserProfile | null>(null);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ error, setError ] = useState<string | null>(null);
 
-      const resJson = await res.json();
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${fetchUrl}/me/`, {
+          body: JSON.stringify({ returnData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
 
-      // eslint-disable-next-line no-console
-      console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+        if (!response.ok) {
+          await navigate(`/login`);
+          throw new Error(`Session expired or invalid. Please log in again.`);
+        }
 
-      const userName = resJson.user.name || `N/A`;
-      const userEmail = resJson.user.email || `N/A`;
-      const userRole = resJson.user.role || `N/A`;
-      const userSupervisor = resJson.user.supervisorName || `N/A`;
-    } catch (err) {
-      if (err instanceof Error) {
-        throw new Error(`Failed to fetch user info: ${err.message}`);
-      } else {
-        throw new Error(`Failed to fetch user info: Unknown error`);
+        const jsonData = await response.json();
+
+        if (jsonData && jsonData.user) {
+          setUser({
+            id: jsonData.user.id || -1,
+            createdAt: jsonData.user.createdAt,
+            email: jsonData.user.email || `N/A`,
+            name: jsonData.user.name || `N/A`,
+            role: jsonData.user.role || `N/A`,
+            supervisorId: jsonData.user.supervisorId || null,
+            supervisorName: jsonData.user.supervisorName || `Not Assigned`,
+            teamNames: jsonData.user.teamNames || `Not Assigned`,
+          });
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(`An unknown error occurred while fetching your profile.`);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    }
-    // evaluationType: resJson.user.role,
-    // semester: selectedSemester,
-    // supervisorId: resJson.user.role === `SUPERVISOR` ? resJson.user.userId : resJson.user.supervisorId,
-    // userId: resJson.user.id,
-  };
-  fetchUserInfo();
-  return <div className="profile-container">
-    <h1>Profile</h1>
-    <div className="profile-div">
-      <div className="left-profile-info">
-        <h2>Your Profile</h2>
-        <p>Name: Name</p>
-        <p>Email: Name</p>
-        <p>Role: Name</p>
+    };
+
+    void fetchUserInfo();
+  }, [ navigate ]);
+
+  if (isLoading) {
+    return <div className="profile-page-container">
+      <main className="profile-content">
+        <h1>Loading Profile...</h1>
+        <p>Please wait while we fetch your details.</p>
+      </main>
+    </div>;
+  }
+
+  if (error) {
+    return <div className="profile-page-container">
+      <main className="profile-content">
+        <h1>Error</h1>
+        <p>{error}</p>
+        <button onClick={() => navigate(`/login`)} className="btn primary-btn">
+          Go to Login
+        </button>
+      </main>
+    </div>;
+  }
+
+  if (!user) {
+    return <div className="profile-page-container">
+      <main className="profile-content">
+        <h1>Profile Not Found</h1>
+        <p>We could not find your profile data. Please try logging in again.</p>
+        <button onClick={() => navigate(`/login`)} className="btn primary-btn">
+          Go to Login
+        </button>
+      </main>
+    </div>;
+  }
+
+  return <div className="profile-page-container">
+    <header className="profile-header">
+      <h1>Your Profile</h1>
+      <p>Manage your personal and organizational information.</p>
+    </header>
+    <main className="profile-content-grid">
+      <div className="profile-card profile-details-card">
+        <div className="profile-avatar">{user.name.charAt(0)}</div>
+        <h2>{user.name}</h2>
+        <span className={`profile-role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
+        <p className="profile-email">{user.email}</p>
       </div>
-      <div className="right-profile-info">
-        <p>Supervisor: Name</p>
-        <button>Change Supervisor</button>
-        <p>Team: Name</p>
-        <button>Change Team</button>
+
+      <div className="profile-card profile-account-card">
+        <h3>Account Information</h3>
+        <div className="profile-info-item">
+          <span className="info-label">Joined On</span>
+          <span className="info-value">
+            {
+              new Date(user.createdAt).toLocaleString(`en-US`, {
+                day: `numeric`,
+                hour: `2-digit`,
+                minute: `2-digit`,
+                month: `short`,
+                weekday: `short`,
+                year: `numeric`,
+              })
+            }
+          </span>
+        </div>
+        <div className="profile-info-item">
+          <span className="info-label">Member ID</span>
+          <span className="info-value">#{user.id}</span>
+        </div>
+        <div className="profile-info-item">
+          <span className="info-label">Supervisor</span>
+          <span className="info-value">{user.supervisorName}</span>
+        </div>
+        <div className="profile-info-item">
+          <span className="info-label">Team</span>
+          <span className="info-value">{user.teamNames}</span>
+        </div>
       </div>
-    </div>
+
+      <div className="profile-card profile-actions-card">
+        <h3>Account Actions</h3>
+        <div className="profile-actions-buttons">
+          <button className="btn secondary-btn" disabled>Edit Profile</button>
+          <button className="btn tertiary-btn" disabled>Change Password</button>
+          <button className="btn destructive-btn" disabled>Delete Account</button>
+        </div>
+      </div>
+    </main>
   </div>;
 };
+
 export default Profile;

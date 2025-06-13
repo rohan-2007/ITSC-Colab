@@ -60,7 +60,6 @@ const Home: React.FC = () => {
 
         if (!response.ok) {
           await navigate(`/login`);
-          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const jsonData = await response.json();
@@ -74,14 +73,11 @@ const Home: React.FC = () => {
             teamId: jsonData.user.teamId || null,
             teamName: jsonData.user.teamName || null,
           });
-        } else {
-          await navigate(`/login`);
         }
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(`[Home useEffect] Session check failed:`, err);
         setError(`Failed to load user data. Please try again.`);
-        await navigate(`/login`);
       } finally {
         setIsLoading(false);
       }
