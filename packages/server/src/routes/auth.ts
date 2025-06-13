@@ -198,7 +198,9 @@ router.post(`/me`, requireAuth, async (
             (e: Evaluation) => e?.type === Role.STUDENT,
           );
         } else if (role === Role.SUPERVISOR && Array.isArray(user.evaluationsGiven)) {
-          evaluationsCompleted = user.evaluationsGiven as Evaluation[];
+          evaluationsCompleted = (user.evaluationsGiven as Evaluation[]).filter(
+            (e: Evaluation) => e?.type === Role.SUPERVISOR,
+          );
         }
 
         res.status(200).json({
