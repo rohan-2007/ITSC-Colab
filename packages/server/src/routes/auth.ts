@@ -63,6 +63,9 @@ router.post(`/signup`, async (
       res.status(400).json({ error: `Email in use` });
       return;
     }
+    if (role === `SUPERVISOR`) {
+      supervisorId = null;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

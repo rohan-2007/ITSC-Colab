@@ -12,6 +12,7 @@ dotenv_1.default.config();
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
 const eval_1 = tslib_1.__importDefault(require("./routes/eval")); // Import the evaluation router
+const supervisor_1 = tslib_1.__importDefault(require("./routes/supervisor"));
 const app = (0, express_1.default)();
 const clientURLs = [
     `http://localhost:5173`,
@@ -48,8 +49,9 @@ app.use(express_1.default.json()); // Use JSON middleware you slugs
 app.use(exports.sessionMiddleware); // Session storage
 app.use(auth_1.default);
 app.use(eval_1.default);
+app.use(supervisor_1.default);
 app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found', path: req.path });
+    res.status(404).json({ error: `Route not found`, path: req.path });
 });
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
