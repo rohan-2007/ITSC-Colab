@@ -67,7 +67,7 @@ const Home: React.FC = () => {
         if (jsonData && jsonData.user) {
           setUser({
             email: jsonData.user.email,
-            evalsCompleted: jsonData.user.evaluationsGiven.length,
+            evalsCompleted: jsonData.user.evaluationsCompleted.length,
             name: jsonData.user.name,
             role: jsonData.user.role,
             teamIDs: jsonData.user.teamIDs || null,
