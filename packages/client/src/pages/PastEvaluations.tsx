@@ -232,6 +232,7 @@ const PastEvaluations: React.FC = () => {
         // eslint-disable-next-line no-console
         console.error(error);
       }
+      // eslint-disable-next-line no-console
       console.log(`here`);
     };
 
@@ -298,7 +299,7 @@ const PastEvaluations: React.FC = () => {
     supervisorName: string;
   }
 
-  const distinctYears = Array.from(new Set(pastEvals.map(item => item.year)));
+  const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
 
   return <>
     {user?.role === `SUPERVISOR` &&
@@ -309,11 +310,10 @@ const PastEvaluations: React.FC = () => {
       </div>}
     <div className="top-bar">
       <div className="left-section">
-        <label  className="semester-label">Year:</label>
+        <label className="semester-label">Year:</label>
         <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
-          {distinctYears.map(year => (
-            <option value={year}>{year}</option>
-          ))}
+          {distinctYears.map((year) =>
+            <option value={year}>{year}</option>)}
         </select>
       </div>
 

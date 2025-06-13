@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser, Role } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import prisma from '../prisma';
 // middleware auth
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +34,6 @@ router.post(`/signup`, async (
     });
 
     let supervisorId: number | null = null;
-    let teamId: number | null = null;
 
     if (supervisorEmail && typeof supervisorEmail === `string`) {
       const supervisor = await prisma.user.findUnique({ where: { email: supervisorEmail } });
@@ -44,7 +43,7 @@ router.post(`/signup`, async (
       }
       supervisorId = supervisor.id;
     }
-
+    const teamConnect = [];
     // Validate team
     if (teamName && typeof teamName === `string`) {
       const team = await prisma.team.findUnique({ where: { name: teamName } });
@@ -52,7 +51,7 @@ router.post(`/signup`, async (
         res.status(400).json({ error: `Team with name '${ teamName }' not found` });
         return;
       }
-      teamId = team.id;
+      teamConnect.push({ id: team.id });
     }
 
     if (!Object.values(Role).includes(role as Role)) {
@@ -66,7 +65,6 @@ router.post(`/signup`, async (
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const teamIdClean = Number(teamId);
 
     const newUser: PrismaUser = await prisma.user.create({
       data: {
@@ -75,7 +73,9 @@ router.post(`/signup`, async (
         password: hashedPassword,
         role,
         supervisorId,
-        teamId: teamIdClean,
+        teams: {
+          connect: teamConnect,
+        },
       },
     });
     req.session.userId = newUser.id;
@@ -157,7 +157,8 @@ router.post(`/me`, requireAuth, async (
   res: Response,
 ) => {
   try {
-    const user: PrismaUser | null = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
+      include: { teams: true },
       where: { id: req.session.userId },
     });
 
@@ -170,13 +171,15 @@ router.post(`/me`, requireAuth, async (
       res.status(403).json({ error: `Forbidden` });
       return;
     }
+    let teamMap: Team[] = [];
+    if (user.teams.length > 0) {
+      teamMap = user.teams;
+    }
     if (req.body) {
       if (req.body.returnData) {
-        const team = await prisma.team.findUnique({
-          where: { id: user.teamId || -1 },
-        });
-        const teamName = team ? team.name : null;
-        const teamId = team ? team.id : null;
+        const teamNames = teamMap.map((t) => t.name);
+        const safeTeamIDs = teamMap.map((t) => t.id);
+
         const createdAt = user.createdAt.toISOString();
         const { id, email, name, role } = user;
         const supervisorId = user.supervisorId || null;
@@ -187,7 +190,7 @@ router.post(`/me`, requireAuth, async (
 
         res.status(200).json({
           message: `Fetched user info`,
-          user: { id, createdAt, email, name, role, supervisorId, supervisorName, teamId, teamName },
+          user: { id, createdAt, email, name, role, safeTeamIDs, supervisorId, supervisorName, teamNames },
         });
       } else {
         res.status(200).json({

@@ -12,8 +12,7 @@ interface UserProfile {
   role: `SUPERVISOR` | `STUDENT` | `N/A`;
   supervisorId: number | null;
   supervisorName: string | null;
-  teamId: number | null;
-  teamName: string | null;
+  teamNames: string | null;
 }
 
 const Profile: React.FC = () => {
@@ -50,8 +49,7 @@ const Profile: React.FC = () => {
             role: jsonData.user.role || `N/A`,
             supervisorId: jsonData.user.supervisorId || null,
             supervisorName: jsonData.user.supervisorName || `Not Assigned`,
-            teamId: jsonData.user.teamId || null,
-            teamName: jsonData.user.teamName || `Not Assigned`,
+            teamNames: jsonData.user.teamNames || `Not Assigned`,
           });
         }
       } catch (err) {
@@ -141,7 +139,7 @@ const Profile: React.FC = () => {
         </div>
         <div className="profile-info-item">
           <span className="info-label">Team</span>
-          <span className="info-value">{user.teamName}</span>
+          <span className="info-value">{user.teamNames}</span>
         </div>
       </div>
 

@@ -46,7 +46,7 @@ const Login: React.FC = () => {
     password: ``,
     role: ``,
     supervisorEmail: ``,
-    teamId: ``,
+    teamName: ``,
   });
 
   async function handleSignUp() {
@@ -151,7 +151,6 @@ const Login: React.FC = () => {
     name: ``,
     password: ``,
     supervisorEmail: ``,
-    teamId: ``,
   });
 
   const [ loginErrors, setLoginErrors ] = useState({
@@ -166,7 +165,6 @@ const Login: React.FC = () => {
       password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
       supervisorEmail:
         formData.supervisorEmail ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
-      teamId: formData.teamId ? `` : `Team is required.`,
     };
     setSignupErrors(newErrors);
     return Object.values(newErrors).every((e) => e === ``);
@@ -261,8 +259,7 @@ const Login: React.FC = () => {
               </>}
 
             <span>Team Name:</span>
-            <input type="text" name="teamId" value={formData.teamId} onChange={handleChange} />
-            {signupErrors.teamId && <div className="error">{signupErrors.teamId}</div>}
+            <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} />
 
             <div className="submit-signup-login-group">
               <button type="submit" onClick={handleSignUp}>Sign Up</button>

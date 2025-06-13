@@ -147,7 +147,9 @@ router.post(`/setTeamInfo`, requireAuth, async (
 
     await prisma.team.update({
       data: {
-        memberIDs,
+        members: {
+          set: memberIDs.map((id2) => ({ id: id2 })),
+        },
         name,
       },
       where: { id },
@@ -178,10 +180,13 @@ router.post(`/createTeam`, requireAuth, async (
   try {
     const newTeam = await prisma.team.create({
       data: {
-        memberIDs,
+        members: {
+          connect: memberIDs.map((id) => ({ id })),
+        },
         name,
       },
     });
+
     res.status(201).json({ message: `Team created`, team: newTeam });
   } catch (err) {
     console.error(`Create team error:`, err);
