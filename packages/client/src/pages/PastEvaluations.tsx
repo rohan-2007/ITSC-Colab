@@ -68,11 +68,11 @@ const PastEvaluations: React.FC = () => {
   //   [key: `--${string}`]: string | number;
   // }
 
-  const studentBgColor = `#95f542`;
+  const studentBgColor = `#abadb0`;
   const studentBorderColor = `#97f04a`;
-  const supervisorBgColor = `#f76d68`;
+  const supervisorBgColor = `#a5c4f2`;
   const supervisorBorderColor = `#e36864`;
-  const bothBgColor = `#f2c763`;
+  const bothBgColor = `#3e84ed`;
   const bothBorderColor = `#e0bb63`;
 
   const dynamicStyles: React.CSSProperties = {
@@ -90,7 +90,7 @@ const PastEvaluations: React.FC = () => {
   const [ filteredSupervisorSemesterEvals, setFilteredSupervisorSemesterEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<PastEval[]>([]);
   const [ evaluationsReady, setEvaluationsReady ] = useState(false);
-  const [ selectedSemester, setSelectedSemester ] = useState(`SPRING`);
+  const [ selectedSemester, setSelectedSemester ] = useState(``);
   const [ selectedYear, setSelectedYear ] = useState(2025);
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
@@ -298,6 +298,8 @@ const PastEvaluations: React.FC = () => {
     supervisorName: string;
   }
 
+  const distinctYears = Array.from(new Set(pastEvals.map(item => item.year)));
+
   return <>
     {user?.role === `SUPERVISOR` &&
       <div id="pre-eval-modal" className="modal-overlay">
@@ -307,6 +309,15 @@ const PastEvaluations: React.FC = () => {
       </div>}
     <div className="top-bar">
       <div className="left-section">
+        <label  className="semester-label">Year:</label>
+        <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
+          {distinctYears.map(year => (
+            <option value={year}>{year}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="right-section">
         <div className="horizontal-scroll">
           {filteredStudentYearEvals.length > 0 || filteredSupervisorYearEvals.length > 0 ?
             (filteredStudentYearEvals.length > filteredSupervisorYearEvals.length ? filteredStudentYearEvals : filteredSupervisorYearEvals).map((evalItem: PastEval) =>
@@ -315,25 +326,16 @@ const PastEvaluations: React.FC = () => {
               <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {evalItem.year}</button>) : null}
         </div>
       </div>
-
-      <div className="right-section">
-        <label htmlFor="semester" className="semester-label">Year:</label>
-        <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-        </select>
-      </div>
     </div>
 
-    <div className="past-evaluations-container">
+    {/* <div className="past-evaluations-container">
       <div className="eval-form">
         <h2>Eval form</h2>
         <div className="info-box">Team: these will automatically fill to whatever they are whenever forms actually get submitted later </div>
         <div className="info-box">Supervisor: these will automatically fill to whatever they are whenever forms actually get submitted later </div>
         <div className="form-contents"> The actual form will go here</div>
       </div>
-    </div>
+    </div> */}
 
     {/* {filteredStudentEvals.length > 0 && filteredSupervisorEvals.length > 0 ?
       filteredStudentEvals.map((evaluation: PastEval, evalIndex) => { */}

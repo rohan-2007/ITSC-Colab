@@ -23,6 +23,7 @@ html, body, #root {
  display: flex;
  flex-direction: row;
  gap: 10px;
+ align-items: center;
 }
 
 .right-section {
@@ -39,10 +40,10 @@ html, body, #root {
 }
 
 .semester-label {
- font-weight: bold;
- font-size: 24px;
- margin-right: 8px;
- margin-bottom: 10px;
+ /* font-weight: bold; */
+ font-size: 20px;
+ /* margin-right: 8px;
+ margin-bottom: 10px; */
 }
 
 .dropdown {
@@ -100,15 +101,16 @@ html, body, #root {
  padding-bottom: 4px;
  white-space: nowrap;
  scrollbar-color: #aaa #f0f0f0;
+ justify-content: right;
 }
 
 .scroll-item {
- width: 50%;
+ width: 25%;
  text-align: center;
  flex: 0 0 auto;
  padding: 6px 12px;
  background-color: #ddd;
- margin-right: 10px;
+ margin: 10px;
  white-space: nowrap;
  border-radius: 4px;
  font-size: 14px;
@@ -143,15 +145,15 @@ html, body, #root {
 
 .display-cell.student-selected {
   background-color: var(--studentBgColor);
-  border-color: var(--studentBorderColor);
+  /* border-color: var(--studentBorderColor); */
 }
 
 .display-cell.supervisor-selected {
   background-color: var(--supervisorBgColor);
-  border-color: var(--supervisorBorderColor);
+  /* border-color: var(--supervisorBorderColor); */
 }
 
 .display-cell.both-selected {
-  background-color: #e9a00d;
-  border-color: #f5a504;
+  background-color:var(--bothBgColor);
+  /* border-color: #f5a504; */
 }

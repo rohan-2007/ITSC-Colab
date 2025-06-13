@@ -99,10 +99,11 @@
 }
 
 .semester-label {
-  font-weight: 600;
-  color: #00796b; /* Teal color */
+  /* text-align: center; */
+  /* font-weight: 600; */
+  /* color: #00796b; Teal color */
   font-size: 0.9em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .semester-value {
