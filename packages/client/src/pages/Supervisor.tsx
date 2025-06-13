@@ -9,6 +9,7 @@ interface Student {
   email: string;
   name: string;
   password: string;
+  supervisorId: number;
 }
 
 interface Team {
