@@ -30,8 +30,9 @@ router.post(`/submitEval`, requireAuth, async (
       return;
     }
 
-    if (Number(req.session.userId) !== studentId && Number(req.session.userId) !== supervisorId) {
-      res.status(404).json({ error: `You cannot submit an evaluation you are not part of! ` });
+    if (![ studentId, supervisorId ].includes(Number(req.session.userId))) {
+      res.status(403).json({ error: `Forbidden: You are not authorized to submit this evaluation.` });
+      return;
     }
 
     const newEval = await prisma.evaluation.create({
@@ -77,6 +78,10 @@ router.get(`/getEval`, requireAuth, async (
     if (evaluationId) {
       // console.log(`evaluationId`);
       const evalRecord = await prisma.evaluation.findUnique({
+        include: {
+          student: true,
+          supervisor: true,
+        },
         where: { id: evaluationId },
       });
 
