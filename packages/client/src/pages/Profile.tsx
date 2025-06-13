@@ -20,6 +20,11 @@ const Profile: React.FC = () => {
   const [ user, setUser ] = useState<UserProfile | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
+  const [ showEditModal, setShowEditModal ] = useState(false);
+
+  const [ newName, setNewName ] = useState(``);
+  const [ newEmail, setNewEmail ] = useState(``);
+  const [ newPassword, setNewPassword ] = useState(``);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -65,6 +70,31 @@ const Profile: React.FC = () => {
 
     void fetchUserInfo();
   }, [ navigate ]);
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await fetch(`${fetchUrl}/update-profile`, {
+        body: JSON.stringify({
+          email: newEmail,
+          name: newName,
+          password: newPassword,
+        }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update profile.`);
+      }
+
+      setShowEditModal(false);
+      window.location.reload();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
+  };
 
   if (isLoading) {
     return <div className="profile-page-container">
@@ -117,16 +147,14 @@ const Profile: React.FC = () => {
         <div className="profile-info-item">
           <span className="info-label">Joined On</span>
           <span className="info-value">
-            {
-              new Date(user.createdAt).toLocaleString(`en-US`, {
-                day: `numeric`,
-                hour: `2-digit`,
-                minute: `2-digit`,
-                month: `short`,
-                weekday: `short`,
-                year: `numeric`,
-              })
-            }
+            {new Date(user.createdAt).toLocaleString(`en-US`, {
+              day: `numeric`,
+              hour: `2-digit`,
+              minute: `2-digit`,
+              month: `short`,
+              weekday: `short`,
+              year: `numeric`,
+            })}
           </span>
         </div>
         <div className="profile-info-item">
@@ -148,12 +176,50 @@ const Profile: React.FC = () => {
         <div className="profile-card profile-actions-card">
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
-            <button className="btn secondary-btn" disabled>Edit Profile</button>
-            <button className="btn tertiary-btn" disabled>Change Password</button>
-            <button className="btn destructive-btn" disabled>Delete Account</button>
+            <button className="btn primary-btn" onClick={() => setShowEditModal(true)}>
+              Edit Profile
+            </button>
           </div>
         </div>}
     </main>
+
+    {showEditModal &&
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Edit Your Profile</h2>
+          <label>
+            Username:
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder={user.name}
+            />
+          </label>
+          <label>
+            Email:
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder={user.email}
+            />
+          </label>
+          <label>
+            Password:
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New password"
+            />
+          </label>
+          <div className="modal-buttons">
+            <button className="btn primary-btn" onClick={handleSaveChanges}>Save</button>
+            <button className="btn destructive-btn" onClick={() => setShowEditModal(false)}>Cancel</button>
+          </div>
+        </div>
+      </div>}
   </div>;
 };
 
