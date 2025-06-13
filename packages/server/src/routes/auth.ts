@@ -158,7 +158,7 @@ router.post(`/me`, requireAuth, async (
 ) => {
   try {
     const user = await prisma.user.findUnique({
-      include: { teams: true },
+      include: { evaluationsGiven: true, evaluationsReceived: true, teams: true },
       where: { id: req.session.userId },
     });
 
@@ -181,7 +181,7 @@ router.post(`/me`, requireAuth, async (
         const safeTeamIDs = teamMap.map((t) => t.id);
 
         const createdAt = user.createdAt.toISOString();
-        const { id, email, name, role } = user;
+        const { id, email, evaluationsGiven, evaluationsReceived, name, role } = user;
         const supervisorId = user.supervisorId || null;
         const supervisor = await prisma.user.findUnique({
           where: { id: supervisorId || -1 },
@@ -190,7 +190,11 @@ router.post(`/me`, requireAuth, async (
 
         res.status(200).json({
           message: `Fetched user info`,
-          user: { id, createdAt, email, name, role, safeTeamIDs, supervisorId, supervisorName, teamNames },
+          user: {
+            id, createdAt, email, evaluationsGiven,
+            evaluationsReceived, name, role, safeTeamIDs,
+            supervisorId, supervisorName, teamNames,
+          },
         });
       } else {
         res.status(200).json({

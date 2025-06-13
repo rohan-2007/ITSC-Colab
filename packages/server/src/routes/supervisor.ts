@@ -110,12 +110,15 @@ router.post(`/teams`, requireAuth, async (
       res.status(404).json({ error: `User not a supervisor or not found` });
       return;
     }
-    const teams: Team[] = await prisma.team.findMany();
+    const teams = await prisma.team.findMany({ include: { members: true } });
 
-    res.status(200).json({
-      message: `Fetched teams`,
-      teams,
-    });
+    const formattedTeams = teams.map((team) => ({
+      id: team.id,
+      memberIDs: team.members.map((m) => m.id),
+      name: team.name,
+    }));
+
+    res.status(200).json({ teams: formattedTeams });
   } catch (err) {
     console.error(`Fetch error:`, err);
     if (!res.headersSent) {
