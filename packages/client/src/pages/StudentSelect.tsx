@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// import Supervisor from './Supervisor';
 
 const StudentSelect: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
@@ -10,9 +12,13 @@ const StudentSelect: React.FC = () => {
 
   interface Student {
     id: number;
+    createdAt: string;
     email: string;
     name: string;
     password: string;
+    role: string;
+    supervisorId: number;
+    updatedAt: string;
   }
 
   interface Data {
@@ -40,7 +46,7 @@ const StudentSelect: React.FC = () => {
   }
 
   const navigateToPastEvaluations = () => {
-    const data: Data = { role: `supervisor`, studentId: selectedStudentId };
+    const data: Data = { role: `SUPERVISOR`, studentId: selectedStudentId };
     void navigate(`/past_evaluations`, { state: data });
   };
 
@@ -63,9 +69,10 @@ const StudentSelect: React.FC = () => {
 
         const resJson = await res.json();
 
-        // console.log(`user data: `, JSON.stringify(resJson, null, 2));
+        console.log(`user data: `, JSON.stringify(resJson, null, 2));
 
         const userId = resJson.user.id;
+        console.log(`supervisor userId`, resJson.user.id);
 
         setUser({
           id: resJson.user.id,
@@ -85,7 +92,9 @@ const StudentSelect: React.FC = () => {
     };
 
     void getUser();
+  }, []);
 
+  useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await fetch(`http://localhost:3001/students/`, {
@@ -95,16 +104,21 @@ const StudentSelect: React.FC = () => {
         });
 
         if (!response.ok) {
-          // eslint-disable-next-line no-console
           console.error(`Failed to fetch students`);
         }
 
         const jsonData = await response.json();
 
         if (jsonData && jsonData.students) {
-          const users = jsonData.students as Student[];
-          setStudents(users);
-          console.log(users);
+          console.log(`inside`);
+          console.log(`jsonData.students: `, jsonData.students);
+          const allStudents = jsonData.students as Student[];
+          console.log(`allStudents: `, allStudents);
+          console.log(`user.id`, user.id);
+          const tempFilteredStudents = allStudents.filter(
+            (student) => student.supervisorId === user.id,
+          );
+          setStudents(tempFilteredStudents);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -118,7 +132,9 @@ const StudentSelect: React.FC = () => {
     };
 
     void fetchStudents();
-  }, []);
+  });
+
+  console.log(`students: `, students);
 
   return <div>
     <h1>Select student</h1>

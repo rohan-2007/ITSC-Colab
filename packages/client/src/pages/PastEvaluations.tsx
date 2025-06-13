@@ -115,7 +115,7 @@ const PastEvaluations: React.FC = () => {
 
   const location = useLocation();
   const data = location.state as Data;
-  console.log(data);
+  console.log(`data: `, data);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
@@ -160,10 +160,19 @@ const PastEvaluations: React.FC = () => {
         supervisorName: resJson.user.supervisorName,
       });
 
-      const evalResponse = await fetch(`http://localhost:3001/getEval/?userId=${userId}`, {
-        credentials: `include`,
-        method: `GET`,
-      });
+      let evalResponse;
+
+      if (data && data.role === `SUPERVISOR`) {
+        evalResponse = await fetch(`http://localhost:3001/getEval/?userId=${data.studentId}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+      } else {
+        evalResponse = await fetch(`http://localhost:3001/getEval/?userId=${userId}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+      }
 
       if (!evalResponse.ok) {
         throw new Error(`HTTP error! status: ${evalResponse.status}`);
