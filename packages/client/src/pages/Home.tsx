@@ -34,8 +34,8 @@ interface User {
   evalsCompleted: number;
   name: string;
   role: string;
-  teamId: number | null;
-  teamName: string | null;
+  teamIDs: number[] | null;
+  teamNames: [] | null;
 }
 
 const Home: React.FC = () => {
@@ -67,11 +67,11 @@ const Home: React.FC = () => {
         if (jsonData && jsonData.user) {
           setUser({
             email: jsonData.user.email,
-            evalsCompleted: jsonData.user.evalsCompleted || 0,
+            evalsCompleted: jsonData.user.evaluationsCompleted.length,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamId: jsonData.user.teamId || null,
-            teamName: jsonData.user.teamName || null,
+            teamIDs: jsonData.user.teamIDs || null,
+            teamNames: jsonData.user.teamNames || null,
           });
         }
       } catch (err) {
@@ -139,10 +139,10 @@ const Home: React.FC = () => {
           <span className="info-value">{user.email}</span>
         </div>
         {/* Display Team Info if available */}
-        {user.teamName &&
+        {user.teamNames &&
           <div className="info-item">
-            <span className="info-label">Team:</span>
-            <span className="info-value">{user.teamName}</span>
+            <span className="info-label">Teams:</span>
+            <span className="info-value">{user.teamNames}</span>
           </div>}
         {/* Optional: Add a link to profile settings or detailed view */}
         <div className="profile-actions">
@@ -170,13 +170,19 @@ const Home: React.FC = () => {
         <div className="quick-actions">
           {user.role === `STUDENT` &&
             <>
-              <button onClick={() => navigate(`/`)} className="btn primary-btn">View My Evaluations</button>
+              <button
+                onClick={() => navigate(`/past_evaluations`)}
+                className="btn primary-btn"
+              >View My Evaluations</button>
               <button onClick={() => navigate(`/`)} className="btn secondary-btn">Request Feedback</button>
             </>}
           {user.role === `SUPERVISOR` &&
             <>
-              <button onClick={() => navigate(`/`)} className="btn secondary-btn">Start New Evaluation</button>
-              <button onClick={() => navigate(`/`)} className="btn tertiary-btn">View Reports</button>
+              <button
+                onClick={() => navigate(`/evaluations`)}
+                className="btn secondary-btn"
+              >Start New Evaluation</button>
+              <button onClick={() => navigate(`/past_evaluations`)} className="btn tertiary-btn">View Reports</button>
             </>}
           {/* Add more buttons based on roles and available routes */}
         </div>

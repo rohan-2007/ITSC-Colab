@@ -283,13 +283,17 @@ const Evaluations: React.FC = () => {
 
     <div className="action-button-group">
       <div className="dashboard-card">
-        <h2>{user?.role === `STUDENT` ? `Start a Self-Evaluation` : `Start a Supervisor Evaluation`}</h2>
-        <div className="team-info">
-          <strong>Supervisor:</strong>
-          {` `}
-          {user?.supervisorName || `N/A`}
-          <br />
-        </div>
+        <h2 className="tc">{user?.role === `STUDENT` ? `Start a Self-Evaluation` : `Start a Supervisor Evaluation`}</h2>
+        <p> {user?.role === `STUDENT` ? `Begin a new self-evaluation for this semester` :
+          `Select from a list of all your students,
+         and complete an evaluation for each this semester.`} </p>
+        {user?.role === `STUDENT` &&
+          <div className="team-info">
+            <strong>Supervisor:</strong>
+            {` `}
+            {user?.supervisorName || `N/A`}
+            <br />
+          </div>}
         <button
           className="btn primary-btn large-btn"
           onClick={async () => {
@@ -305,11 +309,15 @@ const Evaluations: React.FC = () => {
       </div>
 
       <div className="dashboard-card">
-        <h2>Review Past Evaluations</h2>
+        <h2 className="tc">Review Past Evaluations</h2>
         <p> Access and review all your previously submitted evaluations,
           along with any evaluations submitted for you.</p>
-        <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
-          View Past Evaluations</button>
+        {user?.role === `STUDENT` &&
+          <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
+            View Past Evaluations</button>}
+        {user?.role === `SUPERVISOR` &&
+          <button className="btn secondary-btn" onClick={() => navigate(`/student_select`)}>
+            View Past Student Evaluations</button>}
       </div>
     </div>
 

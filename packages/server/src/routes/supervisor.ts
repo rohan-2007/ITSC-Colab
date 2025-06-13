@@ -29,7 +29,7 @@ router.post(`/students`, requireAuth, async (
       return;
     }
     const students = await prisma.user.findMany({
-      where: { supervisorId: user.id },
+      where: { supervisorId: { not: null } },
     });
     res.status(200).json({
       message: `Fetched students`,
@@ -110,12 +110,18 @@ router.post(`/teams`, requireAuth, async (
       res.status(404).json({ error: `User not a supervisor or not found` });
       return;
     }
-    const teams: Team[] = await prisma.team.findMany();
+    const teams = await prisma.team.findMany({ include: { members: true } });
 
-    res.status(200).json({
-      message: `Fetched teams`,
-      teams,
+    const formattedTeams = teams.map((team) => {
+      const members = team.members as Array<{ id: number }>;
+      return {
+        id: team.id,
+        memberIDs: members.map((m) => m.id),
+        name: team.name,
+      };
     });
+
+    res.status(200).json({ teams: formattedTeams });
   } catch (err) {
     console.error(`Fetch error:`, err);
     if (!res.headersSent) {

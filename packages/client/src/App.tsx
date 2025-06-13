@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Supervisor from './pages/Supervisor';
 import RequireRole, { RequireAuth } from './components/RequireRole';
+import StudentSelect from './pages/StudentSelect';
 
 const App: React.FC = () =>
   <Layout>
@@ -49,6 +50,12 @@ const App: React.FC = () =>
           <RequireRole allowedRoles={[ `SUPERVISOR` ]}>
             <Supervisor />
           </RequireRole>
+        }
+      />
+      <Route
+        path="/student_select"
+        element={
+          <StudentSelect />
         }
       />
       {/* <Route path="*" element={<NotFoundPage />} /> */}

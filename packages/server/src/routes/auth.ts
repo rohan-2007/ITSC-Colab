@@ -63,6 +63,9 @@ router.post(`/signup`, async (
       res.status(400).json({ error: `Email in use` });
       return;
     }
+    if (role === `SUPERVISOR`) {
+      supervisorId = null;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -158,7 +161,7 @@ router.post(`/me`, requireAuth, async (
 ) => {
   try {
     const user = await prisma.user.findUnique({
-      include: { teams: true },
+      include: { evaluationsGiven: true, evaluationsReceived: true, teams: true },
       where: { id: req.session.userId },
     });
 
@@ -181,16 +184,35 @@ router.post(`/me`, requireAuth, async (
         const safeTeamIDs = teamMap.map((t) => t.id);
 
         const createdAt = user.createdAt.toISOString();
-        const { id, email, name, role } = user;
+        const { id, email, evaluationsGiven, evaluationsReceived, name, role } = user;
         const supervisorId = user.supervisorId || null;
         const supervisor = await prisma.user.findUnique({
           where: { id: supervisorId || -1 },
         });
         const supervisorName = supervisor ? supervisor.name : `Not Assigned`;
+        interface Evaluation {
+          type: Role;
+          [key: string]: any;
+        };
+        let evaluationsCompleted: Evaluation[] = [];
+
+        if (role === Role.STUDENT && Array.isArray(user.evaluationsReceived)) {
+          evaluationsCompleted = (user.evaluationsReceived as Evaluation[]).filter(
+            (e: Evaluation) => e?.type === Role.STUDENT,
+          );
+        } else if (role === Role.SUPERVISOR && Array.isArray(user.evaluationsGiven)) {
+          evaluationsCompleted = (user.evaluationsGiven as Evaluation[]).filter(
+            (e: Evaluation) => e?.type === Role.SUPERVISOR,
+          );
+        }
 
         res.status(200).json({
           message: `Fetched user info`,
-          user: { id, createdAt, email, name, role, safeTeamIDs, supervisorId, supervisorName, teamNames },
+          user: {
+            id, createdAt, email, evaluationsCompleted, evaluationsGiven,
+            evaluationsReceived, name, role, safeTeamIDs,
+            supervisorId, supervisorName, teamNames,
+          },
         });
       } else {
         res.status(200).json({

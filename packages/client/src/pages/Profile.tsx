@@ -160,7 +160,6 @@ const Profile: React.FC = () => {
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
             <button className="btn secondary-btn" disabled>Edit Profile</button>
-
             <button className="btn destructive-btn" disabled>Delete Account</button>
           </div>
         </div>}
