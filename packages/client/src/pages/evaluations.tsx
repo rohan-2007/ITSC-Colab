@@ -134,32 +134,6 @@ const Evaluations: React.FC = () => {
       }
     };
     void fetchUser();
-
-    const fetchStudents = async () => {
-      const response = await fetch(`${fetchUrl}/students/`, {
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to fetch students`);
-      }
-
-      const jsonData = await response.json();
-
-      if (jsonData && jsonData.students) {
-        const allStudents = jsonData.students as Student[];
-        const tempFilteredStudents = allStudents.filter(
-          (student) => student.supervisorId === user?.id,
-        );
-
-        setStudents(tempFilteredStudents);
-      }
-    };
-
-    void fetchStudents();
   }, [ navigate ]);
 
   const fetchEvalStatusForCurrentUser = async (studentId: number) => {
@@ -189,9 +163,34 @@ const Evaluations: React.FC = () => {
     setSelections((prev) => ({ ...prev, [criterionId]: level }));
   };
 
+  const fetchStudents = async () => {
+    const response = await fetch(`${fetchUrl}/students/`, {
+      credentials: `include`,
+      headers: { 'Content-Type': `application/json` },
+      method: `POST`,
+    });
+
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to fetch students`);
+    }
+
+    const jsonData = await response.json();
+
+    if (jsonData && jsonData.students) {
+      const allStudents = jsonData.students as Student[];
+      const tempFilteredStudents = allStudents.filter(
+        (student) => student.supervisorId === user?.id,
+      );
+
+      setStudents(tempFilteredStudents);
+    }
+  };
+
   // Fetch all statuses for supervisor's students
   const fetchAllStatuses = async () => {
     setSelectedStudentId(null);
+    await fetchStudents();
     if (user?.role !== `SUPERVISOR` || students.length === 0) {
       return;
     }

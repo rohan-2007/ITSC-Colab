@@ -5,9 +5,8 @@
  gap: 2rem;
  font-family: 'Segoe UI', sans-serif;
  margin-bottom: 50px;
- height: auto;
+ height: 100%;
  width: 100vw;
- overflow: scroll;
 }
 h1, p {
   text-align: center;
