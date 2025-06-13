@@ -3,6 +3,7 @@
 // FOR REFERENCE THE SCROLL ITEMS WILL ONLY SHOW 1 BUT WILL ADD MORE AS THEY ADD EVALUATIONS FOR EXAMPLE, 1 evaluation equals 1 button, however if they have 2 it will show 2 buttons.
 import React, { useEffect, useState } from 'react';
 import './PastEvaluations.css';
+import { useLocation } from 'react-router';
 
 type Selections = Record<string, PerformanceLevel>;
 
@@ -48,6 +49,11 @@ const rubricData = [
     title: `Personal Disposition`,
   },
 ];
+
+interface Data {
+  role: string;
+  studentId: number | null;
+}
 
 type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 
@@ -106,6 +112,10 @@ const PastEvaluations: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
   // const [ isLoading, setIsLoading ] = useState(true);
+
+  const location = useLocation();
+  const data = location.state as Data;
+  console.log(data);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
@@ -255,7 +265,7 @@ const PastEvaluations: React.FC = () => {
     }
   }, [ filteredStudentEvals, filteredSupervisorEvals ]);
 
-  if (!evaluationsReady && !user?.role === `SUPERVISOR`) {
+  if (!evaluationsReady && (user?.role !== `SUPERVISOR`)) {
     return <div>Loading...</div>;
   }
 
@@ -312,76 +322,6 @@ const PastEvaluations: React.FC = () => {
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
 
   return <>
-    {user?.role === `SUPERVISOR` &&
-      <div id="pre-eval-modal" className="modal-overlay">
-        <div className="modal-content">
-          <h1>Select student</h1>
-          {/* <h2>Start Supervisor Evaluation</h2> */}
-          <p>
-            Choose which student you want to view an evalaution for:
-          </p>
-
-          {/* Search Input for the table */}
-          <div className="form-group">
-            <label htmlFor="student-search">Search Students:</label>
-            <input
-              id="student-search"
-              type="text"
-              placeholder="e.g., Alice Johnson"
-              value={studentSearch}
-              onChange={(e) => {
-                setStudentSearch(e.target.value);
-                setSelectedStudentId(null); // Deselect student when search changes
-              }}
-            />
-          </div>
-
-          <div className="student-table-container">
-            <table className="student-select-table">
-              <thead>
-                <tr>
-                  <th>Student ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Action</th>
-                  {` `}
-                </tr>
-              </thead>
-              {/* <tbody>
-                {filteredStudents.length > 0 ?
-                  filteredStudents.map((student) => {
-                    const status = studentsEvalStatus[student.id];
-                    // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
-                    const isCompleted = status ? status.supervisorCompleted : false;
-                    return <tr
-                      key={student.id}
-                      className={selectedStudentId === student.id ? `selected` : ``}
-                    >
-                      <td>{student.id}</td>
-                      <td>{student.name}</td>
-                      <td>{student.email}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn select-btn"
-                          onClick={() => setSelectedStudentId(student.id)}
-                          disabled={isCompleted}
-                        >
-                          {isCompleted ? `Completed` : `Select`}
-                        </button>
-                      </td>
-                    </tr>;
-                  }) :
-                  <tr>
-                    <td colSpan={4} className="no-students-message">
-                      No students found.
-                    </td>
-                  </tr>}
-              </tbody> */}
-            </table>
-          </div>
-        </div>
-      </div>}
     <div className="top-bar">
       <div className="left-section">
         <label className="semester-label">Year:</label>
