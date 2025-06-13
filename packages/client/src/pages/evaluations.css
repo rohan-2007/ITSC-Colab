@@ -537,3 +537,7 @@
 .modal-footer .btn.btn-success:hover:not(:disabled) {
   background-color: #45a049;
 }
+
+.tc {
+  text-align: center;
+}

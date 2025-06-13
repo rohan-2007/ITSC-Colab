@@ -187,11 +187,24 @@ router.post(`/me`, requireAuth, async (
           where: { id: supervisorId || -1 },
         });
         const supervisorName = supervisor ? supervisor.name : `Not Assigned`;
+        interface Evaluation {
+          type: Role;
+          [key: string]: any;
+        };
+        let evaluationsCompleted: Evaluation[] = [];
+
+        if (role === Role.STUDENT && Array.isArray(user.evaluationsReceived)) {
+          evaluationsCompleted = (user.evaluationsReceived as Evaluation[]).filter(
+            (e: Evaluation) => e?.type === Role.STUDENT,
+          );
+        } else if (role === Role.SUPERVISOR && Array.isArray(user.evaluationsGiven)) {
+          evaluationsCompleted = user.evaluationsGiven as Evaluation[];
+        }
 
         res.status(200).json({
           message: `Fetched user info`,
           user: {
-            id, createdAt, email, evaluationsGiven,
+            id, createdAt, email, evaluationsCompleted, evaluationsGiven,
             evaluationsReceived, name, role, safeTeamIDs,
             supervisorId, supervisorName, teamNames,
           },
