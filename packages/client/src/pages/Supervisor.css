@@ -394,3 +394,11 @@ button:hover {
   border-radius: 0.25rem;
   cursor: pointer;
 }
+.dropdown-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: #fff;
+}

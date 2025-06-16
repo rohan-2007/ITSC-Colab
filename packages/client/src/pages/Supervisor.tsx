@@ -34,6 +34,7 @@ const Supervisor: React.FC = () => {
     })),
   );
 
+  const [ studentSearchTerm, setStudentSearchTerm ] = useState(``);
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ teamSearch, setTeamSearch ] = useState(``);
   const [ studentInfoModalOpen, setStudentInfoModalOpen ] = useState(false);
@@ -428,18 +429,30 @@ const Supervisor: React.FC = () => {
 
           <div className="modal-form-group">
             <h3>Assign Students</h3>
+            <input
+              type="text"
+              placeholder="Search students..."
+              value={studentSearchTerm}
+              onChange={(e) => setStudentSearchTerm(e.target.value)}
+              className="modal-input"
+              style={{ marginBottom: `10px` }}
+            />
+
             <div className="dropdown-scroll">
-              {students.map((student) => {
-                const isChecked = teams[selectedTeamIndex].assignedStudents.includes(student.name);
-                return <label key={student.id} className="dropdown-item">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
-                  />
-                  {student.name}
-                </label>;
-              })}
+              {students
+                .filter((student) =>
+                  student.name.toLowerCase().includes(studentSearchTerm.toLowerCase()))
+                .map((student) => {
+                  const isChecked = teams[selectedTeamIndex].assignedStudents.includes(student.name);
+                  return <label key={student.id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
+                    />
+                    {student.name}
+                  </label>;
+                })}
             </div>
           </div>
 
@@ -450,7 +463,6 @@ const Supervisor: React.FC = () => {
           </div>
         </div>
       </div>}
-
   </div>;
 };
 
