@@ -29,6 +29,7 @@ router.post(`/students`, requireAuth, async (
       return;
     }
     const students = await prisma.user.findMany({
+      include: { teams: true },
       where: { supervisorId: { not: null } },
     });
     res.status(200).json({

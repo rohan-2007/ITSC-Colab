@@ -19,6 +19,14 @@ const StudentSelect: React.FC = () => {
     role: string;
     supervisorId: number;
     updatedAt: string;
+    teams: Array<Team>;
+  }
+
+  interface Team {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
   }
 
   interface Data {
@@ -43,6 +51,14 @@ const StudentSelect: React.FC = () => {
     role: `STUDENT` | `SUPERVISOR`;
     supervisorId: number | null;
     supervisorName: string;
+  }
+
+  const selectStudent = (id: number | null) => {
+    if (id == selectedStudentId) {
+      setSelectedStudentId(null);
+    } else {
+      setSelectedStudentId(id);
+    }
   }
 
   const navigateToPastEvaluations = () => {
@@ -165,7 +181,7 @@ const StudentSelect: React.FC = () => {
             <th>Student ID</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Action</th>
+            <th>Team</th>
             {` `}
           </tr>
         </thead>
@@ -178,20 +194,13 @@ const StudentSelect: React.FC = () => {
               <tr
                 key={student.id}
                 className={selectedStudentId === student.id ? `selected` : ``}
+                onClick={() => selectStudent(student.id)}
               >
                 <td>{student.id}</td>
                 <td>{student.name}</td>
                 <td>{student.email}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn select-btn"
-                    onClick={() => setSelectedStudentId(student.id)}
-                    // disabled={isCompleted}
-                  >
-                    Select
-                  </button>
-                </td>
+                {student.teams[0] ?
+                <td>{student.teams[0].name}</td> : <td>No team</td>}
               </tr>) :
             <tr>
               <td colSpan={4} className="no-students-message">

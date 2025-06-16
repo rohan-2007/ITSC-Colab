@@ -63,6 +63,7 @@ const Home: React.FC = () => {
         }
 
         const jsonData = await response.json();
+        console.log(`jsonData: `, JSON.stringify(jsonData, null, 2));
 
         if (jsonData && jsonData.user) {
           setUser({
@@ -182,7 +183,7 @@ const Home: React.FC = () => {
                 onClick={() => navigate(`/evaluations`)}
                 className="btn secondary-btn"
               >Start New Evaluation</button>
-              <button onClick={() => navigate(`/past_evaluations`)} className="btn tertiary-btn">View Reports</button>
+              <button onClick={() => navigate(`/student_select`)} className="btn tertiary-btn">View Reports</button>
             </>}
           {/* Add more buttons based on roles and available routes */}
         </div>
