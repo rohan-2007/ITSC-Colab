@@ -80,7 +80,7 @@ const Home: React.FC = () => {
             evalsGiven: jsonData.user.evaluationsGiven || null,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamIDs: [ 2 ],
+            teamIDs: [ 2, 1 ],
             // jsonData.user.teamIDs || null
             teamNames: jsonData.user.teamNames || null,
           });
@@ -127,7 +127,7 @@ const Home: React.FC = () => {
           console.log(allStudents[0].teams[0].id);
           console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
           const tempFilteredStudents = allStudents.filter(
-            (student) => student.teams[0]?.id === user?.teamIDs[0],
+            (student) => student.teams.some((team) => user?.teamIDs?.includes(team.id)),
           );
           setStudents(tempFilteredStudents);
         }
@@ -254,7 +254,7 @@ const Home: React.FC = () => {
                         <td>{student.name}</td>
                         <td>{student.email}</td>
                         {student.teams[0] ?
-                          <td>{student.teams[0].name}</td> : <td>No team</td>}
+                          <td>{student.teams.filter((t) => user.teamIDs?.includes(t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
                         <td>{user.evalsGiven?.some((evaluation) => evaluation.studentId === student.id) ? `Completed` : `Not Completed`}</td>
                       </tr>) :
                     <tr>
