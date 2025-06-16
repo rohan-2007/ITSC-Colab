@@ -44,6 +44,35 @@ router.post(`/students`, requireAuth, async (
   }
 });
 
+router.post(`/supervisors`, requireAuth, async (
+  req: Request<unknown, unknown>,
+  res: Response,
+) => {
+  try {
+    const user: PrismaUser | null = await prisma.user.findUnique({
+      where: { id: req.session.userId },
+    });
+
+    if (!user) {
+      res.status(404).json({ error: `User not found` });
+      return;
+    }
+    const supervisors = await prisma.user.findMany({
+      include: { teams: true },
+      where: { supervisorId: null },
+    });
+    res.status(200).json({
+      message: `Fetched supervisors`,
+      supervisors,
+    });
+  } catch (err) {
+    console.error(`Fetch error:`, err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: `Internal server error` });
+    }
+  }
+});
+
 interface StudentInfoChange {
   email: string;
   name: string;

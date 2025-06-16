@@ -106,11 +106,15 @@ const Supervisor: React.FC = () => {
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
-      if (supRes.ok) {
-        const supData = await supRes.json();
-        if (supData && supData.supervisors) {
-          setSupervisors(supData.supervisors as Supervisor[]);
-        }
+
+      if (!supRes.ok) {
+        // eslint-disable-next-line no-console
+        console.error(`Error fetching supervisors`);
+      }
+
+      const supData = await supRes.json();
+      if (supData && supData.supervisors) {
+        setSupervisors(supData.supervisors as Supervisor[]);
       }
       /* END OF BACKEND CODE */
 
@@ -280,7 +284,7 @@ const Supervisor: React.FC = () => {
     setTeams((prev) =>
       prev.map((team, i) => {
         if (i === teamIndex) {
-          const isAssigned = team.assignedSupervisors.includes(supervisorName);
+          const isAssigned = team.assignedSupervisors ? team.assignedSupervisors.includes(supervisorName) : false;
           return {
             ...team,
             assignedSupervisors: isAssigned ?
@@ -316,6 +320,8 @@ const Supervisor: React.FC = () => {
 
   const filteredTeams = teams.filter((team) =>
     team.name.toLowerCase().includes(teamSearch.toLowerCase()));
+
+  console.log(supervisors);
 
   return <div className="supervisor-page">
     <header className="evaluations-header">
@@ -510,7 +516,7 @@ const Supervisor: React.FC = () => {
                 .filter((s) =>
                   s.name.toLowerCase().includes(supervisorSearchTerm.toLowerCase()))
                 .map((sup) => {
-                  const isChecked = teams[selectedTeamIndex].assignedSupervisors.includes(
+                  const isChecked = teams[selectedTeamIndex].assignedSupervisors?.includes(
                     sup.name,
                   );
                   return <label key={sup.id} className="dropdown-item">
