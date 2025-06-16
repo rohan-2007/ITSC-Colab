@@ -175,6 +175,11 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 25px;
   margin-top: 10px; /* Slight offset for visual balance */
+  text-align: center;
+}
+
+.supervisor-todo-section td, th {
+  text-align: center;
 }
 
 .supervisor-todo-section h2 {
@@ -319,4 +324,12 @@
   background-color: #0056b3; /* Darker blue */
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.todo-table-container {
+  max-height: 50vh; 
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 20px;
 }

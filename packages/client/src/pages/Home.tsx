@@ -228,14 +228,14 @@ const Home: React.FC = () => {
         <section className="supervisor-todo-section">
           <h2>To-Do List</h2>
           <div className="user-stats">
-            <div className="student-table-container">
+            <div className="todo-table-container">
               <table className="student-select-table">
                 <thead>
                   <tr>
                     <th>Student ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Team</th>
+                    <th>Teams</th>
                     <th>Completed</th>
                     {` `}
                   </tr>
@@ -255,7 +255,7 @@ const Home: React.FC = () => {
                         <td>{student.email}</td>
                         {student.teams[0] ?
                           <td>{student.teams.filter((t) => user.teamIDs?.includes(t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
-                        <td>{user.evalsGiven?.some((evaluation) => evaluation.studentId === student.id) ? `Completed` : `Not Completed`}</td>
+                        <td>{user.evalsGiven?.some((evaluation) => evaluation.studentId === student.id) ? `✅` : `❌`}</td>
                       </tr>) :
                     <tr>
                       <td colSpan={4} className="no-students-message">
