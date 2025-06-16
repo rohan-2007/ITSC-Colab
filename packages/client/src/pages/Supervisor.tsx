@@ -12,9 +12,16 @@ interface Student {
   supervisorId: number;
 }
 
+interface Supervisor {
+  id: number;
+  email: string;
+  name: string;
+}
+
 interface Team {
   id?: number;
   assignedStudents: string[];
+  assignedSupervisors: string[];
   expanded: boolean;
   name: string;
   search: string;
@@ -23,10 +30,12 @@ interface Team {
 
 const Supervisor: React.FC = () => {
   const [ students, setStudents ] = useState<Student[]>([]);
-
+  const [ supervisors, setSupervisors ] = useState<Supervisor[]>([]);
+  const [ supervisorSearchTerm, setSupervisorSearchTerm ] = useState(``);
   const [ teams, setTeams ] = useState<Team[]>(
     Array.from({ length: 1 }, (_, i) => ({
       assignedStudents: [],
+      assignedSupervisors: [],
       expanded: false,
       name: `Team ${i + 1}`,
       search: ``,
@@ -91,6 +100,19 @@ const Supervisor: React.FC = () => {
         fetchedStudents = studentsData.students as Student[];
         setStudents(fetchedStudents);
       }
+      /* FOR ROHAN: THIS IS THE BACKEND CODE, EITHER DELETE IT OR CHANGE IT TO LINK TO OUR BACKEND */
+      const supRes = await fetch(`${fetchUrl}/supervisors`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+      if (supRes.ok) {
+        const supData = await supRes.json();
+        if (supData && supData.supervisors) {
+          setSupervisors(supData.supervisors as Supervisor[]);
+        }
+      }
+      /* END OF BACKEND CODE */
 
       // Then fetch teams (now that we have students)
       const teamsResponse = await fetch(`${fetchUrl}/teams`, {
@@ -254,6 +276,22 @@ const Supervisor: React.FC = () => {
       }));
   };
 
+  const handleSupervisorToggle = (teamIndex: number, supervisorName: string) => {
+    setTeams((prev) =>
+      prev.map((team, i) => {
+        if (i === teamIndex) {
+          const isAssigned = team.assignedSupervisors.includes(supervisorName);
+          return {
+            ...team,
+            assignedSupervisors: isAssigned ?
+              team.assignedSupervisors.filter((n) => n !== supervisorName) :
+              [ ...team.assignedSupervisors, supervisorName ],
+          };
+        }
+        return team;
+      }));
+  };
+
   const updateTeamSearch = (teamIndex: number, value: string) => {
     setTeams((prev) =>
       prev.map((team, i) =>
@@ -264,6 +302,7 @@ const Supervisor: React.FC = () => {
     const nextTeamNumber = teams.length + 1;
     const newTeam: Team = {
       assignedStudents: [],
+      assignedSupervisors: [],
       expanded: false,
       name: `Team ${nextTeamNumber}`,
       search: ``,
@@ -295,7 +334,6 @@ const Supervisor: React.FC = () => {
         />
         <div className="scroll-box student-list">
           {filteredStudents.map((student, index) =>
-            // Each student row now has the student name and a single "Change Info" button.
             <div className="student-row" key={index}>
               <span className="student-name">{student.name}</span>
               <button
@@ -451,6 +489,37 @@ const Supervisor: React.FC = () => {
                       onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
                     />
                     {student.name}
+                  </label>;
+                })}
+            </div>
+          </div>
+          {/* ───────── Assign Supervisors (NEW) ───────── */}
+          <div className="modal-form-group">
+            <h3>Assign Supervisors</h3>
+            <input
+              type="text"
+              placeholder="Search supervisors..."
+              value={supervisorSearchTerm}
+              onChange={(e) => setSupervisorSearchTerm(e.target.value)}
+              className="modal-input"
+              style={{ marginBottom: `10px` }}
+            />
+
+            <div className="dropdown-scroll">
+              {supervisors
+                .filter((s) =>
+                  s.name.toLowerCase().includes(supervisorSearchTerm.toLowerCase()))
+                .map((sup) => {
+                  const isChecked = teams[selectedTeamIndex].assignedSupervisors.includes(
+                    sup.name,
+                  );
+                  return <label key={sup.id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => handleSupervisorToggle(selectedTeamIndex, sup.name)}
+                    />
+                    {sup.name}
                   </label>;
                 })}
             </div>
