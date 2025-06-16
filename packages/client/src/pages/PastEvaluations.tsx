@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable @stylistic/max-len */
 // FOR REFERENCE THE SCROLL ITEMS WILL ONLY SHOW 1 BUT WILL ADD MORE AS THEY ADD EVALUATIONS FOR EXAMPLE, 1 evaluation equals 1 button, however if they have 2 it will show 2 buttons.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
 
@@ -55,28 +55,28 @@ interface Data {
   studentId: number | null;
 }
 
+export interface PastEval {
+  id: number;
+  createdAt: string;
+  criteria: JSON;
+  semester: string;
+  studentId: number;
+  supervisorId: number | null;
+  type: string;
+  updatedAt: string;
+  year: number;
+}
+
+interface Student {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+}
+
 type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 
 const PastEvaluations: React.FC = () => {
-  interface PastEval {
-    id: number;
-    createdAt: string;
-    criteria: JSON;
-    semester: string;
-    studentId: number;
-    supervisorId: number | null;
-    type: string;
-    updatedAt: string;
-    year: number;
-  }
-
-  interface Student {
-    id: number;
-    email: string;
-    name: string;
-    password: string;
-  }
-
   // interface LegendItem {
   //   color: string;
   //   label: string;
@@ -93,6 +93,9 @@ const PastEvaluations: React.FC = () => {
   const bothBgColor = `#3e84ed`;
   const bothBorderColor = `#e0bb63`;
 
+  const topBarRef = useRef<HTMLDivElement>(null);
+  const [ topBarHeight, setTopBarHeight ] = useState<number>(0);
+
   const dynamicStyles: React.CSSProperties = {
     '--bothBgColor': bothBgColor,
     '--bothBorderColor': bothBorderColor,
@@ -100,6 +103,7 @@ const PastEvaluations: React.FC = () => {
     '--studentBorderColor': studentBorderColor,
     '--supervisorBgColor': supervisorBgColor,
     '--supervisorBorderColor': supervisorBorderColor,
+    '--topBarHeight': topBarHeight,
   } as React.CSSProperties;
 
   const legendColors = [
@@ -138,9 +142,22 @@ const PastEvaluations: React.FC = () => {
   };
 
   useEffect(() => {
-    // console.log(selectedYear);
-    // handleSelectedSemester(filteredStudentYearEvals ? filteredStudentYearEvals[0].semester : filteredSupervisorYearEvals[0].semester);
-  }, [ selectedYear ]);
+    const handleResize = () => {
+      if (topBarRef.current) {
+        // setTopBarHeight(topBarRef.current.offsetHeight);
+        const height = topBarRef.current.offsetHeight;
+        document.documentElement.style.setProperty(`--topBarHeight`, `${height}px`);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener(`resize`, handleResize); // Update on resize
+
+    return () => {
+      window.removeEventListener(`resize`, handleResize); // Cleanup on unmount
+    };
+  }, []);
 
   const getPastEvals = async () => {
     // console.log(`getPastEvals`);
@@ -342,7 +359,7 @@ const PastEvaluations: React.FC = () => {
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
 
   return <>
-    <div className="top-bar">
+    <div className="top-bar" ref={topBarRef}>
       <div className="left-section">
         <label className="semester-label">Year:</label>
         <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>

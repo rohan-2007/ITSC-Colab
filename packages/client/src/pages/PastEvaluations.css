@@ -10,6 +10,7 @@ html, body, #root {
  left: 0;
  right: 0;
  z-index: 1000;
+ height: auto;
  width: 100%;
  display: flex;
  justify-content: space-between;
@@ -97,7 +98,7 @@ html, body, #root {
  display: flex;
  overflow-x: auto;
  overflow-y: hidden;
- width: 70vh;
+ width: auto;
  padding-bottom: 4px;
  white-space: nowrap;
  scrollbar-color: #aaa #f0f0f0;
@@ -105,7 +106,7 @@ html, body, #root {
 }
 
 .scroll-item {
- width: 25%;
+ width: auto;
  text-align: center;
  flex: 0 0 auto;
  padding: 6px 12px;
@@ -128,20 +129,20 @@ html, body, #root {
 .past-evals-container {
   /* grid-area: profile; */
   width: auto;
-  height: auto;
+  height: calc(100vh - var(--topBarHeight));
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 25px;
-  margin-top: 10px; /* Slight offset for visual balance */
+  margin-top: var(--topBarHeight); /* Slight offset for visual balance */
   display: flex; /* Use flex to push the button to the bottom */
   flex-direction: column;
 }
 
-.past-evals-container * {
+/* .past-evals-container * {
   height: auto;
   width: auto;
-}
+} */
 
 .display-cell.student-selected {
   background-color: var(--studentBgColor);
@@ -163,11 +164,12 @@ html, body, #root {
   display: flex;
   flex-direction: row; 
   margin: 2vh; 
-  width: 33%;
+  /* width: 33%; */
 }
 
 .legend-item-container {
   align-items: center;
   display: flex;
   margin: 4px;
+  width: auto;
 }

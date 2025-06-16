@@ -1,7 +1,11 @@
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable no-console */
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './home.css';
+import { Student } from './StudentSelect';
+import { PastEval } from './PastEvaluations';
 
 const fetchUrl = `http://localhost:${3001}`;
 
@@ -24,7 +28,7 @@ const assignSemester = (): string => {
   } else if (today >= springStart && today <= springEnd) {
     return `SPRING`;
   }
-  // eslint-disable-next-line no-console
+
   console.log(`unknown semester`, today < summerStart, today > summerEnd);
   return `UNKNOWN`;
 };
@@ -32,6 +36,7 @@ const currentSemester = assignSemester();
 interface User {
   email: string;
   evalsCompleted: number;
+  evalsGiven: PastEval[] | null;
   name: string;
   role: string;
   teamIDs: number[] | null;
@@ -44,6 +49,9 @@ const Home: React.FC = () => {
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
+  const [ students, setStudents ] = useState<Student[]>([]);
+
+  // const students: User[] = [];
 
   useEffect(() => {
     const checkSession = async () => {
@@ -69,14 +77,15 @@ const Home: React.FC = () => {
           setUser({
             email: jsonData.user.email,
             evalsCompleted: jsonData.user.evaluationsCompleted.length,
+            evalsGiven: jsonData.user.evaluationsGiven || null,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamIDs: jsonData.user.teamIDs || null,
+            teamIDs: [ 2 ],
+            // jsonData.user.teamIDs || null
             teamNames: jsonData.user.teamNames || null,
           });
         }
       } catch (err) {
-        // eslint-disable-next-line no-console
         console.error(`[Home useEffect] Session check failed:`, err);
         setError(`Failed to load user data. Please try again.`);
       } finally {
@@ -86,6 +95,55 @@ const Home: React.FC = () => {
 
     void checkSession();
   }, [ navigate ]);
+
+  useEffect(() => {
+    if (user?.role === `SUPERVISOR`) {
+      document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats to-do'\n'actions actions to-do'`);
+    } else {
+      document.documentElement.style.setProperty(`--gridLayout`, `'header header'\n'profile stats'\n'actions actions'`);
+    }
+
+    const fetchTeamStudents = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/students/`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        if (!response.ok) {
+          console.error(`Failed to fetch students`);
+        }
+
+        const jsonData = await response.json();
+
+        if (jsonData && jsonData.students) {
+          console.log(`inside`);
+          console.log(`jsonData.students: `, jsonData.students);
+          const allStudents = jsonData.students as Student[];
+          console.log(`allStudents: `, allStudents);
+          console.log(`user.id`, user?.email);
+          console.log(user?.teamIDs[0]);
+          console.log(allStudents[0].teams[0].id);
+          console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
+          const tempFilteredStudents = allStudents.filter(
+            (student) => student.teams[0]?.id === user?.teamIDs[0],
+          );
+          setStudents(tempFilteredStudents);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          // console.log(`user fetch error: ${err.message}`);
+          throw new Error(`Error while fetching students: ${err.message}`);
+        } else {
+          // console.log(`an unknown user fetch error`);
+          throw new Error(`an unknown students fetch error`);
+        }
+      }
+    };
+
+    void fetchTeamStudents();
+  }, [ user ]);
 
   if (isLoading) {
     return <div className="home-container">
@@ -165,6 +223,50 @@ const Home: React.FC = () => {
             </div> */}
         </div>
       </section>
+
+      {user.role === `SUPERVISOR` &&
+        <section className="supervisor-todo-section">
+          <h2>To-Do List</h2>
+          <div className="user-stats">
+            <div className="student-table-container">
+              <table className="student-select-table">
+                <thead>
+                  <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Team</th>
+                    <th>Completed</th>
+                    {` `}
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.length > 0 ?
+                    students.map((student) =>
+                    // const status = studentsEvalStatus[student.id];
+                    // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
+                    // const isCompleted = status ? status.supervisorCompleted : false;
+                      <tr
+                        key={student.id}
+                        // className={selectedStudentId === student.id ? `selected` : ``}
+                      >
+                        <td>{student.id}</td>
+                        <td>{student.name}</td>
+                        <td>{student.email}</td>
+                        {student.teams[0] ?
+                          <td>{student.teams[0].name}</td> : <td>No team</td>}
+                        <td>{user.evalsGiven?.some((evaluation) => evaluation.studentId === student.id) ? `Completed` : `Not Completed`}</td>
+                      </tr>) :
+                    <tr>
+                      <td colSpan={4} className="no-students-message">
+                        No students found.
+                      </td>
+                    </tr>}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>}
 
       <section className="quick-actions-section">
         <h2>Quick Actions</h2>

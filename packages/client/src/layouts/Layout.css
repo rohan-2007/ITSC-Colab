@@ -7,6 +7,13 @@
 
   /* Includes padding in the element's total width and height calculation. */
   box-sizing: border-box;
+  flex: 1;
+  background-color: #f0f2f5;
+  overflow: scroll;
+  display: grid;
+  grid-template-columns: 1fr; /* Single column layout */
+  flex-direction: column;
+  /* gap: 20px; Space between rows */
 }
 
 .layout-container {
@@ -22,11 +29,4 @@ footer {
 
 header {
   margin-bottom: 90px;
-}
-
-.main-content-area {
-  flex: 1;
-  background-color: #f0f2f5;
-  overflow: scroll;
-  /* background-color: aqua; */
 }

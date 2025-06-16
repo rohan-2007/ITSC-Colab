@@ -3,6 +3,49 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import Supervisor from './Supervisor';
 
+export interface Student {
+  id: number;
+  createdAt: string;
+  email: string;
+  name: string;
+  password: string;
+  role: string;
+  supervisorId: number;
+  teams: Team[];
+  updatedAt: string;
+}
+
+interface Team {
+  id: number;
+  createdAt: string;
+  name: string;
+  updatedAt: string;
+}
+
+interface Data {
+  role: string;
+  studentId: number | null;
+}
+
+interface PastEval {
+  id: number;
+  createdAt: string;
+  criteria: JSON;
+  semester: string;
+  studentId: number;
+  supervisorId: number | null;
+  type: string;
+  updatedAt: string;
+  year: number;
+}
+
+interface User {
+  id: number;
+  role: `STUDENT` | `SUPERVISOR`;
+  supervisorId: number | null;
+  supervisorName: string;
+}
+
 const StudentSelect: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
@@ -10,56 +53,13 @@ const StudentSelect: React.FC = () => {
   const [ user, setUser ] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  interface Student {
-    id: number;
-    createdAt: string;
-    email: string;
-    name: string;
-    password: string;
-    role: string;
-    supervisorId: number;
-    updatedAt: string;
-    teams: Array<Team>;
-  }
-
-  interface Team {
-    id: number;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  interface Data {
-    role: string;
-    studentId: number | null;
-  }
-
-  interface PastEval {
-    id: number;
-    createdAt: string;
-    criteria: JSON;
-    semester: string;
-    studentId: number;
-    supervisorId: number | null;
-    type: string;
-    updatedAt: string;
-    year: number;
-  }
-
-  interface User {
-    id: number;
-    role: `STUDENT` | `SUPERVISOR`;
-    supervisorId: number | null;
-    supervisorName: string;
-  }
-
   const selectStudent = (id: number | null) => {
     if (id == selectedStudentId) {
       setSelectedStudentId(null);
     } else {
       setSelectedStudentId(id);
     }
-  }
+  };
 
   const navigateToPastEvaluations = () => {
     const data: Data = { role: `SUPERVISOR`, studentId: selectedStudentId };
@@ -200,7 +200,7 @@ const StudentSelect: React.FC = () => {
                 <td>{student.name}</td>
                 <td>{student.email}</td>
                 {student.teams[0] ?
-                <td>{student.teams[0].name}</td> : <td>No team</td>}
+                  <td>{student.teams[0].name}</td> : <td>No team</td>}
               </tr>) :
             <tr>
               <td colSpan={4} className="no-students-message">
