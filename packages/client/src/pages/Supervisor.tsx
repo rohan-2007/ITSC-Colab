@@ -113,8 +113,11 @@ const Supervisor: React.FC = () => {
       }
 
       const supData = await supRes.json();
+      let fetchedSupervisors: Supervisor[] = [];
+
       if (supData && supData.supervisors) {
-        setSupervisors(supData.supervisors as Supervisor[]);
+        fetchedSupervisors = supData.supervisors as Supervisor[];
+        setSupervisors(fetchedSupervisors);
       }
       /* END OF BACKEND CODE */
 
@@ -136,6 +139,9 @@ const Supervisor: React.FC = () => {
         const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => ({
           id: team.id,
           assignedStudents: fetchedStudents
+            .filter((s) => team.memberIDs.includes(s.id))
+            .map((s) => s.name),
+          assignedSupervisors: fetchedSupervisors
             .filter((s) => team.memberIDs.includes(s.id))
             .map((s) => s.name),
           expanded: false,
@@ -213,8 +219,8 @@ const Supervisor: React.FC = () => {
       .filter((s) => updatedTeam.assignedStudents.includes(s.name))
       .map((s) => s.id);
 
-    const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) => (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id))
-    console.log(`names: ` + supervisors.filter((s) => updatedTeam.assignedSupervisors.includes(s.name)));
+    const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) => (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
+    console.log(`names: ${supervisors.filter((s) => updatedTeam.assignedSupervisors.includes(s.name))}`);
 
     if (team.id) {
     // Update existing team
@@ -289,6 +295,7 @@ const Supervisor: React.FC = () => {
         if (i === teamIndex) {
           const assigned = team.assignedSupervisors || [];
           const isAssigned = assigned.includes(supervisorName);
+          console.log(`isAssigned: `, isAssigned);
           return {
             ...team,
             assignedSupervisors: isAssigned ?
@@ -491,11 +498,12 @@ const Supervisor: React.FC = () => {
                 .filter((student) =>
                   student.name.toLowerCase().includes(studentSearchTerm.toLowerCase()))
                 .map((student) => {
-                  const isChecked = teams[selectedTeamIndex].assignedStudents.includes(student.name);
+                  const isCheckedStudent = teams[selectedTeamIndex].assignedStudents.includes(student.name);
+                  console.log(`isCheckedStudent ${student.name}: `, isCheckedStudent);
                   return <label key={student.id} className="dropdown-item">
                     <input
                       type="checkbox"
-                      checked={isChecked}
+                      checked={isCheckedStudent}
                       onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
                     />
                     {student.name}
@@ -520,13 +528,14 @@ const Supervisor: React.FC = () => {
                 .filter((s) =>
                   s.name.toLowerCase().includes(supervisorSearchTerm.toLowerCase()))
                 .map((sup) => {
-                  const isChecked = (teams[selectedTeamIndex].assignedSupervisors || []).includes(
+                  const isCheckedSupervisor = (teams[selectedTeamIndex].assignedSupervisors || []).includes(
                     sup.name,
                   );
+                  console.log(`isCheckedSupervisor ${sup.name}: `, isCheckedSupervisor);
                   return <label key={sup.id} className="dropdown-item">
                     <input
                       type="checkbox"
-                      checked={isChecked}
+                      checked={isCheckedSupervisor}
                       onChange={() => handleSupervisorToggle(selectedTeamIndex, sup.name)}
                     />
                     {sup.name}
