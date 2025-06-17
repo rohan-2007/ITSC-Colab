@@ -67,12 +67,12 @@ export interface PastEval {
   year: number;
 }
 
-interface Student {
-  id: number;
-  email: string;
-  name: string;
-  password: string;
-}
+// interface Student {
+//   id: number;
+//   email: string;
+//   name: string;
+//   password: string;
+// }
 
 export interface User {
   id: number;
@@ -103,7 +103,6 @@ const PastEvaluations: React.FC = () => {
   const bothBorderColor = `#e0bb63`;
 
   const topBarRef = useRef<HTMLDivElement>(null);
-  const [ topBarHeight, setTopBarHeight ] = useState<number>(0);
 
   const dynamicStyles: React.CSSProperties = {
     '--bothBgColor': bothBgColor,
@@ -112,7 +111,6 @@ const PastEvaluations: React.FC = () => {
     '--studentBorderColor': studentBorderColor,
     '--supervisorBgColor': supervisorBgColor,
     '--supervisorBorderColor': supervisorBorderColor,
-    '--topBarHeight': topBarHeight,
   } as React.CSSProperties;
 
   const legendColors = [
@@ -132,14 +130,13 @@ const PastEvaluations: React.FC = () => {
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
-  const [ studentSearch, setStudentSearch ] = useState(``);
-  const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
-  const [ students, setStudents ] = useState<Student[]>([]);
+  // const [ studentSearch, setStudentSearch ] = useState(``);
+  // const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
+  // const [ students, setStudents ] = useState<Student[]>([]);
   // const [ isLoading, setIsLoading ] = useState(true);
 
   const location = useLocation();
   const data = location.state as Data;
-  console.log(`data: `, data);
 
   const handleSelectedSemester = (semester: string) => {
     setSelectedSemester(semester);
@@ -196,6 +193,7 @@ const PastEvaluations: React.FC = () => {
         role: resJson.user.role,
         supervisorId: resJson.user.supervisorId || null,
         supervisorName: resJson.user.supervisorName,
+        teamNames: resJson.user.teamNames,
       });
 
       let evalResponse;
@@ -364,7 +362,7 @@ const PastEvaluations: React.FC = () => {
   return <>
     <div className="top-bar" ref={topBarRef}>
       <div className="left-section">
-        <label className="semester-label">Year:</label>
+        <h3 className="semester-label">Year:</h3>
         <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
           {distinctYears.map((year) =>
             <option value={year}>{year}</option>)}

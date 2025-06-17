@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+
+// @@unique([studentId, semester, year, type])
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PastEval, User } from './PastEvaluations';
@@ -33,6 +35,7 @@ const StudentSelect: React.FC = () => {
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
+  const [ studentSearchTerm, setStudentSearchTerm ] = useState(``);
   const navigate = useNavigate();
 
   const selectStudent = (id: number | null) => {
@@ -69,7 +72,6 @@ const StudentSelect: React.FC = () => {
 
         console.log(`user data: `, JSON.stringify(resJson, null, 2));
 
-        const userId = resJson.user.id;
         console.log(`supervisor userId`, resJson.user.id);
 
         setUser({
@@ -113,7 +115,6 @@ const StudentSelect: React.FC = () => {
           console.log(`jsonData.students: `, jsonData.students);
           const allStudents = jsonData.students as Student[];
           console.log(`allStudents: `, allStudents);
-          console.log(`user.id`, user.id);
           const tempFilteredStudents = allStudents.filter(
             (student) =>
               user &&
@@ -152,9 +153,9 @@ const StudentSelect: React.FC = () => {
         id="student-search"
         type="text"
         placeholder="e.g., Alice Johnson"
-        value={studentSearch}
+        value={studentSearchTerm}
         onChange={(e) => {
-          setStudentSearch(e.target.value);
+          setStudentSearchTerm(e.target.value);
           setSelectedStudentId(null); // Deselect student when search changes
         }}
       />
@@ -173,7 +174,7 @@ const StudentSelect: React.FC = () => {
         </thead>
         <tbody>
           {students.length > 0 ?
-            students.map((student) =>
+            students.filter((s) => s.name.toLowerCase().includes(studentSearchTerm.toLowerCase())).map((student) =>
               // const status = studentsEvalStatus[student.id];
               // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
               // const isCompleted = status ? status.supervisorCompleted : false;
