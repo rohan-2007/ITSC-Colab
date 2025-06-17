@@ -4,6 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
+import '../components/buttonandcard.css';
 
 type Selections = Record<string, PerformanceLevel>;
 

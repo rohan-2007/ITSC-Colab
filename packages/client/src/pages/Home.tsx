@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './home.css';
 import { Student } from './StudentSelect';
 import { PastEval } from './PastEvaluations';
+import '../components/buttonandcard.css';
 
 const fetchUrl = `http://localhost:${3001}`;
 
