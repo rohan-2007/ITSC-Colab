@@ -272,59 +272,6 @@
   margin-top: 15px; /* Add some top margin */
 }
 
-/* Buttons */
-.btn {
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  text-decoration: none; /* For button-like links if using <a> */
-  display: inline-flex; /* Ensure consistent spacing if content varies */
-  align-items: center;
-  justify-content: center;
-}
-
-.btn.small-btn {
-  padding: 8px 15px;
-  font-size: 0.9em;
-  border-radius: 6px;
-}
-
-.primary-btn {
-  background-color: #f44336; /* Red */
-  color: #ffffff;
-}
-
-.primary-btn:hover {
-  background-color: #d32f2f; /* Darker red */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.secondary-btn {
-  background-color: #4CAF50; /* Green */
-  color: #ffffff;
-}
-
-.secondary-btn:hover {
-  background-color: #388E3C; /* Darker green */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.tertiary-btn {
-  background-color: #007bff; /* Blue */
-  color: #ffffff;
-}
-
-.tertiary-btn:hover {
-  background-color: #0056b3; /* Darker blue */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
 
 .todo-table-container {
   max-height: 50vh; 
