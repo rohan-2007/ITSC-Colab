@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Supervisor.css';
+import '../components/buttonandcard.css';
 const fetchUrl = `http://localhost:${3001}`;
 interface Student {
   id: number;
@@ -352,7 +353,7 @@ const Supervisor: React.FC = () => {
               <span className="student-name">{student.name}</span>
               <button
                 onClick={() => openStudentInfoModal(index)}
-                className="change-info-button"
+                className="change-info-btn"
               >
                 Change Info
               </button>
@@ -363,7 +364,7 @@ const Supervisor: React.FC = () => {
       <div className="card">
         <div className="card-header">
           <h2>Manage Student Teams</h2>
-          <button onClick={addNewTeam} className="add-team-button">+ New Team</button>
+          <button onClick={addNewTeam} className="btn">+ New Team</button>
         </div>
         <input
           type="text"

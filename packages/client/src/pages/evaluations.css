@@ -272,55 +272,6 @@
   border-top: 1px solid #e0e0e0;
 }
 
-.btn {
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn:disabled {
-  background-color: #cccccc !important;
-  color: #666666;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.primary-btn {
-  background-color: #f44336;
-  color: #ffffff;
-}
-
-.primary-btn:hover:not(:disabled) {
-  background-color: #d32f2f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* --- NEW: Button styles to match your screenshot --- */
-.btn.btn-success {
-  background-color: #4CAF50; /* The green from your image */
-  color: white;
-}
-.btn.btn-success:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.btn.btn-cancel {
-  background-color: #757575; /* The grey from your image */
-  color: white;
-}
-.btn.btn-cancel:hover:not(:disabled) {
-  background-color: #616161;
-}
-
 /* --- Main Evaluation Form Styles (Unchanged but included for completeness) --- */
 #evaluation-modal .modal-content {
   max-width: 1200px;
@@ -448,42 +399,6 @@
   color: #007bff;
   flex-grow: 1;
   text-align: left;
-}
-
-/* Reusable Button Styles */
-.btn {
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.primary-btn {
-  background-color: #f44336;
-  color: #ffffff;
-  margin: 10px;
-}
-
-.primary-btn:hover {
-  background-color: #d32f2f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.secondary-btn {
-  color: #ffffff;
-}
-
-.secondary-btn:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .center-text {

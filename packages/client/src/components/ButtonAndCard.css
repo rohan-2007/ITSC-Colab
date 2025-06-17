@@ -1,5 +1,3 @@
-
-
 button:hover {
   transform: scale(1.05);
 }
@@ -15,6 +13,45 @@ button {
  margin-bottom: 5px;
  transition: all 0.3s ease;
  cursor: pointer;
-   font-family: inherit;
+  font-family: inherit;
 }
 
+.btn.small-btn {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  border-radius: 6px;
+}
+
+/* This is the "completed" button in supervisor eval */
+.btn.select-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 6px 14px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.btn {
+  padding: 12px 25px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.change-info-btn {
+  padding: 8px 25px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
