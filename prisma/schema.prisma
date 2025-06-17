@@ -9,50 +9,58 @@ datasource db {
 }
 
 model User {
-  id                  Int       @id @default(autoincrement())
+  id                  Int          @id @default(autoincrement())
   name                String
   password            String
-  email               String    @unique
+  email               String       @unique
   role                Role
   supervisorId        Int?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  teams               Team[]        @relation("UserTeams")
-  evaluationsGiven    Evaluation[]  @relation("SupervisorEvaluations")
-  evaluationsReceived Evaluation[]  @relation("StudentEvaluations")
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  evaluationsReceived Evaluation[] @relation("StudentEvaluations")
+  evaluationsGiven    Evaluation[] @relation("SupervisorEvaluations")
+  teams               Team[]       @relation("UserTeams")
 
   @@map("user")
 }
 
 model Team {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  members User[] @relation("UserTeams")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   User[]   @relation("UserTeams")
+}
+
+model Evaluation {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  supervisorId Int?
+  year         Int
+  semester     Semester
+  type         Role
+  criteria     Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  team         String?
+  student      User     @relation("StudentEvaluations", fields: [studentId], references: [id])
+  supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
+
+  @@unique([studentId, semester, year, type])
+}
+
+model user_sessions {
+  sid    String   @id(map: "session_pkey") @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
 }
 
 enum Semester {
   SPRING
   SUMMER
   FALL
-}
-
-model Evaluation {
-  id            Int       @id @default(autoincrement())
-  studentId     Int
-  student       User      @relation("StudentEvaluations", fields: [studentId], references: [id])
-  supervisorId  Int?
-  supervisor    User?     @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
-  year          Int
-  semester      Semester
-  type          Role
-  criteria      Json
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-
-  @@unique([studentId, semester, year, type])
 }
 
 enum Role {

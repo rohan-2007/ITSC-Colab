@@ -74,6 +74,15 @@ interface Student {
   password: string;
 }
 
+export interface User {
+  id: number;
+  evalsGiven: PastEval | null;
+  role: `STUDENT` | `SUPERVISOR`;
+  supervisorId: number | null;
+  supervisorName: string;
+  teamNames?: string[] | null;
+}
+
 type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 
 const PastEvaluations: React.FC = () => {
@@ -183,6 +192,7 @@ const PastEvaluations: React.FC = () => {
 
       setUser({
         id: resJson.user.id,
+        evalsGiven: resJson.user.evaluationsGiven,
         role: resJson.user.role,
         supervisorId: resJson.user.supervisorId || null,
         supervisorName: resJson.user.supervisorName,
@@ -348,13 +358,6 @@ const PastEvaluations: React.FC = () => {
   // console.log(pastEvals);
   // return pastEvals;
   // };
-
-  interface User {
-    id: number;
-    role: `STUDENT` | `SUPERVISOR`;
-    supervisorId: number | null;
-    supervisorName: string;
-  }
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
 

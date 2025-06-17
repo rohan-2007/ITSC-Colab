@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User } from './PastEvaluations';
 import './evaluations.css';
 
 const fetchUrl = `http://localhost:3001`;
@@ -7,12 +8,12 @@ const fetchUrl = `http://localhost:3001`;
 type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 type Selections = Record<string, PerformanceLevel>;
 
-interface User {
-  id: number;
-  role: `STUDENT` | `SUPERVISOR`;
-  supervisorId: number | null;
-  supervisorName: string;
-}
+// interface User {
+//   id: number;
+//   role: `STUDENT` | `SUPERVISOR`;
+//   supervisorId: number | null;
+//   supervisorName: string;
+// }
 
 const rubricData = [
   {
@@ -95,6 +96,7 @@ const Evaluations: React.FC = () => {
   const [ message, setMessage ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ canStartSelfEval, setCanSelfEval ] = useState(true);
+  const [ selectedTeam, setSelectedTeam ] = useState(user?.teamNames ? user.teamNames[0] : `no team`);
 
   // This state is our single source of truth for all statuses.
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, {
@@ -122,9 +124,11 @@ const Evaluations: React.FC = () => {
         const data = await response.json();
         setUser({
           id: data.user.id,
+          evalsGiven: data.user.evaluationsGiven,
           role: data.user.role,
           supervisorId: data.user.supervisorId || null,
           supervisorName: data.user.supervisorName,
+          teamNames: data.user.teamNames,
         });
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -233,6 +237,7 @@ const Evaluations: React.FC = () => {
         semester: selectedSemester,
         studentId: user.id,
         supervisorId: user.supervisorId,
+        team: selectedTeam,
         type: user.role,
         year: new Date().getFullYear(),
       };
@@ -459,6 +464,17 @@ const Evaluations: React.FC = () => {
                 `Student Self-Evaluation` :
                 `Supervisor Evaluation`}
             </h2>
+            <div className="semester-selector">
+              <label htmlFor="semester">Team:</label>
+              <select
+                id="semester"
+                value={selectedTeam}
+                onChange={(e) => setSelectedTeam(e.target.value)}
+              >
+                {user?.teamNames?.map((teamName, index) =>
+                  <option key={index} value={teamName}>{teamName}</option>)}
+              </select>
+            </div>
             <div className="semester-selector">
               <label htmlFor="semester">Semester:</label>
               <select

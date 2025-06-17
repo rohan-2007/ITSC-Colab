@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PastEval, User } from './PastEvaluations';
 // import Supervisor from './Supervisor';
 
 export interface Student {
@@ -27,25 +28,6 @@ interface Data {
   studentId: number | null;
 }
 
-interface PastEval {
-  id: number;
-  createdAt: string;
-  criteria: JSON;
-  semester: string;
-  studentId: number;
-  supervisorId: number | null;
-  type: string;
-  updatedAt: string;
-  year: number;
-}
-
-interface User {
-  id: number;
-  role: `STUDENT` | `SUPERVISOR`;
-  supervisorId: number | null;
-  supervisorName: string;
-}
-
 const StudentSelect: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
@@ -54,7 +36,7 @@ const StudentSelect: React.FC = () => {
   const navigate = useNavigate();
 
   const selectStudent = (id: number | null) => {
-    if (id == selectedStudentId) {
+    if (id === selectedStudentId) {
       setSelectedStudentId(null);
     } else {
       setSelectedStudentId(id);
@@ -92,6 +74,7 @@ const StudentSelect: React.FC = () => {
 
         setUser({
           id: resJson.user.id,
+          evalsGiven: resJson.user.evaluationsGiven,
           role: resJson.user.role,
           supervisorId: resJson.user.supervisorId || null,
           supervisorName: resJson.user.supervisorName,
@@ -132,7 +115,10 @@ const StudentSelect: React.FC = () => {
           console.log(`allStudents: `, allStudents);
           console.log(`user.id`, user.id);
           const tempFilteredStudents = allStudents.filter(
-            (student) => student.supervisorId === user.id,
+            (student) =>
+              user &&
+              Array.isArray(user.evalsGiven) &&
+              user.evalsGiven.some((evaluation: PastEval) => evaluation.studentId === student.id),
           );
           setStudents(tempFilteredStudents);
         }

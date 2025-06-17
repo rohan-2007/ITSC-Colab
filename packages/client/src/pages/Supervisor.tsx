@@ -219,8 +219,8 @@ const Supervisor: React.FC = () => {
       .filter((s) => updatedTeam.assignedStudents.includes(s.name))
       .map((s) => s.id);
 
-    const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) => (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
-    console.log(`names: ${supervisors.filter((s) => updatedTeam.assignedSupervisors.includes(s.name))}`);
+    const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) =>
+      (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
 
     if (team.id) {
     // Update existing team
@@ -295,7 +295,6 @@ const Supervisor: React.FC = () => {
         if (i === teamIndex) {
           const assigned = team.assignedSupervisors || [];
           const isAssigned = assigned.includes(supervisorName);
-          console.log(`isAssigned: `, isAssigned);
           return {
             ...team,
             assignedSupervisors: isAssigned ?
@@ -331,8 +330,6 @@ const Supervisor: React.FC = () => {
 
   const filteredTeams = teams.filter((team) =>
     team.name.toLowerCase().includes(teamSearch.toLowerCase()));
-
-  console.log(supervisors);
 
   return <div className="supervisor-page">
     <header className="evaluations-header">
@@ -499,7 +496,6 @@ const Supervisor: React.FC = () => {
                   student.name.toLowerCase().includes(studentSearchTerm.toLowerCase()))
                 .map((student) => {
                   const isCheckedStudent = teams[selectedTeamIndex].assignedStudents.includes(student.name);
-                  console.log(`isCheckedStudent ${student.name}: `, isCheckedStudent);
                   return <label key={student.id} className="dropdown-item">
                     <input
                       type="checkbox"
@@ -531,7 +527,6 @@ const Supervisor: React.FC = () => {
                   const isCheckedSupervisor = (teams[selectedTeamIndex].assignedSupervisors || []).includes(
                     sup.name,
                   );
-                  console.log(`isCheckedSupervisor ${sup.name}: `, isCheckedSupervisor);
                   return <label key={sup.id} className="dropdown-item">
                     <input
                       type="checkbox"

@@ -125,7 +125,7 @@ const Home: React.FC = () => {
           console.log(`user.id`, user?.email);
           console.log(user?.teamIDs);
           console.log(allStudents[0].teams[0].id);
-          console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
+          // console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
           const tempFilteredStudents = allStudents.filter(
             (student) => student.teams.some((team) => user?.teamIDs?.includes(team.id)),
           );
@@ -201,7 +201,7 @@ const Home: React.FC = () => {
         {user.teamNames &&
           <div className="info-item">
             <span className="info-label">Teams:</span>
-            <span className="info-value">{user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}</span>
+            <span className="info-value">{user.teamNames.length > 0 ? user.teamNames.join(`, `) : `Not Assigned`}</span>
           </div>}
         {/* Optional: Add a link to profile settings or detailed view */}
         <div className="profile-actions">

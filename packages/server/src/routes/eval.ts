@@ -12,6 +12,7 @@ interface EvaluationBody {
   semester: keyof typeof Semester;
   studentId: number;
   supervisorId?: number;
+  team: string;
   year: number;
 }
 
@@ -20,7 +21,7 @@ router.post(`/submitEval`, requireAuth, async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, evaluationType, semester, studentId, supervisorId, year } = req.body;
+    const { criteria, evaluationType, semester, studentId, supervisorId, team, year } = req.body;
     const user = await prisma.user.findUnique({
       where: { id: studentId },
     });
@@ -41,6 +42,7 @@ router.post(`/submitEval`, requireAuth, async (
         semester,
         studentId,
         supervisorId: supervisorId || null,
+        team,
         type: evaluationType,
         year,
       },
