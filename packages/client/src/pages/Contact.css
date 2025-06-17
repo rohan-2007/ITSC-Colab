@@ -22,37 +22,7 @@
   flex-wrap: wrap;
 }
 
-.primary-button,
-.secondary-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  min-width: 120px;
-}
 
-.primary-button {
-  background-color: #3a3a3a;
-  color: white;
-  border: none;
-}
-
-.primary-button:hover {
-  background-color: #000;
-  transform: scale(1.05);
-}
-
-.secondary-button {
-  background-color: transparent;
-  color: #333;
-  border: 1px solid #3a3a3a;
-}
-
-.secondary-button:hover {
-  background-color: #f5f5f5;
-  transform: scale(1.05);
-}
 
 .contact-description {
   max-width: 600px;

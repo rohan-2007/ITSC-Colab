@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
-
+import '../components/buttonandcard.css';
 const fetchUrl = `http://localhost:3001`;
 
 interface UserProfile {
@@ -176,7 +176,7 @@ const Profile: React.FC = () => {
         <div className="profile-card profile-actions-card">
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
-            <button className="btn primary-btn" onClick={() => setShowEditModal(true)}>
+            <button className="btn destructive-btn" onClick={() => setShowEditModal(true)}>
               Edit Profile
             </button>
           </div>
@@ -215,7 +215,7 @@ const Profile: React.FC = () => {
             />
           </label>
           <div className="modal-buttons">
-            <button className="btn primary-btn" onClick={handleSaveChanges}>Save</button>
+            <button className="btn destructive-btn" onClick={handleSaveChanges}>Save</button>
             <button className="btn destructive-btn" onClick={() => setShowEditModal(false)}>Cancel</button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import './login.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const fetchUrl = `http://localhost:${3001}`;
+import '../components/buttonandcard.css';
 
 const Login: React.FC = () => {
   const [ message, setMessage ] = useState(``);
