@@ -80,7 +80,7 @@ const Home: React.FC = () => {
             evalsGiven: jsonData.user.evaluationsGiven || null,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamIDs: [ 2, 1 ],
+            teamIDs: jsonData.user.safeTeamIDs || null,
             // jsonData.user.teamIDs || null
             teamNames: jsonData.user.teamNames || null,
           });
@@ -123,7 +123,7 @@ const Home: React.FC = () => {
           const allStudents = jsonData.students as Student[];
           console.log(`allStudents: `, allStudents);
           console.log(`user.id`, user?.email);
-          console.log(user?.teamIDs[0]);
+          console.log(user?.teamIDs);
           console.log(allStudents[0].teams[0].id);
           console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
           const tempFilteredStudents = allStudents.filter(

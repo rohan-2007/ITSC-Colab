@@ -213,10 +213,13 @@ const Supervisor: React.FC = () => {
       .filter((s) => updatedTeam.assignedStudents.includes(s.name))
       .map((s) => s.id);
 
+    const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) => (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id))
+    console.log(`names: ` + supervisors.filter((s) => updatedTeam.assignedSupervisors.includes(s.name)));
+
     if (team.id) {
     // Update existing team
       await fetch(`${fetchUrl}/setTeamInfo`, {
-        body: JSON.stringify({ id: team.id, memberIDs, name: updatedTeam.name }),
+        body: JSON.stringify({ id: team.id, memberIDs: updatedMemberIDs, name: updatedTeam.name }),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
@@ -284,12 +287,13 @@ const Supervisor: React.FC = () => {
     setTeams((prev) =>
       prev.map((team, i) => {
         if (i === teamIndex) {
-          const isAssigned = team.assignedSupervisors ? team.assignedSupervisors.includes(supervisorName) : false;
+          const assigned = team.assignedSupervisors || [];
+          const isAssigned = assigned.includes(supervisorName);
           return {
             ...team,
             assignedSupervisors: isAssigned ?
-              team.assignedSupervisors.filter((n) => n !== supervisorName) :
-              [ ...team.assignedSupervisors, supervisorName ],
+              assigned.filter((n) => n !== supervisorName) :
+              [ ...assigned, supervisorName ],
           };
         }
         return team;
@@ -516,7 +520,7 @@ const Supervisor: React.FC = () => {
                 .filter((s) =>
                   s.name.toLowerCase().includes(supervisorSearchTerm.toLowerCase()))
                 .map((sup) => {
-                  const isChecked = teams[selectedTeamIndex].assignedSupervisors?.includes(
+                  const isChecked = (teams[selectedTeamIndex].assignedSupervisors || []).includes(
                     sup.name,
                   );
                   return <label key={sup.id} className="dropdown-item">

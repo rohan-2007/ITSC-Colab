@@ -170,7 +170,10 @@ router.post(`/setTeamInfo`, requireAuth, async (
   req: Request<unknown, unknown, TeamInfoChange>,
   res: Response,
 ) => {
+  console.log(`in setTeamInfo`);
   const { id, memberIDs, name } = req.body;
+
+  console.log(`id: ${id}, memberIDs: ${memberIDs}, name: ${name}`);
   try {
     const team: Team | null = await prisma.team.findUnique({
       where: { id },
