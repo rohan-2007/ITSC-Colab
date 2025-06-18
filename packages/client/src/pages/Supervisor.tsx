@@ -338,7 +338,7 @@ const Supervisor: React.FC = () => {
       <p>Manage team members, student assignments and passwords, as well as other info.</p>
     </header>
     <div className="main-content-2">
-      <div className="card">
+      <div className="manage-student-card">
         <h2>Manage Student Information</h2>
         <input
           type="text"
@@ -361,8 +361,8 @@ const Supervisor: React.FC = () => {
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-header">
+      <div className="manage-teams-card">
+        <div className="manage-teams-card-header">
           <h2>Manage Student Teams</h2>
           <button onClick={addNewTeam} className="button-new-team">+ New Team</button>
         </div>

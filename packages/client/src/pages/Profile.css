@@ -2,6 +2,7 @@
   padding: 20px;
   padding-top: 90px;
   width: 100vw;
+  font-weight: 600; /* I thought this looked good u can change it if u want a - ALEX */
   background-color: #f0f2f5;
   font-family: 'Inter', sans-serif;
   color: #333;
@@ -36,21 +37,6 @@
   margin: 0 auto;
 }
 
-.profile-card {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-}
-
 .profile-card h3 {
   font-size: 1.4em;
   color: #2c3e50;
@@ -59,11 +45,6 @@
   border-bottom: 2px solid #f44336;
   padding-bottom: 10px;
   display: inline-block;
-}
-
-.profile-details-card {
-  align-items: center;
-  text-align: center;
 }
 
 .profile-avatar {
@@ -79,12 +60,6 @@
   justify-content: center;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.profile-details-card h2 {
-  margin: 0 0 10px 0;
-  font-size: 1.8em;
-  color: #2c3e50;
 }
 
 .profile-role-badge {
@@ -140,21 +115,9 @@
   align-self: flex-end;
 }
 
-.profile-actions-card {
-  justify-content: space-between;
-  height: 40%;
-}
-
 .profile-actions-buttons {
   display: flex;
   justify-content: center;
-}
-
-.profile-content {
-  text-align: center;
-  padding: 50px 20px;
-  max-width: 600px;
-  margin: auto;
 }
 
 @media (max-width: 768px) {

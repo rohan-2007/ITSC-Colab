@@ -357,3 +357,116 @@
   background-color: #198754; 
   border-color: #198754;
 }
+
+
+
+
+/*
+
+CARDS
+
+*/
+
+
+/* SUPERVISOR PAGE CARDS */
+.manage-teams-card,
+.manage-student-card {
+ background: #ffffff;
+ padding: 2rem;
+ border-radius: 1rem;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+ flex: 1;
+ min-width: 450px;
+ display: flex;
+ flex-direction: column;
+}
+
+.manage-student-card h2,
+.manage-teams-card h2 {
+ margin-bottom: 1rem;
+ font-size: 1.5rem;
+ color: #b91c1c;
+ font-weight: 700;
+}
+
+.manage-teams-card-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 1rem;
+}
+/* End Supervisor page cards */
+
+/* PROFILE PAGE CARDS */
+.profile-details-card {
+  align-items: center;
+  text-align: center;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.profile-details-card h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.8em;
+  color: #2c3e50;
+}
+
+.profile-actions-card {
+  justify-content: space-between;
+  height: 30%;
+}
+/* End of profile page cards */
+
+/* HOME CARDS */
+.supervisor-todo-section {
+  grid-area: to-do;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; 
+  text-align: center;
+}
+
+.profile-quick-info {
+  grid-area: profile;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px; 
+  display: flex; 
+  flex-direction: column;
+}
+
+.quick-actions-section {
+  grid-area: actions;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+}
+
+.user-stats-section {
+  grid-area: stats;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: 10px;
+}
+/* end of home cards */
