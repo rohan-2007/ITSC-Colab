@@ -206,7 +206,7 @@ const Home: React.FC = () => {
           </div>}
         {/* Optional: Add a link to profile settings or detailed view */}
         <div className="profile-actions">
-          <button onClick={() => navigate(`/profile`)} className="btn small-btn tertiary-btn">View Full Profile</button>
+          <button onClick={() => navigate(`/profile`)} className="button-view-profile">View Full Profile</button>
         </div>
       </section>
 
@@ -284,9 +284,9 @@ const Home: React.FC = () => {
             <>
               <button
                 onClick={() => navigate(`/evaluations`)}
-                className="btn secondary-btn"
+                className="button-start-eval"
               >Start New Evaluation</button>
-              <button onClick={() => navigate(`/student_select`)} className="btn tertiary-btn">View Reports</button>
+              <button onClick={() => navigate(`/student_select`)} className="button-view-reports">View Reports</button>
             </>}
           {/* Add more buttons based on roles and available routes */}
         </div>

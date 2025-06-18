@@ -197,10 +197,10 @@ const Login: React.FC = () => {
       <div>
         <h1>UC Performance Review</h1>
         <div className="button-group">
-          <button id="signupMainBtn" onClick={togglePopupSignup} disabled={isLoading}>
+          <button className="signUpButton" id="signupMainBtn" onClick={togglePopupSignup} disabled={isLoading}>
             {isLoading ? `Signing up...` : `Sign Up`}
           </button>
-          <button id="loginMainBtn" onClick={togglePopupLogin} disabled={isLoading}>
+          <button className="loginButton" id="loginMainBtn" onClick={togglePopupLogin} disabled={isLoading}>
             {isLoading ? `Logging in...` : `Login`}
           </button>
         </div>

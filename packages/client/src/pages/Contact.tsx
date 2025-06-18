@@ -1,14 +1,15 @@
 import React from 'react';
 import './Contact.css';
 import itscLogo from '/ITSC_LOGO.png';
+import '../components/ButtonAndCard.css';
 
 const Contact: React.FC = () =>
   <div className="contact-page">
     <h1 className="contact-title">Contact us</h1>
 
     <div className="button-row">
-      <button className="primary-button">Email</button>
-      <button className="secondary-button">Button</button>
+      <button className="button-email-contact">Email</button>
+      <button className="button-second-contact">Button</button>
     </div>
 
     <p className="contact-description">
