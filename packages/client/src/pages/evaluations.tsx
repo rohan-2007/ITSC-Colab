@@ -131,6 +131,8 @@ const Evaluations: React.FC = () => {
           supervisorName: data.user.supervisorName,
           teamNames: data.user.teamNames,
         });
+        const team = data.user.teamNames[0];
+        setSelectedTeam(team);
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(`Failed to fetch user data: ${err instanceof Error ? err.message : String(err)}`);
@@ -284,6 +286,8 @@ const Evaluations: React.FC = () => {
       <h1>Loading...</h1>
     </div>;
   }
+
+  console.log(`Team: `, selectedTeam);
 
   return <div className="evaluations-page">
     {!isFormVisible && <header className="evaluations-header">

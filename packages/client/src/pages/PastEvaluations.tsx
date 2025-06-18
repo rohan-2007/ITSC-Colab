@@ -8,52 +8,17 @@ import '../components/buttonandcard.css';
 
 type Selections = Record<string, PerformanceLevel>;
 
-const rubricData = [
-  {
-    id: `criticalThinking`,
-    levels: {
-      competitive: `Demonstrates outstanding adaptability to new situations and challenges.`,
-      inProgress: `Adapts to new situations effectively.`,
-      starting: `Resists change and struggles to adapt to new situations.`,
-    },
-    subCriteria: [ `Problem solving`, `Adaptability` ],
-    title: `Critical Thinking/Problem Solving`,
-  },
-  {
-    id: `technicalProficiency`,
-    levels: {
-      competitive: `Performs complex tasks, and consistently demonstrates a high level of technical expertise.`,
-      inProgress: `Capable of performing and solving problems. Can meet the technical requirements of the role.`,
-      starting: `Demonstrates limited technical skills and knowledge. Struggles to perform tasks.`,
-    },
-    subCriteria: [ `Git (version control)`, `GitHub`, `Application admin`, `(Knowledge, Speed, Productivity)` ],
-    title: `Technical Proficiency`,
-  },
-  {
-    id: `teamwork`,
-    levels: {
-      competitive: `Inspires and uplifts teams to while focusing on accountability and initiative flexibility.`,
-      inProgress: `Maintains team-oriented mind by being accountable, taking initiative, and being flexible on tasks.`,
-      starting: `Works in isolation and avoids collaboration. Shows resistance to sharing work with others.`,
-    },
-    subCriteria: [ `Collaboration`, `Prioritization`, `Accountability`, `Initiative`, `Flexibility`, `Integrity` ],
-    title: `Teamwork`,
-  },
-  {
-    id: `personalDisposition`,
-    levels: {
-      competitive: `High interpersonal skills can be seen through conversations. Consistently meets deadlines.`,
-      inProgress: `Shows good range of interpersonal skills. Displays competent skills. Provides clear direction.`,
-      starting: `Low interpersonal skills. This is evident by: lack of listening, struggling to complete work on time.`,
-    },
-    subCriteria: [ `Communication`, `Time management`, `Organization`, `Adaptability`, `Patience` ],
-    title: `Personal Disposition`,
-  },
-];
-
 interface Data {
   role: string;
   studentId: number | null;
+}
+
+interface Criteria {
+  criteria: string;
+  descriptions: string[];
+  levels: string[];
+  subCriteria: string[] | null;
+  title: string | null;
 }
 
 export interface PastEval {
@@ -85,7 +50,7 @@ export interface User {
   teamNames?: string[] | null;
 }
 
-type PerformanceLevel = `starting` | `inProgress` | `competitive`;
+// type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 
 const PastEvaluations: React.FC = () => {
   // interface LegendItem {
@@ -122,6 +87,7 @@ const PastEvaluations: React.FC = () => {
   ];
 
   const [ pastEvals, setPastEvals ] = useState<PastEval[]>([]);
+  const [ criteria, setCriteria ] = useState<Criteria[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<PastEval[]>([]);
   const [ filteredStudentSemesterEvals, setFilteredStudentSemesterEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorSemesterEvals, setFilteredSupervisorSemesterEvals ] = useState<PastEval[]>([]);
@@ -135,6 +101,28 @@ const PastEvaluations: React.FC = () => {
   const [ filteredStudentTeamEvals, setFilteredStudentTeamEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorTeamEvals, setFilteredSupervisorTeamEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
+
+  const rubricData = criteria.map((item) => ({
+    id: item.criteria,
+    descriptions: item.descriptions,
+    levels: item.levels,
+    subCriteria: item.subCriteria,
+    title: item.title,
+  }));
+
+  console.log(`criteria[0].levels: `, criteria[0]);
+
+  // console.log(`rubricData: `, rubricData);
+
+  // id: item.id,
+  //   levels: {
+  //     competitive: `Demonstrates outstanding adaptability to new situations and challenges.`,
+  //     inProgress: `Adapts to new situations effectively.`,
+  //     starting: `Resists change and struggles to adapt to new situations.`,
+  //   },
+  //   subCriteria: [ `Problem solving`, `Adaptability` ],
+  //   title: `Critical Thinking/Problem Solving`,
+
   // const [ studentSearch, setStudentSearch ] = useState(``);
   // const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   // const [ students, setStudents ] = useState<Student[]>([]);
@@ -177,6 +165,35 @@ const PastEvaluations: React.FC = () => {
 
   useEffect(() => {
   }, [ selectedSemester ]);
+
+  const getCriteriaData = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/criteriaData/`, {
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        method: `POST`,
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const resJson = await res.json();
+
+      const criteriaData = resJson.criteria as Criteria[];
+      console.log(`criteriaData: `, criteriaData);
+      setCriteria(criteriaData);
+      const performanceLevels = criteria[0].levels;
+      type PerformanceLevel = typeof performanceLevels[number];
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(`user fetch error: ${err.message}`);
+      } else {
+        throw new Error(`an unknown user fetch error`);
+      }
+    }
+  };
 
   const getPastEvals = async () => {
     // console.log(`getPastEvals`);
@@ -270,6 +287,7 @@ const PastEvaluations: React.FC = () => {
 
     const fetchPastEvals = async () => {
       try {
+        void getCriteriaData();
         const evals = await getPastEvals();
         if (user?.role === `SUPERVISOR`) {
           const supervisorEvals = evals.filter((e) => e.supervisorId === user.id);
@@ -376,7 +394,7 @@ const PastEvaluations: React.FC = () => {
   // };
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
-  // console.log(`filteredStudentSemesterEvals :${filteredStudentSemesterEvals}`);
+  console.log(`filteredStudentTeamEvals :${JSON.stringify(filteredStudentTeamEvals)}`);
 
   return <>
     <div className="top-bar" ref={topBarRef}>
@@ -448,9 +466,7 @@ const PastEvaluations: React.FC = () => {
           <thead>
             <tr>
               <th>Criteria</th>
-              <th>Starting</th>
-              <th>In Progress</th>
-              <th>Competitive</th>
+              {rubricData[0].levels.map((element) => <th>{element}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -459,13 +475,13 @@ const PastEvaluations: React.FC = () => {
                 <td className="criteria-column">
                   <strong>{criterion.title}</strong>
                   <ul>
-                    {criterion.subCriteria.map((sub, index) =>
+                    {criterion.subCriteria?.map((sub, index) =>
                       <li key={index}>{sub}</li>)}
                   </ul>
                 </td>
-                {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
+                {criterion.levels.map(
 
-                  (level) => {
+                  (level, index) => {
                     let cellClass = `display-cell`;
 
                     // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
@@ -486,7 +502,7 @@ const PastEvaluations: React.FC = () => {
                         // onClick={() => handleSelect(criterion.id, level)}
                       >
                         <div className="level-text">
-                          {criterion.levels[level]}
+                          {criterion.descriptions[index]}
                         </div>
                       </td>);
                   },

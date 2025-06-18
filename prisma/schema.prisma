@@ -47,6 +47,15 @@ model Evaluation {
   supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
 }
 
+model Criteria {
+  id           Int      @id @default(autoincrement())
+  title        String
+  criteria     String
+  subCriteria  String[]
+  levels       String[]
+  descriptions String[]
+}
+
 model user_sessions {
   sid    String   @id(map: "session_pkey") @db.VarChar
   sess   Json     @db.Json

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Team } from '../../../../generated/prisma';
 import prisma from '../prisma';
+// import { Prisma } from '@prisma/client';
 
 // middleware auth
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -241,6 +242,22 @@ router.delete(`/deleteTeam/:id`, requireAuth, async (
     res.status(200).json({ message: `Team deleted` });
   } catch (err) {
     console.error(`Delete team error:`, err);
+    res.status(500).json({ error: `Internal server error` });
+  }
+});
+
+router.post(`/criteriaData`, async (
+  req: Request<unknown, unknown>,
+  res: Response,
+) => {
+  try {
+    const criteria = await prisma.criteria.findMany();
+    res.status(200).json({
+      criteria,
+      message: `Fetched criteria data`,
+    });
+  } catch (err) {
+    console.error(`Criteria fetch error: `, err);
     res.status(500).json({ error: `Internal server error` });
   }
 });
