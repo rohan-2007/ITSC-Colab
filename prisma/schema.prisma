@@ -45,8 +45,6 @@ model Evaluation {
   team         String?
   student      User     @relation("StudentEvaluations", fields: [studentId], references: [id])
   supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
-
-  @@unique([studentId, semester, year, type])
 }
 
 model user_sessions {

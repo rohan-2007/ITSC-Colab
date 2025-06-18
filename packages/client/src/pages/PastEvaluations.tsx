@@ -66,6 +66,7 @@ export interface PastEval {
   type: string;
   updatedAt: string;
   year: number;
+  team: string;
 }
 
 // interface Student {
@@ -126,8 +127,9 @@ const PastEvaluations: React.FC = () => {
   const [ filteredSupervisorSemesterEvals, setFilteredSupervisorSemesterEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<PastEval[]>([]);
   const [ evaluationsReady, setEvaluationsReady ] = useState(false);
-  const [ selectedSemester, setSelectedSemester ] = useState(``);
+  const [ selectedSemester, setSelectedSemester ] = useState(`SUMMER`);
   const [ selectedYear, setSelectedYear ] = useState(2025);
+  const [ selectedTeam, setSelectedTeam ] = useState(``);
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
@@ -139,8 +141,14 @@ const PastEvaluations: React.FC = () => {
   const location = useLocation();
   const data = location.state as Data;
 
-  const handleSelectedSemester = (semester: string) => {
-    setSelectedSemester(semester);
+  const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("in semester");
+    console.log(event.target.value);
+    setSelectedSemester(event.target.value);
+  };
+
+  const handleSelectedTeam = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTeam(event.target.value);
   };
 
   const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -265,8 +273,21 @@ const PastEvaluations: React.FC = () => {
 
     const fetchPastEvals = async () => {
       try {
+        
+        
+        console.log("selectedYear : " + selectedYear);
+        console.log("selectedSemester : " + selectedSemester);
+        console.log("filterStudentYearEvals : " + filteredStudentYearEvals);
+        console.log("filteredStudentSemesterEvals :" + filteredStudentSemesterEvals);
+
         const evals = await getPastEvals();
-        setPastEvals(evals);
+        if (user?.role === `SUPERVISOR`) {
+          const supervisorEvals = evals.filter((e) => e.supervisorId === user.id);
+          setPastEvals(supervisorEvals);
+        } else {
+          setPastEvals(evals);
+        }
+
         const studentEvals = evals.filter(
           // (entry) => entry.type === `STUDENT` && entry.semester === `${selectedSemester}`,
           (entry) => entry.type === `STUDENT`,
@@ -303,7 +324,7 @@ const PastEvaluations: React.FC = () => {
     };
 
     void fetchPastEvals();
-  }, [ selectedSemester, selectedYear ]);
+  }, [ selectedSemester, selectedYear, selectedTeam ]);
 
   useEffect(() => {
     if (filteredStudentEvals.length || filteredSupervisorEvals.length) {
@@ -359,6 +380,8 @@ const PastEvaluations: React.FC = () => {
   // };
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
+  console.log("filteredStudentSemesterEvals :" + filteredStudentSemesterEvals);
+
 
   return <>
     <div className="top-bar" ref={topBarRef}>
@@ -367,6 +390,18 @@ const PastEvaluations: React.FC = () => {
         <select id="semester" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
           {distinctYears.map((year) =>
             <option value={year}>{year}</option>)}
+        </select>
+        <h3 className="semester-label">Semester:</h3>
+        <select id="semester" className="dropdown" value={selectedSemester} onChange={handleSelectedSemester}>
+          {filteredStudentYearEvals.length > 0 || filteredSupervisorYearEvals.length > 0 ?
+            (filteredStudentYearEvals.length > filteredSupervisorYearEvals.length ? filteredStudentYearEvals : filteredSupervisorYearEvals).map((evalItem: PastEval) =>
+            <option value={evalItem.semester}>{evalItem.semester}</option>): null}
+        </select>
+        <h3 className="semester-label">Team:</h3>
+        <select id="semester" className="dropdown" value={selectedTeam} onChange={handleSelectedTeam}>
+          {filteredStudentSemesterEvals.length > 0 || filteredStudentSemesterEvals.length > 0 ?
+            Array.from(new Set((filteredStudentSemesterEvals.length > filteredStudentSemesterEvals.length ? filteredStudentSemesterEvals : filteredStudentSemesterEvals).map((item) => item.team))).map((element) =>
+            <option value={element}>{element}</option>): null}
         </select>
       </div>
 
@@ -385,7 +420,7 @@ const PastEvaluations: React.FC = () => {
           </div>)}
       </div>
 
-      <div className="right-section">
+      {/* <div className="right-section">
         <div className="horizontal-scroll">
           {filteredStudentYearEvals.length > 0 || filteredSupervisorYearEvals.length > 0 ?
             (filteredStudentYearEvals.length > filteredSupervisorYearEvals.length ? filteredStudentYearEvals : filteredSupervisorYearEvals).map((evalItem: PastEval) =>
@@ -393,7 +428,7 @@ const PastEvaluations: React.FC = () => {
               // const year = timestamp.getFullYear();
               <button className="scroll-item" onClick={() => handleSelectedSemester(evalItem.semester)}>{evalItem.semester} {evalItem.year}</button>) : null}
         </div>
-      </div>
+      </div> */}
     </div>
 
     {/* <div className="past-evaluations-container">

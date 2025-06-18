@@ -14,9 +14,9 @@ const Layout: React.FC<Props> = ({ children }) =>
       <Navbar />
     </header>
     <main className="main-content-area">{children}</main>
-    <footer>
+    {/* <footer>
       <Footer />
-    </footer>
+    </footer> */}
   </div>;
 
 export default Layout;
