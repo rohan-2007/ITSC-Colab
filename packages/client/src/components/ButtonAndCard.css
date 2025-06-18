@@ -56,5 +56,31 @@ button {
   justify-content: center;
 }
 
-/* few more pages need to be done */
-/* few more pages need to be done */
+/* contact page row */
+.button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+/* Evaluations page, select table for supervisors */
+.btn.select-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 6px 14px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+}
+.btn.select-btn:hover {
+  background-color: #0056b3;
+}
+.selected .btn.select-btn {
+  background-color: #198754; 
+  border-color: #198754;
+}
+

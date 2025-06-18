@@ -243,22 +243,7 @@
   color: #6c757d;
 }
 
-/* The new 'Select' button inside the table */
-.btn.select-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 6px 14px;
-  font-size: 0.9em;
-  font-weight: 500;
-  margin: 0;
-}
-.btn.select-btn:hover {
-  background-color: #0056b3;
-}
-.selected .btn.select-btn {
-  background-color: #198754; /* Change button color on selected row */
-  border-color: #198754;
-}
+
 
 /* --- FOOTER & BUTTONS (REFINED) --- */
 .modal-footer {
