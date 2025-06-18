@@ -63,10 +63,10 @@ export interface PastEval {
   semester: string;
   studentId: number;
   supervisorId: number | null;
+  team: string;
   type: string;
   updatedAt: string;
   year: number;
-  team: string;
 }
 
 // interface Student {
@@ -132,6 +132,8 @@ const PastEvaluations: React.FC = () => {
   const [ selectedTeam, setSelectedTeam ] = useState(``);
   const [ filteredStudentYearEvals, setFilteredStudentYearEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorYearEvals, setFilteredSupervisorYearEvals ] = useState<PastEval[]>([]);
+  const [ filteredStudentTeamEvals, setFilteredStudentTeamEvals ] = useState<PastEval[]>([]);
+  const [ filteredSupervisorTeamEvals, setFilteredSupervisorTeamEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
   // const [ studentSearch, setStudentSearch ] = useState(``);
   // const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
@@ -142,9 +144,8 @@ const PastEvaluations: React.FC = () => {
   const data = location.state as Data;
 
   const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("in semester");
-    console.log(event.target.value);
     setSelectedSemester(event.target.value);
+    // setSelectedTeam(filteredStudentSemesterEvals ? filteredStudentSemesterEvals[0].team : filteredSupervisorSemesterEvals[0].team);
   };
 
   const handleSelectedTeam = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -153,7 +154,7 @@ const PastEvaluations: React.FC = () => {
 
   const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(parseInt(event.target.value, 10));
-    setSelectedSemester(filteredStudentYearEvals ? filteredStudentYearEvals[0].semester : filteredSupervisorYearEvals[0].semester);
+    // setSelectedSemester(filteredStudentYearEvals ? filteredStudentYearEvals[0].semester : filteredSupervisorYearEvals[0].semester);
   };
 
   useEffect(() => {
@@ -173,6 +174,9 @@ const PastEvaluations: React.FC = () => {
       window.removeEventListener(`resize`, handleResize); // Cleanup on unmount
     };
   }, []);
+
+  useEffect(() => {
+  }, [ selectedSemester ]);
 
   const getPastEvals = async () => {
     // console.log(`getPastEvals`);
@@ -225,23 +229,16 @@ const PastEvaluations: React.FC = () => {
 
       const pastEvalsJson: PastEval[] = await evalResponse.json();
 
-      // eslint-disable-next-line no-console
-      console.log(`past evals: `, JSON.stringify(pastEvalsJson, null, 2));
-
       return pastEvalsJson;
     } catch (err) {
       if (err instanceof Error) {
-        // console.log(`user fetch error: ${err.message}`);
         throw new Error(`user fetch error: ${err.message}`);
       } else {
-        // console.log(`an unknown user fetch error`);
         throw new Error(`an unknown user fetch error`);
       }
     }
   };
   // void getPastEvals();
-
-  // console.log(selectedSemester);
 
   useEffect(() => {
     // const fetchUser = async () => {
@@ -273,13 +270,6 @@ const PastEvaluations: React.FC = () => {
 
     const fetchPastEvals = async () => {
       try {
-        
-        
-        console.log("selectedYear : " + selectedYear);
-        console.log("selectedSemester : " + selectedSemester);
-        console.log("filterStudentYearEvals : " + filteredStudentYearEvals);
-        console.log("filteredStudentSemesterEvals :" + filteredStudentSemesterEvals);
-
         const evals = await getPastEvals();
         if (user?.role === `SUPERVISOR`) {
           const supervisorEvals = evals.filter((e) => e.supervisorId === user.id);
@@ -302,6 +292,14 @@ const PastEvaluations: React.FC = () => {
         setFilteredSupervisorEvals(supervisorEvals);
 
         // console.log(`Filtered supervisor evaluations: `, supervisorEvals);
+
+        setFilteredStudentTeamEvals(studentEvals.filter(
+          (entry) => entry.semester === selectedSemester && entry.year === selectedYear && entry.team === selectedTeam,
+        ));
+        setFilteredSupervisorTeamEvals(supervisorEvals.filter(
+          (entry) => entry.semester === selectedSemester && entry.year === selectedYear && entry.team === selectedTeam,
+        ));
+
         setFilteredStudentSemesterEvals(studentEvals.filter(
           (entry) => entry.semester === selectedSemester && entry.year === selectedYear,
         ));
@@ -319,8 +317,6 @@ const PastEvaluations: React.FC = () => {
         // eslint-disable-next-line no-console
         console.error(error);
       }
-      // eslint-disable-next-line no-console
-      console.log(`here`);
     };
 
     void fetchPastEvals();
@@ -380,8 +376,7 @@ const PastEvaluations: React.FC = () => {
   // };
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
-  console.log("filteredStudentSemesterEvals :" + filteredStudentSemesterEvals);
-
+  // console.log(`filteredStudentSemesterEvals :${filteredStudentSemesterEvals}`);
 
   return <>
     <div className="top-bar" ref={topBarRef}>
@@ -393,15 +388,17 @@ const PastEvaluations: React.FC = () => {
         </select>
         <h3 className="semester-label">Semester:</h3>
         <select id="semester" className="dropdown" value={selectedSemester} onChange={handleSelectedSemester}>
-          {filteredStudentYearEvals.length > 0 || filteredSupervisorYearEvals.length > 0 ?
-            (filteredStudentYearEvals.length > filteredSupervisorYearEvals.length ? filteredStudentYearEvals : filteredSupervisorYearEvals).map((evalItem: PastEval) =>
-            <option value={evalItem.semester}>{evalItem.semester}</option>): null}
+          <option value="" />
+          {filteredStudentYearEvals.concat(filteredSupervisorYearEvals).length > 0 ?
+            Array.from(new Set(filteredStudentYearEvals.concat(filteredSupervisorYearEvals).map((item) => item.semester))).map((element) =>
+              <option value={element}>{element}</option>) : null}
         </select>
         <h3 className="semester-label">Team:</h3>
         <select id="semester" className="dropdown" value={selectedTeam} onChange={handleSelectedTeam}>
-          {filteredStudentSemesterEvals.length > 0 || filteredStudentSemesterEvals.length > 0 ?
-            Array.from(new Set((filteredStudentSemesterEvals.length > filteredStudentSemesterEvals.length ? filteredStudentSemesterEvals : filteredStudentSemesterEvals).map((item) => item.team))).map((element) =>
-            <option value={element}>{element}</option>): null}
+          <option value="" />
+          {filteredStudentSemesterEvals.concat(filteredSupervisorSemesterEvals).length > 0 ?
+            Array.from(new Set(filteredStudentSemesterEvals.concat(filteredSupervisorSemesterEvals).map((item) => item.team))).map((element) =>
+              <option value={element}>{element}</option>) : null}
         </select>
       </div>
 
@@ -472,11 +469,11 @@ const PastEvaluations: React.FC = () => {
                     let cellClass = `display-cell`;
 
                     // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
-                    if ((filteredStudentSemesterEvals[0] && filteredSupervisorSemesterEvals[0]) && ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
+                    if ((filteredStudentTeamEvals[0] && filteredSupervisorTeamEvals[0]) && ((filteredStudentTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
                       cellClass += ` both-selected`;
-                    } else if (filteredStudentSemesterEvals[0] && ((filteredStudentSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
+                    } else if (filteredStudentTeamEvals[0] && ((filteredStudentTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
                       cellClass += ` student-selected`;
-                    } else if (filteredSupervisorSemesterEvals[0] && (filteredSupervisorSemesterEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                    } else if (filteredSupervisorTeamEvals[0] && (filteredSupervisorTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
                       cellClass += ` supervisor-selected`;
                     } else {
                       cellClass = String(cellClass);

@@ -33,7 +33,6 @@ interface Data {
 const StudentSelect: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
-  const [ studentSearch, setStudentSearch ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
   const [ studentSearchTerm, setStudentSearchTerm ] = useState(``);
   const navigate = useNavigate();
