@@ -37,24 +37,6 @@ h1 {
   grid-template-columns: 1fr 1fr; /* Two columns for profile and stats */
 }
 
-.card {
- background: #ffffff;
- padding: 2rem;
- border-radius: 1rem;
- box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
- flex: 1;
- min-width: 450px;
- display: flex;
- flex-direction: column;
-}
-
-.card h2 {
- margin-bottom: 1rem;
- font-size: 1.5rem;
- color: #b91c1c;
- font-weight: 700;
-}
-
 .search-input {
  padding: 0.5rem 0.75rem;
  margin-bottom: 1rem;
