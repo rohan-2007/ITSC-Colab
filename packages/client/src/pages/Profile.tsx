@@ -176,7 +176,7 @@ const Profile: React.FC = () => {
         <div className="profile-card profile-actions-card">
           <h3>Account Actions</h3>
           <div className="profile-actions-buttons">
-            <button className="btn destructive-btn" onClick={() => setShowEditModal(true)}>
+            <button className="button-edit-profile" onClick={() => setShowEditModal(true)}>
               Edit Profile
             </button>
           </div>
@@ -215,8 +215,8 @@ const Profile: React.FC = () => {
             />
           </label>
           <div className="modal-buttons">
-            <button className="btn destructive-btn" onClick={handleSaveChanges}>Save</button>
-            <button className="btn destructive-btn" onClick={() => setShowEditModal(false)}>Cancel</button>
+            <button className="button-default" onClick={handleSaveChanges}>Save</button>
+            <button className="button-default" onClick={() => setShowEditModal(false)}>Cancel</button>
           </div>
         </div>
       </div>}

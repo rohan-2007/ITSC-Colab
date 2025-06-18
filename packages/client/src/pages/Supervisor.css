@@ -167,27 +167,6 @@ h1 {
  width: 100%;
 }
 
-.modal-buttons {
- display: flex;
- justify-content: space-between;
- gap: 0.5rem;
- flex-wrap: wrap;
-}
-
-.modal-save {
- background: #f3f4f6;
- color: #111827;
-}
-
-.modal-save:hover {
- background-color: #e5e7eb;
-}
-
-.modal-cancel {
- background: #f3f4f6;
- color: #111827;
-}
-
 .modal-cancel:hover {
  background-color: #f0f0f0;
 }
@@ -205,38 +184,16 @@ h1 {
  margin-bottom: 1rem;
 }
 
-.add-team-button {
- padding: 0.4rem 0.75rem;
- font-size: 0.875rem;
-}
-
 .team-tools {
  display: flex;
  gap: 0.5rem;
  align-items: center;
 }
 
-.edit-team-button,
-.toggle-button {
- background-color: #f9fafb;
- border: 1px solid #d1d5db;
- color: #374151;
-}
-
 .team-name-span {
   flex: 1;
   font-weight: 600;
   padding: 0.25rem 0;
-}
-
-.edit-team-button,
-.toggle-button {
-  margin-left: 0.5rem;
-  background: #e5e7eb;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 .dropdown-scroll {
@@ -246,8 +203,4 @@ h1 {
   border-radius: 6px;
   padding: 8px;
   background-color: #fff;
-}
-
-.change-info-button {
-  padding: 0.3rem 1em;
 }

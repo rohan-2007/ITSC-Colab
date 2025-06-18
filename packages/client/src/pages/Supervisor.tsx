@@ -353,7 +353,7 @@ const Supervisor: React.FC = () => {
               <span className="student-name">{student.name}</span>
               <button
                 onClick={() => openStudentInfoModal(index)}
-                className="change-info-btn"
+                className="button-change-info"
               >
                 Change Info
               </button>
@@ -364,7 +364,7 @@ const Supervisor: React.FC = () => {
       <div className="card">
         <div className="card-header">
           <h2>Manage Student Teams</h2>
-          <button onClick={addNewTeam} className="btn">+ New Team</button>
+          <button onClick={addNewTeam} className="button-new-team">+ New Team</button>
         </div>
         <input
           type="text"
@@ -379,8 +379,8 @@ const Supervisor: React.FC = () => {
               <div className="student-row">
                 <span className="team-name-span">{team.name}</span>
                 <div className="team-tools">
-                  <button className="edit-team-button" onClick={() => openEditTeamModal(index)}>✎</button>
-                  <button className="toggle-button" onClick={() => toggleAssignedDropdown(index)}>
+                  <button className="button-edit-team" onClick={() => openEditTeamModal(index)}>✎</button>
+                  <button className="button-display-students" onClick={() => toggleAssignedDropdown(index)}>
                     {team.assignedStudents.length}
                   </button>
                 </div>
@@ -541,9 +541,9 @@ const Supervisor: React.FC = () => {
           </div>
 
           <div className="modal-buttons">
-            <button onClick={saveTeamName} className="modal-save">Save</button>
-            <button onClick={closeTeamModal} className="modal-cancel">Cancel</button>
-            <button onClick={deleteTeam} className="modal-delete">Delete</button>
+            <button onClick={saveTeamName} className="modal-save-supervisor">Save</button>
+            <button onClick={closeTeamModal} className="modal-cancel-supervisor">Cancel</button>
+            <button onClick={deleteTeam} className="modal-delete-supervisor">Delete</button>
           </div>
         </div>
       </div>}

@@ -1,12 +1,14 @@
-button:hover {
+/* Defaults */
+.button-default:hover {
   transform: scale(1.05);
 }
 
-button {
+.button-default {
  background-color: red;
   color: white;
  padding: 12px 24px;
  font-size: 16px;
+ font-weight: 600;
  cursor: pointer;
  transition: background-color 0.3s ease;
  width: 100px;
@@ -16,11 +18,264 @@ button {
   font-family: inherit;
 }
 
-.btn.small-btn {
+.logout-btn {
+   background-color: red;
+  color: white;
+ padding: 12px 24px;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.modal-buttons {
+ display: flex;
+ justify-content: space-between;
+ gap: 0.5rem;
+ flex-wrap: wrap;
+}
+
+/* End of Defaults */
+
+/* LOGIN PAGE */
+
+.loginButton:hover,
+.signUpButton:hover {
+  transform: scale(1.05);
+}
+
+.loginButton{
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
+.signUpButton {
+    background-color: red;
+  color: white;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+/* END OF LOGIN */
+
+/* HOME PAGE */
+.button-view-reports {
+  background-color: red;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 150px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.button-view-reports:hover {
+  transform: scale(1.05);
+}
+
+.button-start-eval {
+  background-color: red;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 200px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.button-start-eval:hover {
+  transform: scale(1.05);
+}
+
+.button-view-profile {
+  background-color: red;
+  color: white;
   padding: 8px 15px;
   font-size: 0.9em;
   border-radius: 6px;
+  font-weight: 600;
+  border-radius: 6px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 143px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
 }
+
+.button-view-profile:hover {
+  transform: scale(1.05);
+}
+/* End of home */
+
+/* PROFILE PAGE */
+.button-edit-profile:hover {
+  transform: scale(1.05);
+}
+
+.button-edit-profile {
+ background-color: red;
+  color: white;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ width: 150px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+}
+/* End of profile */
+
+/* SUPERVISOR PAGE */
+.button-new-team {
+  background-color: red;
+  color: white;
+  padding: 12px 25px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}  
+
+.button-new-team:hover {
+  transform: scale(1.05);
+}
+
+.modal-save-supervisor,
+.modal-cancel-supervisor,
+.modal-delete-supervisor {
+ background: #f3f4f6;
+ color: #111827;
+ padding: 12px 24px;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.modal-save-supervisor:hover,
+.modal-cancel-supervisor:hover,
+.modal-delete-supervisor:hover {
+  transform: scale(1.05);
+}
+
+.modal-delete-supervisor:hover {
+  background-color: rgb(200, 30, 30);
+}
+
+.modal-save,
+.modal-cancel {
+ background: #f3f4f6;
+ color: #111827;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.modal-cancel {
+  margin-right: -10px;
+}
+
+.modal-save:hover,
+.modal-cancel:hover {
+  transform: scale(1.05);
+}
+
+.button-change-info:hover {
+  transform: scale(1.05);
+}
+
+.button-change-info {
+ background-color: red;
+  color: white;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 150px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.button-edit-team:hover,
+.button-display-students:hover {
+  transform: scale(1.05);
+}
+
+.button-edit-team {
+ padding: 12px 24px;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.button-display-students {
+ padding: 12px 24px;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ width: 70px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+}
+/* End of supervisor page */
 
 /* This is the "completed" button in supervisor eval */
 .btn.select-btn {
@@ -56,7 +311,7 @@ button {
   justify-content: center;
 }
 
-/* contact page row */
+/* CONTACT PAGE */
 .button-row {
   display: flex;
   flex-direction: row;
@@ -66,6 +321,25 @@ button {
   margin-bottom: 30px;
   flex-wrap: wrap;
 }
+
+.button-email-contact,
+.button-second-contact {
+ background-color: red;
+  color: white;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+}
+
+.button-email-contact:hover,
+.button-second-contact:hover {
+  transform: scale(1.05);
+}
+/* END OF CONTACT PAGE */
 
 /* Evaluations page, select table for supervisors */
 .btn.select-btn {
@@ -83,4 +357,3 @@ button {
   background-color: #198754; 
   border-color: #198754;
 }
-
