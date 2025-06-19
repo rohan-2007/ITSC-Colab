@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './PastEvaluations';
+import { Criteria } from './PastEvaluations';
 import './evaluations.css';
 import '../components/buttonandcard.css';
 
@@ -15,49 +16,6 @@ type Selections = Record<string, PerformanceLevel>;
 //   supervisorId: number | null;
 //   supervisorName: string;
 // }
-
-const rubricData = [
-  {
-    id: `criticalThinking`,
-    levels: {
-      competitive: `Demonstrates outstanding adaptability to new situations and challenges.`,
-      inProgress: `Adapts to new situations effectively.`,
-      starting: `Resists change and struggles to adapt to new situations.`,
-    },
-    subCriteria: [ `Problem solving`, `Adaptability` ],
-    title: `Critical Thinking/Problem Solving`,
-  },
-  {
-    id: `technicalProficiency`,
-    levels: {
-      competitive: `Performs complex tasks, and consistently demonstrates a high level of technical expertise.`,
-      inProgress: `Capable of performing and solving problems. Can meet the technical requirements of the role.`,
-      starting: `Demonstrates limited technical skills and knowledge. Struggles to perform tasks.`,
-    },
-    subCriteria: [ `Git (version control)`, `GitHub`, `Application admin`, `(Knowledge, Speed, Productivity)` ],
-    title: `Technical Proficiency`,
-  },
-  {
-    id: `teamwork`,
-    levels: {
-      competitive: `Inspires and uplifts teams to while focusing on accountability and initiative flexibility.`,
-      inProgress: `Maintains team-oriented mind by being accountable, taking initiative, and being flexible on tasks.`,
-      starting: `Works in isolation and avoids collaboration. Shows resistance to sharing work with others.`,
-    },
-    subCriteria: [ `Collaboration`, `Prioritization`, `Accountability`, `Initiative`, `Flexibility`, `Integrity` ],
-    title: `Teamwork`,
-  },
-  {
-    id: `personalDisposition`,
-    levels: {
-      competitive: `High interpersonal skills can be seen through conversations. Consistently meets deadlines.`,
-      inProgress: `Shows good range of interpersonal skills. Displays competent skills. Provides clear direction.`,
-      starting: `Low interpersonal skills. This is evident by: lack of listening, struggling to complete work on time.`,
-    },
-    subCriteria: [ `Communication`, `Time management`, `Organization`, `Adaptability`, `Patience` ],
-    title: `Personal Disposition`,
-  },
-];
 
 const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `UNKNOWN` => {
   const today = new Date();
@@ -90,14 +48,12 @@ const Evaluations: React.FC = () => {
   const [ isPreModalVisible, setIsPMVisible ] = useState(false);
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
-  const [ selections, setSelections ] = useState<Selections>(
-    rubricData.reduce((acc, cr) => ({ ...acc, [cr.id]: `starting` }), {}),
-  );
   const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
   const [ message, setMessage ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ canStartSelfEval, setCanSelfEval ] = useState(true);
   const [ selectedTeam, setSelectedTeam ] = useState(user?.teamNames ? user.teamNames[0] : `no team`);
+  const [ criteria, setCriteria ] = useState<Criteria[]>([]);
 
   // This state is our single source of truth for all statuses.
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, {
@@ -109,6 +65,45 @@ const Evaluations: React.FC = () => {
     student.name.toLowerCase().includes(studentSearch.toLowerCase()));
 
   const currentYear = new Date().getFullYear();
+
+  const rubricData = criteria.map((item) => ({
+    id: item.criteria,
+    descriptions: item.descriptions,
+    levels: item.levels,
+    subCriteria: item.subCriteria,
+    title: item.title,
+  }));
+
+  const [ selections, setSelections ] = useState<Selections>(
+    rubricData.reduce((acc, cr) => ({ ...acc, [cr.id]: `starting` }), {}),
+  );
+
+  const getCriteriaData = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/criteriaData/`, {
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        method: `POST`,
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const resJson = await res.json();
+
+      const criteriaData = resJson.criteria as Criteria[];
+      console.log(`criteriaData: `, criteriaData);
+      setCriteria(criteriaData);
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(`user fetch error: ${err.message}`);
+      } else {
+        throw new Error(`an unknown user fetch error`);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -141,6 +136,7 @@ const Evaluations: React.FC = () => {
       }
     };
     void fetchUser();
+    void getCriteriaData();
   }, [ navigate ]);
 
   const fetchEvalStatusForCurrentUser = async (studentId: number) => {
@@ -499,9 +495,7 @@ const Evaluations: React.FC = () => {
               <thead>
                 <tr>
                   <th>Criteria</th>
-                  <th>Starting</th>
-                  <th>In Progress</th>
-                  <th>Competitive</th>
+                  {rubricData[0].levels.map((element) => <th>{element}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -510,22 +504,25 @@ const Evaluations: React.FC = () => {
                     <td className="criteria-column">
                       <strong>{criterion.title}</strong>
                       <ul>
-                        {criterion.subCriteria.map((sub, index) =>
+                        {criterion.subCriteria?.map((sub, index) =>
                           <li key={index}>{sub}</li>)}
                       </ul>
                     </td>
-                    {([ `starting`, `inProgress`, `competitive` ] as PerformanceLevel[]).map(
-                      (level) =>
-                        <td
+                    {criterion.levels.map(
+                      (level, index) => {
+                        const performanceLevels = criteria[0].levels;
+                        type PerformanceLevel = typeof performanceLevels[number];
+                        const typedLevel = level as PerformanceLevel;
+                        return (<td
                           key={level}
                           className={`level-cell ${selections[criterion.id] === level ? `selected` : ``}`}
-                          onClick={() => handleSelect(criterion.id, level)}
+                          onClick={() => handleSelect(criterion.id, typedLevel)}
                         >
                           <div className="level-text">
-                            {criterion.levels[level]}
+                            {criterion.descriptions[index]}
                           </div>
-                        </td>,
-
+                        </td>)
+                      }
                     )}
                   </tr>)}
               </tbody>

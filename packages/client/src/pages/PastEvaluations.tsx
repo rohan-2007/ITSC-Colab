@@ -13,7 +13,7 @@ interface Data {
   studentId: number | null;
 }
 
-interface Criteria {
+export interface Criteria {
   criteria: string;
   descriptions: string[];
   levels: string[];
