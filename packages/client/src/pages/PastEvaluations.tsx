@@ -6,7 +6,7 @@ import './PastEvaluations.css';
 import { useLocation } from 'react-router';
 import '../components/buttonandcard.css';
 
-type Selections = Record<string, PerformanceLevel>;
+let Selections;
 
 interface Data {
   role: string;
@@ -184,8 +184,6 @@ const PastEvaluations: React.FC = () => {
       const criteriaData = resJson.criteria as Criteria[];
       console.log(`criteriaData: `, criteriaData);
       setCriteria(criteriaData);
-      const performanceLevels = criteria[0].levels;
-      type PerformanceLevel = typeof performanceLevels[number];
     } catch (err) {
       if (err instanceof Error) {
         throw new Error(`user fetch error: ${err.message}`);
@@ -483,15 +481,25 @@ const PastEvaluations: React.FC = () => {
 
                   (level, index) => {
                     let cellClass = `display-cell`;
-
+                    const performanceLevels = criteria[0].levels;
+                    type PerformanceLevel = typeof performanceLevels[number];
+                    type Selections = Record<string, PerformanceLevel>;
+                    console.log(`filteredStudentTeamEvals: `, filteredStudentTeamEvals);
+                    console.log(`Level: `, level);
+                    // console.log(`filteredStudentTeamEvals[0].criteria as unknown as Selections.[criterion.id]: `, (filteredStudentTeamEvals[0].criteria as unknown as Selections)?.[criterion.id])
                     // const selectedLevel = (evaluation.criteria as unknown as Selections)?.[criterion.id];
                     if ((filteredStudentTeamEvals[0] && filteredSupervisorTeamEvals[0]) && ((filteredStudentTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level && (filteredSupervisorTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
+                      console.log(`both-selected`);
                       cellClass += ` both-selected`;
                     } else if (filteredStudentTeamEvals[0] && ((filteredStudentTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level)) {
+                      console.log(`student-selected`);
                       cellClass += ` student-selected`;
                     } else if (filteredSupervisorTeamEvals[0] && (filteredSupervisorTeamEvals[0].criteria as unknown as Selections)?.[criterion.id] === level) {
+                      console.log(`supervisor-selected`);
                       cellClass += ` supervisor-selected`;
                     } else {
+                      console.log(`in else`);
+    
                       cellClass = String(cellClass);
                     }
                     return (
