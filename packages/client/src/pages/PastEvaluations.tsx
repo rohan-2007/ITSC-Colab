@@ -6,19 +6,31 @@ import './PastEvaluations.css';
 import { useLocation } from 'react-router';
 import '../components/buttonandcard.css';
 
-let Selections;
-
 interface Data {
   role: string;
   studentId: number | null;
 }
 
 export interface Criteria {
-  criteria: string;
-  descriptions: string[];
+  criteriaLevels: CriteriaLevel[];
   levels: string[];
-  subCriteria: string[] | null;
+  name: string;
+  subCriteria: SubCriteria[];
   title: string | null;
+}
+
+export interface SubCriteria {
+  name: string;
+}
+
+export interface CriteriaLevel {
+  description: string;
+  level: Level;
+}
+
+export interface Level {
+  name: string;
+  title: string;
 }
 
 export interface PastEval {
@@ -103,10 +115,10 @@ const PastEvaluations: React.FC = () => {
   const [ user, setUser ] = useState<User | null>(null);
 
   const rubricData = criteria.map((item) => ({
-    id: item.criteria,
-    descriptions: item.descriptions,
-    levels: item.levels,
-    subCriteria: item.subCriteria,
+    id: item.name,
+    descriptions: item.criteriaLevels.map((level) => level.description),
+    levels: item.criteriaLevels.map((level) => level.level.name),
+    subCriteria: item.subCriteria.map((element) => element.name),
     title: item.title,
   }));
 
@@ -287,6 +299,7 @@ const PastEvaluations: React.FC = () => {
       try {
         void getCriteriaData();
         const evals = await getPastEvals();
+        console.log(`evals: `, evals);
         if (user?.role === `SUPERVISOR`) {
           const supervisorEvals = evals.filter((e) => e.supervisorId === user.id);
           setPastEvals(supervisorEvals);
@@ -390,6 +403,7 @@ const PastEvaluations: React.FC = () => {
   // console.log(pastEvals);
   // return pastEvals;
   // };
+  void getCriteriaData();
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
   console.log(`filteredStudentTeamEvals :${JSON.stringify(filteredStudentTeamEvals)}`);
@@ -499,7 +513,7 @@ const PastEvaluations: React.FC = () => {
                       cellClass += ` supervisor-selected`;
                     } else {
                       console.log(`in else`);
-    
+
                       cellClass = String(cellClass);
                     }
                     return (

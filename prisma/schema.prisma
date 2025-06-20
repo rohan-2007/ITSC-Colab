@@ -48,12 +48,36 @@ model Evaluation {
 }
 
 model Criteria {
-  id           Int      @id @default(autoincrement())
-  title        String
-  criteria     String
-  subCriteria  String[]
-  levels       String[]
-  descriptions String[]
+  id              Int      @id @default(autoincrement())
+  name            String
+  title           String
+  subCriteria     SubCriteria[]
+  criteriaLevels  CriteriaLevel[]
+}
+
+model SubCriteria {
+  id              Int       @id @default(autoincrement())
+  name            String
+  criterion       Criteria  @relation(fields: [criterionId], references: [id])
+  criterionId     Int
+}
+
+model Level {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
+  title           String
+  criteriaLevels  CriteriaLevel[]
+}
+
+model CriteriaLevel {
+  id            Int       @id @default(autoincrement())
+  criterion     Criteria  @relation(fields: [criterionId], references: [id])
+  criterionId   Int
+  level         Level     @relation(fields: [levelId], references: [id])
+  levelId       Int
+  description   String
+
+  @@unique([criterionId, levelId])
 }
 
 model user_sessions {

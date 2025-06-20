@@ -10,7 +10,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "Semester" AS ENUM ('SPRING', 'SUMMER', 'FALL');
+-- CREATE TYPE "Semester" AS ENUM ('SPRING', 'SUMMER', 'FALL');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('SUPERVISOR', 'STUDENT');

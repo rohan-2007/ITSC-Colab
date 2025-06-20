@@ -251,7 +251,16 @@ router.post(`/criteriaData`, async (
   res: Response,
 ) => {
   try {
-    const criteria = await prisma.criteria.findMany();
+    const criteria = await prisma.criteria.findMany({
+      include: {
+        criteriaLevels: {
+          include: {
+            level: true,
+          },
+        },
+        subCriteria: true,
+      },
+    });
     res.status(200).json({
       criteria,
       message: `Fetched criteria data`,

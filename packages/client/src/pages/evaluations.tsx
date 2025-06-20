@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './PastEvaluations';
-import { Criteria } from './PastEvaluations';
+import { Criteria, CriteriaLevel, Level, SubCriteria } from './PastEvaluations';
 import './evaluations.css';
 import '../components/buttonandcard.css';
 
@@ -67,10 +67,10 @@ const Evaluations: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const rubricData = criteria.map((item) => ({
-    id: item.criteria,
-    descriptions: item.descriptions,
-    levels: item.levels,
-    subCriteria: item.subCriteria,
+    id: item.name,
+    descriptions: item.criteriaLevels.map((level) => level.description),
+    levels: item.criteriaLevels.map((level) => level.level.name),
+    subCriteria: item.subCriteria.map((element) => element.name),
     title: item.title,
   }));
 
