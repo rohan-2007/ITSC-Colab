@@ -40,18 +40,7 @@
   margin: 0 auto;
 }
 
-.dashboard-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  max-width: 100%;
-}
-
-.dashboard-card h2 {
+.eval-cards h2 {
   font-size: 1.8em;
   color: #2c3e50;
   margin-top: 0;
@@ -60,7 +49,7 @@
   margin-bottom: 20px;
 }
 
-.dashboard-card p {
+.eval-cards p {
   color: #555;
   line-height: 1.6;
   flex-grow: 1;
@@ -221,29 +210,12 @@
   border-bottom: none;
 }
 
-.student-select-table tbody tr {
-  transition: background-color 0.15s ease-in-out;
-}
-
-.student-select-table tbody tr:hover {
-  background-color: #f0f2f5;
-}
-
-/* This is the visual feedback for the selected row! */
-.student-select-table tbody tr.selected {
-  background-color: #d1e7dd; /* A pleasant light green */
-  color: #0f5132;
-  font-weight: 500;
-}
-
 .no-students-message {
   text-align: center;
   font-style: italic;
   padding: 25px;
   color: #6c757d;
 }
-
-
 
 /* --- FOOTER & BUTTONS (REFINED) --- */
 .modal-footer {
@@ -402,11 +374,12 @@
   width: 90%;
   background-color:rgb(222, 222, 222);
 }
+
 .student-name-large.selected {
   background-color: darkGray;
 }
 
-.dashboard-card .btn {
+.eval-cards .btn {
   width: 100%;
   margin-top: auto; /* Pushes button to the bottom of the card */
 }

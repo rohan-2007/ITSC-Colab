@@ -358,8 +358,103 @@
   border-color: #198754;
 }
 
+.new-eval-button {
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  width: 400px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
 
+.new-eval-button:hover {
+  transform: scale(1.05);
+}
 
+.view-eval-button {
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  width: 400px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.view-eval-button:hover {
+  transform: scale(1.05);
+}
+
+.button-cancel-eval {
+  background-color: #757575;
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.button-cancel-eval:hover {
+  transform: scale(1.05);
+}
+
+.submit-button-eval {
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+    color: white;
+}
+
+.submit-button-eval:hover {
+  transform: scale(1.05);
+}
+
+.proceed-eval {
+  background-color: #4CAF50;
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.proceed-eval:hover {
+  transform: scale(1.05);
+}
+
+.student-select-table tbody tr.selected {
+  background-color: #d1e7dd; 
+  color: #0f5132;
+  font-weight: 500;
+}
+
+.student-select-table tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.student-select-table tbody tr:hover {
+  background-color: #f0f2f5;
+}
+/* end of eval page */
+
+/* STUDENT SELECT PAGE */
+.view-eval-student {
+ background-color: red !important;
+  color: white;
+ font-size: 16px;
+ font-weight: 600;
+ cursor: pointer;
+ width: 180px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.view-eval-student:hover {
+  transform: scale(1.05);
+}
+/* end of student select */
 
 /*
 
@@ -470,3 +565,16 @@ CARDS
   margin-top: 10px;
 }
 /* end of home cards */
+
+/* EVAL CARDS */
+.eval-cards {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-width: 100%;
+}
+/* end of eval card */

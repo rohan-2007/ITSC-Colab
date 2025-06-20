@@ -292,7 +292,7 @@ const Evaluations: React.FC = () => {
     </header>}
 
     <div className="action-button-group">
-      <div className="dashboard-card">
+      <div className="eval-cards">
         <h2 className="tc">{user?.role === `STUDENT` ? `Start a Self-Evaluation` : `Start a Supervisor Evaluation`}</h2>
         <p> {user?.role === `STUDENT` ? `Begin a new self-evaluation for this semester` :
           `Select from a list of all your students,
@@ -305,7 +305,7 @@ const Evaluations: React.FC = () => {
             <br />
           </div>}
         <button
-          className="btn primary-btn large-btn"
+          className="new-eval-button"
           onClick={async () => {
             setIsPMVisible((prev) => !prev);
             await fetchAllStatuses();
@@ -318,15 +318,15 @@ const Evaluations: React.FC = () => {
         </button>
       </div>
 
-      <div className="dashboard-card">
+      <div className="eval-cards">
         <h2 className="tc">Review Past Evaluations</h2>
         <p> Access and review all your previously submitted evaluations,
           along with any evaluations submitted for you.</p>
         {user?.role === `STUDENT` &&
-          <button className="btn secondary-btn" onClick={() => navigate(`/past_evaluations`)}>
+          <button className="view-eval-button" onClick={() => navigate(`/past_evaluations`)}>
             View Past Evaluations</button>}
         {user?.role === `SUPERVISOR` &&
-          <button className="btn secondary-btn" onClick={() => navigate(`/student_select`)}>
+          <button className="view-eval-button" onClick={() => navigate(`/student_select`)}>
             View Past Student Evaluations</button>}
       </div>
     </div>
@@ -429,7 +429,7 @@ const Evaluations: React.FC = () => {
         <div className="modal-footer">
           <button
             type="button"
-            className="btn btn-cancel"
+            className="button-cancel-eval"
             style={{ backgroundColor: `#757575` }}
             data-modal-id="pre-eval-modal"
             onClick={() => {
@@ -439,7 +439,7 @@ const Evaluations: React.FC = () => {
           </button>
           {canStartSelfEval && <button
             id="proceed-to-eval-btn"
-            className="btn btn-success"
+            className="proceed-eval"
             style={{ backgroundColor: `#4CAF50` }}
             onClick={() => {
               setIsFormVisible((prev) => !prev);
@@ -512,8 +512,8 @@ const Evaluations: React.FC = () => {
                       (level, index) => {
                         const performanceLevels = criteria[0].levels;
                         type PerformanceLevel = typeof performanceLevels[number];
-                        const typedLevel = level as PerformanceLevel;
-                        return (<td
+                        const typedLevel = level;
+                        return <td
                           key={level}
                           className={`level-cell ${selections[criterion.id] === level ? `selected` : ``}`}
                           onClick={() => handleSelect(criterion.id, typedLevel)}
@@ -521,8 +521,8 @@ const Evaluations: React.FC = () => {
                           <div className="level-text">
                             {criterion.descriptions[index]}
                           </div>
-                        </td>)
-                      }
+                        </td>;
+                      },
                     )}
                   </tr>)}
               </tbody>
@@ -533,7 +533,7 @@ const Evaluations: React.FC = () => {
             {message && <p className="submission-message">{message}</p>}
             <button
               type="button"
-              className="btn secondary-btn"
+              className="button-cancel-eval"
               style={{ backgroundColor: `#757575` }}
               data-modal-id="evaluation-modal"
               onClick={() => {
@@ -544,7 +544,7 @@ const Evaluations: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="btn primary-btn"
+              className="submit-button-eval"
               style={{ backgroundColor: `#4CAF50` }}
             >Submit Evaluation</button>
           </div>
