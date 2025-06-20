@@ -379,21 +379,6 @@
   background-color: darkGray;
 }
 
-.eval-cards .btn {
-  width: 100%;
-  margin-top: auto; /* Pushes button to the bottom of the card */
-}
-
-/* 2. Make Modal Footer buttons a consistent size */
-/* This gives buttons in the modal footer (e.g., Cancel, Proceed) */
-/* a uniform width for a cleaner, more balanced look. */
-.modal-footer .btn {
-  min-width: 140px; /* Adjust this value as needed */
-  justify-content: center;
-}
-
-/* 3. Ensure your custom Cancel/Success buttons in the modal use the new sizing */
-/* We'll re-apply your specific styles with the new .btn- class names */
 .modal-footer .btn.btn-cancel {
   background-color: #757575;
   color: white;
