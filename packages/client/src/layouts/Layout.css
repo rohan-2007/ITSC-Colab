@@ -9,7 +9,7 @@
   box-sizing: border-box;
   flex: 1;
   background-color: #f0f2f5;
-  overflow: scroll;
+  /* overflow: scroll; */
   display: grid;
   grid-template-columns: 1fr; /* Single column layout */
   flex-direction: column;
