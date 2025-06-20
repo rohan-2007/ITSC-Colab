@@ -159,13 +159,6 @@ h1 {
  border-color: #f87171;
 }
 
-.card-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 1rem;
-}
-
 .team-tools {
  display: flex;
  gap: 0.5rem;

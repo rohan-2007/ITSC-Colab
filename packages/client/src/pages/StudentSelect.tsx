@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
-
-// @@unique([studentId, semester, year, type])
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PastEval, User } from './PastEvaluations';
 // import Supervisor from './Supervisor';
-
+import '../components/buttonandcard.css';
+import './StudentSelect.css';
 export interface Student {
   id: number;
   createdAt: string;
@@ -17,7 +16,6 @@ export interface Student {
   teams: Team[];
   updatedAt: string;
 }
-
 interface Team {
   id: number;
   createdAt: string;
@@ -33,8 +31,8 @@ interface Data {
 const StudentSelect: React.FC = () => {
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
+  const [ studentSearch, setStudentSearch ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
-  const [ studentSearchTerm, setStudentSearchTerm ] = useState(``);
   const navigate = useNavigate();
 
   const selectStudent = (id: number | null) => {
@@ -71,6 +69,7 @@ const StudentSelect: React.FC = () => {
 
         console.log(`user data: `, JSON.stringify(resJson, null, 2));
 
+        const userId = resJson.user.id;
         console.log(`supervisor userId`, resJson.user.id);
 
         setUser({
@@ -114,6 +113,7 @@ const StudentSelect: React.FC = () => {
           console.log(`jsonData.students: `, jsonData.students);
           const allStudents = jsonData.students as Student[];
           console.log(`allStudents: `, allStudents);
+          console.log(`user.id`, user.id);
           const tempFilteredStudents = allStudents.filter(
             (student) =>
               user &&
@@ -152,9 +152,9 @@ const StudentSelect: React.FC = () => {
         id="student-search"
         type="text"
         placeholder="e.g., Alice Johnson"
-        value={studentSearchTerm}
+        value={studentSearch}
         onChange={(e) => {
-          setStudentSearchTerm(e.target.value);
+          setStudentSearch(e.target.value);
           setSelectedStudentId(null); // Deselect student when search changes
         }}
       />
@@ -173,7 +173,7 @@ const StudentSelect: React.FC = () => {
         </thead>
         <tbody>
           {students.length > 0 ?
-            students.filter((s) => s.name.toLowerCase().includes(studentSearchTerm.toLowerCase())).map((student) =>
+            students.map((student) =>
               // const status = studentsEvalStatus[student.id];
               // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
               // const isCompleted = status ? status.supervisorCompleted : false;
@@ -199,7 +199,7 @@ const StudentSelect: React.FC = () => {
     <div className="modal-footer">
       <button
         type="button"
-        className="btn secondary-btn"
+        className="view-eval-student"
         style={{ backgroundColor: `#757575` }}
         data-modal-id="evaluation-modal"
         onClick={() => {
