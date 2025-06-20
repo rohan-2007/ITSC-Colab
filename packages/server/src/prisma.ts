@@ -1,6 +1,8 @@
 // This file is a Prisma singleton. Use this to reference Prisma.
-import { PrismaClient } from '../../../generated/prisma';
+import { PrismaClient as PrismaClientMain } from '../../../generated/prisma';
+import { PrismaClient as PrismaClientGitreports } from '../../../generated/gitreports';
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClientMain();
+export const prismaGit = new PrismaClientGitreports();
 
-export default prisma;
+// export default prisma;

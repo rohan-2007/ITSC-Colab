@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 // middleware auth
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId) {

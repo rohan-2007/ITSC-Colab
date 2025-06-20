@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { JsonObject } from '@prisma/client/runtime/library';
 import { Role, Semester } from '../../../../generated/prisma';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 import { requireAuth } from './auth';
 
 const router = Router();

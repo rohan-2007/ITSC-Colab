@@ -11,7 +11,11 @@
   },
   "scripts": {
     "lint": "lerna run lint --stream --since",
-    "lint:fix": "lerna run lint:fix --stream --since"
+    "lint:fix": "lerna run lint:fix --stream --since",
+    "pull:perf-review": "prisma db pull --schema=prisma/schema.prisma",
+    "generate:perf-review": "prisma generate --schema=prisma/schema.prisma",
+    "pull:gitreports": "prisma db pull --schema=prisma/gitreports.schema.prisma",
+    "generate:gitreports": "prisma generate --schema=prisma/gitreports.schema.prisma"
   },
   "workspaces": [
     "packages/*"

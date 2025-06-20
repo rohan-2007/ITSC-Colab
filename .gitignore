@@ -5,6 +5,7 @@ packages/server/.env
 prisma/.env
 packages/server/dist/
 generated/prisma/
+generated/gitreports/
 lerna-debug.log
 .vscode/
 .vscode/extensions.json

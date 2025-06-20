@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Team } from '../../../../generated/prisma';
-import prisma from '../prisma';
+import { prisma } from '../prisma';
 // import { Prisma } from '@prisma/client';
 
 // middleware auth
