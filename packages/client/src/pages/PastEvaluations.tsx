@@ -234,9 +234,9 @@ const PastEvaluations: React.FC = () => {
     return `UNKNOWN`;
   };
 
-  const addGitContributions = () => {
+  // const addGitContributions = () => {
 
-  };
+  // };
 
   const getCriteriaData = async () => {
     try {
