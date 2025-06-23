@@ -1,27 +1,27 @@
-// import { Request, Response, Router } from 'express';
-// import { Contributions } from '../../../../generated/prisma';
-// import { prismaGit } from '../prisma';
+import { Request, Response, Router } from 'express';
+import { prismaGit } from '../prisma';
 
-// const router = Router();
+const router = Router();
 
-// interface RequestBody {
-//   username: string;
-// }
+interface RequestBody {
+  username: string;
+}
 
-// router.post(`/gitData`, async (
-//   req: Request<unknown, unknown, RequestBody>,
-//   res: Response,
-// ) => {
-//   const request = req.body;
+router.post(`/gitData`, async (
+  req: Request<unknown, unknown, RequestBody>,
+  res: Response,
+) => {
+  const request = req.body;
 
-//   const contributions: Contributions |  = await prismaGit.contributions.findMany({
-//     where: { user_login: request.username },
-//   });
+  // contributions: Contributions[] - findMany returns an array of Contributions
+  const contributions = await prismaGit.contributions.findMany({
+    where: { user_login: request.username },
+  });
 
-//   res.status(200).json({
-//     contributions,
-//     message: `Fetched git contributions`,
-//   });
-// });
+  res.status(200).json({
+    contributions,
+    message: `Fetched git contributions`,
+  });
+});
 
-// export default router;
+export default router;
