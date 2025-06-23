@@ -10,6 +10,7 @@ import type { RequestHandler } from 'express';
 import authRouter from './routes/auth'; // Import the router
 import evalRouter from './routes/eval'; // Import the evaluation router
 import supervisorRouter from './routes/supervisor';
+import gitreportsRouter from './routes/gitreports';
 import rubricRouter from './routes/rubric';
 import { seedRubricData } from './seed'; // Adjust the path as needed
 export let sessionMiddleware: RequestHandler;
@@ -60,6 +61,8 @@ const main = async () => {
   app.use(evalRouter);
   app.use(rubricRouter);
   app.use(supervisorRouter);
+  app.use(gitreportsRouter);
+
   app.use((req, res) => {
     res.status(404).json({ error: `Route not found`, path: req.path });
   });

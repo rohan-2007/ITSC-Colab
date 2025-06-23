@@ -4,11 +4,26 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
+import { assignSemester } from './evaluations';
 import '../components/buttonandcard.css';
 
 interface Data {
   role: string;
   studentId: number | null;
+}
+
+export interface Contribution {
+  contribution_count: number;
+  date: string;
+  user_login: string;
+}
+
+export interface Criteria {
+  criteriaLevels: CriteriaLevel[];
+  levels: string[];
+  name: string;
+  subCriteria: SubCriteria[];
+  title: string | null;
 }
 
 export interface SubCriteria {
@@ -47,6 +62,7 @@ export interface PastEval {
 
 export interface User {
   id: number;
+  email: string;
   evalsGiven: PastEval | null;
   role: `STUDENT` | `SUPERVISOR`;
   supervisorId: number | null;
@@ -105,6 +121,7 @@ const PastEvaluations: React.FC = () => {
   const [ filteredStudentTeamEvals, setFilteredStudentTeamEvals ] = useState<PastEval[]>([]);
   const [ filteredSupervisorTeamEvals, setFilteredSupervisorTeamEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
+  const [ contributions, setContributions ] = useState<Contribution[]>();
 
   const rubricData = criteria.map((item) => ({
     id: item.name,
@@ -168,7 +185,58 @@ const PastEvaluations: React.FC = () => {
   }, []);
 
   useEffect(() => {
-  }, [ selectedSemester ]);
+    const getGitData = async () => {
+      try {
+        const username = user?.email.slice(user.email.indexOf(`@`) + 1);
+
+        console.log(`username: `, user);
+
+        const res = await fetch(`http://localhost:3001/gitData/`, {
+          body: JSON.stringify({ username }),
+          credentials: `include`,
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          method: `POST`,
+        });
+
+        const resJson = await res.json();
+
+        const contributionList = resJson.contributions as Contribution[];
+
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+
+        console.log(`gitData: `, contributions);
+      } catch (err) {
+        if (err instanceof Error) {
+          throw new Error(`git fetch error: ${err.message}`);
+        } else {
+          throw new Error(`an unknown git fetch error`);
+        }
+      }
+    };
+
+    void getGitData();
+  }, [ user ]);
+
+  const getSemesterFromTimestamp = (timestamp: string | Date) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    if (date >= new Date(year, 4, 12) && date <= new Date(year, 7, 9)) {
+      return `SUMMER`;
+    }
+    if (date >= new Date(year, 7, 25) && date <= new Date(year, 11, 5)) {
+      return `FALL`;
+    }
+    if (date >= new Date(year, 0, 12) && date <= new Date(year, 3, 24)) {
+      return `SPRING`;
+    }
+    return `UNKNOWN`;
+  };
+
+  const addGitContributions = () => {
+
+  };
 
   const getCriteriaData = async () => {
     try {
@@ -221,6 +289,7 @@ const PastEvaluations: React.FC = () => {
 
       setUser({
         id: resJson.user.id,
+        email: resJson.user.email,
         evalsGiven: resJson.user.evaluationsGiven,
         role: resJson.user.role,
         supervisorId: resJson.user.supervisorId || null,
@@ -291,6 +360,7 @@ const PastEvaluations: React.FC = () => {
       try {
         void getCriteriaData();
         const evals = await getPastEvals();
+        // void getGitData();
         console.log(`evals: `, evals);
         if (user?.role === `SUPERVISOR`) {
           const supervisorEvals = evals.filter((e) => e.supervisorId === user.id);
@@ -396,6 +466,7 @@ const PastEvaluations: React.FC = () => {
   // return pastEvals;
   // };
   void getCriteriaData();
+  // void getGitData();
 
   const distinctYears = Array.from(new Set(pastEvals.map((item) => item.year)));
   console.log(`filteredStudentTeamEvals :${JSON.stringify(filteredStudentTeamEvals)}`);
