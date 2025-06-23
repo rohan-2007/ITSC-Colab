@@ -3,36 +3,80 @@
     "name": "critical_thinking",
     "title": "Critical Thinking/Problem Solving",
     "subItems": ["Problem solving", "Adaptability"],
-    "descriptionStarting": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
-    "descriptionInProgress": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
-    "descriptionCompetitive": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
+    "performanceLevels": [
+      {
+        "level": "Starting",
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+      },
+      {
+        "level": "InProgress",
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+      },
+      {
+        "level": "Competitive",
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+      }
+    ],
     "displayOrder": 1
   },
   {
     "name": "technical_proficiency",
     "title": "Technical Proficiency",
     "subItems": ["Git (source version control)", "GitHub", "Application administration", "(Knowledge Speed Productivity)"],
-    "descriptionStarting": "Demonstrates limited technical skills and knowledge. Struggles to perform tasks and complete issues/tickets.",
-    "descriptionInProgress": "Capable of performing and solving problems. Can meet the technical requirements of the role consistently. Consistently learning new, relevant tools.",
-    "descriptionCompetitive": "Performs complex tasks, and consistently demonstrates a high level of technical expertise and innovation.",
+    "performanceLevels": [
+      {
+        "level": "Starting",
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+      },
+      {
+        "level": "InProgress",
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+      },
+      {
+        "level": "Competitive",
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+      }
+    ],
     "displayOrder": 2
   },
   {
     "name": "teamwork",
     "title": "Teamwork",
     "subItems": ["Collaboration", "Prioritization", "Accountability", "Initiative", "Flexibility", "Integrity", "Resilience", "How do you approach tasks"],
-    "descriptionStarting": "Works in isolation and avoids collaboration. Shows resistance to sharing information or knowledge with others or does so with a bad attitude. Shows limited focus on project and customer needs or satisfaction. Struggles to communicate with honesty and transparency. Struggles to accept setbacks and challenges with a positive attitude.",
-    "descriptionInProgress": "Maintains team-oriented mind frame by being accountable, taking initiative, and being flexible on tasks needed to support team goals. Proactively contributes to team success and provides support and assistance to enhance overall team performance. This is done through emphasis on collaboration and prioritization. Maintains a focus on the project, customer needs and customer satisfaction. Maintains transparent and honest communication. Maintains the ability to accept setbacks and approaches resolution with a positive attitude.",
-    "descriptionCompetitive": "Inspires and uplifts teams to maintain a team-oriented focus, while focusing on accountability, initiative flexibility and collaboration. Goes above and beyond ensuring customer has the highest satisfaction for their needs. Excels in ethical behavior through leading by example. Embraces setbacks as a part of learning and receives feedback well.",
+    "performanceLevels": [
+      {
+        "level": "Starting",
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+      },
+      {
+        "level": "InProgress",
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+      },
+      {
+        "level": "Competitive",
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+      }
+    ],
     "displayOrder": 3
   },
   {
     "name": "personal_disposition",
     "title": "Personal Disposition",
     "subItems": ["Communication", "Time management", "Organization", "Attention to detail", "Delegation", "Speed of learning", "Patience", "Proactive Communication"],
-    "descriptionStarting": "Demonstrates low interpersonal skills such as communication and time management. This is evidenced by the lack of active listening during team meetings or conversations and struggles to perform tasks in a timely manner. Demonstrates limited leadership skills. Struggles to provide direction and motivation to the team. Struggles with attention to detail. Often exhibits negative or disengaged demeanor, struggles to maintain a professional attitude, adaptability, patience or proactive communication.",
-    "descriptionInProgress": "Shows good range of interpersonal skills through effective communication in verbal and written channels and accomplishing tasks in a timely manner. Displays competent skills. Provides clear direction and motivation to the team, and effectively manages team members through the use of organization, attention to detail and appropriate delegation. Maintains a positive and professional attitude, demonstrating adaptability, patience, and proactive communication.",
-    "descriptionCompetitive": "High interpersonal skills can be seen through an understanding and implementation of nuance in conversations, adapting communication style as needed to convey ideas clearly and professionally. Consistently meets deadlines and shows initiative to complete new tasks. Empowers team members to develop leadership skills and improve organization and emphasizes attention to detail. Inspires and uplifts team through positive attitude, interactions, and empowering team members to maintain a positive demeanor.",
+    "performanceLevels": [
+      {
+        "level": "Starting",
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+      },
+      {
+        "level": "InProgress",
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+      },
+      {
+        "level": "Competitive",
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+      }
+    ],
     "displayOrder": 4
   }
 ]

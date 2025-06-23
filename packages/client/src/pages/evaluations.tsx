@@ -6,16 +6,27 @@ import '../components/buttonandcard.css';
 
 const fetchUrl = `http://localhost:3001`;
 
-interface RubricCategoryData {
+interface RubricPerformanceLevelData {
   id: number;
-  descriptionCompetitive: string;
-  descriptionInProgress: string;
-  descriptionStarting: string;
-  name: string;
-  subItems: string[];
-  title: string;
+  description: string; // e.g., 'Starting', 'In Progress', 'Competitive'
+  level: string;
 }
 
+interface RubricSubItemData {
+  id: number;
+  name: string;
+}
+
+interface RubricCategoryData {
+  id: number;
+  levels: RubricPerformanceLevelData[]; // The unique key for the category, e.g., 'problem_solving'
+  name: string; // The display title, e.g., 'Problem Solving'
+  subSkills: RubricSubItemData[]; // Changed from subItems: string[] to a structured array
+  title: string; // This now holds the performance level descriptions
+}
+
+// This constant remains the same, but it's now used to find the right level from the fetched data.
+// Ensure that `level.title` here matches the `level` property in your `RubricPerformanceLevel` database records.
 const performanceLevels = [
   { key: `starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
   { key: `inProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
@@ -503,20 +514,24 @@ const Evaluations: React.FC = () => {
                   <tr key={category.id}>
                     <td className="criteria-column">
                       <strong>{category.title}</strong>
+                      {/* UPDATED: Map over the new subSkills array of objects */}
                       <ul>
-                        {category.subItems?.map((sub, index) =>
-                          <li key={index}>{sub}</li>)}
+                        {category.subSkills?.map((sub) =>
+                          <li key={sub.id}>{sub.name}</li>)}
                       </ul>
                     </td>
                     {performanceLevels.map((level) => {
-                      const descriptionKey =
-                        `description${
-                          level.key.charAt(0).toUpperCase() + level.key.slice(1)
-                        }` as keyof RubricCategoryData;
-                      const description = category[descriptionKey] ?? ``; // Safely access property
+                      // =================================================================
+                      // UPDATED: Logic to find the description from the nested 'levels' array
+                      // =================================================================
+                      // We find the performance level from the fetched data that matches the current column's title.
+                      const levelData = category.levels.find((l) => l.level === level.title);
+                      // The description is taken from the found levelData, or we show a fallback text.
+                      const description = levelData ? levelData.description : `Description not available.`;
 
                       return <td
                         key={level.key}
+                        // The className and onClick logic still work perfectly with your 'selections' state
                         className={`level-cell ${selections[category.name] === level.key ? `selected` : ``}`}
                         onClick={() => handleSelect(category.name, level.key)}
                       >

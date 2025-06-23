@@ -47,31 +47,36 @@ model Evaluation {
   student      User     @relation("StudentEvaluations", fields: [studentId], references: [id])
   supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
 }
-
 model RubricCategory {
-  id           Int                     @id @default(autoincrement())
-  name         String                  @unique
-  title        String
-  subItems     String[]                // array is okay here
-  displayOrder Int                     @default(0)
+  id             Int                     @id @default(autoincrement())
+  name           String                  @unique
+  title          String
+  subItems       String[]                // Okay if you won't query/filter these
+  displayOrder   Int                     @default(0)
 
-  descriptions RubricCategoryLevel[]   // 👈 one-to-many
+  levels         RubricPerformanceLevel[]
+  subSkills      RubricSubItem[]
 
   @@map("rubricCategory")
 }
 
-model RubricCategoryLevel {
-  id                Int    @id @default(autoincrement())
-  rubricCategoryId  Int
-  level             String  // "Starting", "In Progress", etc.
-  description       String
-
-  rubricCategory    RubricCategory @relation(fields: [rubricCategoryId], references: [id])
-
-  @@unique([rubricCategoryId, level]) // no duplicate levels per category
-  @@map("rubricCategoryLevel")
+model RubricSubItem {
+  id              Int                   @id @default(autoincrement())
+  name            String
+  rubricCategory  RubricCategory        @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  rubricCategoryId Int
 }
 
+model RubricPerformanceLevel {
+  id                Int                @id @default(autoincrement())
+  rubricCategoryId  Int
+  level             String             
+  description       String
+
+  rubricCategory    RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+
+  @@map("rubricCategoryLevel")
+}
 
 
 

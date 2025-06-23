@@ -8,20 +8,25 @@ const router = Router();
 
 interface EvaluationBody {
   criteria: JsonObject;
-  evaluationType: keyof typeof Role;
+  // UPDATED: Renamed 'evaluationType' to 'type' for consistency with the Prisma schema
   semester: keyof typeof Semester;
   studentId: number;
   supervisorId?: number;
   team: string;
+  type: keyof typeof Role;
   year: number;
 }
 
+// =================================================================
+// UPDATED: The /submitEval route
+// =================================================================
 router.post(`/submitEval`, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
 ): Promise<void> => {
   try {
-    const { criteria, evaluationType, semester, studentId, supervisorId, team, year } = req.body;
+    // UPDATED: Destructuring 'type' instead of 'evaluationType'
+    const { criteria, semester, studentId, supervisorId, team, type, year } = req.body;
     const user = await prisma.user.findUnique({
       where: { id: studentId },
     });
@@ -31,6 +36,7 @@ router.post(`/submitEval`, requireAuth, async (
       return;
     }
 
+    // This authorization logic remains the same
     if (![ studentId, supervisorId ].includes(Number(req.session.userId))) {
       res.status(403).json({ error: `Forbidden: You are not authorized to submit this evaluation.` });
       return;
@@ -43,7 +49,8 @@ router.post(`/submitEval`, requireAuth, async (
         studentId,
         supervisorId: supervisorId || null,
         team,
-        type: evaluationType,
+        // UPDATED: Using 'type' directly
+        type,
         year,
       },
     });

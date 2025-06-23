@@ -1,20 +1,23 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { prisma } from '../prisma';
-import type { RubricCategory } from '../../../../generated/prisma';
 
 const router = Router();
-router.get(`/rubric/`, async (req, res) => {
+router.get(`/rubric`, async (req: Request, res: Response): Promise<void> => {
   try {
-    const rubricCategories: RubricCategory[] | null = await prisma.rubricCategory.findMany({
+    const rubricCategories = await prisma.rubricCategory.findMany({
+      include: {
+        levels: true, // Include the related performance levels
+        subSkills: true, // Include the related sub-skills
+      },
       orderBy: {
-        displayOrder: `asc`,
+        displayOrder: `asc`, // Order categories by the specified display order
       },
     });
     res.status(200).json(rubricCategories);
-  } catch (error: unknown) {
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Failed to fetch rubric data:`, error);
-    res.status(500).json({ error: `Internal server error while fetching rubric.` });
+    console.error(`Error fetching rubric data:`, error);
+    res.status(500).json({ error: `Internal server error` });
   }
 });
 
