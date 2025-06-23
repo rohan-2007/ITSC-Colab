@@ -6,18 +6,29 @@ router.get(`/rubric`, async (req: Request, res: Response): Promise<void> => {
   try {
     const rubricCategories = await prisma.rubricCategory.findMany({
       include: {
-        levels: true, // Include the related performance levels
-        subSkills: true, // Include the related sub-skills
+        levels: {
+          select: {
+            id: true,
+            description: true,
+            level: true,
+          },
+        },
+        subItems: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
       orderBy: {
-        displayOrder: `asc`, // Order categories by the specified display order
+        displayOrder: `asc`,
       },
     });
     res.status(200).json(rubricCategories);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Error fetching rubric data:`, error);
-    res.status(500).json({ error: `Internal server error` });
+    console.error(`Fetch rubric error:`, error);
+    res.status(500).json({ error: `Failed to fetch rubric data` });
   }
 });
 

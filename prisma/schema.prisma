@@ -39,46 +39,64 @@ model Evaluation {
   year         Int
   semester     Semester
   type         Role
-
-  criteria     Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   team         String?
-  student      User     @relation("StudentEvaluations", fields: [studentId], references: [id])
-  supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
-}
-model RubricCategory {
-  id             Int                     @id @default(autoincrement())
-  name           String                  @unique
-  title          String
-  subItems       String[]                // Okay if you won't query/filter these
-  displayOrder   Int                     @default(0)
 
-  levels         RubricPerformanceLevel[]
-  subSkills      RubricSubItem[]
+  student    User               @relation("StudentEvaluations", fields: [studentId], references: [id])
+  supervisor User?              @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
+  results    EvaluationResult[]
+
+  @@map("evaluation")
+}
+
+model RubricCategory {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  title        String
+  displayOrder Int      @default(0)
+
+  levels   RubricPerformanceLevel[]
+  subItems RubricSubItem[] // Using the relation instead of a string array
+  evaluationResults EvaluationResult[]
 
   @@map("rubricCategory")
 }
 
 model RubricSubItem {
-  id              Int                   @id @default(autoincrement())
-  name            String
-  rubricCategory  RubricCategory        @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  id               Int                @id @default(autoincrement())
+  name             String
   rubricCategoryId Int
+  rubricCategory   RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+
+  @@map("rubricSubItem")
 }
 
 model RubricPerformanceLevel {
-  id                Int                @id @default(autoincrement())
-  rubricCategoryId  Int
-  level             String             
-  description       String
+  id                 Int                @id @default(autoincrement())
+  rubricCategoryId   Int
+  level              String
+  description        String
 
-  rubricCategory    RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  rubricCategory     RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  evaluationResults  EvaluationResult[]
 
-  @@map("rubricCategoryLevel")
+  @@map("rubricPerformanceLevel")
 }
 
+model EvaluationResult {
+  id                       Int                    @id @default(autoincrement())
+  evaluationId             Int
+  rubricCategoryId         Int
+  rubricPerformanceLevelId Int
 
+  evaluation             Evaluation             @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  rubricCategory         RubricCategory          @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  rubricPerformanceLevel RubricPerformanceLevel @relation(fields: [rubricPerformanceLevelId], references: [id])
+
+  @@unique([rubricCategoryId, evaluationId])
+  @@map("evaluationResult")
+}
 
 model user_sessions {
   sid    String   @id(map: "session_pkey") @db.VarChar

@@ -1,14 +1,18 @@
 import { Request, Response, Router } from 'express';
-import { JsonObject } from '@prisma/client/runtime/library';
 import { Role, Semester } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
 import { requireAuth } from './auth';
 
 const router = Router();
+interface EvaluationResultBody {
+  rubricCategoryId: number;
+  rubricPerformanceLevelId: number;
+  // comment is not in the schema, so it's removed
+}
 
+// Interface for the entire evaluation submission
 interface EvaluationBody {
-  criteria: JsonObject;
-  // UPDATED: Renamed 'evaluationType' to 'type' for consistency with the Prisma schema
+  results: EvaluationResultBody[];
   semester: keyof typeof Semester;
   studentId: number;
   supervisorId?: number;
@@ -17,52 +21,46 @@ interface EvaluationBody {
   year: number;
 }
 
-// =================================================================
-// UPDATED: The /submitEval route
-// =================================================================
 router.post(`/submitEval`, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
 ): Promise<void> => {
   try {
-    // UPDATED: Destructuring 'type' instead of 'evaluationType'
-    const { criteria, semester, studentId, supervisorId, team, type, year } = req.body;
-    const user = await prisma.user.findUnique({
-      where: { id: studentId },
-    });
+    const { results, semester, studentId, supervisorId, team, type, year } = req.body;
 
-    if (!user) {
-      res.status(404).json({ error: `User not found` });
-      return;
-    }
-
-    // This authorization logic remains the same
-    if (![ studentId, supervisorId ].includes(Number(req.session.userId))) {
+    // Authorization: The submitter must be the student being evaluated or their supervisor
+    if (
+      Number(req.session.userId) !== studentId &&
+      Number(req.session.userId) !== supervisorId
+    ) {
       res.status(403).json({ error: `Forbidden: You are not authorized to submit this evaluation.` });
       return;
     }
 
+    // The logic here is already correct for your new schema.
+    // It creates an Evaluation and nests the creation of multiple EvaluationResult records.
     const newEval = await prisma.evaluation.create({
       data: {
-        criteria,
+        results: {
+          // `createMany` is efficient for creating multiple related records
+          createMany: {
+            data: results.map((result) => ({
+              rubricCategoryId: result.rubricCategoryId,
+              rubricPerformanceLevelId: result.rubricPerformanceLevelId,
+            })),
+          },
+        },
         semester,
         studentId,
-        supervisorId: supervisorId || null,
+        supervisorId: supervisorId ?? null, // Use nullish coalescing for clarity
         team,
-        // UPDATED: Using 'type' directly
         type,
         year,
       },
     });
 
     res.status(201).json({
-      eval: {
-        id: newEval.id,
-        createdAt: newEval.createdAt,
-        semester,
-        studentId,
-        supervisorId,
-      },
+      evaluationId: newEval.id,
       message: `Evaluation submitted successfully`,
     });
   } catch (error) {
@@ -78,13 +76,19 @@ router.get(`/getEval`, requireAuth, async (
 ): Promise<void> => {
   const evaluationId = req.query.evaluationId ? Number(req.query.evaluationId) : undefined;
   const userId = req.query.userId ? Number(req.query.userId) : undefined;
+  const sessionUserId = Number(req.session.userId);
 
   try {
     if (evaluationId) {
       const evalRecord = await prisma.evaluation.findUnique({
         include: {
-          student: true,
-          supervisor: true,
+          results: {
+            include: {
+              rubricPerformanceLevel: true,
+            },
+          },
+          student: { select: { id: true, email: true, name: true } },
+          supervisor: { select: { id: true, email: true, name: true } },
         },
         where: { id: evaluationId },
       });
@@ -94,8 +98,8 @@ router.get(`/getEval`, requireAuth, async (
         return;
       }
 
-      if (evalRecord.studentId !== userId || evalRecord.supervisorId !== userId) {
-        res.status(404).json({ error: `Access Forbidden` });
+      if (evalRecord.studentId !== sessionUserId && evalRecord.supervisorId !== sessionUserId) {
+        res.status(403).json({ error: `Forbidden: You are not authorized to view this evaluation.` });
         return;
       }
 
@@ -104,12 +108,18 @@ router.get(`/getEval`, requireAuth, async (
     }
 
     if (userId) {
+      if (userId !== sessionUserId) {
+        res.status(403).json({ error: `Forbidden: You can only retrieve your own evaluations.` });
+        return;
+      }
+
       const evaluations = await prisma.evaluation.findMany({
         where: { studentId: userId },
       });
 
       if (!evaluations) {
-        res.status(404).json({ error: `evaluation records not found` });
+        res.status(404).json({ error: `Evaluation records not found` });
+        return;
       }
 
       res.status(200).json(evaluations);
@@ -197,6 +207,7 @@ router.get(`/supervisorEvals`, requireAuth, async (
 
   if (!supervisorId || !semester || !year) {
     res.status(400).json({ error: `Missing required query parameters: semester, year` });
+    return;
   }
 
   try {
@@ -207,6 +218,7 @@ router.get(`/supervisorEvals`, requireAuth, async (
 
     if (myStudents.length === 0) {
       res.status(200).json({});
+      return;
     }
     const studentIds = myStudents.map((s) => s.id);
 

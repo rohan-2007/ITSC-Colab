@@ -4,8 +4,12 @@ import { User } from './PastEvaluations';
 import './evaluations.css';
 import '../components/buttonandcard.css';
 
+// Assume your API routes are prefixed with /api. Adjust if necessary.
 const fetchUrl = `http://localhost:3001`;
 
+// ====================================================================================
+// UPDATED: Interfaces to match the new schema and the /api/rubric response
+// ====================================================================================
 interface RubricPerformanceLevelData {
   id: number;
   description: string; // e.g., 'Starting', 'In Progress', 'Competitive'
@@ -21,20 +25,22 @@ interface RubricCategoryData {
   id: number;
   levels: RubricPerformanceLevelData[]; // The unique key for the category, e.g., 'problem_solving'
   name: string; // The display title, e.g., 'Problem Solving'
-  subSkills: RubricSubItemData[]; // Changed from subItems: string[] to a structured array
-  title: string; // This now holds the performance level descriptions
+  subItems: RubricSubItemData[];
+  title: string; // Renamed from subSkills to match schema
 }
 
-// This constant remains the same, but it's now used to find the right level from the fetched data.
-// Ensure that `level.title` here matches the `level` property in your `RubricPerformanceLevel` database records.
-const performanceLevels = [
+// This constant is now only used for rendering table headers consistently.
+const performanceLevelColumns = [
   { key: `starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
   { key: `inProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
   { key: `competitive`, subtitle: `(should aim this level upon graduation)`, title: `Competitive` },
 ] as const;
 
-type PerformanceLevelKey = typeof performanceLevels[number][`key`];
-type Selections = Record<string, PerformanceLevelKey>;
+// ====================================================================================
+// UPDATED: Selections state now stores the numeric IDs required for the API
+// { [rubricCategoryId: number]: rubricPerformanceLevelId: number }
+// ====================================================================================
+type Selections = Record<number, number>;
 
 const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
   const today = new Date();
@@ -55,11 +61,9 @@ interface Student {
   id: number;
   email: string;
   name: string;
-  password: string;
   supervisorId: number;
 }
 
-// Type for evaluation status, assuming what the backend might return
 interface EvalStatus {
   studentCompleted: boolean;
   supervisorCompleted: boolean;
@@ -75,15 +79,14 @@ const Evaluations: React.FC = () => {
   const [ selectedSemester, setSelectedSemester ] = useState<`SPRING` | `SUMMER` | `FALL` | `N/A`>(assignSemester());
   const [ message, setMessage ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
-  const [ selectedTeam, setSelectedTeam ] = useState(
-    user?.teamNames ? user.teamNames[0] : `no team`,
-  );
+  const [ selectedTeam, setSelectedTeam ] = useState(`no team`);
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategoryData[]>([]);
   const [ selections, setSelections ] = useState<Selections>({});
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
   const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
 
+  // Fetch functions for statuses and students (unchanged)
   const fetchAllStatuses = async () => {
     const currentSemester = assignSemester();
     const currentYear = new Date().getFullYear();
@@ -149,69 +152,6 @@ const Evaluations: React.FC = () => {
       setCanStartSelfEval(true);
     }
   };
-  const getRubricData = async () => {
-    try {
-      const res = await fetch(`${fetchUrl}/rubric/`, { method: `GET` });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data = await res.json() as RubricCategoryData[];
-      setRubricCategories(data);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-console
-      console.warn(`Rubric fetch error: ${errorMsg}`);
-    }
-  };
-
-  useEffect(() => {
-    if (rubricCategories.length > 0) {
-      const initialSelections = rubricCategories.reduce((acc, category) => {
-        acc[category.name] = `starting`;
-        return acc;
-      }, {} as Selections);
-      setSelections(initialSelections);
-    }
-  }, [ rubricCategories ]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(`${fetchUrl}/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-        if (!response.ok) {
-          throw new Error(`Session not found. Please log in.`);
-        }
-        const data = await response.json();
-        setUser({
-          id: data.user.id,
-          evalsGiven: data.user.evaluationsGiven,
-          role: data.user.role,
-          supervisorId: data.user.supervisorId || null,
-          supervisorName: data.user.supervisorName,
-          teamNames: data.user.teamNames,
-        });
-        const [ team ] = data.user.teamNames;
-        setSelectedTeam(typeof team === `string` ? team : `no team`);
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : String(err);
-        // eslint-disable-next-line no-console
-        console.warn(`Failed to fetch user data: ${errorMsg}`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    void fetchUser();
-    void getRubricData();
-  }, [ navigate ]);
-
-  const handleSelect = (criterionName: string, level: PerformanceLevelKey) => {
-    setSelections((prev) => ({ ...prev, [criterionName]: level }));
-  };
 
   const fetchStudents = async () => {
     const response = await fetch(`${fetchUrl}/students/`, {
@@ -233,52 +173,134 @@ const Evaluations: React.FC = () => {
     }
   };
 
+  // NEW: Fetch the rubric data from the backend
+  const getRubricData = async () => {
+    try {
+      const res = await fetch(`${fetchUrl}/rubric`, { method: `GET` });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json() as RubricCategoryData[];
+      setRubricCategories(data);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // eslint-disable-next-line no-console
+      console.warn(`Rubric fetch error: ${errorMsg}`);
+    }
+  };
+
+  // UPDATED: Initialize selections with default IDs when rubric data is loaded
+  useEffect(() => {
+    if (rubricCategories.length > 0) {
+      const initialSelections: Selections = {};
+      for (const category of rubricCategories) {
+        const defaultLevel = category.levels.find((l) => l.level === `Starting`) || category.levels[0];
+        if (defaultLevel) {
+          initialSelections[category.id] = defaultLevel.id;
+        }
+      }
+      setSelections(initialSelections);
+    }
+  }, [ rubricCategories ]);
+
+  // Main useEffect to fetch initial data on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`${fetchUrl}/me/`, {
+          body: JSON.stringify({ returnData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+        if (!response.ok) {
+          throw new Error(`Session not found. Please log in.`);
+        }
+        const data = await response.json();
+        setUser(data.user as User);
+        setSelectedTeam((data.user.teamNames?.[0] as string) || `no team`);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        // eslint-disable-next-line no-console
+        console.warn(`Failed to fetch user data: ${errorMsg}`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    void fetchUser();
+    void getRubricData();
+  }, [ navigate ]);
+
+  // UPDATED: handleSelect now works with numeric IDs
+  const handleSelect = (categoryId: number, levelId: number) => {
+    setSelections((prev) => ({ ...prev, [categoryId]: levelId }));
+  };
+
+  // UPDATED: handleSubmit now constructs the correct payload for the API
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      setMessage(`Error: User not found. Cannot submit evaluation.`);
+      setMessage(`Error: User not found.`);
       return;
     }
-    setMessage(`Submitting...`);
-    try {
-      const evalData = {
-        criteria: selections,
-        semester: selectedSemester,
-        studentId: user.id,
-        supervisorId: user.supervisorId,
-        team: selectedTeam,
-        type: user.role,
-        year: new Date().getFullYear(),
-      };
-      if (user.role === `SUPERVISOR`) {
-        if (selectedStudentId !== null) {
-          evalData.studentId = selectedStudentId;
-        } else {
-          setMessage(`Error: Please select a student before submitting the evaluation.`);
-          return;
-        }
-        evalData.supervisorId = user.id;
-      }
+    if (Object.keys(selections).length !== rubricCategories.length) {
+      setMessage(`Please make a selection for every rubric category.`);
+      return;
+    }
 
-      const response = await fetch(`${fetchUrl}/submitEval/`, {
-        body: JSON.stringify(evalData),
+    setMessage(`Submitting...`);
+
+    const studentIdForEval = user.role === `SUPERVISOR` ? selectedStudentId : user.id;
+    const supervisorIdForEval = user.role === `SUPERVISOR` ? user.id : user.supervisorId;
+
+    if (!studentIdForEval) {
+      setMessage(`Error: A student must be selected.`);
+      return;
+    }
+
+    // Transform the `selections` state into the `results` array the API expects
+    const resultsPayload = Object.entries(selections).map(([ catId, levelId ]) => ({
+      rubricCategoryId: Number(catId),
+      rubricPerformanceLevelId: levelId,
+    }));
+
+    const evaluationBody = {
+      results: resultsPayload,
+      semester: selectedSemester,
+      studentId: studentIdForEval,
+      supervisorId: supervisorIdForEval,
+      team: selectedTeam,
+      type: user.role,
+      year: new Date().getFullYear(),
+    };
+
+    try {
+      const response = await fetch(`${fetchUrl}/submitEval`, {
+        body: JSON.stringify(evaluationBody),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(String(errorData.message) || `Failed to submit evaluation.`);
+        const errorMsg = typeof errorData.error === `string` ? errorData.error : `Failed to submit evaluation.`;
+        throw new Error(String(errorMsg));
       }
       setMessage(`Evaluation submitted successfully!`);
       setTimeout(() => setMessage(``), 3000);
       setIsFormVisible(false);
+      // Refetch statuses to update the UI
+      if (user.role === `SUPERVISOR`) {
+        void fetchAllStatuses();
+      }
+      if (user.role === `STUDENT`) {
+        void fetchEvalStatusForCurrentUser();
+      }
     } catch (err) {
       setMessage(`Error: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
-  // Derived state for filtering students based on search input
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
@@ -458,115 +480,100 @@ const Evaluations: React.FC = () => {
         </div>
       </div>
     </div>}
-
-    {isFormVisible && <div id="evaluation-modal" className="modal-overlay">
-      <div className="modal-content" style={{ height: `80%`, overflow: `scroll` }}>
-        <form onSubmit={handleSubmit}>
-
-          <div className="form-header">
-            <h2>
-              {user?.role === `STUDENT` ?
-                `Student Self-Evaluation` :
-                `Supervisor Evaluation`}
-            </h2>
-            <div className="semester-selector">
-              <label htmlFor="team">Team:</label>
-              <select
-                id="team"
-                value={selectedTeam}
-                onChange={(e) => setSelectedTeam(e.target.value)}
-              >
-                {user?.teamNames?.map((teamName, index) =>
-                  <option key={index} value={teamName}>{teamName}</option>)}
-              </select>
+    {isFormVisible &&
+      <div id="evaluation-modal" className="modal-overlay">
+        <div className="modal-content" style={{ height: `80%`, overflow: `scroll` }}>
+          <form onSubmit={handleSubmit}>
+            <div className="form-header">
+              <h2>{user?.role === `STUDENT` ? `Student Self-Evaluation` : `Supervisor Evaluation`}</h2>
+              <div className="semester-selector">
+                <label htmlFor="team">Team:</label>
+                <select id="team" value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)}>
+                  {user?.teamNames?.map((teamName, index) =>
+                    <option key={index} value={teamName}>{teamName}</option>)}
+                </select>
+              </div>
+              <div className="semester-selector">
+                <label htmlFor="semester">Semester:</label>
+                <select
+                  id="semester"
+                  value={selectedSemester}
+                  onChange={(e) => setSelectedSemester(e.target.value as `SPRING` | `SUMMER` | `FALL` | `N/A`)}
+                >
+                  <option value="SPRING">SPRING</option>
+                  <option value="SUMMER">SUMMER</option>
+                  <option value="FALL">FALL</option>
+                </select>
+              </div>
             </div>
-            <div className="semester-selector">
-              <label htmlFor="semester">Semester:</label>
-              <select
-                id="semester"
-                value={selectedSemester}
-                onChange={(e) => setSelectedSemester(e.target.value as `SPRING` | `SUMMER` | `FALL` | `N/A`)}
-              >
-                <option value="SPRING">SPRING</option>
-                <option value="SUMMER">SUMMER</option>
-                <option value="FALL">FALL</option>
-              </select>
+
+            <div className="rubric-table-wrapper">
+              <table className="rubric-table">
+                <thead>
+                  <tr>
+                    <th>Criteria/Level of performance</th>
+                    {performanceLevelColumns.map((level) =>
+                      <th key={level.key}>
+                        {level.title}
+                        <br />
+                        <span style={{ fontSize: `0.9em`, fontWeight: `normal` }}>{level.subtitle}</span>
+                      </th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rubricCategories.map((category) =>
+                    <tr key={category.id}>
+                      <td className="criteria-column">
+                        <strong>{category.title}</strong>
+                        {/* Use 'subItems' to match schema and new interface */}
+                        <ul>
+                          {category.subItems?.map((sub) =>
+                            <li key={sub.id}>{sub.name}</li>)}
+                        </ul>
+                      </td>
+                      {/* Map through the static columns to ensure order */}
+                      {performanceLevelColumns.map((column) => {
+                        // Find the specific performance level data that matches the current column
+                        const levelData = category.levels.find((l) => l.level === column.title);
+
+                        if (!levelData) {
+                          // Render an empty cell if this category doesn't have this performance level
+                          return <td key={column.key} />;
+                        }
+
+                        const isSelected = selections[category.id] === levelData.id;
+
+                        return <td
+                          key={column.key}
+                          className={`level-cell ${isSelected ? `selected` : ``}`}
+                          // Pass the numeric IDs to the selection handler
+                          onClick={() => handleSelect(category.id, levelData.id)}
+                        >
+                          <div className="level-text">{levelData.description}</div>
+                        </td>;
+                      })}
+                    </tr>)}
+                </tbody>
+              </table>
             </div>
-          </div>
 
-          <div className="rubric-table-wrapper">
-            <table className="rubric-table">
-              <thead>
-                <tr>
-                  <th>Criteria/Level of performance</th>
-                  {performanceLevels.map((level) =>
-                    <th key={level.key}>
-                      {level.title}
-                      <br />
-                      <span style={{ fontSize: `0.9em`, fontWeight: `normal` }}>
-                        {level.subtitle}
-                      </span>
-                    </th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {rubricCategories.map((category) =>
-                  <tr key={category.id}>
-                    <td className="criteria-column">
-                      <strong>{category.title}</strong>
-                      {/* UPDATED: Map over the new subSkills array of objects */}
-                      <ul>
-                        {category.subSkills?.map((sub) =>
-                          <li key={sub.id}>{sub.name}</li>)}
-                      </ul>
-                    </td>
-                    {performanceLevels.map((level) => {
-                      // =================================================================
-                      // UPDATED: Logic to find the description from the nested 'levels' array
-                      // =================================================================
-                      // We find the performance level from the fetched data that matches the current column's title.
-                      const levelData = category.levels.find((l) => l.level === level.title);
-                      // The description is taken from the found levelData, or we show a fallback text.
-                      const description = levelData ? levelData.description : `Description not available.`;
-
-                      return <td
-                        key={level.key}
-                        // The className and onClick logic still work perfectly with your 'selections' state
-                        className={`level-cell ${selections[category.name] === level.key ? `selected` : ``}`}
-                        onClick={() => handleSelect(category.name, level.key)}
-                      >
-                        <div className="level-text">
-                          {description}
-                        </div>
-                      </td>;
-                    })}
-                  </tr>)}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="modal-footer">
-            {message && <p className="submission-message">{message}</p>}
-            <button
-              type="button"
-              className="button-cancel-eval"
-              style={{ backgroundColor: `#757575` }}
-              data-modal-id="evaluation-modal"
-              onClick={() => {
-                setIsFormVisible(false);
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="submit-button-eval"
-              style={{ backgroundColor: `#4CAF50` }}
-            >Submit Evaluation</button>
-          </div>
-        </form>
-      </div>
-    </div>}
+            <div className="modal-footer">
+              {message && <p className="submission-message">{message}</p>}
+              <button
+                type="button"
+                className="button-cancel-eval"
+                style={{ backgroundColor: `#757575` }}
+                onClick={() => setIsFormVisible(false)}
+              >
+                Cancel
+              </button>
+              <button type="submit" className="submit-button-eval" style={{ backgroundColor: `#4CAF50` }}>
+                Submit Evaluation
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>}
     <div className="center-text">
       {message && <p className="submission-message">{message}</p>}
     </div>
