@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import '../CSS/Profile.css';
 import '../components/buttonandcard.css';
+import '../components/Modals.css';
 const fetchUrl = `http://localhost:3001`;
 
 interface UserProfile {
@@ -184,8 +185,8 @@ const Profile: React.FC = () => {
     </main>
 
     {showEditModal &&
-      <div className="modal-overlay">
-        <div className="modal-content">
+      <div className="modal-overlay-profile">
+        <div className="modal-content-profile">
           <h2>Edit Your Profile</h2>
           <label>
             Username:

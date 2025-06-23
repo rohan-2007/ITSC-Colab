@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PastEval, User } from './PastEvaluations';
 import '../components/buttonandcard.css';
-import './StudentSelect.css';
+import '../CSS/StudentSelect.css';
 
 export interface Student {
   id: number;

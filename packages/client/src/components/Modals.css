@@ -1,0 +1,150 @@
+/* DEFAULTS */
+.modal-save:hover,
+.modal-cancel:hover {
+  transform: scale(1.05);
+}
+
+.modal-save,
+.modal-cancel {
+ background: #f3f4f6;
+ color: #111827;
+ font-weight: 600;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+ width: 100px;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.modal-cancel {
+  margin-right: -10px;
+}
+/* end of defaults */
+
+/* PROFILE PAGE */
+.modal-overlay-profile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content-profile {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content-profile h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.modal-content-profile label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-content-profile input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+}
+/* end of profile page */
+
+/* SUPERVISOR PAGE */
+.modal-overlay-supervisor {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0, 0, 0, 0.4);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ z-index: 1000;
+}
+
+.modal-student-info-modal{
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 470px;
+  margin-bottom: 1rem;
+}
+
+.modal-student-info-modal h3,
+.modal-change-team-supervisor h3 {
+ font-size: 1.25rem;
+ font-weight: 700;
+}
+
+.modal-change-team-supervisor h4 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #b91c1c;
+  margin-left: 70px;
+  margin-bottom: 0px;
+}
+
+.modal-form-group-supervisor {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.modal-input-supervisor {
+ padding: 0.5rem;
+ border-radius: 0.375rem;
+ border: 1px solid #ccc;
+ width: 90%;
+}
+
+.modal-input-supervisor-team-name {
+ padding: 0.5rem;
+ border-radius: 0.375rem;
+ border: 1px solid #ccc;
+ width: 90%;
+}
+
+.modal-delete:hover {
+ background-color: #fee2e2;
+ color: #7f1d1d;
+ border-color: #f87171;
+}
+
+.modal-change-team-supervisor {
+ background: white;
+ padding: 2rem;
+ border-radius: 1rem;
+ box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+ width: 300px;
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
+}
+/* end of supervisor page */
+
+/* EVALUATIONS PAGE */
+
+/* end of evaluations */

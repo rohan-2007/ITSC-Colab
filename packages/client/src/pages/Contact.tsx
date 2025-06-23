@@ -1,5 +1,5 @@
 import React from 'react';
-import './Contact.css';
+import '../CSS/Contact.css';
 import itscLogo from '/ITSC_LOGO.png';
 import '../components/ButtonAndCard.css';
 
