@@ -122,6 +122,7 @@ const PastEvaluations: React.FC = () => {
   const [ filteredSupervisorTeamEvals, setFilteredSupervisorTeamEvals ] = useState<PastEval[]>([]);
   const [ user, setUser ] = useState<User | null>(null);
   const [ contributions, setContributions ] = useState<Contribution[]>();
+  const [ totalContributions, setTotalContributions ] = useState<number>();
 
   const rubricData = criteria.map((item) => ({
     id: item.name,
@@ -189,7 +190,7 @@ const PastEvaluations: React.FC = () => {
       try {
         const username = user?.email.slice(user.email.indexOf(`@`) + 1);
 
-        console.log(`username: `, user);
+        console.log(`username: `, username);
 
         const res = await fetch(`http://localhost:3001/gitData/`, {
           body: JSON.stringify({ username }),
@@ -202,11 +203,15 @@ const PastEvaluations: React.FC = () => {
 
         const resJson = await res.json();
 
-        const contributionList = resJson.contributions as Contribution[];
+        console.log(`resJson: `, JSON.stringify(resJson, null, 2));
 
-        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+        const contributionList = resJson.data as Contribution[];
+        console.log(`contributionList: `, contributionList);
 
-        console.log(`gitData: `, contributions);
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));  
+        
+        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+        // console.log(`gitData: `, contributions);
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -218,6 +223,12 @@ const PastEvaluations: React.FC = () => {
 
     void getGitData();
   }, [ user ]);
+
+  useEffect(() => {
+    const sum = contributions?.reduce((sum, contribution) => sum + contribution.contribution_count, 0);
+    setTotalContributions(sum);
+    console.log(`totalContributions: `, totalContributions);
+  }, [ contributions ]);
 
   const getSemesterFromTimestamp = (timestamp: string | Date) => {
     const date = new Date(timestamp);
@@ -233,10 +244,6 @@ const PastEvaluations: React.FC = () => {
     }
     return `UNKNOWN`;
   };
-
-  // const addGitContributions = () => {
-
-  // };
 
   const getCriteriaData = async () => {
     try {
