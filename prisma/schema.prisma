@@ -1,11 +1,13 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["perf_review", "GitReports"]
 }
 
 model User {
@@ -22,6 +24,7 @@ model User {
   teams               Team[]       @relation("UserTeams")
 
   @@map("user")
+  @@schema("perf_review")
 }
 
 model Team {
@@ -30,6 +33,7 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   members   User[]   @relation("UserTeams")
+  @@schema("perf_review")
 }
 
 model Evaluation {
@@ -48,6 +52,7 @@ model Evaluation {
   results    EvaluationResult[]
 
   @@map("evaluation")
+  @@schema("perf_review")
 }
 
 model RubricCategory {
@@ -61,6 +66,7 @@ model RubricCategory {
   evaluationResults EvaluationResult[]
 
   @@map("rubricCategory")
+  @@schema("perf_review")
 }
 
 model RubricSubItem {
@@ -70,6 +76,7 @@ model RubricSubItem {
   rubricCategory   RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
 
   @@map("rubricSubItem")
+  @@schema("perf_review")
 }
 
 model RubricPerformanceLevel {
@@ -82,6 +89,7 @@ model RubricPerformanceLevel {
   evaluationResults  EvaluationResult[]
 
   @@map("rubricPerformanceLevel")
+  @@schema("perf_review")
 }
 
 model EvaluationResult {
@@ -96,6 +104,7 @@ model EvaluationResult {
 
   @@unique([rubricCategoryId, evaluationId])
   @@map("evaluationResult")
+  @@schema("perf_review")
 }
 
 model user_sessions {
@@ -104,15 +113,85 @@ model user_sessions {
   expire DateTime @db.Timestamp(6)
 
   @@index([expire], map: "IDX_session_expire")
+  @@schema("perf_review")
 }
 
 enum Semester {
   SPRING
   SUMMER
   FALL
+  @@schema("perf_review")
 }
 
 enum Role {
   SUPERVISOR
   STUDENT
+  @@schema("perf_review")
+}
+
+// git
+model assignees {
+  id            Int       @id @default(autoincrement())
+  event_id      Int       @unique
+  issue_id      Int
+  assignee      String    @db.VarChar
+  assigned_at   DateTime? @db.Timestamp(6)
+  unassigned_at DateTime? @db.Timestamp(6)
+  issue_number  Int?
+  org_name      String    @db.VarChar
+  repo_name     String    @db.VarChar
+  project_name  String?   @db.VarChar
+  @@schema("GitReports")
+}
+
+model contributions {
+  id                 Int      @id @default(autoincrement())
+  user_login         String   @db.VarChar
+  date               DateTime @db.Date
+  contribution_count Int
+
+  @@unique([user_login, date], map: "unique_user_date")
+  @@schema("GitReports")
+}
+
+model events {
+  id           Int      @id @default(autoincrement())
+  event_id     Int?     @unique
+  event_type   String   @db.VarChar
+  issue_id     Int
+  issue_number Int
+  org_name     String   @db.VarChar
+  repo_name    String   @db.VarChar
+  repo_link    String   @db.VarChar
+  project_name String   @db.VarChar
+  project_link String   @db.VarChar
+  assignees    String[] @db.VarChar
+  column_name  String   @db.VarChar
+  created_at   DateTime @db.Timestamp(6)
+  @@schema("GitReports")
+}
+
+model releases {
+  id           Int      @id @default(autoincrement())
+  release_id   Int      @unique
+  repo_name    String   @db.VarChar
+  org_name     String   @db.VarChar
+  tag_name     String   @db.VarChar
+  release_name String?  @db.VarChar
+  created_at   DateTime @db.Timestamp(6)
+  project_name String?  @db.VarChar
+  @@schema("GitReports")
+}
+
+model user_contributions_by_year {
+  user_login          String @db.VarChar
+  contribution_year   String @db.VarChar
+  commits             Int?
+  issues              Int?
+  pull_requests       Int?
+  code_reviews        Int?
+  total_contributions Int?
+
+  @@id([user_login, contribution_year])
+  @@schema("GitReports")
 }
