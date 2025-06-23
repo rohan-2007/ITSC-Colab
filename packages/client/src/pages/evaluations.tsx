@@ -31,15 +31,11 @@ interface RubricCategoryData {
 
 // This constant is now only used for rendering table headers consistently.
 const performanceLevelColumns = [
-  { key: `starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
-  { key: `inProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
-  { key: `competitive`, subtitle: `(should aim this level upon graduation)`, title: `Competitive` },
+  { key: `Starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
+  { key: `InProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
+  { key: `Competitive`, subtitle: `(should aim this level upon graduation)`, title: `Competitive` },
 ] as const;
 
-// ====================================================================================
-// UPDATED: Selections state now stores the numeric IDs required for the API
-// { [rubricCategoryId: number]: rubricPerformanceLevelId: number }
-// ====================================================================================
 type Selections = Record<number, number>;
 
 const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
@@ -534,7 +530,7 @@ const Evaluations: React.FC = () => {
                       {/* Map through the static columns to ensure order */}
                       {performanceLevelColumns.map((column) => {
                         // Find the specific performance level data that matches the current column
-                        const levelData = category.levels.find((l) => l.level === column.title);
+                        const levelData = category.levels.find((l) => l.level === column.key);
 
                         if (!levelData) {
                           // Render an empty cell if this category doesn't have this performance level
