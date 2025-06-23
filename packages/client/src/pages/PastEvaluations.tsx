@@ -11,14 +11,6 @@ interface Data {
   studentId: number | null;
 }
 
-export interface Criteria {
-  criteriaLevels: CriteriaLevel[];
-  levels: string[];
-  name: string;
-  subCriteria: SubCriteria[];
-  title: string | null;
-}
-
 export interface SubCriteria {
   name: string;
 }

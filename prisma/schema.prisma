@@ -39,6 +39,7 @@ model Evaluation {
   year         Int
   semester     Semester
   type         Role
+
   criteria     Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -47,38 +48,32 @@ model Evaluation {
   supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
 }
 
-model Criteria {
-  id              Int      @id @default(autoincrement())
-  name            String
-  title           String
-  subCriteria     SubCriteria[]
-  criteriaLevels  CriteriaLevel[]
+model RubricCategory {
+  id           Int                     @id @default(autoincrement())
+  name         String                  @unique
+  title        String
+  subItems     String[]                // array is okay here
+  displayOrder Int                     @default(0)
+
+  descriptions RubricCategoryLevel[]   // 👈 one-to-many
+
+  @@map("rubricCategory")
 }
 
-model SubCriteria {
-  id              Int       @id @default(autoincrement())
-  name            String
-  criterion       Criteria  @relation(fields: [criterionId], references: [id])
-  criterionId     Int
+model RubricCategoryLevel {
+  id                Int    @id @default(autoincrement())
+  rubricCategoryId  Int
+  level             String  // "Starting", "In Progress", etc.
+  description       String
+
+  rubricCategory    RubricCategory @relation(fields: [rubricCategoryId], references: [id])
+
+  @@unique([rubricCategoryId, level]) // no duplicate levels per category
+  @@map("rubricCategoryLevel")
 }
 
-model Level {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique
-  title           String
-  criteriaLevels  CriteriaLevel[]
-}
 
-model CriteriaLevel {
-  id            Int       @id @default(autoincrement())
-  criterion     Criteria  @relation(fields: [criterionId], references: [id])
-  criterionId   Int
-  level         Level     @relation(fields: [levelId], references: [id])
-  levelId       Int
-  description   String
 
-  @@unique([criterionId, levelId])
-}
 
 model user_sessions {
   sid    String   @id(map: "session_pkey") @db.VarChar

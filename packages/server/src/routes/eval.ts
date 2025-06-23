@@ -69,16 +69,11 @@ router.get(`/getEval`, requireAuth, async (
   req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {
-  // console.log(`in getEval`);
-  // const { evaluationId, userId } = req.query;
   const evaluationId = req.query.evaluationId ? Number(req.query.evaluationId) : undefined;
   const userId = req.query.userId ? Number(req.query.userId) : undefined;
 
-  // console.log(`${ evaluationId } ${ userId }`);
-
   try {
     if (evaluationId) {
-      // console.log(`evaluationId`);
       const evalRecord = await prisma.evaluation.findUnique({
         include: {
           student: true,
@@ -92,7 +87,6 @@ router.get(`/getEval`, requireAuth, async (
         return;
       }
 
-      // Authorization check, supervisor or user can access
       if (evalRecord.studentId !== userId || evalRecord.supervisorId !== userId) {
         res.status(404).json({ error: `Access Forbidden` });
         return;
@@ -103,13 +97,10 @@ router.get(`/getEval`, requireAuth, async (
     }
 
     if (userId) {
-      // console.log(`in userId${ userId }`);
       const evaluations = await prisma.evaluation.findMany({
-        // orderBy: { createdAt: `desc` },
         where: { studentId: userId },
       });
 
-      // console.log(`evals: ${ JSON.stringify(evaluations) }`);
       if (!evaluations) {
         res.status(404).json({ error: `evaluation records not found` });
       }
@@ -153,6 +144,97 @@ router.get(`/evalStatus`, requireAuth, async (req, res) => {
     studentCompleted,
     supervisorCompleted,
   });
+});
+
+router.get(
+  `/evalStatus/self`,
+  requireAuth,
+  async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const { semester, year } = req.query;
+    const studentId = req.session.userId;
+
+    if (!studentId || !semester || !year) {
+      res.status(400).json({ error: `Missing required query parameters: studentId, semester, year` });
+      return;
+    }
+
+    try {
+      const evaluations = await prisma.evaluation.findMany({
+        where: {
+          semester: semester as Semester,
+          studentId: Number(studentId),
+          type: `STUDENT`,
+          year: Number(year),
+        },
+      });
+      const studentCompleted = evaluations.length > 0;
+
+      res.status(200).json({ studentCompleted });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Get self evaluation status error:`, error);
+      res.status(500).json({ error: `Internal server error` });
+    }
+  },
+);
+
+router.get(`/supervisorEvals`, requireAuth, async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const { semester, year } = req.query;
+  const supervisorId = req.session.userId;
+
+  if (!supervisorId || !semester || !year) {
+    res.status(400).json({ error: `Missing required query parameters: semester, year` });
+  }
+
+  try {
+    const myStudents = await prisma.user.findMany({
+      select: { id: true },
+      where: { supervisorId: Number(supervisorId) },
+    });
+
+    if (myStudents.length === 0) {
+      res.status(200).json({});
+    }
+    const studentIds = myStudents.map((s) => s.id);
+
+    const evaluations = await prisma.evaluation.findMany({
+      select: {
+        studentId: true,
+        type: true,
+      },
+      where: {
+        semester: semester as Semester,
+        studentId: { in: studentIds },
+        year: Number(year),
+      },
+    });
+
+    const statuses: Record<number, { studentCompleted: boolean, supervisorCompleted: boolean }> = {};
+
+    for (const id of studentIds) {
+      statuses[id] = { studentCompleted: false, supervisorCompleted: false };
+    }
+
+    for (const ev of evaluations) {
+      if (ev.type === `STUDENT`) {
+        statuses[ev.studentId].studentCompleted = true;
+      } else if (ev.type === `SUPERVISOR`) {
+        statuses[ev.studentId].supervisorCompleted = true;
+      }
+    }
+
+    res.status(200).json(statuses);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Get supervisor evaluation statuses error:`, error);
+    res.status(500).json({ error: `Internal server error` });
+  }
 });
 
 export default router;
