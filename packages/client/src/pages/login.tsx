@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FormEvent, useState } from 'react';
-import './login.css';
+import '../CSS/login.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const fetchUrl = `http://localhost:${3001}`;

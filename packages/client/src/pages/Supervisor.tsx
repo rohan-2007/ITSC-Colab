@@ -2,8 +2,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Supervisor.css';
+import '../CSS/Supervisor.css';
 import '../components/buttonandcard.css';
+import '../components/Modals.css';
 const fetchUrl = `http://localhost:${3001}`;
 interface Student {
   id: number;
@@ -421,33 +422,33 @@ const Supervisor: React.FC = () => {
     </div>
 
     {studentInfoModalOpen &&
-      <div className="modal-overlay" onClick={closeStudentInfoModal}>
-        <div className="modal student-info-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-overlay-supervisor" onClick={closeStudentInfoModal}>
+        <div className="modal-student-info-modal" onClick={(e) => e.stopPropagation()}>
           <h3>Edit Student Information</h3>
 
-          <div className="modal-form-group">
+          <div className="modal-form-group-supervisor">
             <label htmlFor="studentName">Student Name</label>
             <input
               id="studentName"
               type="text"
               value={editedStudent?.name || ``}
               onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, name: e.target.value } : null)}
-              className="modal-input"
+              className="modal-input-supervisor"
             />
           </div>
 
-          <div className="modal-form-group">
+          <div className="modal-form-group-supervisor">
             <label htmlFor="studentEmail">Email</label>
             <input
               id="studentEmail"
               type="email"
               value={editedStudent?.email || ``}
               onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, email: e.target.value } : null)}
-              className="modal-input"
+              className="modal-input-supervisor"
             />
           </div>
 
-          <div className="modal-form-group">
+          <div className="modal-form-group-supervisor">
             <label htmlFor="studentPassword">New Password</label>
             <input
               id="studentPassword"
@@ -455,39 +456,43 @@ const Supervisor: React.FC = () => {
               placeholder="Leave blank to keep current"
               value={editedStudent?.newPassword || ``}
               onChange={(e) => setEditedStudent((prev) => prev ? { ...prev, newPassword: e.target.value } : null)}
-              className="modal-input"
+              className="modal-input-supervisor"
             />
           </div>
 
           <div className="modal-buttons">
             <button onClick={saveStudentInfo} className="modal-save">Save</button>
-            <button onClick={closeStudentInfoModal} className="modal-cancel">Cancel</button>
+            <button onClick={closeStudentInfoModal} className="modal-cancel-supervisor">Cancel</button>
           </div>
         </div>
       </div>}
 
     {teamEditModalOpen && selectedTeamIndex !== null &&
       <div className="modal-overlay" onClick={closeTeamModal}>
-        <div className="modal" onClick={(e) => e.stopPropagation()}>
-          <h3>Edit Team</h3>
+        <div className="modal-change-team-supervisor" onClick={(e) => e.stopPropagation()}>
+          <h4>Edit Team</h4>
 
-          <label htmlFor="teamName">Team Name</label>
+          <h3>
+            {` `}
+            <label htmlFor="teamName">Team Name</label>
+            {` `}
+          </h3>
           <input
             id="teamName"
             type="text"
             value={editedTeamName}
             onChange={(e) => setEditedTeamName(e.target.value)}
-            className="modal-input"
+            className="modal-input-supervisor-team-name"
           />
 
-          <div className="modal-form-group">
+          <div className="modal-form-group-supervisor">
             <h3>Assign Students</h3>
             <input
               type="text"
               placeholder="Search students..."
               value={studentSearchTerm}
               onChange={(e) => setStudentSearchTerm(e.target.value)}
-              className="modal-input"
+              className="modal-input-supervisor"
               style={{ marginBottom: `10px` }}
             />
 
@@ -509,14 +514,14 @@ const Supervisor: React.FC = () => {
             </div>
           </div>
           {/* ───────── Assign Supervisors (NEW) ───────── */}
-          <div className="modal-form-group">
+          <div className="modal-form-group-supervisor">
             <h3>Assign Supervisors</h3>
             <input
               type="text"
               placeholder="Search supervisors..."
               value={supervisorSearchTerm}
               onChange={(e) => setSupervisorSearchTerm(e.target.value)}
-              className="modal-input"
+              className="modal-input-supervisor"
               style={{ marginBottom: `10px` }}
             />
 

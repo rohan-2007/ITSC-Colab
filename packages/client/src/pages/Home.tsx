@@ -3,7 +3,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './home.css';
+import '../CSS/home.css';
 import { Student } from './StudentSelect';
 import { PastEval } from './PastEvaluations';
 import '../components/buttonandcard.css';

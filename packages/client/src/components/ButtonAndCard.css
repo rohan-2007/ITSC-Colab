@@ -214,30 +214,6 @@ button {
   background-color: rgb(200, 30, 30);
 }
 
-.modal-save,
-.modal-cancel {
- background: #f3f4f6;
- color: #111827;
- font-weight: 600;
- cursor: pointer;
- transition: background-color 0.3s ease;
-  transition: all 0.3s ease;
- width: 100px;
- margin-bottom: 5px;
- transition: all 0.3s ease;
- cursor: pointer;
-  font-family: inherit;
-}
-
-.modal-cancel {
-  margin-right: -10px;
-}
-
-.modal-save:hover,
-.modal-cancel:hover {
-  transform: scale(1.05);
-}
-
 .button-change-info:hover {
   transform: scale(1.05);
 }
