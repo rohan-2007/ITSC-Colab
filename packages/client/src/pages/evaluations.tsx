@@ -1,23 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './PastEvaluations';
-import { Criteria, CriteriaLevel, Level, SubCriteria } from './PastEvaluations';
 import './evaluations.css';
 import '../components/buttonandcard.css';
 
 const fetchUrl = `http://localhost:3001`;
 
-type PerformanceLevel = `starting` | `inProgress` | `competitive`;
-type Selections = Record<string, PerformanceLevel>;
+interface RubricPerformanceLevelData {
+  id: number;
+  description: string; // e.g., 'Starting', 'In Progress', 'Competitive'
+  level: string;
+}
 
-// interface User {
-//   id: number;
-//   role: `STUDENT` | `SUPERVISOR`;
-//   supervisorId: number | null;
-//   supervisorName: string;
-// }
+interface RubricSubItemData {
+  id: number;
+  name: string;
+}
 
-const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `UNKNOWN` => {
+interface RubricCategoryData {
+  id: number;
+  levels: RubricPerformanceLevelData[]; // The unique key for the category, e.g., 'problem_solving'
+  name: string; // The display title, e.g., 'Problem Solving'
+  subSkills: RubricSubItemData[]; // Changed from subItems: string[] to a structured array
+  title: string; // This now holds the performance level descriptions
+}
+
+// This constant remains the same, but it's now used to find the right level from the fetched data.
+// Ensure that `level.title` here matches the `level` property in your `RubricPerformanceLevel` database records.
+const performanceLevels = [
+  { key: `starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
+  { key: `inProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
+  { key: `competitive`, subtitle: `(should aim this level upon graduation)`, title: `Competitive` },
+] as const;
+
+type PerformanceLevelKey = typeof performanceLevels[number][`key`];
+type Selections = Record<string, PerformanceLevelKey>;
+
+const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
   const today = new Date();
   const year = today.getFullYear();
   if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
@@ -29,7 +48,7 @@ const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `UNKNOWN` => {
   if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
     return `SPRING`;
   }
-  return `UNKNOWN`;
+  return `N/A`;
 };
 
 interface Student {
@@ -40,70 +59,120 @@ interface Student {
   supervisorId: number;
 }
 
+// Type for evaluation status, assuming what the backend might return
+interface EvalStatus {
+  studentCompleted: boolean;
+  supervisorCompleted: boolean;
+}
+
 const Evaluations: React.FC = () => {
   const navigate = useNavigate();
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ isFormVisible, setIsFormVisible ] = useState(false);
-  const [ isPreModalVisible, setIsPMVisible ] = useState(false);
-  const [ studentSearch, setStudentSearch ] = useState(``);
+  const [ isPreModalVisible, setIsPreModalVisible ] = useState(false);
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
-  const [ selectedSemester, setSelectedSemester ] = useState(assignSemester());
+  const [ selectedSemester, setSelectedSemester ] = useState<`SPRING` | `SUMMER` | `FALL` | `N/A`>(assignSemester());
   const [ message, setMessage ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
-  const [ canStartSelfEval, setCanSelfEval ] = useState(true);
-  const [ selectedTeam, setSelectedTeam ] = useState(user?.teamNames ? user.teamNames[0] : `no team`);
-  const [ criteria, setCriteria ] = useState<Criteria[]>([]);
-
-  // This state is our single source of truth for all statuses.
-  const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, {
-    studentCompleted: boolean;
-    supervisorCompleted: boolean;
-  }>>({});
-
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(studentSearch.toLowerCase()));
-
-  const currentYear = new Date().getFullYear();
-
-  const rubricData = criteria.map((item) => ({
-    id: item.name,
-    descriptions: item.criteriaLevels.map((level) => level.description),
-    levels: item.criteriaLevels.map((level) => level.level.name),
-    subCriteria: item.subCriteria.map((element) => element.name),
-    title: item.title,
-  }));
-
-  const [ selections, setSelections ] = useState<Selections>(
-    rubricData.reduce((acc, cr) => ({ ...acc, [cr.id]: `starting` }), {}),
+  const [ selectedTeam, setSelectedTeam ] = useState(
+    user?.teamNames ? user.teamNames[0] : `no team`,
   );
+  const [ rubricCategories, setRubricCategories ] = useState<RubricCategoryData[]>([]);
+  const [ selections, setSelections ] = useState<Selections>({});
+  const [ studentSearch, setStudentSearch ] = useState(``);
+  const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
+  const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
 
-  const getCriteriaData = async () => {
+  const fetchAllStatuses = async () => {
+    const currentSemester = assignSemester();
+    const currentYear = new Date().getFullYear();
+
+    if (currentSemester === `N/A`) {
+      // eslint-disable-next-line no-console
+      console.warn(`Cannot fetch statuses: Not within a valid semester.`);
+      return;
+    }
+
     try {
-      const res = await fetch(`http://localhost:3001/criteriaData/`, {
-        headers: {
-          'Content-Type': `application/json`,
+      const response = await fetch(
+        `${fetchUrl}/supervisorEvals?semester=${currentSemester}&year=${currentYear}`,
+        {
+          credentials: `include`,
+          method: `GET`,
         },
-        method: `POST`,
-      });
+      );
 
+      if (!response.ok) {
+        throw new Error(`Failed to fetch student evaluation statuses`);
+      }
+
+      const data = await response.json();
+      setStudentsEvalStatus(data as Record<number, EvalStatus>);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // eslint-disable-next-line no-console
+      console.warn(`Error fetching evaluation statuses: ${errorMsg}`);
+      setStudentsEvalStatus({});
+    }
+  };
+
+  const fetchEvalStatusForCurrentUser = async () => {
+    const currentSemester = assignSemester();
+    const currentYear = new Date().getFullYear();
+
+    if (currentSemester === `N/A`) {
+      setCanStartSelfEval(false); // Can't start if not in a semester
+      setMessage(`Evaluations can only be started during the SPRING, SUMMER, or FALL semesters.`);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${fetchUrl}/evalStatus/self?semester=${currentSemester}&year=${currentYear}`,
+        {
+          credentials: `include`,
+          method: `GET`,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch self-evaluation status`);
+      }
+
+      const data = await response.json() as { studentCompleted: boolean };
+      setCanStartSelfEval(!data.studentCompleted);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // eslint-disable-next-line no-console
+      console.warn(`Error fetching self-evaluation status: ${errorMsg}`);
+      setCanStartSelfEval(true);
+    }
+  };
+  const getRubricData = async () => {
+    try {
+      const res = await fetch(`${fetchUrl}/rubric/`, { method: `GET` });
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-
-      const resJson = await res.json();
-
-      const criteriaData = resJson.criteria as Criteria[];
-      console.log(`criteriaData: `, criteriaData);
-      setCriteria(criteriaData);
+      const data = await res.json() as RubricCategoryData[];
+      setRubricCategories(data);
     } catch (err) {
-      if (err instanceof Error) {
-        throw new Error(`user fetch error: ${err.message}`);
-      } else {
-        throw new Error(`an unknown user fetch error`);
-      }
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // eslint-disable-next-line no-console
+      console.warn(`Rubric fetch error: ${errorMsg}`);
     }
   };
+
+  useEffect(() => {
+    if (rubricCategories.length > 0) {
+      const initialSelections = rubricCategories.reduce((acc, category) => {
+        acc[category.name] = `starting`;
+        return acc;
+      }, {} as Selections);
+      setSelections(initialSelections);
+    }
+  }, [ rubricCategories ]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -126,44 +195,22 @@ const Evaluations: React.FC = () => {
           supervisorName: data.user.supervisorName,
           teamNames: data.user.teamNames,
         });
-        const team = data.user.teamNames[0];
-        setSelectedTeam(team);
+        const [ team ] = data.user.teamNames;
+        setSelectedTeam(typeof team === `string` ? team : `no team`);
       } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
         // eslint-disable-next-line no-console
-        console.error(`Failed to fetch user data: ${err instanceof Error ? err.message : String(err)}`);
+        console.warn(`Failed to fetch user data: ${errorMsg}`);
       } finally {
         setIsLoading(false);
       }
     };
     void fetchUser();
-    void getCriteriaData();
+    void getRubricData();
   }, [ navigate ]);
 
-  const fetchEvalStatusForCurrentUser = async (studentId: number) => {
-    try {
-      const response = await fetch(
-        `${fetchUrl}/evalStatus?studentId=${studentId}&semester=${assignSemester()}&year=${currentYear}`, {
-          credentials: `include`,
-        },
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data) {
-          // Update the status for just this one user in our map
-          setStudentsEvalStatus((prev) => ({ ...prev, [studentId]: data }));
-          setCanSelfEval(Boolean(!data.studentCompleted));
-          // eslint-disable-next-line no-console
-          console.log(canStartSelfEval);
-        }
-      }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to fetch evaluation status:`, err);
-    }
-  };
-
-  const handleSelect = (criterionId: string, level: PerformanceLevel) => {
-    setSelections((prev) => ({ ...prev, [criterionId]: level }));
+  const handleSelect = (criterionName: string, level: PerformanceLevelKey) => {
+    setSelections((prev) => ({ ...prev, [criterionName]: level }));
   };
 
   const fetchStudents = async () => {
@@ -172,54 +219,18 @@ const Evaluations: React.FC = () => {
       headers: { 'Content-Type': `application/json` },
       method: `POST`,
     });
-
     if (!response.ok) {
       // eslint-disable-next-line no-console
-      console.error(`Failed to fetch students`);
+      console.warn(`Failed to fetch students`);
     }
-
     const jsonData = await response.json();
-
     if (jsonData && jsonData.students) {
       const allStudents = jsonData.students as Student[];
       const tempFilteredStudents = allStudents.filter(
         (student) => student.supervisorId === user?.id,
       );
-
       setStudents(tempFilteredStudents);
     }
-  };
-
-  // Fetch all statuses for supervisor's students
-  const fetchAllStatuses = async () => {
-    setSelectedStudentId(null);
-    await fetchStudents();
-    if (user?.role !== `SUPERVISOR` || students.length === 0) {
-      return;
-    }
-    // Create an array of fetch promises, one for each student
-    const statusPromises = students.map((student) =>
-      fetch(
-        `${fetchUrl}/evalStatus?studentId=${student.id}&semester=${assignSemester()}&year=${currentYear}`,
-        { credentials: `include` },
-      )
-        .then((res) => res.ok ? res.json() : { studentCompleted: false, supervisorCompleted: false })
-        .then((data) => ({
-          id: student.id,
-          status: data,
-        })));
-
-    // Wait for all fetch requests to complete
-    const results = await Promise.all(statusPromises);
-
-    // Transform the array of results into a lookup object (our state shape)
-    const statusMap = results.reduce((acc, result) => {
-      acc[result.id] = result.status;
-      return acc;
-    }, {} as typeof studentsEvalStatus);
-
-    // Update the state with the statuses for all students
-    setStudentsEvalStatus(statusMap);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -232,7 +243,6 @@ const Evaluations: React.FC = () => {
     try {
       const evalData = {
         criteria: selections,
-        evaluationType: user.role,
         semester: selectedSemester,
         studentId: user.id,
         supervisorId: user.supervisorId,
@@ -250,32 +260,30 @@ const Evaluations: React.FC = () => {
         evalData.supervisorId = user.id;
       }
 
-      // eslint-disable-next-line no-console
-      console.log(`eval object client : ${JSON.stringify(evalData, null, 2)}`);
-
       const response = await fetch(`${fetchUrl}/submitEval/`, {
         body: JSON.stringify(evalData),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(String(errorData.message) || `Failed to submit evaluation.`);
       }
-
       setMessage(`Evaluation submitted successfully!`);
       setTimeout(() => setMessage(``), 3000);
       setIsFormVisible(false);
     } catch (err) {
-      if (err instanceof Error) {
-        setMessage(`Error: ${err.message}`);
-      } else {
-        setMessage(`An unknown error occurred.`);
-      }
+      setMessage(`Error: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
+
+  // Derived state for filtering students based on search input
+  const filteredStudents = students.filter(
+    (student) =>
+      student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+      student.email.toLowerCase().includes(studentSearch.toLowerCase()),
+  );
 
   if (isLoading) {
     return <div className="evaluations-page">
@@ -283,13 +291,12 @@ const Evaluations: React.FC = () => {
     </div>;
   }
 
-  console.log(`Team: `, selectedTeam);
-
   return <div className="evaluations-page">
-    {!isFormVisible && <header className="evaluations-header">
-      <h1>Evaluations</h1>
-      <p>Complete a new performance evaluation or review previous submissions.</p>
-    </header>}
+    {!isFormVisible &&
+      <header className="evaluations-header">
+        <h1>Evaluations</h1>
+        <p>Complete a new performance evaluation or review previous submissions.</p>
+      </header>}
 
     <div className="action-button-group">
       <div className="eval-cards">
@@ -307,17 +314,19 @@ const Evaluations: React.FC = () => {
         <button
           className="new-eval-button"
           onClick={async () => {
-            setIsPMVisible((prev) => !prev);
-            await fetchAllStatuses();
-            if (user) {
-              await fetchEvalStatusForCurrentUser(user.id);
+            setIsPreModalVisible(true);
+            if (user?.role === `SUPERVISOR`) {
+              await fetchStudents();
+              await fetchAllStatuses();
+            }
+            if (user?.role === `STUDENT` && user.id) {
+              await fetchEvalStatusForCurrentUser();
             }
           }}
         >
           {isFormVisible ? `Close Evaluation Form` : `Start New Evaluation`}
         </button>
       </div>
-
       <div className="eval-cards">
         <h2 className="tc">Review Past Evaluations</h2>
         <p> Access and review all your previously submitted evaluations,
@@ -358,20 +367,18 @@ const Evaluations: React.FC = () => {
 
           {user?.role === `SUPERVISOR` &&
             <>
-              {/* This content is now properly centered by its own CSS */}
               <h2>Start Supervisor Evaluation</h2>
               <p>
                 You are about to begin a new evaluation for a student.
                 Please choose a student from the list below to proceed.
               </p>
 
-              {/* Search Input for the table */}
               <div className="form-group">
                 <label htmlFor="student-search">Search Students:</label>
                 <input
                   id="student-search"
                   type="text"
-                  placeholder="e.g., Alice Johnson"
+                  placeholder="e.g., Alice Johnson or alice@example.com"
                   value={studentSearch}
                   onChange={(e) => {
                     setStudentSearch(e.target.value);
@@ -388,14 +395,12 @@ const Evaluations: React.FC = () => {
                       <th>Name</th>
                       <th>Email</th>
                       <th>Action</th>
-                      {` `}
                     </tr>
                   </thead>
                   <tbody>
                     {filteredStudents.length > 0 ?
-                      filteredStudents.map((student) => {
+                      filteredStudents.map((student: Student) => {
                         const status = studentsEvalStatus[student.id];
-                        // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
                         const isCompleted = status ? status.supervisorCompleted : false;
                         return <tr
                           key={student.id}
@@ -433,32 +438,31 @@ const Evaluations: React.FC = () => {
             style={{ backgroundColor: `#757575` }}
             data-modal-id="pre-eval-modal"
             onClick={() => {
-              setIsPMVisible((prev) => !prev);
+              setIsPreModalVisible(false);
             }}
           >Cancel
           </button>
-          {canStartSelfEval && <button
-            id="proceed-to-eval-btn"
-            className="proceed-eval"
-            style={{ backgroundColor: `#4CAF50` }}
-            onClick={() => {
-              setIsFormVisible((prev) => !prev);
-              setIsPMVisible((prev) => !prev);
-            }}
-          >Proceed to Evaluation</button>}
+          {/* This button logic now works for both roles */}
+          {(user?.role === `STUDENT` ? canStartSelfEval : user?.role === `SUPERVISOR`) &&
+            <button
+              id="proceed-to-eval-btn"
+              className="proceed-eval"
+              style={{ backgroundColor: `#4CAF50` }}
+              onClick={() => {
+                setIsFormVisible(true);
+                setIsPreModalVisible(false);
+              }}
+              disabled={user?.role === `SUPERVISOR` &&
+                (selectedStudentId === null || studentsEvalStatus[selectedStudentId]?.supervisorCompleted)}
+            >Proceed to Evaluation</button>}
         </div>
       </div>
     </div>}
 
-    {isFormVisible && <div
-      id="evaluation-modal"
-      className="modal-overlay"
-    >
-      <div
-        className="modal-content"
-        style={{ height: `80%`, overflow: `scroll` }}
-      >
+    {isFormVisible && <div id="evaluation-modal" className="modal-overlay">
+      <div className="modal-content" style={{ height: `80%`, overflow: `scroll` }}>
         <form onSubmit={handleSubmit}>
+
           <div className="form-header">
             <h2>
               {user?.role === `STUDENT` ?
@@ -466,9 +470,9 @@ const Evaluations: React.FC = () => {
                 `Supervisor Evaluation`}
             </h2>
             <div className="semester-selector">
-              <label htmlFor="semester">Team:</label>
+              <label htmlFor="team">Team:</label>
               <select
-                id="semester"
+                id="team"
                 value={selectedTeam}
                 onChange={(e) => setSelectedTeam(e.target.value)}
               >
@@ -481,7 +485,7 @@ const Evaluations: React.FC = () => {
               <select
                 id="semester"
                 value={selectedSemester}
-                onChange={(e) => setSelectedSemester(e.target.value as `SPRING` | `SUMMER` | `FALL` | `UNKNOWN`)}
+                onChange={(e) => setSelectedSemester(e.target.value as `SPRING` | `SUMMER` | `FALL` | `N/A`)}
               >
                 <option value="SPRING">SPRING</option>
                 <option value="SUMMER">SUMMER</option>
@@ -494,36 +498,48 @@ const Evaluations: React.FC = () => {
             <table className="rubric-table">
               <thead>
                 <tr>
-                  <th>Criteria</th>
-                  {rubricData[0].levels.map((element) => <th>{element}</th>)}
+                  <th>Criteria/Level of performance</th>
+                  {performanceLevels.map((level) =>
+                    <th key={level.key}>
+                      {level.title}
+                      <br />
+                      <span style={{ fontSize: `0.9em`, fontWeight: `normal` }}>
+                        {level.subtitle}
+                      </span>
+                    </th>)}
                 </tr>
               </thead>
               <tbody>
-                {rubricData.map((criterion) =>
-                  <tr key={criterion.id}>
+                {rubricCategories.map((category) =>
+                  <tr key={category.id}>
                     <td className="criteria-column">
-                      <strong>{criterion.title}</strong>
+                      <strong>{category.title}</strong>
+                      {/* UPDATED: Map over the new subSkills array of objects */}
                       <ul>
-                        {criterion.subCriteria?.map((sub, index) =>
-                          <li key={index}>{sub}</li>)}
+                        {category.subSkills?.map((sub) =>
+                          <li key={sub.id}>{sub.name}</li>)}
                       </ul>
                     </td>
-                    {criterion.levels.map(
-                      (level, index) => {
-                        const performanceLevels = criteria[0].levels;
-                        type PerformanceLevel = typeof performanceLevels[number];
-                        const typedLevel = level;
-                        return <td
-                          key={level}
-                          className={`level-cell ${selections[criterion.id] === level ? `selected` : ``}`}
-                          onClick={() => handleSelect(criterion.id, typedLevel)}
-                        >
-                          <div className="level-text">
-                            {criterion.descriptions[index]}
-                          </div>
-                        </td>;
-                      },
-                    )}
+                    {performanceLevels.map((level) => {
+                      // =================================================================
+                      // UPDATED: Logic to find the description from the nested 'levels' array
+                      // =================================================================
+                      // We find the performance level from the fetched data that matches the current column's title.
+                      const levelData = category.levels.find((l) => l.level === level.title);
+                      // The description is taken from the found levelData, or we show a fallback text.
+                      const description = levelData ? levelData.description : `Description not available.`;
+
+                      return <td
+                        key={level.key}
+                        // The className and onClick logic still work perfectly with your 'selections' state
+                        className={`level-cell ${selections[category.name] === level.key ? `selected` : ``}`}
+                        onClick={() => handleSelect(category.name, level.key)}
+                      >
+                        <div className="level-text">
+                          {description}
+                        </div>
+                      </td>;
+                    })}
                   </tr>)}
               </tbody>
             </table>
@@ -537,7 +553,7 @@ const Evaluations: React.FC = () => {
               style={{ backgroundColor: `#757575` }}
               data-modal-id="evaluation-modal"
               onClick={() => {
-                setIsFormVisible((prev) => !prev);
+                setIsFormVisible(false);
               }}
             >
               Cancel

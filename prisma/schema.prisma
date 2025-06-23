@@ -39,6 +39,7 @@ model Evaluation {
   year         Int
   semester     Semester
   type         Role
+
   criteria     Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -46,39 +47,38 @@ model Evaluation {
   student      User     @relation("StudentEvaluations", fields: [studentId], references: [id])
   supervisor   User?    @relation("SupervisorEvaluations", fields: [supervisorId], references: [id])
 }
+model RubricCategory {
+  id             Int                     @id @default(autoincrement())
+  name           String                  @unique
+  title          String
+  subItems       String[]                // Okay if you won't query/filter these
+  displayOrder   Int                     @default(0)
 
-model Criteria {
-  id              Int      @id @default(autoincrement())
+  levels         RubricPerformanceLevel[]
+  subSkills      RubricSubItem[]
+
+  @@map("rubricCategory")
+}
+
+model RubricSubItem {
+  id              Int                   @id @default(autoincrement())
   name            String
-  title           String
-  subCriteria     SubCriteria[]
-  criteriaLevels  CriteriaLevel[]
+  rubricCategory  RubricCategory        @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  rubricCategoryId Int
 }
 
-model SubCriteria {
-  id              Int       @id @default(autoincrement())
-  name            String
-  criterion       Criteria  @relation(fields: [criterionId], references: [id])
-  criterionId     Int
+model RubricPerformanceLevel {
+  id                Int                @id @default(autoincrement())
+  rubricCategoryId  Int
+  level             String             
+  description       String
+
+  rubricCategory    RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+
+  @@map("rubricCategoryLevel")
 }
 
-model Level {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique
-  title           String
-  criteriaLevels  CriteriaLevel[]
-}
 
-model CriteriaLevel {
-  id            Int       @id @default(autoincrement())
-  criterion     Criteria  @relation(fields: [criterionId], references: [id])
-  criterionId   Int
-  level         Level     @relation(fields: [levelId], references: [id])
-  levelId       Int
-  description   String
-
-  @@unique([criterionId, levelId])
-}
 
 model user_sessions {
   sid    String   @id(map: "session_pkey") @db.VarChar
