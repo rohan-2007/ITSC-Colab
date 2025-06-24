@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './PastEvaluations';
-import './evaluations.css';
+import '../CSS/evaluations.css';
 import '../components/buttonandcard.css';
+import '../components/Modals.css';
 
 // Assume your API routes are prefixed with /api. Adjust if necessary.
 const fetchUrl = `http://localhost:3001`;
@@ -34,6 +35,7 @@ interface RubricCategoryData {
 
 type Selections = Record<number, number>;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
   const today = new Date();
   const year = today.getFullYear();
@@ -375,8 +377,8 @@ const Evaluations: React.FC = () => {
       </div>
     </div>
 
-    {isPreModalVisible && <div id="pre-eval-modal" className="modal-overlay">
-      <div className="modal-content">
+    {isPreModalVisible && <div id="pre-eval-modal" className="modal-overlay-evaluations">
+      <div className="modal-content-evaluations">
         <div id="pre-eval-content">
           {user?.role === `STUDENT` &&
             <>
@@ -466,7 +468,7 @@ const Evaluations: React.FC = () => {
               </div>
             </>}
         </div>
-        <div className="modal-footer">
+        <div className="modal-footer-evaluations">
           <button
             type="button"
             className="button-cancel-eval"
@@ -494,8 +496,8 @@ const Evaluations: React.FC = () => {
       </div>
     </div>}
     {isFormVisible &&
-      <div id="evaluation-modal" className="modal-overlay">
-        <div className="modal-content" style={{ height: `80%`, overflow: `scroll` }}>
+      <div id="evaluation-modal" className="modal-overlay-evaluations">
+        <div className="modal-content-evaluations" style={{ height: `80%`, overflow: `scroll` }}>
           <form onSubmit={handleSubmit}>
             <div className="form-header">
               <h2>{user?.role === `STUDENT` ? `Student Self-Evaluation` : `Supervisor Evaluation`}</h2>
@@ -568,7 +570,7 @@ const Evaluations: React.FC = () => {
               </table>
             </div>
 
-            <div className="modal-footer">
+            <div className="modal-footer-evaluations">
               {message && <p className="submission-message">{message}</p>}
               <button
                 type="button"

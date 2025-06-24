@@ -13,6 +13,7 @@ const cors_1 = tslib_1.__importDefault(require("cors"));
 const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
 const eval_1 = tslib_1.__importDefault(require("./routes/eval")); // Import the evaluation router
 const supervisor_1 = tslib_1.__importDefault(require("./routes/supervisor"));
+const gitreports_1 = tslib_1.__importDefault(require("./routes/gitreports"));
 const rubric_1 = tslib_1.__importDefault(require("./routes/rubric"));
 const seed_1 = require("./seed"); // Adjust the path as needed
 const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -55,6 +56,7 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     app.use(eval_1.default);
     app.use(rubric_1.default);
     app.use(supervisor_1.default);
+    app.use(gitreports_1.default);
     app.use((req, res) => {
         res.status(404).json({ error: `Route not found`, path: req.path });
     });

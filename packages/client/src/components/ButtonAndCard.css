@@ -425,15 +425,17 @@ button {
 
 /* STUDENT SELECT PAGE */
 .view-eval-student {
- background-color: red !important;
+  background-color: red !important;
   color: white;
- font-size: 16px;
- font-weight: 600;
- cursor: pointer;
- width: 180px;
- transition: all 0.3s ease;
- cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+   width: 180px;
+  transition: all 0.3s ease;
   font-family: inherit;
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+  cursor: pointer;
 }
 
 .view-eval-student:hover {
@@ -551,7 +553,7 @@ CARDS
 }
 /* end of home cards */
 
-/* EVAL CARDS */
+/* EVALUATIONS CARDS */
 .eval-cards {
   background-color: #ffffff;
   border-radius: 12px;
