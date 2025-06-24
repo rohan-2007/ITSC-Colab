@@ -15,6 +15,9 @@ interface RubricPerformanceLevelData {
   description: string; // e.g., 'Starting', 'In Progress', 'Competitive'
   level: string;
 }
+interface RubricPerformanceLevelHeader {
+  level: string; // "Starting", "InProgress", "Competitive"
+}
 
 interface RubricSubItemData {
   id: number;
@@ -28,13 +31,6 @@ interface RubricCategoryData {
   subItems: RubricSubItemData[];
   title: string; // Renamed from subSkills to match schema
 }
-
-// This constant is now only used for rendering table headers consistently.
-const performanceLevelColumns = [
-  { key: `Starting`, subtitle: `(students will start their journey here)`, title: `Starting` },
-  { key: `InProgress`, subtitle: `(students seek to reach this level)`, title: `In Progress` },
-  { key: `Competitive`, subtitle: `(should aim this level upon graduation)`, title: `Competitive` },
-] as const;
 
 type Selections = Record<number, number>;
 
@@ -185,9 +181,26 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  // UPDATED: Initialize selections with default IDs when rubric data is loaded
+  const [ performanceLevelTypes, setPerformanceLevelTypes ] = useState<RubricPerformanceLevelHeader[]>([]);
+
   useEffect(() => {
     if (rubricCategories.length > 0) {
+      const levelNames = new Set<string>();
+      rubricCategories.forEach((category) => {
+        category.levels.forEach((level) => {
+          levelNames.add(level.level); // Add the 'level' string (e.g., "Starting")
+        });
+      });
+
+      // Create an array of objects for easier mapping in JSX, ensuring order if needed
+      const orderedLevelNames = [ `Starting`, `InProgress`, `Competitive` ]; // Or sort if not fixed
+      const uniquePerformanceLevelTypes = orderedLevelNames
+        .filter((name) => levelNames.has(name))
+        .map((name) => ({ level: name }));
+
+      setPerformanceLevelTypes(uniquePerformanceLevelTypes);
+
+      // Initialize selections with the ID of the 'Starting' level for each category
       const initialSelections: Selections = {};
       for (const category of rubricCategories) {
         const defaultLevel = category.levels.find((l) => l.level === `Starting`) || category.levels[0];
@@ -199,7 +212,6 @@ const Evaluations: React.FC = () => {
     }
   }, [ rubricCategories ]);
 
-  // Main useEffect to fetch initial data on component mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -227,12 +239,17 @@ const Evaluations: React.FC = () => {
     void getRubricData();
   }, [ navigate ]);
 
-  // UPDATED: handleSelect now works with numeric IDs
-  const handleSelect = (categoryId: number, levelId: number) => {
+  const handleSelect = (categoryId: number, levelId: number, target: HTMLElement) => {
+    Array.from(document.getElementsByClassName(`level-cell`)).forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      if (htmlEl.dataset.categoryId === target.dataset.categoryId) {
+        htmlEl.classList.remove(`selected`);
+      }
+    });
+    target.classList.add(`selected`);
     setSelections((prev) => ({ ...prev, [categoryId]: levelId }));
   };
 
-  // UPDATED: handleSubmit now constructs the correct payload for the API
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -507,45 +524,43 @@ const Evaluations: React.FC = () => {
               <table className="rubric-table">
                 <thead>
                   <tr>
-                    <th>Criteria/Level of performance</th>
-                    {performanceLevelColumns.map((level) =>
-                      <th key={level.key}>
-                        {level.title}
-                        <br />
-                        <span style={{ fontSize: `0.9em`, fontWeight: `normal` }}>{level.subtitle}</span>
-                      </th>)}
+                    <th>Category</th>
+                    {/* Use performanceLevelTypes for headers */}
+                    {performanceLevelTypes.map((levelType) =>
+                      <th key={levelType.level}>{levelType.level}</th>)}
                   </tr>
                 </thead>
                 <tbody>
                   {rubricCategories.map((category) =>
                     <tr key={category.id}>
-                      <td className="criteria-column">
-                        <strong>{category.title}</strong>
-                        {/* Use 'subItems' to match schema and new interface */}
-                        <ul>
-                          {category.subItems?.map((sub) =>
-                            <li key={sub.id}>{sub.name}</li>)}
-                        </ul>
+                      {` `}
+                      <td className="category-header-cell">
+                        {` `}
+                        <h4>{category.title}</h4>
+                        {category.subItems.length > 0 &&
+                          <ul className="rubric-sub-items">
+                            {category.subItems.map((subItem) =>
+                              <li key={subItem.id}>{subItem.name}</li>)}
+                          </ul>}
                       </td>
-                      {/* Map through the static columns to ensure order */}
-                      {performanceLevelColumns.map((column) => {
-                        // Find the specific performance level data that matches the current column
-                        const levelData = category.levels.find((l) => l.level === column.key);
+                      {performanceLevelTypes.map((levelType) => {
+                        // Find the specific RubricPerformanceLevelData object for THIS category and THIS level name
+                        const categorySpecificLevel = category.levels.find(
+                          (lvl) => lvl.level === levelType.level,
+                        );
 
-                        if (!levelData) {
-                          // Render an empty cell if this category doesn't have this performance level
-                          return <td key={column.key} />;
+                        if (!categorySpecificLevel) {
+                          // fuck, if this happens.
+                          return <td key={`${category.id}-${levelType.level}`}>N/A</td>;
                         }
 
-                        const isSelected = selections[category.id] === levelData.id;
-
                         return <td
-                          key={column.key}
-                          className={`level-cell ${isSelected ? `selected` : ``}`}
+                          className="level-cell"
+                          data-category-id={category.id}
                           // Pass the numeric IDs to the selection handler
-                          onClick={() => handleSelect(category.id, levelData.id)}
+                          onClick={(e) => handleSelect(category.id, categorySpecificLevel.id, e.currentTarget)}
                         >
-                          <div className="level-text">{levelData.description}</div>
+                          <div className="level-text">{categorySpecificLevel.description}</div>
                         </td>;
                       })}
                     </tr>)}
