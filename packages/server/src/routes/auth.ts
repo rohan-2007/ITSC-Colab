@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
-// middleware auth
+
+const router = Router();
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId) {
     res.status(401).json({ error: `Not authenticated` });
@@ -11,8 +13,6 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-const router = Router();
 interface SignupRequestBody {
   email: string;
   name: string;
@@ -44,7 +44,6 @@ router.post(`/signup`, async (
       supervisorId = supervisor.id;
     }
     const teamConnect = [];
-    // Validate team
     if (teamName && typeof teamName === `string`) {
       const team = await prisma.team.findUnique({ where: { name: teamName } });
       if (!team) {

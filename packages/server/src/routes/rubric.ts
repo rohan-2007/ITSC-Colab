@@ -25,9 +25,7 @@ router.get(`/rubric`, async (req: Request, res: Response): Promise<void> => {
       },
     });
     res.status(200).json(rubricCategories);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Fetch rubric error:`, error);
+  } catch {
     res.status(500).json({ error: `Failed to fetch rubric data` });
   }
 });

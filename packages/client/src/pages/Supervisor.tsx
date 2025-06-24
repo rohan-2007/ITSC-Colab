@@ -82,7 +82,7 @@ const Supervisor: React.FC = () => {
           const jsonData = await response.json();
           if (jsonData && jsonData.user) {
             const userData = { id: jsonData.user.id };
-            return userData; // Return the user data
+            return userData;
           }
           return null;
         } catch {
@@ -225,7 +225,6 @@ const Supervisor: React.FC = () => {
       (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
 
     if (team.id) {
-    // Update existing team
       await fetch(`${fetchUrl}/setTeamInfo`, {
         body: JSON.stringify({ id: team.id, memberIDs: updatedMemberIDs, name: updatedTeam.name }),
         credentials: `include`,
@@ -233,7 +232,6 @@ const Supervisor: React.FC = () => {
         method: `POST`,
       });
     } else {
-    // Create new team
       const res = await fetch(`${fetchUrl}/createTeam`, {
         body: JSON.stringify({ memberIDs, name: updatedTeam.name }),
         credentials: `include`,

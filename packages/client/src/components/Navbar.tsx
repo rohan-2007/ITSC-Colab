@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/alt-text */
-// src/components/Navbar.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
@@ -10,23 +9,18 @@ const Navbar: React.FC = () => {
 
   React.useEffect(() => {
     const fetchRole = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-        if (!response.ok) {
-          throw new Error(`Session not found. Please log in.`);
-        }
-        const data = await response.json();
-        if (data) {
-          setIsSupervisor(data.user.role === `SUPERVISOR`);
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to fetch user data: ${err instanceof Error ? err.message : String(err)}`);
+      const response = await fetch(`http://localhost:3001/me/`, {
+        body: JSON.stringify({ returnData: true }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+      if (!response.ok) {
+        throw new Error(`Session not found. Please log in.`);
+      }
+      const data = await response.json();
+      if (data) {
+        setIsSupervisor(data.user.role === `SUPERVISOR`);
       }
     };
     void fetchRole();
