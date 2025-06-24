@@ -62,6 +62,7 @@ const StudentSelect: React.FC = () => {
         const resJson = await res.json();
         setUser({
           id: resJson.user.id,
+          email: resJson.user.email,
           evalsGiven: resJson.user.evaluationsGiven,
           role: resJson.user.role,
           supervisorId: resJson.user.supervisorId || null,
