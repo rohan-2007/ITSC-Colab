@@ -11,12 +11,6 @@ export default tseslint.config(
       },
     },
   },
-  // TODO: Uncomment and switch to es modules
-  // {
-  //   rules: {
-  //     "import/extensions": [ `error`, `ignorePackages` ],
-  //   },
-  // },
   {
     files: [ `**/*.{ts,js,tsx,jsx,mjs,mts}` ],
     rules: {
