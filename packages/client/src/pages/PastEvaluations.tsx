@@ -581,8 +581,7 @@ const PastEvaluations: React.FC = () => {
 
                   (level, index) => {
                     let cellClass = `display-cell`;
-                    const performanceLevels = criteria[0].levels;
-                    type PerformanceLevel = typeof performanceLevels[number];
+                    type PerformanceLevel = typeof criteria[0][`levels`][number];
                     type Selections = Record<string, PerformanceLevel>;
                     console.log(`filteredStudentTeamEvals: `, filteredStudentTeamEvals);
                     console.log(`Level: `, level);
