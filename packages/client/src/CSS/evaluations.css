@@ -1,5 +1,3 @@
-/* src/pages/evaluations.css */
-/* General Page Styles */
 .evaluations-page {
   padding: 20px;
   padding-top: 120px;
@@ -30,7 +28,7 @@
   margin-top: 5px;
 }
 
-/* Dashboard & Action Cards */
+
 .action-button-group {
   display: flex;
   justify-content: center;
@@ -69,82 +67,14 @@
   color: #333;
 }
 
-/* --- MODAL STYLES (REFINED) --- */
-.modal-overlay {
-  display: flex;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-content {
-  background-color: #ffffff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-  animation: fadeIn 0.3s;
-  width: 100%;
-  max-width: 650px;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.modal-close {
-  color: #aaa;
-  background-color: rgba(21, 21, 21, 0.9);
-  border: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  transition: background-color 0.2s;
-}
-.modal-close:hover {
-  background-color: rgba(81, 81, 81, 1);
-  color: white;
-}
-
-/* --- PRE-EVAL MODAL CONTENT (REFINED) --- */
-#pre-eval-modal .modal-content h2,
-#pre-eval-modal .modal-content > p {
-  text-align: center; /* Center only the title and main paragraph */
-}
-
-#pre-eval-modal .modal-content h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.6em;
-  color: #2c3e50;
-}
-
-#pre-eval-modal .modal-content > p {
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 25px;
-}
-
 .form-group {
   margin-bottom: 15px;
-  text-align: left; /* Ensure label is left-aligned */
+  text-align: left; 
 }
 
 .form-group label {
@@ -160,12 +90,11 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1em;
-  box-sizing: border-box; /* Important for 100% width to work correctly */
+  box-sizing: border-box; 
 }
 
-/* --- NEW AND IMPROVED STUDENT SELECTION TABLE --- */
 .student-table-container {
-  max-height: 250px; /* Control scroll height */
+  max-height: 250px; 
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -194,7 +123,6 @@
   z-index: 1;
 }
 
-/* Define column widths for better layout */
 .student-select-table th:nth-child(1) { width: 15%; } /* ID */
 .student-select-table th:nth-child(2) { width: 35%; } /* Name */
 .student-select-table th:nth-child(3) { width: 35%; } /* Email */
@@ -213,24 +141,6 @@
   font-style: italic;
   padding: 25px;
   color: #6c757d;
-}
-
-/* --- FOOTER & BUTTONS (REFINED) --- */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
-}
-
-/* --- Main Evaluation Form Styles (Unchanged but included for completeness) --- */
-#evaluation-modal .modal-content {
-  max-width: 1200px;
-  text-align: left;
 }
 
 .form-header {
@@ -339,15 +249,6 @@
   font-weight: 500;
 }
 
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
 .submission-message {
   margin: 0;
   font-weight: 500;
@@ -362,35 +263,6 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.student-row-centered {
-  text-align: center;
-}
-
-.student-name-large {
-  width: 90%;
-  background-color:rgb(222, 222, 222);
-}
-
-.student-name-large.selected {
-  background-color: darkGray;
-}
-
-.modal-footer .btn.btn-cancel {
-  background-color: #757575;
-  color: white;
-}
-.modal-footer .btn.btn-cancel:hover:not(:disabled) {
-  background-color: #616161;
-}
-
-.modal-footer .btn.btn-success {
-  background-color: #4CAF50;
-  color: white;
-}
-.modal-footer .btn.btn-success:hover:not(:disabled) {
-  background-color: #45a049;
 }
 
 .tc {

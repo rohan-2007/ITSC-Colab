@@ -14,37 +14,3 @@
  gap: 12px;
  width:100vw;
 }
-
-.signup-card {
- margin-top: 50px;
- background-color: white;
- padding: 1rem;
- width: 300px;
- border-radius: 10px;
- box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
- height: fit-content;
- width: 20vw;
-}
-
-.submit-signup-login-group {
-  display: flex;
-  justify-content:space-around;
-}
-
-.signup-card h2 {
- margin: 0rem;
- text-align: center;
- color: #1a1a40;
-}
-
-.signup-card form {
- display: flex;
- flex-direction: column;
-}
-
-.signup-card input {
- margin-bottom: 12px;
- padding: 8px;
- border: 1px solid #ccc;
- border-radius: 4px;
-}

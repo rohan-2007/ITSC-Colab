@@ -146,5 +146,106 @@
 /* end of supervisor page */
 
 /* EVALUATIONS PAGE */
+.modal-overlay-evaluations {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
 
+.modal-content-evaluations {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.3s;
+  width: 100%;
+  max-width: 650px;
+}
+
+#pre-eval-modal .modal-content-evaluations h2,
+#pre-eval-modal .modal-content-evaluations > p {
+  text-align: center;
+}
+
+#pre-eval-modal .modal-content-evaluations h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.6em;
+  color: #2c3e50;
+}
+
+#pre-eval-modal .modal-content-evaluations > p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+#evaluation-modal .modal-content-evaluations {
+  max-width: 1200px;
+  text-align: left;
+}
+
+.modal-footer-evaluations {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
 /* end of evaluations */
+
+/* STUDENT SELECT */
+.modal-footer.center-button {
+  display: flex;
+  justify-content: center;
+}
+/* end of student select */
+
+/* LOGIN PAGE */
+.signup-card {
+ margin-top: 50px;
+ background-color: white;
+ padding: 1rem;
+ width: 300px;
+ border-radius: 10px;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+ height: fit-content;
+ width: 20vw;
+}
+
+.submit-signup-login-group {
+  display: flex;
+  justify-content:space-around;
+}
+
+.signup-card h2 {
+ margin: 0rem;
+ text-align: center;
+ color: #1a1a40;
+}
+
+.signup-card form {
+ display: flex;
+ flex-direction: column;
+}
+
+.signup-card input {
+ margin-bottom: 12px;
+ padding: 8px;
+ border: 1px solid #ccc;
+ border-radius: 4px;
+}
+/* end of login page */

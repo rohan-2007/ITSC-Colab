@@ -468,7 +468,7 @@ const Supervisor: React.FC = () => {
       </div>}
 
     {teamEditModalOpen && selectedTeamIndex !== null &&
-      <div className="modal-overlay" onClick={closeTeamModal}>
+      <div className="modal-overlay-supervisor" onClick={closeTeamModal}>
         <div className="modal-change-team-supervisor" onClick={(e) => e.stopPropagation()}>
           <h4>Edit Team</h4>
 
