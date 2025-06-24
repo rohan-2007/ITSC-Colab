@@ -225,8 +225,8 @@ const PastEvaluations: React.FC = () => {
   }, [ user ]);
 
   useEffect(() => {
-    const sum = contributions?.reduce((sum, contribution) => sum + contribution.contribution_count, 0);
-    setTotalContributions(sum);
+    const total = contributions?.reduce((acc, contribution) => acc + contribution.contribution_count, 0);
+    setTotalContributions(total);
     console.log(`totalContributions: `, totalContributions);
   }, [ contributions ]);
 
@@ -500,6 +500,8 @@ const PastEvaluations: React.FC = () => {
             Array.from(new Set(filteredStudentSemesterEvals.concat(filteredSupervisorSemesterEvals).map((item) => item.team))).map((element) =>
               <option value={element}>{element}</option>) : null}
         </select>
+        <h3 className="semester-label">Git Contributions:</h3>
+        <h2>{totalContributions}</h2>
       </div>
 
       <div className="legend-outer">
