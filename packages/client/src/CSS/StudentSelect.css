@@ -48,6 +48,7 @@
 .student-table-container {
   overflow-x: auto;
   margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .student-select-table {
@@ -72,8 +73,3 @@
   padding: 1rem;
   color: #6b7280;
 }
-
-.student-table-container {
-  margin-bottom: 0;
-}
-

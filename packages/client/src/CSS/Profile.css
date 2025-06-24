@@ -109,12 +109,6 @@
   text-align: right;
 }
 
-.profile-organization-card .btn {
-  margin-top: 10px;
-  margin-bottom: 20px;
-  align-self: flex-end;
-}
-
 .profile-actions-buttons {
   display: flex;
   justify-content: center;
@@ -129,4 +123,3 @@
     text-align: center;
   }
 }
-
