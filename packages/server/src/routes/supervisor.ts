@@ -72,10 +72,9 @@ router.post(`/supervisors`, requireAuth, async (
     }
   }
 });
-
 interface StudentInfoChange {
-  email: string;
-  name: string;
+  email?: string;
+  name?: string;
   password?: string;
   userId: number;
 }
@@ -85,7 +84,7 @@ router.post(`/setUserInfo`, requireAuth, async (
   res: Response,
 ) => {
   const { email, name, password, userId } = req.body;
-  let hashedPassword = password;
+
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
       where: { id: userId },
@@ -96,27 +95,35 @@ router.post(`/setUserInfo`, requireAuth, async (
       return;
     }
 
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
-    } else {
-      hashedPassword = user.password;
+    // Build update data object only with non-empty fields
+    const updateData: Partial<PrismaUser> = {};
+
+    if (email && email.trim() !== ``) {
+      updateData.email = email;
+    }
+    if (name && name.trim() !== ``) {
+      updateData.name = name;
+    }
+    if (password && password.trim() !== ``) {
+      updateData.password = await bcrypt.hash(password, 10);
     }
 
-    await prisma.user.update({
-      data: {
-        email,
-        name,
-        password: hashedPassword,
-      },
+    if (Object.keys(updateData).length === 0) {
+      res.status(400).json({ error: `No valid fields to update` });
+      return;
+    }
+
+    const updatedUser = await prisma.user.update({
+      data: updateData,
       where: { id: userId },
     });
 
     res.status(200).json({
       message: `Successfully set user info!`,
       user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
       },
     });
   } catch (err) {

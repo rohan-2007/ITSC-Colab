@@ -74,11 +74,12 @@ const Profile: React.FC = () => {
 
   const handleSaveChanges = async () => {
     try {
-      const response = await fetch(`${fetchUrl}/update-profile`, {
+      const response = await fetch(`${fetchUrl}/setUserInfo`, {
         body: JSON.stringify({
           email: newEmail,
           name: newName,
           password: newPassword,
+          userId: user?.id,
         }),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
