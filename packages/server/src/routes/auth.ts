@@ -21,7 +21,7 @@ export const limiter = rateLimit({
     error: `Too many requests, please slow down.`,
   },
   standardHeaders: true,
-  windowMs: 60 * 1000,
+  windowMs: 10 * 1000,
 });
 
 interface SignupRequestBody {
