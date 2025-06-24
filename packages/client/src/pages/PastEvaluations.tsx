@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable no-console */
 /* eslint-disable @stylistic/max-len */
 // FOR REFERENCE THE SCROLL ITEMS WILL ONLY SHOW 1 BUT WILL ADD MORE AS THEY ADD EVALUATIONS FOR EXAMPLE, 1 evaluation equals 1 button, however if they have 2 it will show 2 buttons.
 import React, { useEffect, useRef, useState } from 'react';
@@ -426,7 +427,6 @@ const PastEvaluations: React.FC = () => {
           (entry) => entry.year === selectedYear,
         ));
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(error);
       }
     };
