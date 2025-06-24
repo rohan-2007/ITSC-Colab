@@ -1,9 +1,12 @@
 /* eslint-disable @stylistic/max-len */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/home.css';
+import * as d3 from 'd3';
+// import Contribution from '../pages/PastEvaluations';
+import type { Contribution } from '../pages/PastEvaluations';
 import { Student } from './StudentSelect';
 import { PastEval } from './PastEvaluations';
 import '../components/buttonandcard.css';
@@ -32,6 +35,22 @@ const assignSemester = (): string => {
 
   return `UNKNOWN`;
 };
+
+const getSemesterFromTimestamp = (timestamp: string | Date) => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  if (date >= new Date(year, 4, 12) && date <= new Date(year, 7, 9)) {
+    return `SUMMER`;
+  }
+  if (date >= new Date(year, 7, 25) && date <= new Date(year, 11, 5)) {
+    return `FALL`;
+  }
+  if (date >= new Date(year, 0, 12) && date <= new Date(year, 3, 24)) {
+    return `SPRING`;
+  }
+  return `UNKNOWN`;
+};
+
 const currentSemester = assignSemester();
 interface User {
   email: string;
@@ -44,14 +63,76 @@ interface User {
 }
 
 const Home: React.FC = () => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const navigate = useNavigate();
 
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
+  const [ graphData, setGraphData ] = useState<Array<{ x: number, y: number }>>();
+  const [ height, _setHeight ] = useState<number>(200);
+  const [ width, _setWidth ] = useState<number>(200);
+  const [ contributions, setContributions ] = useState<Contribution[]>();
 
   // const students: User[] = [];
+
+  useEffect(() => {
+    console.log(`contributions: `, contributions);
+    if (svgRef.current && graphData && width && height) {
+      console.log(`heeeyy`);
+      const svg = d3.select(svgRef.current);
+      const xScale = d3.scaleLinear().domain([ 0, graphData.length - 1 ]).range([ 0, width ]);
+      const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 1 ]).range([ height, 0 ]);
+      const line = d3.line<{ x: number, y: number }>().x((_, i) => xScale(i)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
+
+      svg.selectAll(`*`).remove();
+      svg.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+    }
+  }, [ graphData ]);
+
+  useEffect(() => {
+    const getGitData = async () => {
+      try {
+        const username = user?.email.slice(user.email.indexOf(`@`) + 1);
+
+        console.log(`username: `, username);
+
+        const res = await fetch(`http://localhost:3001/gitData/`, {
+          body: JSON.stringify({ username }),
+          credentials: `include`,
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          method: `POST`,
+        });
+
+        const resJson = await res.json();
+
+        console.log(`resJson: `, JSON.stringify(resJson, null, 2));
+
+        const contributionList = resJson.data as Contribution[];
+        console.log(`contributionList: `, contributionList);
+
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+
+        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+        // console.log(`gitData: `, contributions);
+      } catch (err) {
+        if (err instanceof Error) {
+          throw new Error(`git fetch error: ${err.message}`);
+        } else {
+          throw new Error(`an unknown git fetch error`);
+        }
+      }
+    };
+
+    void getGitData();
+  }, [ user ]);
+
+  useEffect(() => {
+    setGraphData(contributions?.map((item, index) => ({ x: index, y: item.contribution_count })));
+  }, [ contributions ]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -99,7 +180,7 @@ const Home: React.FC = () => {
     if (user?.role === `SUPERVISOR`) {
       document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats to-do'\n'actions actions to-do'`);
     } else {
-      document.documentElement.style.setProperty(`--gridLayout`, `'header header'\n'profile stats'\n'actions actions'`);
+      document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats graph'\n'actions actions actions'`);
     }
 
     const fetchTeamStudents = async () => {
@@ -211,6 +292,17 @@ const Home: React.FC = () => {
               <h2>5</h2>
               <p>Pending Evaluations</p>
             </div> */}
+        </div>
+      </section>
+
+      <section className="graph-section">
+        <h2>Your Past Contributions</h2>
+        <div className="user-stats">
+          {/* <div className="stat">
+            <h2>{user.evalsCompleted}</h2>
+            <p>Evaluations Completed</p>
+          </div> */}
+          <svg ref={svgRef} width={width} height={height} />
         </div>
       </section>
 

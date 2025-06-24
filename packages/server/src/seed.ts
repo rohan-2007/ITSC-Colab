@@ -6,11 +6,21 @@ PLEASE UPDATE, it is wrong
 // /prisma/seed.ts
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
+import { Client as PgClient } from 'pg';
 import { prisma } from './prisma';
 
 interface PerformanceLevel {
   description: string;
   level: string;
+}
+
+interface ContributionRow {
+  id: number;
+  contribution_count: number;
+  date: string;
+  user_login: string;
 }
 
 interface RubricSeedData {
@@ -20,6 +30,29 @@ interface RubricSeedData {
   subItems: string[];
   title: string;
 }
+
+const src = new PgClient({ connectionString: process.env.DATABASE_GITREPORTS_URL });
+
+async function main() {
+  await src.connect();
+  const { rows } = await src.query(`SELECT * FROM "contributions"`);
+  const typedRows = rows as ContributionRow[];
+  for (const row of typedRows) {
+    await prisma.contributions.upsert({
+      create: row,
+      update: { contribution_count: row.contribution_count },
+      where: { user_login_date: { date: row.date, user_login: row.user_login } },
+    });
+  }
+  await src.end();
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+}).finally(async () => {
+  await prisma.$disconnect();
+});
 
 export const seedRubricData = async (): Promise<void> => {
   try {
