@@ -30,7 +30,6 @@ const assignSemester = (): string => {
     return `SPRING`;
   }
 
-  console.log(`unknown semester`, today < summerStart, today > summerEnd);
   return `UNKNOWN`;
 };
 const currentSemester = assignSemester();
@@ -72,7 +71,6 @@ const Home: React.FC = () => {
         }
 
         const jsonData = await response.json();
-        console.log(`jsonData: `, JSON.stringify(jsonData, null, 2));
 
         if (jsonData && jsonData.user) {
           setUser({
@@ -119,14 +117,7 @@ const Home: React.FC = () => {
         const jsonData = await response.json();
 
         if (jsonData && jsonData.students) {
-          console.log(`inside`);
-          console.log(`jsonData.students: `, jsonData.students);
           const allStudents = jsonData.students as Student[];
-          console.log(`allStudents: `, allStudents);
-          console.log(`user.id`, user?.email);
-          console.log(user?.teamIDs);
-          console.log(allStudents[0].teams[0].id);
-          // console.log(user?.teamIDs[0] === allStudents[0].teams[0].id);
           const tempFilteredStudents = allStudents.filter(
             (student) => student.teams.some((team) => user?.teamIDs?.includes(team.id)),
           );
@@ -134,10 +125,8 @@ const Home: React.FC = () => {
         }
       } catch (err) {
         if (err instanceof Error) {
-          // console.log(`user fetch error: ${err.message}`);
           throw new Error(`Error while fetching students: ${err.message}`);
         } else {
-          // console.log(`an unknown user fetch error`);
           throw new Error(`an unknown students fetch error`);
         }
       }

@@ -5,19 +5,15 @@ import '../CSS/evaluations.css';
 import '../components/buttonandcard.css';
 import '../components/Modals.css';
 
-// Assume your API routes are prefixed with /api. Adjust if necessary.
 const fetchUrl = `http://localhost:3001`;
 
-// ====================================================================================
-// UPDATED: Interfaces to match the new schema and the /api/rubric response
-// ====================================================================================
 interface RubricPerformanceLevelData {
   id: number;
-  description: string; // e.g., 'Starting', 'In Progress', 'Competitive'
+  description: string;
   level: string;
 }
 interface RubricPerformanceLevelHeader {
-  level: string; // "Starting", "InProgress", "Competitive"
+  level: string;
 }
 
 interface RubricSubItemData {
@@ -27,16 +23,15 @@ interface RubricSubItemData {
 
 interface RubricCategoryData {
   id: number;
-  levels: RubricPerformanceLevelData[]; // The unique key for the category, e.g., 'problem_solving'
-  name: string; // The display title, e.g., 'Problem Solving'
+  levels: RubricPerformanceLevelData[];
+  name: string;
   subItems: RubricSubItemData[];
-  title: string; // Renamed from subSkills to match schema
+  title: string;
 }
 
 type Selections = Record<number, number>;
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
+const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
   const today = new Date();
   const year = today.getFullYear();
   if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
@@ -80,7 +75,6 @@ const Evaluations: React.FC = () => {
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
   const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
 
-  // Fetch functions for statuses and students (unchanged)
   const fetchAllStatuses = async () => {
     const currentSemester = assignSemester();
     const currentYear = new Date().getFullYear();
@@ -119,7 +113,7 @@ const Evaluations: React.FC = () => {
     const currentYear = new Date().getFullYear();
 
     if (currentSemester === `N/A`) {
-      setCanStartSelfEval(false); // Can't start if not in a semester
+      setCanStartSelfEval(false);
       setMessage(`Evaluations can only be started during the SPRING, SUMMER, or FALL semesters.`);
       return;
     }
@@ -167,7 +161,6 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  // NEW: Fetch the rubric data from the backend
   const getRubricData = async () => {
     try {
       const res = await fetch(`${fetchUrl}/rubric`, { method: `GET` });
@@ -190,19 +183,17 @@ const Evaluations: React.FC = () => {
       const levelNames = new Set<string>();
       rubricCategories.forEach((category) => {
         category.levels.forEach((level) => {
-          levelNames.add(level.level); // Add the 'level' string (e.g., "Starting")
+          levelNames.add(level.level);
         });
       });
 
-      // Create an array of objects for easier mapping in JSX, ensuring order if needed
-      const orderedLevelNames = [ `Starting`, `InProgress`, `Competitive` ]; // Or sort if not fixed
+      const orderedLevelNames = [ `Starting`, `InProgress`, `Competitive` ];
       const uniquePerformanceLevelTypes = orderedLevelNames
         .filter((name) => levelNames.has(name))
         .map((name) => ({ level: name }));
 
       setPerformanceLevelTypes(uniquePerformanceLevelTypes);
 
-      // Initialize selections with the ID of the 'Starting' level for each category
       const initialSelections: Selections = {};
       for (const category of rubricCategories) {
         const defaultLevel = category.levels.find((l) => l.level === `Starting`) || category.levels[0];
@@ -273,7 +264,6 @@ const Evaluations: React.FC = () => {
       return;
     }
 
-    // Transform the `selections` state into the `results` array the API expects
     const resultsPayload = Object.entries(selections).map(([ catId, levelId ]) => ({
       rubricCategoryId: Number(catId),
       rubricPerformanceLevelId: levelId,
@@ -304,7 +294,6 @@ const Evaluations: React.FC = () => {
       setMessage(`Evaluation submitted successfully!`);
       setTimeout(() => setMessage(``), 3000);
       setIsFormVisible(false);
-      // Refetch statuses to update the UI
       if (user.role === `SUPERVISOR`) {
         void fetchAllStatuses();
       }
@@ -419,7 +408,7 @@ const Evaluations: React.FC = () => {
                   value={studentSearch}
                   onChange={(e) => {
                     setStudentSearch(e.target.value);
-                    setSelectedStudentId(null); // Deselect student when search changes
+                    setSelectedStudentId(null);
                   }}
                 />
               </div>
@@ -479,7 +468,6 @@ const Evaluations: React.FC = () => {
             }}
           >Cancel
           </button>
-          {/* This button logic now works for both roles */}
           {(user?.role === `STUDENT` ? canStartSelfEval : user?.role === `SUPERVISOR`) &&
             <button
               id="proceed-to-eval-btn"
@@ -527,7 +515,6 @@ const Evaluations: React.FC = () => {
                 <thead>
                   <tr>
                     <th>Category</th>
-                    {/* Use performanceLevelTypes for headers */}
                     {performanceLevelTypes.map((levelType) =>
                       <th key={levelType.level}>{levelType.level}</th>)}
                   </tr>
@@ -546,7 +533,6 @@ const Evaluations: React.FC = () => {
                           </ul>}
                       </td>
                       {performanceLevelTypes.map((levelType) => {
-                        // Find the specific RubricPerformanceLevelData object for THIS category and THIS level name
                         const categorySpecificLevel = category.levels.find(
                           (lvl) => lvl.level === levelType.level,
                         );
@@ -559,7 +545,6 @@ const Evaluations: React.FC = () => {
                         return <td
                           className="level-cell"
                           data-category-id={category.id}
-                          // Pass the numeric IDs to the selection handler
                           onClick={(e) => handleSelect(category.id, categorySpecificLevel.id, e.currentTarget)}
                         >
                           <div className="level-text">{categorySpecificLevel.description}</div>

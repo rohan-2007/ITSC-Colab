@@ -4,7 +4,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
-import { assignSemester } from './evaluations';
 import '../components/buttonandcard.css';
 
 interface Data {
@@ -69,6 +68,21 @@ export interface User {
   supervisorName: string;
   teamNames?: string[] | null;
 }
+
+const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
+  const today = new Date();
+  const year = today.getFullYear();
+  if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
+    return `SUMMER`;
+  }
+  if (today >= new Date(year, 7, 25) && today <= new Date(year, 11, 5)) {
+    return `FALL`;
+  }
+  if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
+    return `SPRING`;
+  }
+  return `N/A`;
+};
 
 // type PerformanceLevel = `starting` | `inProgress` | `competitive`;
 

@@ -59,105 +59,116 @@ const Supervisor: React.FC = () => {
     userId: number;
   } | null>(null);
   const [ editedTeamName, setEditedTeamName ] = useState(``);
+  const [ filteredStudents, setFilteredStudents ] = useState<Student[]>([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const response = await fetch(`${fetchUrl}/me/`, {
+    const run = async () => {
+      const checkSession = async () => {
+        try {
+          const response = await fetch(`${fetchUrl}/me/`, {
+            body: JSON.stringify({ returnData: true }),
+            credentials: `include`,
+            headers: { 'Content-Type': `application/json` },
+            method: `POST`,
+          });
+
+          if (!response.ok) {
+            await navigate(`/login`);
+            return null;
+          }
+
+          const jsonData = await response.json();
+          if (jsonData && jsonData.user) {
+            const userData = { id: jsonData.user.id };
+            return userData; // Return the user data
+          }
+          return null;
+        } catch {
+          await navigate(`/login`);
+          return null;
+        }
+      };
+
+      const userData = await checkSession();
+      if (!userData) {
+        return;
+      }
+
+      const fetchData = async () => {
+        const studentsResponse = await fetch(`${fetchUrl}/students/`, {
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
         });
 
-        if (!response.ok) {
-          await navigate(`/login`);
+        if (!studentsResponse.ok) {
+          return;
         }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(`[Evaluations useEffect] Session check failed:`, err);
-        await navigate(`/login`);
-      }
+
+        const studentsData = await studentsResponse.json();
+        let fetchedStudents: Student[] = [];
+
+        if (studentsData && studentsData.students) {
+          fetchedStudents = studentsData.students as Student[];
+          setStudents(fetchedStudents);
+        }
+
+        setFilteredStudents(
+          fetchedStudents.filter((student) => student.supervisorId === userData.id),
+        );
+
+        const supRes = await fetch(`${fetchUrl}/supervisors`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        const supData = await supRes.json();
+        let fetchedSupervisors: Supervisor[] = [];
+
+        if (supData && supData.supervisors) {
+          fetchedSupervisors = supData.supervisors as Supervisor[];
+          setSupervisors(fetchedSupervisors);
+        }
+
+        const teamsResponse = await fetch(`${fetchUrl}/teams`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
+
+        const teamsData = await teamsResponse.json();
+
+        if (teamsResponse.ok && teamsData.teams) {
+          interface TeamFromApi {
+            id: number;
+            memberIDs: number[];
+            name: string;
+          }
+          const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => ({
+            id: team.id,
+            assignedStudents: fetchedStudents
+              .filter((s) => team.memberIDs.includes(s.id))
+              .map((s) => s.name),
+            assignedSupervisors: fetchedSupervisors
+              .filter((s) => team.memberIDs.includes(s.id))
+              .map((s) => s.name),
+            expanded: false,
+            name: team.name,
+            search: ``,
+            showAssigned: false,
+          }));
+
+          setTeams(newTeams);
+        }
+      };
+
+      await fetchData();
     };
 
-    const fetchData = async () => {
-      // First fetch students
-      const studentsResponse = await fetch(`${fetchUrl}/students/`, {
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-
-      if (!studentsResponse.ok) {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to fetch students`);
-        return;
-      }
-
-      const studentsData = await studentsResponse.json();
-      let fetchedStudents: Student[] = [];
-
-      if (studentsData && studentsData.students) {
-        fetchedStudents = studentsData.students as Student[];
-        setStudents(fetchedStudents);
-      }
-      /* FOR ROHAN: THIS IS THE BACKEND CODE, EITHER DELETE IT OR CHANGE IT TO LINK TO OUR BACKEND */
-      const supRes = await fetch(`${fetchUrl}/supervisors`, {
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-
-      if (!supRes.ok) {
-        // eslint-disable-next-line no-console
-        console.error(`Error fetching supervisors`);
-      }
-
-      const supData = await supRes.json();
-      let fetchedSupervisors: Supervisor[] = [];
-
-      if (supData && supData.supervisors) {
-        fetchedSupervisors = supData.supervisors as Supervisor[];
-        setSupervisors(fetchedSupervisors);
-      }
-      /* END OF BACKEND CODE */
-
-      // Then fetch teams (now that we have students)
-      const teamsResponse = await fetch(`${fetchUrl}/teams`, {
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-
-      const teamsData = await teamsResponse.json();
-
-      if (teamsResponse.ok && teamsData.teams) {
-        interface TeamFromApi {
-          id: number;
-          memberIDs: number[];
-          name: string;
-        }
-        const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => ({
-          id: team.id,
-          assignedStudents: fetchedStudents
-            .filter((s) => team.memberIDs.includes(s.id))
-            .map((s) => s.name),
-          assignedSupervisors: fetchedSupervisors
-            .filter((s) => team.memberIDs.includes(s.id))
-            .map((s) => s.name),
-          expanded: false,
-          name: team.name,
-          search: ``,
-          showAssigned: false,
-        }));
-
-        setTeams(newTeams);
-      }
-    };
-
-    void checkSession();
-    void fetchData();
+    void run();
   }, [ navigate ]);
 
   const openStudentInfoModal = (index: number) => {
@@ -189,23 +200,12 @@ const Supervisor: React.FC = () => {
   };
 
   const saveStudentInfo = async () => {
-    // eslint-disable-next-line no-console
-    console.log(`Saving student info:`, editedStudent);
-
-    const res = await fetch(`${fetchUrl}/setUserInfo/`, {
+    await fetch(`${fetchUrl}/setUserInfo/`, {
       body: JSON.stringify(editedStudent),
       credentials: `include`,
       headers: { 'Content-Type': `application/json` },
       method: `POST`,
     });
-    if (!res.ok) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to set user info`);
-    }
-
-    const jsonData = await res.json();
-    // eslint-disable-next-line no-console
-    console.log(`Saved student info:`, jsonData);
 
     closeStudentInfoModal();
   };
@@ -326,9 +326,6 @@ const Supervisor: React.FC = () => {
     };
     setTeams((prev) => [ ...prev, newTeam ]);
   };
-
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(studentSearch.toLowerCase()));
 
   const filteredTeams = teams.filter((team) =>
     team.name.toLowerCase().includes(teamSearch.toLowerCase()));

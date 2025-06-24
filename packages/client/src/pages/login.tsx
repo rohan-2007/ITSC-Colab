@@ -19,22 +19,17 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     const checkSession = async () => {
-      try {
-        const response = await fetch(`${fetchUrl}/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
+      const response = await fetch(`${fetchUrl}/me/`, {
+        body: JSON.stringify({ returnData: true }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
 
-        const jsonData = await response.json();
+      const jsonData = await response.json();
 
-        if (jsonData.sessionActive) {
-          await navigate(`/home`);
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(`Session check failed:`, error);
+      if (jsonData.sessionActive) {
+        await navigate(`/home`);
       }
     };
 
