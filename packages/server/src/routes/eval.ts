@@ -69,19 +69,15 @@ router.get(`/getEval`, requireAuth, async (
   res: Response,
 ): Promise<void> => {
   const evaluationId = req.query.evaluationId ? Number(req.query.evaluationId) : undefined;
-  const userId = req.query.userId ? Number(req.query.userId) : undefined;
+  const targetUserId = req.query.userId ? Number(req.query.userId) : undefined;
   const sessionUserId = Number(req.session.userId);
 
   try {
     if (evaluationId) {
       const evalRecord = await prisma.evaluation.findUnique({
         include: {
-          results: {
-            include: {
-              rubricPerformanceLevel: true,
-            },
-          },
-          student: { select: { id: true, email: true, name: true } },
+          results: { include: { rubricPerformanceLevel: true } },
+          student: { select: { id: true, email: true, name: true, supervisorId: true } },
           supervisor: { select: { id: true, email: true, name: true } },
         },
         where: { id: evaluationId },
@@ -92,7 +88,7 @@ router.get(`/getEval`, requireAuth, async (
         return;
       }
 
-      if (evalRecord.studentId !== sessionUserId && evalRecord.supervisorId !== sessionUserId) {
+      if (evalRecord.studentId !== sessionUserId && evalRecord.student.supervisorId !== sessionUserId) {
         res.status(403).json({ error: `Forbidden: You are not authorized to view this evaluation.` });
         return;
       }
@@ -101,20 +97,30 @@ router.get(`/getEval`, requireAuth, async (
       return;
     }
 
-    if (userId) {
-      if (userId !== sessionUserId) {
-        res.status(403).json({ error: `Forbidden: You can only retrieve your own evaluations.` });
+    if (targetUserId) {
+      const sessionUser = await prisma.user.findUnique({ where: { id: sessionUserId } });
+
+      const isOwnRequest = targetUserId === sessionUserId;
+
+      let isSupervisorRequest = false;
+      if (sessionUser?.role === `SUPERVISOR`) {
+        const student = await prisma.user.findUnique({ where: { id: targetUserId } });
+        if (student?.supervisorId === sessionUserId) {
+          isSupervisorRequest = true;
+        }
+      }
+
+      if (!isOwnRequest && !isSupervisorRequest) {
+        res.status(403).json({ error: `Forbidden: You are not authorized to retrieve these evaluations.` });
         return;
       }
 
       const evaluations = await prisma.evaluation.findMany({
-        where: { studentId: userId },
+        include: {
+          results: true,
+        },
+        where: { studentId: targetUserId },
       });
-
-      if (!evaluations) {
-        res.status(404).json({ error: `Evaluation records not found` });
-        return;
-      }
 
       res.status(200).json(evaluations);
       return;

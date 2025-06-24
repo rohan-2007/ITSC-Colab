@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PastEval, User } from './PastEvaluations';
-import '../components/buttonandcard.css';
+import { Evaluation, User } from './PastEvaluations';
+import '../components/ButtonAndCard.css';
 import '../CSS/StudentSelect.css';
 
 export interface Student {
@@ -34,6 +34,8 @@ const StudentSelect: React.FC = () => {
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
+  const [ _userEvaluations, setUserEvaluations ] = useState<Evaluation[]>([]);
+  const [ loading, setLoading ] = useState(true);
   const navigate = useNavigate();
 
   const selectStudent = (id: number | null) => {
@@ -45,69 +47,98 @@ const StudentSelect: React.FC = () => {
     void navigate(`/past_evaluations`, { state: data });
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
+  const fetchUser = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/me/`, {
+        body: JSON.stringify({ returnData: true }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const resJson = await res.json();
-        setUser({
-          id: resJson.user.id,
-          email: resJson.user.email,
-          evalsGiven: resJson.user.evaluationsGiven,
-          role: resJson.user.role,
-          supervisorId: resJson.user.supervisorId || null,
-          supervisorName: resJson.user.supervisorName,
-        });
-      } catch (err) {
-        throw new Error(`user fetch error: ${err instanceof Error ? err.message : `unknown error`}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-    };
 
-    void getUser();
+      const resJson = await res.json();
+      const userData: User = {
+        id: resJson.user.id,
+        email: resJson.user.email,
+        role: resJson.user.role,
+        supervisorId: resJson.user.supervisorId || null,
+        supervisorName: resJson.user.supervisorName,
+        teamNames: resJson.user.teamNames,
+      };
+      setUser(userData);
+
+      // Fetch evaluations given by this supervisor
+      if (userData.role === `SUPERVISOR`) {
+        const evalRes = await fetch(`http://localhost:3001/getEval/?userId=${userData.id}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+
+        if (evalRes.ok) {
+          const evaluationsData: Evaluation[] = await evalRes.json();
+          // Filter for evaluations given by this supervisor
+          const supervisorEvals = evaluationsData.filter((evaluation) => evaluation.supervisorId === userData.id);
+          setUserEvaluations(supervisorEvals);
+        }
+      }
+    } catch (err) {
+      console.error(`User fetch error:`, err);
+    }
+  };
+
+  const fetchStudents = async () => {
+    if (!user) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001/students/`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to fetch students`);
+        return;
+      }
+
+      const jsonData = await response.json();
+
+      if (jsonData?.students) {
+        setStudents(jsonData.students as Student[]);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error(`Student fetch error:`, err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const initializeData = async () => {
+      await fetchUser();
+    };
+    void initializeData();
   }, []);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/students/`, {
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-
-        if (!response.ok) {
-          console.error(`Failed to fetch students`);
-        }
-
-        const jsonData = await response.json();
-
-        if (jsonData && jsonData.students) {
-          const allStudents = jsonData.students as Student[];
-          const tempFilteredStudents = allStudents.filter(
-            (student) =>
-              user &&
-              Array.isArray(user.evalsGiven) &&
-              user.evalsGiven.some((evaluation: PastEval) => evaluation.studentId === student.id),
-          );
-          setStudents(tempFilteredStudents);
-        }
-      } catch (err) {
-        throw new Error(`student fetch error: ${err instanceof Error ? err.message : `unknown error`}`);
-      }
-    };
-
     void fetchStudents();
   });
+
+  // Filter students based on search
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+    student.email.toLowerCase().includes(studentSearch.toLowerCase()));
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return <div className="student-select-wrapper">
     <div className="student-select-card">
@@ -142,8 +173,8 @@ const StudentSelect: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {students.length > 0 ?
-              students.map((student) =>
+            {filteredStudents.length > 0 ?
+              filteredStudents.map((student) =>
                 <tr
                   key={student.id}
                   className={selectedStudentId === student.id ? `selected` : ``}
@@ -156,7 +187,7 @@ const StudentSelect: React.FC = () => {
                 </tr>) :
               <tr>
                 <td colSpan={4} className="no-students-message">
-                  No students found.
+                  {studentSearch ? `No students match your search.` : `No students found.`}
                 </td>
               </tr>}
           </tbody>
@@ -169,6 +200,7 @@ const StudentSelect: React.FC = () => {
           className="view-eval-student"
           data-modal-id="evaluation-modal"
           onClick={() => navigateToPastEvaluations()}
+          disabled={!selectedStudentId}
         >
           View Evaluations
         </button>
