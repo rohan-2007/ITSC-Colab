@@ -4,7 +4,6 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -17,8 +16,7 @@ html,#root,body {
   align-items: center;     
   height: 100%;         
   width: 100%;  
-  background-color: #f0f2f5;
-  overflow:hidden;
+    background-color: #f0f2f5;
 }
 
 h1 {
@@ -31,6 +29,5 @@ h1 {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
 }

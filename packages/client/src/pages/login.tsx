@@ -188,7 +188,7 @@ const Login: React.FC = () => {
     }));
   };
 
-  return <div className="centered-page">
+  return <div className="centered-page-login">
     {!isOpenSignup && !isOpenLogin &&
       <div>
         <h1>UC Performance Review</h1>
