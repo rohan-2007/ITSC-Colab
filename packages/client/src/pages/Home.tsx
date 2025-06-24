@@ -5,25 +5,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/home.css';
 import * as d3 from 'd3';
-// import Contribution from '../pages/PastEvaluations';
 import type { Contribution } from '../pages/PastEvaluations';
 import { Student } from './StudentSelect';
 import { PastEval } from './PastEvaluations';
-import '../components/buttonandcard.css';
+import '../components/ButtonAndCard.css';
 
 const fetchUrl = `http://localhost:${3001}`;
 
 const assignSemester = (): string => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reset time to midnight
+  today.setHours(0, 0, 0, 0);
 
   const year = today.getFullYear();
-  const summerStart = new Date(year, 4, 12); // May 12
-  const summerEnd = new Date(year, 7, 9); // August 9
-  const fallStart = new Date(year, 7, 25); // August 25
-  const fallEnd = new Date(year, 11, 5); // December 5
-  const springStart = new Date(year, 0, 12); // January 12 of next year
-  const springEnd = new Date(year, 3, 24); // April 24 of next year
+  const summerStart = new Date(year, 4, 12);
+  const summerEnd = new Date(year, 7, 9);
+  const fallStart = new Date(year, 7, 25);
+  const fallEnd = new Date(year, 11, 5);
+  const springStart = new Date(year, 0, 12);
+  const springEnd = new Date(year, 3, 24);
 
   if (today >= summerStart && today <= summerEnd) {
     return `SUMMER`;
@@ -115,7 +114,6 @@ const Home: React.FC = () => {
         setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
 
         console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
-        // console.log(`gitData: `, contributions);
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -159,7 +157,6 @@ const Home: React.FC = () => {
             name: jsonData.user.name,
             role: jsonData.user.role,
             teamIDs: jsonData.user.safeTeamIDs || null,
-            // jsonData.user.teamIDs || null
             teamNames: jsonData.user.teamNames || null,
           });
         }
@@ -266,13 +263,11 @@ const Home: React.FC = () => {
           <span className="info-label">Email:</span>
           <span className="info-value">{user.email}</span>
         </div>
-        {/* Display Team Info if available */}
         {user.teamNames &&
           <div className="info-item">
             <span className="info-label">Teams:</span>
             <span className="info-value">{user.teamNames.length > 0 ? user.teamNames.join(`, `) : `Not Assigned`}</span>
           </div>}
-        {/* Optional: Add a link to profile settings or detailed view */}
         <div className="profile-actions">
           <button onClick={() => navigate(`/profile`)} className="button-view-profile">View Full Profile</button>
         </div>
@@ -285,21 +280,12 @@ const Home: React.FC = () => {
             <h2>{user.evalsCompleted}</h2>
             <p>Evaluations Completed</p>
           </div>
-          {/* Add more stats here as needed, e.g., 'Evaluations Due', 'Team Members Evaluated' */}
-          {/* <div className="stat">
-              <h2>5</h2>
-              <p>Pending Evaluations</p>
-            </div> */}
         </div>
       </section>
 
       <section className="graph-section">
         <h2>Your Past Contributions</h2>
         <div className="user-stats">
-          {/* <div className="stat">
-            <h2>{user.evalsCompleted}</h2>
-            <p>Evaluations Completed</p>
-          </div> */}
           <svg ref={svgRef} width={width} height={height} />
         </div>
       </section>
@@ -323,12 +309,8 @@ const Home: React.FC = () => {
                 <tbody>
                   {students.length > 0 ?
                     students.map((student) =>
-                    // const status = studentsEvalStatus[student.id];
-                    // Check if the supervisor has completed the eval. Default to false if status is not yet loaded.
-                    // const isCompleted = status ? status.supervisorCompleted : false;
                       <tr
                         key={student.id}
-                        // className={selectedStudentId === student.id ? `selected` : ``}
                       >
                         <td>{student.id}</td>
                         <td>{student.name}</td>
@@ -367,7 +349,6 @@ const Home: React.FC = () => {
               >Start New Evaluation</button>
               <button onClick={() => navigate(`/student_select`)} className="button-view-reports">View Reports</button>
             </>}
-          {/* Add more buttons based on roles and available routes */}
         </div>
       </section>
     </main>

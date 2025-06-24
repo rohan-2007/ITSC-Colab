@@ -1,20 +1,11 @@
 import { Request, Response, Router } from 'express';
-// import { User as PrismaUser } from '../../../../generated/prisma';
-// import { Contribution } from '@prisma/client';
 import { prisma } from '../prisma';
-// import Contribution from '../../../client/src/pages/PastEvaluations';
 
 const router = Router();
 
 interface RequestBody {
   username: string;
 }
-
-// interface Contribution {
-//   contribution_count: number;
-//   date: string;
-//   user_login: string;
-// }
 
 router.post(`/gitData`, async (
   req: Request<unknown, unknown, RequestBody>,

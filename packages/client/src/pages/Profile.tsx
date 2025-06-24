@@ -93,8 +93,11 @@ const Profile: React.FC = () => {
       setShowEditModal(false);
       window.location.reload();
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(`An unknown error occurred while updating your profile.`);
+      }
     }
   };
 

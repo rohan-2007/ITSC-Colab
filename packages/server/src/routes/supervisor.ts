@@ -1,16 +1,8 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
-
-// middleware auth
-export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session.userId) {
-    res.status(401).json({ error: `Not authenticated` });
-    return;
-  }
-  next();
-};
+import { requireAuth } from './auth';
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const router = Router();
@@ -95,7 +87,6 @@ router.post(`/setUserInfo`, requireAuth, async (
       return;
     }
 
-    // Build update data object only with non-empty fields
     const updateData: Partial<PrismaUser> = {};
 
     if (email && email.trim() !== ``) {
@@ -251,21 +242,5 @@ router.delete(`/deleteTeam/:id`, requireAuth, async (
     res.status(500).json({ error: `Internal server error` });
   }
 });
-
-// router.post(`/criteriaData`, async (
-//   req: Request<unknown, unknown>,
-//   res: Response,
-// ) => {
-//   try {
-//     const criteria = await prisma.criteria.findMany({ select: { id: true } });
-//     res.status(200).json({
-//       criteria,
-//       message: `Fetched criteria data`,
-//     });
-//   } catch (err) {
-//     console.error(`Criteria fetch error: `, err);
-//     res.status(500).json({ error: `Internal server error` });
-//   }
-// });
 
 export default router;

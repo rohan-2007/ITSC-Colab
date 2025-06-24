@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from './PastEvaluations';
@@ -80,7 +81,6 @@ const Evaluations: React.FC = () => {
     const currentYear = new Date().getFullYear();
 
     if (currentSemester === `N/A`) {
-      // eslint-disable-next-line no-console
       console.warn(`Cannot fetch statuses: Not within a valid semester.`);
       return;
     }
@@ -102,7 +102,7 @@ const Evaluations: React.FC = () => {
       setStudentsEvalStatus(data as Record<number, EvalStatus>);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-console
+
       console.warn(`Error fetching evaluation statuses: ${errorMsg}`);
       setStudentsEvalStatus({});
     }
@@ -135,7 +135,7 @@ const Evaluations: React.FC = () => {
       setCanStartSelfEval(!data.studentCompleted);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-console
+
       console.warn(`Error fetching self-evaluation status: ${errorMsg}`);
       setCanStartSelfEval(true);
     }
@@ -148,7 +148,6 @@ const Evaluations: React.FC = () => {
       method: `POST`,
     });
     if (!response.ok) {
-      // eslint-disable-next-line no-console
       console.warn(`Failed to fetch students`);
     }
     const jsonData = await response.json();
@@ -171,7 +170,7 @@ const Evaluations: React.FC = () => {
       setRubricCategories(data);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-console
+
       console.warn(`Rubric fetch error: ${errorMsg}`);
     }
   };
@@ -222,7 +221,7 @@ const Evaluations: React.FC = () => {
         setSelectedTeam((data.user.teamNames?.[0] as string) || `no team`);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
-        // eslint-disable-next-line no-console
+
         console.warn(`Failed to fetch user data: ${errorMsg}`);
       } finally {
         setIsLoading(false);

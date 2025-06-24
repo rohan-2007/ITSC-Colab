@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, { FormEvent, useState } from 'react';
 import '../CSS/login.css';
 import { useEffect } from 'react';
@@ -85,7 +86,6 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    // e.preventDefault();
     const isValid = validateLogin();
     if (isValid) {
       setIsLoading(true);
@@ -202,7 +202,6 @@ const Login: React.FC = () => {
         </div>
       </div>}
     {isOpenSignup &&
-    // <div>
       <div className="page">
         <div className="signup-card">
           <h2>Sign Up</h2>
@@ -264,7 +263,6 @@ const Login: React.FC = () => {
             </div>
           </form>
         </div>
-        {/* </div> */}
       </div>}
     {isOpenLogin &&
       <div>

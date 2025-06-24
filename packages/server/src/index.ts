@@ -1,18 +1,19 @@
+/* eslint-disable no-console */
 import express from 'express';
 import session from 'express-session';
 import pgSession from 'connect-pg-simple';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
-// import cookieParser from 'cookieParser';
+
 import cors from 'cors';
 import type { RequestHandler } from 'express';
-import authRouter from './routes/auth'; // Import the router
-import evalRouter from './routes/eval'; // Import the evaluation router
+import authRouter from './routes/auth';
+import evalRouter from './routes/eval';
 import supervisorRouter from './routes/supervisor';
 import gitreportsRouter from './routes/gitreports';
 import rubricRouter from './routes/rubric';
-import { seedRubricData } from './seed'; // Adjust the path as needed
+import { seedRubricData } from './seed';
 export let sessionMiddleware: RequestHandler;
 
 const main = async () => {
@@ -38,7 +39,7 @@ const main = async () => {
   sessionMiddleware = session({
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       sameSite: `lax`,
       secure: process.env.NODE_ENV === `production`,
     },
@@ -56,7 +57,7 @@ const main = async () => {
     res.send(`Welcome from TypeScript backend!`);
   });
   app.use(express.json()); // Use JSON middleware you slugs
-  app.use(sessionMiddleware); // Session storage
+  app.use(sessionMiddleware);
   app.use(authRouter);
   app.use(evalRouter);
   app.use(rubricRouter);
@@ -68,12 +69,10 @@ const main = async () => {
   });
 
   app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
     console.log(`Server running on http://localhost:${ PORT }`);
   });
 };
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
 });

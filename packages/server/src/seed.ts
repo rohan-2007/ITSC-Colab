@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-// /prisma/seed.ts
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -69,14 +68,13 @@ export const seedRubricData = async (): Promise<void> => {
       });
 
       if (!existingCategory) {
-        // Create category with correct ID
         await prisma.rubricCategory.create({
           data: {
             id: categoryId,
             displayOrder: category.displayOrder,
             levels: {
               create: category.performanceLevels.map((level, idx) => ({
-                id: (categoryId * 100) + (idx + 1), // deterministic level ID
+                id: (categoryId * 100) + (idx + 1),
                 description: level.description,
                 level: level.level,
               })),
@@ -92,7 +90,6 @@ export const seedRubricData = async (): Promise<void> => {
           },
         });
       } else {
-        // Update ID if needed
         if (existingCategory.id !== categoryId) {
           await prisma.rubricCategory.update({
             data: { id: categoryId },
@@ -100,7 +97,6 @@ export const seedRubricData = async (): Promise<void> => {
           });
         }
 
-        // Levels
         for (let levelIdx = 0; levelIdx < category.performanceLevels.length; levelIdx += 1) {
           const level = category.performanceLevels[levelIdx];
           const levelId = (categoryId * 100) + (levelIdx + 1);

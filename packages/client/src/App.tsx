@@ -1,9 +1,6 @@
-// src/App.tsx
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-// import NotFoundPage from './pages/PastEvaluations';
 import Layout from './layouts/Layout';
 import PastEvaluations from './pages/PastEvaluations';
 import Login from './pages/login';
@@ -58,7 +55,6 @@ const App: React.FC = () =>
           <StudentSelect />
         }
       />
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   </Layout>;
 export default App;

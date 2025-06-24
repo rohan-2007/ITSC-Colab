@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Request, Response, Router } from 'express';
 import { Role, Semester } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
@@ -7,10 +8,8 @@ const router = Router();
 interface EvaluationResultBody {
   rubricCategoryId: number;
   rubricPerformanceLevelId: number;
-  // comment is not in the schema, so it's removed
 }
 
-// Interface for the entire evaluation submission
 interface EvaluationBody {
   results: EvaluationResultBody[];
   semester: keyof typeof Semester;
@@ -28,7 +27,6 @@ router.post(`/submitEval`, requireAuth, async (
   try {
     const { results, semester, studentId, supervisorId, team, type, year } = req.body;
 
-    // Authorization: The submitter must be the student being evaluated or their supervisor
     if (
       Number(req.session.userId) !== studentId &&
       Number(req.session.userId) !== supervisorId
@@ -37,12 +35,9 @@ router.post(`/submitEval`, requireAuth, async (
       return;
     }
 
-    // The logic here is already correct for your new schema.
-    // It creates an Evaluation and nests the creation of multiple EvaluationResult records.
     const newEval = await prisma.evaluation.create({
       data: {
         results: {
-          // `createMany` is efficient for creating multiple related records
           createMany: {
             data: results.map((result) => ({
               rubricCategoryId: result.rubricCategoryId,
@@ -52,7 +47,7 @@ router.post(`/submitEval`, requireAuth, async (
         },
         semester,
         studentId,
-        supervisorId: supervisorId ?? null, // Use nullish coalescing for clarity
+        supervisorId: supervisorId ?? null,
         team,
         type,
         year,
@@ -64,7 +59,6 @@ router.post(`/submitEval`, requireAuth, async (
       message: `Evaluation submitted successfully`,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Submit evaluation error:`, error);
     res.status(500).json({ error: `Internal server error` });
   }
@@ -128,7 +122,6 @@ router.get(`/getEval`, requireAuth, async (
 
     res.status(400).json({ error: `Provide either evaluationId or userId as query param` });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Get evaluation error:`, error);
     res.status(500).json({ error: `Internal server error` });
   }
@@ -191,7 +184,6 @@ router.get(
 
       res.status(200).json({ studentCompleted });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`Get self evaluation status error:`, error);
       res.status(500).json({ error: `Internal server error` });
     }
@@ -250,7 +242,6 @@ router.get(`/supervisorEvals`, requireAuth, async (
 
     res.status(200).json(statuses);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Get supervisor evaluation statuses error:`, error);
     res.status(500).json({ error: `Internal server error` });
   }
