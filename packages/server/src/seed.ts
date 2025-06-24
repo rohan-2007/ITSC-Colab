@@ -1,8 +1,4 @@
-/* THIS FILE AUTO GENERATES THE RUBRIC DATABASE BASED OFF
-OF THE CONFIG/DEFAULT-RUBRIC.JSON
-PLEASE UPDATE, it is wrong
-*/
-
+/* eslint-disable no-console */
 // /prisma/seed.ts
 import fs from 'fs';
 import path from 'path';
@@ -152,10 +148,9 @@ export const seedRubricData = async (): Promise<void> => {
         }
       }
     }
-    // eslint-disable-next-line no-console
+
     console.log(`✅ Rubric seeding complete with consistent IDs.`);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`❌ Failed to synchronize rubric data:`, error);
     process.exit(1);
   }
