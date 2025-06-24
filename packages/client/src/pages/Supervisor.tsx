@@ -85,9 +85,7 @@ const Supervisor: React.FC = () => {
             return userData; // Return the user data
           }
           return null;
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.error(`[Session check failed]:`, err);
+        } catch {
           await navigate(`/login`);
           return null;
         }
@@ -202,23 +200,12 @@ const Supervisor: React.FC = () => {
   };
 
   const saveStudentInfo = async () => {
-    // eslint-disable-next-line no-console
-    console.log(`Saving student info:`, editedStudent);
-
-    const res = await fetch(`${fetchUrl}/setUserInfo/`, {
+    await fetch(`${fetchUrl}/setUserInfo/`, {
       body: JSON.stringify(editedStudent),
       credentials: `include`,
       headers: { 'Content-Type': `application/json` },
       method: `POST`,
     });
-    if (!res.ok) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to set user info`);
-    }
-
-    const jsonData = await res.json();
-    // eslint-disable-next-line no-console
-    console.log(`Saved student info:`, jsonData);
 
     closeStudentInfoModal();
   };
