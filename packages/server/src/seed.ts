@@ -26,10 +26,8 @@ export const seedRubricData = async (): Promise<void> => {
     const rubricPath = path.join(__dirname, `..`, `config`, `default-rubric.json`);
     const rubricFileContent = fs.readFileSync(rubricPath, `utf-8`);
     const rubricData = JSON.parse(rubricFileContent) as RubricSeedData[];
-    for (const category of rubricData) {
-      // Using a transaction to ensure that deleting and creating happens together.
-      // The `onDelete: Cascade` in your schema will automatically remove old
-      // subItems and performanceLevels when the parent category is deleted.
+    for (let i = 0; i < rubricData.length; i += 1) {
+      const category = rubricData[i];
       await prisma.$transaction(async (tx) => {
         await tx.rubricCategory.deleteMany({
           where: { name: category.name },
@@ -37,8 +35,8 @@ export const seedRubricData = async (): Promise<void> => {
 
         await tx.rubricCategory.create({
           data: {
+            id: i + 1,
             displayOrder: category.displayOrder,
-            // UPDATED: Create related RubricPerformanceLevel records using the 'levels' relation
             levels: {
               create: category.performanceLevels.map((level) => ({
                 description: level.description,
@@ -46,7 +44,6 @@ export const seedRubricData = async (): Promise<void> => {
               })),
             },
             name: category.name,
-            // UPDATED: Create related RubricSubItem records using the 'subItems' relation
             subItems: {
               create: category.subItems.map((itemName) => ({
                 name: itemName,

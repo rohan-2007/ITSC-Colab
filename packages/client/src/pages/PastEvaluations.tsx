@@ -208,8 +208,8 @@ const PastEvaluations: React.FC = () => {
         const contributionList = resJson.data as Contribution[];
         console.log(`contributionList: `, contributionList);
 
-        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));  
-        
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+
         console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
         // console.log(`gitData: `, contributions);
       } catch (err) {
