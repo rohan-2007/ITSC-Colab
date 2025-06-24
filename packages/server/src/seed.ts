@@ -26,37 +26,104 @@ export const seedRubricData = async (): Promise<void> => {
     const rubricPath = path.join(__dirname, `..`, `config`, `default-rubric.json`);
     const rubricFileContent = fs.readFileSync(rubricPath, `utf-8`);
     const rubricData = JSON.parse(rubricFileContent) as RubricSeedData[];
+
     for (let i = 0; i < rubricData.length; i += 1) {
       const category = rubricData[i];
-      await prisma.$transaction(async (tx) => {
-        await tx.rubricCategory.deleteMany({
-          where: { name: category.name },
-        });
+      const categoryId = i + 1;
 
-        await tx.rubricCategory.create({
+      const existingCategory = await prisma.rubricCategory.findUnique({
+        include: {
+          levels: true,
+          subItems: true,
+        },
+        where: { name: category.name },
+      });
+
+      if (!existingCategory) {
+        // Create category with correct ID
+        await prisma.rubricCategory.create({
           data: {
-            id: i + 1,
+            id: categoryId,
             displayOrder: category.displayOrder,
             levels: {
-              create: category.performanceLevels.map((level) => ({
+              create: category.performanceLevels.map((level, idx) => ({
+                id: (categoryId * 100) + (idx + 1), // deterministic level ID
                 description: level.description,
                 level: level.level,
               })),
             },
             name: category.name,
             subItems: {
-              create: category.subItems.map((itemName) => ({
-                name: itemName,
+              create: category.subItems.map((item, idx) => ({
+                id: (categoryId * 100) + (idx + 1),
+                name: item,
               })),
             },
             title: category.title,
           },
         });
-      });
+      } else {
+        // Update ID if needed
+        if (existingCategory.id !== categoryId) {
+          await prisma.rubricCategory.update({
+            data: { id: categoryId },
+            where: { id: existingCategory.id },
+          });
+        }
+
+        // Levels
+        for (let levelIdx = 0; levelIdx < category.performanceLevels.length; levelIdx += 1) {
+          const level = category.performanceLevels[levelIdx];
+          const levelId = (categoryId * 100) + (levelIdx + 1);
+          const existingLevel = existingCategory.levels.find(
+            (l) => l.level === level.level && l.description === level.description,
+          );
+
+          if (!existingLevel) {
+            await prisma.rubricPerformanceLevel.create({
+              data: {
+                id: levelId,
+                description: level.description,
+                level: level.level,
+                rubricCategoryId: categoryId,
+              },
+            });
+          } else if (existingLevel.id !== levelId) {
+            await prisma.rubricPerformanceLevel.update({
+              data: { id: levelId },
+              where: { id: existingLevel.id },
+            });
+          }
+        }
+
+        // SubItems
+        for (let subIdx = 0; subIdx < category.subItems.length; subIdx += 1) {
+          const item = category.subItems[subIdx];
+          const itemId = (categoryId * 100) + (subIdx + 1);
+          const existingSub = existingCategory.subItems.find((s) => s.name === item);
+
+          if (!existingSub) {
+            await prisma.rubricSubItem.create({
+              data: {
+                id: itemId,
+                name: item,
+                rubricCategoryId: categoryId,
+              },
+            });
+          } else if (existingSub.id !== itemId) {
+            await prisma.rubricSubItem.update({
+              data: { id: itemId },
+              where: { id: existingSub.id },
+            });
+          }
+        }
+      }
     }
+    // eslint-disable-next-line no-console
+    console.log(`✅ Rubric seeding complete with consistent IDs.`);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Failed to synchronize rubric data:`, error);
+    console.error(`❌ Failed to synchronize rubric data:`, error);
     process.exit(1);
   }
 };
