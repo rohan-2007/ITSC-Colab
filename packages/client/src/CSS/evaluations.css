@@ -93,9 +93,7 @@
   position: relative;
   animation: fadeIn 0.3s;
   width: 100%;
-  max-width: 650px; /* A good width for the pre-eval modal */
-  /* --- KEY FIX: REMOVED FORCED CENTERING --- */
-  /* text-align is now left by default, which is what we want for forms/tables */
+  max-width: 650px;
 }
 
 @keyframes fadeIn {

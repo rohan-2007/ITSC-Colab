@@ -38,7 +38,7 @@ const performanceLevelColumns = [
 
 type Selections = Record<number, number>;
 
-export const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
+const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
   const today = new Date();
   const year = today.getFullYear();
   if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
