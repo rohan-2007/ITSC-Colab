@@ -70,28 +70,33 @@ const Home: React.FC = () => {
   const [ error, setError ] = useState<string | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ graphData, setGraphData ] = useState<Array<{ x: number, y: number }>>();
-  const [ height, _setHeight ] = useState<number>(200);
-  const [ width, _setWidth ] = useState<number>(200);
+  const [ height, setHeight ] = useState<number>(200);
+  const [ width, setWidth ] = useState<number>(400);
   const [ contributions, setContributions ] = useState<Contribution[]>();
 
   useEffect(() => {
     console.log(`contributions: `, contributions);
     if (svgRef.current && graphData && width && height) {
-      console.log(`heeeyy`);
+      setWidth(svgRef.current.clientWidth);
+      setHeight(svgRef.current.clientHeight);
       const svg = d3.select(svgRef.current);
       const xScale = d3.scaleLinear().domain([ 0, graphData.length - 1 ]).range([ 0, width ]);
       const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 1 ]).range([ height, 0 ]);
       const line = d3.line<{ x: number, y: number }>().x((_, i) => xScale(i)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
-
       svg.selectAll(`*`).remove();
-      svg.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+      const targetTickSpacing = 60; // pixels per tick
+      const tickCount = Math.floor(width / targetTickSpacing);
+      const g = svg.append(`g`);
+      g.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+      g.append(`g`).call(d3.axisBottom(xScale).ticks(tickCount));
+      g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickPadding(10));
     }
   }, [ graphData ]);
 
   useEffect(() => {
     const getGitData = async () => {
       try {
-        const username = user?.email.slice(user.email.indexOf(`@`) + 1);
+        const username = user?.email.slice(0, user.email.indexOf(`@`));
 
         console.log(`username: `, username);
 
@@ -175,7 +180,7 @@ const Home: React.FC = () => {
     if (user?.role === `SUPERVISOR`) {
       document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats to-do'\n'actions actions to-do'`);
     } else {
-      document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats graph'\n'actions actions actions'`);
+      document.documentElement.style.setProperty(`--gridLayout`, `'header header'\n'graph graph'\n'profile stats'\n'actions actions'`);
     }
 
     const fetchTeamStudents = async () => {
@@ -283,12 +288,18 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="graph-section">
+      {user.role === `STUDENT` && <section className="graph-section">
         <h2>Your Past Contributions</h2>
-        <div className="user-stats">
-          <svg ref={svgRef} width={width} height={height} />
+        <div className="graph-div">
+          {/* <div className="stat">
+            <h2>{user.evalsCompleted}</h2>
+            <p>Evaluations Completed</p>
+          </div> */}
+          {contributions ?
+            <svg ref={svgRef} className="graph" /> :
+            <h3>No Past Contributions</h3>}
         </div>
-      </section>
+      </section>}
 
       {user.role === `SUPERVISOR` &&
         <section className="supervisor-todo-section">
