@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
+import rateLimit from 'express-rate-limit';
 import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
 
@@ -13,6 +14,16 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
+export const limiter = rateLimit({
+  legacyHeaders: false,
+  max: 10,
+  message: {
+    error: `Too many requests, please slow down.`,
+  },
+  standardHeaders: true,
+  windowMs: 60 * 1000,
+});
+
 interface SignupRequestBody {
   email: string;
   name: string;
@@ -22,7 +33,7 @@ interface SignupRequestBody {
   teamName?: string;
 }
 
-router.post(`/signup`, async (
+router.post(`/signup`, limiter, async (
   req: Request<unknown, unknown, SignupRequestBody>,
   res: Response,
 ) => {
@@ -98,7 +109,7 @@ interface LoginRequestBody {
   password: string;
 }
 
-router.post(`/login`, async (
+router.post(`/login`, limiter, async (
   req: Request<unknown, unknown, LoginRequestBody>,
   res: Response,
 ) => {
@@ -132,7 +143,7 @@ router.post(`/login`, async (
   }
 });
 
-router.post(`/logout`, (req: Request, res: Response) => {
+router.post(`/logout`, limiter, (req: Request, res: Response) => {
   req.session.destroy((err) => {
     if (err) {
       console.error(`Session destruction failed:`, err);
@@ -154,7 +165,7 @@ interface UserInfoBody {
   returnData?: boolean;
 }
 
-router.post(`/me`, requireAuth, async (
+router.post(`/me`, limiter, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
