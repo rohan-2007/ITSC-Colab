@@ -77,19 +77,19 @@ const Home: React.FC = () => {
 
   // const students: User[] = [];
 
-  useEffect(() => {
-    console.log(`contributions: `, contributions);
-    if (svgRef.current && graphData && width && height) {
-      console.log(`heeeyy`);
-      const svg = d3.select(svgRef.current);
-      const xScale = d3.scaleLinear().domain([ 0, graphData.length - 1 ]).range([ 0, width ]);
-      const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 1 ]).range([ height, 0 ]);
-      const line = d3.line<{ x: number, y: number }>().x((_, i) => xScale(i)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
+  // useEffect(() => {
+  //   console.log(`contributions: `, contributions);
+  //   if (svgRef.current && graphData && width && height) {
+  //     console.log(`heeeyy`);
+  //     const svg = d3.select(svgRef.current);
+  //     const xScale = d3.scaleLinear().domain([ 0, graphData.length - 1 ]).range([ 0, width ]);
+  //     const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 1 ]).range([ height, 0 ]);
+  //     const line = d3.line<{ x: number, y: number }>().x((_, i) => xScale(i)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
 
-      svg.selectAll(`*`).remove();
-      svg.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
-    }
-  }, [ graphData ]);
+  //     svg.selectAll(`*`).remove();
+  //     svg.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+  //   }
+  // }, [ graphData ]);
 
   useEffect(() => {
     const getGitData = async () => {
