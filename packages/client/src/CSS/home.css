@@ -261,6 +261,16 @@
   width: 100%;
 }
 
+#tooltip {
+   position: absolute; 
+   opacity: 0; 
+   background: white; 
+   border: 1px solid #ccc; 
+   padding: 5px; 
+   border-radius: 4px; 
+   pointer-events: none;
+}
+
 /* .graph-div {
   padding-bottom: 20px;
 } */

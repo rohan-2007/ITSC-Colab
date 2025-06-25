@@ -135,6 +135,11 @@ const PastEvaluations: React.FC = () => {
     setSelectedYear(parseInt(event.target.value, 10));
   };
 
+  const checkIfCurrentYear = (timestamp: string | Date) => {
+    const date = new Date(timestamp);
+    return date.getFullYear() === new Date().getFullYear();
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (topBarRef.current) {
@@ -184,7 +189,7 @@ const PastEvaluations: React.FC = () => {
       const contributionList = resJson.data as Contribution[];
 
       setContributions(contributionList.filter((item) =>
-        getSemesterFromTimestamp(item.date) === assignSemester()));
+        getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
     } catch (err) {
       console.error(`Git fetch error:`, err);
     }

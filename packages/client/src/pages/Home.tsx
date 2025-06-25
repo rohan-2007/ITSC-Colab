@@ -50,6 +50,16 @@ const getSemesterFromTimestamp = (timestamp: string | Date) => {
   return `UNKNOWN`;
 };
 
+const getMonthFromTimestamp = (timestamp: string | Date) => {
+  const date = new Date(timestamp);
+  return date.toLocaleString(`default`, { month: `long` });
+};
+
+const checkIfCurrentYear = (timestamp: string | Date) => {
+  const date = new Date(timestamp);
+  return date.getFullYear() === new Date().getFullYear();
+};
+
 const currentSemester = assignSemester();
 interface User {
   email: string;
@@ -69,29 +79,104 @@ const Home: React.FC = () => {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
-  const [ graphData, setGraphData ] = useState<Array<{ x: number, y: number }>>();
+  const [ graphData, setGraphData ] = useState<Array<{ x: Date, y: number }>>();
   const [ height, setHeight ] = useState<number>(200);
   const [ width, setWidth ] = useState<number>(400);
-  const [ contributions, setContributions ] = useState<Contribution[]>();
+  const [ contributions, setContributions ] = useState<Contribution[] | null>(null);
+  const [ months, setMonths ] = useState<string[]>();
 
   useEffect(() => {
     console.log(`contributions: `, contributions);
-    if (svgRef.current && graphData && width && height) {
+    if (svgRef.current && graphData && width && height && months && contributions) {
+      console.log(`graphData: `, graphData);
       setWidth(svgRef.current.clientWidth);
       setHeight(svgRef.current.clientHeight);
+      const margin = { bottom: 20, left: 20, right: 20, top: 20 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.bottom - margin.top;
+      console.log(`width:`, innerWidth, `height:`, innerHeight);
       const svg = d3.select(svgRef.current);
-      const xScale = d3.scaleLinear().domain([ 0, graphData.length - 1 ]).range([ 0, width ]);
-      const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 1 ]).range([ height, 0 ]);
-      const line = d3.line<{ x: number, y: number }>().x((_, i) => xScale(i)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
+      const xScale = d3.scaleTime().domain((d3.extent(graphData, (d) => d.x)) as [Date, Date]).range([ 0, innerWidth + margin.left ]);
+      const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 5 ]).range([ innerHeight, 0 ]);
+      graphData.sort((a, b) => a.x.getTime() - b.x.getTime());
+      const line = d3.line<{ x: Date, y: number }>().x((d) => xScale(d.x)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
+
       svg.selectAll(`*`).remove();
-      const targetTickSpacing = 60; // pixels per tick
-      const tickCount = Math.floor(width / targetTickSpacing);
+      // const targetTickSpacing = 60; // pixels per tick
+      // const tickCount = Math.floor(innerWidth / targetTickSpacing);
       const g = svg.append(`g`);
-      g.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
-      g.append(`g`).call(d3.axisBottom(xScale).ticks(tickCount));
-      g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickPadding(10));
+      const dateLabels = contributions.map((d) => new Date(d.date));
+      const xAxis = d3.axisBottom(xScale)
+        .ticks(graphData.length)
+        .tickFormat((d, i) => {
+          const date = dateLabels[i];
+          return d3.timeFormat(`%b %d`)(date);
+        });
+
+      const focusLine = g.append(`line`)
+        .attr(`stroke`, `gray`)
+        .attr(`stroke-width`, 1)
+        .attr(`y1`, 0)
+        .attr(`y2`, innerHeight)
+        .style(`opacity`, 0);
+
+      svg.append(`rect`)
+        .attr(`width`, innerWidth)
+        .attr(`height`, innerHeight)
+        .attr(`fill`, `none`)
+        .attr(`pointer-events`, `all`)
+        .on(`mousemove`, (event: MouseEvent) => {
+          const [ x ] = d3.pointer(event);
+          focusLine
+            .attr(`x1`, x)
+            .attr(`x2`, x)
+            .style(`opacity`, 1);
+
+          // Optional: snap to nearest point
+          const xDate = xScale.invert(x); // for scaleTime
+          const i = d3.bisector((d: typeof graphData[0]) => d.x).center(graphData, xDate);
+          const d = graphData[i];
+
+          // You can now move your tooltip to d.x, d.y
+          d3.select(`#tooltip`)
+            .style(`opacity`, 1)
+            .html(`📅 ${d3.timeFormat(`%b %d, %Y`)(d.x)}<br/>📊 ${d.y} contributions`)
+            .style(`left`, `${event.pageX + 10}px`)
+            .style(`top`, `${event.pageY - 28}px`);
+        })
+        .on(`mouseout`, () => {
+          focusLine.style(`opacity`, 0);
+          d3.select(`#tooltip`).style(`opacity`, 0);
+        });
+      // g.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+      g.selectAll(`circle`)
+        .data(graphData)
+        .enter()
+        .append(`circle`)
+        .attr(`cx`, (d) => xScale(d.x))
+        .attr(`cy`, (d) => yScale(d.y))
+        .attr(`r`, 4)
+        .attr(`fill`, `teal`)
+        .on(`mouseover`, (event, d) => {
+          d3.select(`#tooltip`)
+            .style(`opacity`, 1)
+            .html(`📅 ${d3.timeFormat(`%b %d, %Y`)(d.x)}<br/>📊 ${d.y} contributions`)
+            .style(`left`, `${event.pageX + 10}px`)
+            .style(`top`, `${event.pageY - 28}px`);
+        })
+        .on(`mouseout`, () => {
+          d3.select(`#tooltip`).style(`opacity`, 0);
+        });
+      g.append(`path`)
+        .datum(graphData)
+        .attr(`fill`, `none`)
+        .attr(`stroke`, `teal`)
+        .attr(`stroke-width`, 2)
+        .attr(`d`, line);
+      g.append(`g`).attr(`transform`, `translate(${margin.left}, ${innerHeight})`).call(xAxis);
+      g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth - margin.left).tickPadding(10));
     }
-  }, [ graphData ]);
+  }, [ graphData, width, height, months ]);
 
   useEffect(() => {
     const getGitData = async () => {
@@ -116,9 +201,9 @@ const Home: React.FC = () => {
         const contributionList = resJson.data as Contribution[];
         console.log(`contributionList: `, contributionList);
 
-        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
 
-        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester()));
+        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -132,7 +217,8 @@ const Home: React.FC = () => {
   }, [ user ]);
 
   useEffect(() => {
-    setGraphData(contributions?.map((item, index) => ({ x: index, y: item.contribution_count })));
+    setMonths(Array.from(new Set(contributions?.map((item) => getMonthFromTimestamp(item.date)))));
+    setGraphData(contributions?.map((item) => ({ x: new Date(item.date), y: item.contribution_count })));
   }, [ contributions ]);
 
   useEffect(() => {
@@ -289,15 +375,17 @@ const Home: React.FC = () => {
       </section>
 
       {user.role === `STUDENT` && <section className="graph-section">
-        <h2>Your Past Contributions</h2>
+        <h2>Your Past Git Contributions</h2>
         <div className="graph-div">
           {/* <div className="stat">
             <h2>{user.evalsCompleted}</h2>
             <p>Evaluations Completed</p>
           </div> */}
+          {/* <h3>contributions: {contributions}</h3> */}
           {contributions ?
             <svg ref={svgRef} className="graph" /> :
             <h3>No Past Contributions</h3>}
+          <div id="tooltip" />
         </div>
       </section>}
 
