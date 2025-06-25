@@ -148,3 +148,56 @@
     text-align: center;
   }
 }
+
+.error-message {
+  color: #d55959; /* Match scrollbar thumb or your theme's error color */
+  font-size: 0.9em;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.profile-details-card .button-edit-profile {
+  background-color: #555; /* Example style */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%; /* Make button full width in this card */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.profile-details-card .button-edit-profile:hover {
+  background-color: #333;
+}
+
+
+/* Optional: Styles for evaluation status */
+.status-completed {
+  color: #4CAF50; /* Green for completed */
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #f44336; /* Red/Orange for pending */
+  font-weight: bold;
+}
+
+/* Ensure profile-card can accommodate content gracefully */
+.profile-card {
+  /* ... existing styles ... */
+  display: flex;
+  flex-direction: column; /* Helps with alignment of items within card */
+}
+
+.profile-card h3 {
+  /* ... existing styles ... */
+  width: 100%; /* Ensure title spans width if items below are full width */
+  box-sizing: border-box;
+}
+
+.profile-card p {
+  line-height: 1.5;
+}
