@@ -24,6 +24,16 @@ export const limiter = rateLimit({
   windowMs: 10 * 1000,
 });
 
+export const meLimiter = rateLimit({
+  legacyHeaders: false,
+  max: 5,
+  message: {
+    error: `Too many requests, please slow down.`,
+  },
+  standardHeaders: true,
+  windowMs: 1000,
+});
+
 interface SignupRequestBody {
   email: string;
   name: string;
@@ -165,7 +175,7 @@ interface UserInfoBody {
   returnData?: boolean;
 }
 
-router.post(`/me`, limiter, requireAuth, async (
+router.post(`/me`, meLimiter, requireAuth, async (
   req: Request<unknown, unknown, UserInfoBody>,
   res: Response,
 ) => {
