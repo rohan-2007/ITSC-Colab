@@ -10,19 +10,17 @@ interface UserProfile {
   id: number;
   createdAt: string;
   email: string;
-  name: string; // Assuming this might be used as git username
+  name: string;
   role: `SUPERVISOR` | `STUDENT` | `N/A`;
   supervisorId: number | null;
   supervisorName: string | null;
   teamNames: string | null;
 }
 
-// For student's self-evaluation status
 interface StudentSelfEvalStatus {
   studentCompleted: boolean;
 }
 
-// For Git contributions (adjust based on actual prisma.contributions schema)
 interface GitContribution {
   id: number;
   contribution_count: number;
@@ -30,14 +28,12 @@ interface GitContribution {
   user_login: string;
 }
 
-// Helper function to get current academic term (can be moved to a utils file)
 const getCurrentAcademicTerm = (): { semester: `FALL` | `SPRING` | `SUMMER`, year: number } => {
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth(); // 0-11 (Jan-Dec)
+  const month = now.getMonth();
 
   let semester: `FALL` | `SPRING` | `SUMMER`;
-  // Simplified logic: Jan-Apr: Spring, May-Aug: Summer, Sep-Dec: Fall
   if (month >= 0 && month <= 3) {
     semester = `SPRING`;
   } else if (month >= 4 && month <= 7) {
@@ -59,7 +55,6 @@ const Profile: React.FC = () => {
   const [ newEmail, setNewEmail ] = useState(``);
   const [ newPassword, setNewPassword ] = useState(``);
 
-  // State for Student's specific data
   const [ selfEvalStatus, setSelfEvalStatus ] = useState<StudentSelfEvalStatus | null>(null);
   const [ selfEvalStatusLoading, setSelfEvalStatusLoading ] = useState(false);
   const [ selfEvalStatusError, setSelfEvalStatusError ] = useState<string | null>(null);
@@ -68,7 +63,6 @@ const Profile: React.FC = () => {
   const [ gitContributionsLoading, setGitContributionsLoading ] = useState(false);
   const [ gitContributionsError, setGitContributionsError ] = useState<string | null>(null);
 
-  // State for Supervisor's specific data
   const [ _supervisorEvalCount, setSupervisorEvalCount ] = useState<{ pending: number, total: number } | null>(null);
   const [ _supervisorEvalCountLoading, setSupervisorEvalCountLoading ] = useState(false);
   const [ _supervisorEvalCountError, setSupervisorEvalCountError ] = useState<string | null>(null);
@@ -108,7 +102,6 @@ const Profile: React.FC = () => {
           };
           setUser(fetchedUser);
 
-          // Set initial values for edit modal placeholders
           setNewName(fetchedUser.name === `N/A` ? `` : String(fetchedUser.name));
           setNewEmail(fetchedUser.email === `N/A` ? `` : String(fetchedUser.email));
         } else {
@@ -128,12 +121,10 @@ const Profile: React.FC = () => {
     void fetchUserInfo();
   }, [ navigate ]);
 
-  // Effect for fetching student-specific data
   useEffect(() => {
     if (user && user.role === `STUDENT` && user.id !== -1) {
       const { semester, year } = getCurrentAcademicTerm();
 
-      // Fetch self evaluation status
       const fetchSelfEval = async () => {
         setSelfEvalStatusLoading(true);
         setSelfEvalStatusError(null);
@@ -145,7 +136,6 @@ const Profile: React.FC = () => {
             throw new Error(`Failed to fetch self evaluation status.`);
           }
           const data = await response.json();
-          // Type guard to ensure data matches StudentSelfEvalStatus
           if (
             typeof data === `object` &&
             data !== null &&
@@ -163,10 +153,9 @@ const Profile: React.FC = () => {
         }
       };
 
-      // Fetch Git contributions
       const fetchGitData = async () => {
         if (user.name === `N/A` || !user.name) {
-          setGitContributions([]); // No contributions if name is N/A
+          setGitContributions([]);
           setGitContributionsError(`Git username (user's name) is not available to fetch contributions.`);
           setGitContributionsLoading(false);
           return;
@@ -184,7 +173,6 @@ const Profile: React.FC = () => {
             throw new Error(`Failed to fetch Git contributions.`);
           }
           const data = await response.json();
-          // Type guard to ensure data.data is an array of GitContribution
           if (Array.isArray(data.data)) {
             setGitContributions(data.data as GitContribution[]);
           } else {
@@ -201,9 +189,8 @@ const Profile: React.FC = () => {
       void fetchSelfEval();
       void fetchGitData();
     }
-  }, [ user ]); // Removed navigate as it's not used directly here
+  }, [ user ]);
 
-  // Effect for fetching supervisor-specific data
   useEffect(() => {
     if (user && user.role === `SUPERVISOR`) {
       const { semester, year } = getCurrentAcademicTerm();
@@ -238,12 +225,11 @@ const Profile: React.FC = () => {
       };
       void fetchSupervisorStats();
     }
-  }, [ user ]); // Removed navigate
+  }, [ user ]);
 
   const handleSaveChanges = async () => {
     try {
-      // Basic validation
-      if (newPassword && newPassword.length < 6) { // Example: min password length
+      if (newPassword && newPassword.length < 6) {
         setError(`Password must be at least 6 characters long.`);
         return;
       }
@@ -261,7 +247,7 @@ const Profile: React.FC = () => {
         payload.password = newPassword;
       }
 
-      if (Object.keys(payload).length <= 1) { // Only userId means no changes
+      if (Object.keys(payload).length <= 1) {
         setShowEditModal(false);
         return;
       }
@@ -281,12 +267,10 @@ const Profile: React.FC = () => {
       }
 
       setShowEditModal(false);
-      // Instead of reload, ideally update state or re-fetch user info
-      // For simplicity here, reload is used as in original code.
       window.location.reload();
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message); // Display this error in the modal or globally
+        setError(err.message);
       } else {
         setError(`An unknown error occurred while updating your profile.`);
       }
@@ -302,7 +286,7 @@ const Profile: React.FC = () => {
     </div>;
   }
 
-  if (error && !user) { // Only show full page error if user data couldn't be loaded at all
+  if (error && !user) {
     return <div className="profile-page-container">
       <main className="profile-content">
         <h1>Error</h1>
@@ -333,7 +317,6 @@ const Profile: React.FC = () => {
     </header>
     {error && <p className="error-message" style={{ marginBottom: `15px`, textAlign: `center` }}>{error}</p>}
     {` `}
-    {/* Display update errors here */}
     <main className="profile-content-grid">
       <div className="profile-card profile-details-card">
         <div className="profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
@@ -387,7 +370,6 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      {/* Student Specific Cards */}
       {user.role === `STUDENT` &&
         <>
           <div className="profile-card student-evaluations-card">
@@ -444,7 +426,6 @@ const Profile: React.FC = () => {
           <h2>Edit Your Profile</h2>
           {error && <p className="error-message" style={{ textAlign: `center` }}>{error}</p>}
           {` `}
-          {/* Display modal-specific errors */}
           <label>
             Username:
             <input
@@ -478,7 +459,7 @@ const Profile: React.FC = () => {
               className="button-default"
               onClick={() => {
                 setShowEditModal(false);
-                setError(null); // Clear errors when cancelling
+                setError(null);
               }}
             >Cancel</button>
           </div>
