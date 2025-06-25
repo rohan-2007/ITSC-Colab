@@ -69,9 +69,9 @@ const Profile: React.FC = () => {
   const [ gitContributionsError, setGitContributionsError ] = useState<string | null>(null);
 
   // State for Supervisor's specific data
-  const [ supervisorEvalCount, setSupervisorEvalCount ] = useState<{ pending: number, total: number } | null>(null);
-  const [ supervisorEvalCountLoading, setSupervisorEvalCountLoading ] = useState(false);
-  const [ supervisorEvalCountError, setSupervisorEvalCountError ] = useState<string | null>(null);
+  const [ _supervisorEvalCount, setSupervisorEvalCount ] = useState<{ pending: number, total: number } | null>(null);
+  const [ _supervisorEvalCountLoading, setSupervisorEvalCountLoading ] = useState(false);
+  const [ _supervisorEvalCountError, setSupervisorEvalCountError ] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -385,31 +385,6 @@ const Profile: React.FC = () => {
             {user.teamNames && user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}
           </span>
         </div>
-        {user.role === `SUPERVISOR` &&
-          <>
-            {supervisorEvalCountLoading &&
-              <p style={{ padding: `10px 0`, textAlign: `center` }}>
-                Loading supervision stats...
-              </p>}
-            {supervisorEvalCountError &&
-              <p
-                className="error-message"
-                style={{ padding: `10px 0`, textAlign: `center` }}
-              >
-                {supervisorEvalCountError}
-              </p>}
-            {supervisorEvalCount && !supervisorEvalCountLoading && !supervisorEvalCountError &&
-              <div className="profile-info-item">
-                <span className="info-label">
-                  Pending Student Evals (
-                  {getCurrentAcademicTerm().semester} {getCurrentAcademicTerm().year}
-                  )
-                </span>
-                <span className="info-value">
-                  {supervisorEvalCount.pending} / {supervisorEvalCount.total}
-                </span>
-              </div>}
-          </>}
       </div>
 
       {/* Student Specific Cards */}
