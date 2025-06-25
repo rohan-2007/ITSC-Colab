@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import Supervisor from './pages/Supervisor';
 import RequireRole, { RequireAuth } from './components/RequireRole';
 import StudentSelect from './pages/StudentSelect';
+import FilterEvaluations from './pages/FilterEvaluations';
 
 const App: React.FC = () =>
   <Layout>
@@ -53,6 +54,12 @@ const App: React.FC = () =>
         path="/student_select"
         element={
           <StudentSelect />
+        }
+      />
+      <Route
+        path="/filter_evaluations"
+        element={
+          <FilterEvaluations />
         }
       />
     </Routes>

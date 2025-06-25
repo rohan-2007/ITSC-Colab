@@ -5,6 +5,7 @@ import { User } from './PastEvaluations';
 import '../CSS/evaluations.css';
 import '../components/buttonandcard.css';
 import '../components/Modals.css';
+import { UserData } from './FilterEvaluations';
 
 const fetchUrl = `http://localhost:3001`;
 
@@ -75,6 +76,13 @@ const Evaluations: React.FC = () => {
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
   const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
+
+  const navigateToFilterEvaluations = () => {
+    if (user?.role === `STUDENT`) {
+      const data: UserData = { studentId: user.id };
+      void navigate(`/filter_evaluations`, { state: data });
+    }
+  };
 
   const fetchAllStatuses = async () => {
     const currentSemester = assignSemester();
@@ -357,7 +365,7 @@ const Evaluations: React.FC = () => {
         <p> Access and review all your previously submitted evaluations,
           along with any evaluations submitted for you.</p>
         {user?.role === `STUDENT` &&
-          <button className="view-eval-button" onClick={() => navigate(`/past_evaluations`)}>
+          <button className="view-eval-button" onClick={() => navigateToFilterEvaluations()}>
             View Past Evaluations</button>}
         {user?.role === `SUPERVISOR` &&
           <button className="view-eval-button" onClick={() => navigate(`/student_select`)}>

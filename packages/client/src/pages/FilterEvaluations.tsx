@@ -3,25 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
 import '../components/ButtonAndCard.css';
+import { useNavigate } from 'react-router';
+import type { Data } from './PastEvaluations';
 
-export interface Data {
-  role: string;
-  semester: string;
+export interface UserData {
   studentId: number | null;
-  team: string | null;
-  year: number;
-}
-
-// interface PastEvalFilterData {
-//   semester: string;
-//   team: string;
-//   year: number;
-// }
-
-export interface Contribution {
-  contribution_count: number;
-  date: string;
-  user_login: string;
 }
 
 export interface RubricCategory {
@@ -77,60 +63,59 @@ export interface User {
   teamNames?: string[] | null;
 }
 
-const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
-  const today = new Date();
-  const year = today.getFullYear();
-  if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
-    return `SUMMER`;
-  }
-  if (today >= new Date(year, 7, 25) && today <= new Date(year, 11, 5)) {
-    return `FALL`;
-  }
-  if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
-    return `SPRING`;
-  }
-  return `N/A`;
-};
+// const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
+//   const today = new Date();
+//   const year = today.getFullYear();
+//   if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
+//     return `SUMMER`;
+//   }
+//   if (today >= new Date(year, 7, 25) && today <= new Date(year, 11, 5)) {
+//     return `FALL`;
+//   }
+//   if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
+//     return `SPRING`;
+//   }
+//   return `N/A`;
+// };
 
-const PastEvaluations: React.FC = () => {
-  const studentBgColor = `#abadb0`;
-  const studentBorderColor = `#97f04a`;
-  const supervisorBgColor = `#a5c4f2`;
-  const supervisorBorderColor = `#e36864`;
-  const bothBgColor = `#3e84ed`;
-  const bothBorderColor = `#e0bb63`;
+const FilterEvaluations: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const data = location.state as UserData;
+  // const studentBgColor = `#abadb0`;
+  // const studentBorderColor = `#97f04a`;
+  // const supervisorBgColor = `#a5c4f2`;
+  // const supervisorBorderColor = `#e36864`;
+  // const bothBgColor = `#3e84ed`;
+  // const bothBorderColor = `#e0bb63`;
 
   const topBarRef = useRef<HTMLDivElement>(null);
 
-  const dynamicStyles: React.CSSProperties = {
-    '--bothBgColor': bothBgColor,
-    '--bothBorderColor': bothBorderColor,
-    '--studentBgColor': studentBgColor,
-    '--studentBorderColor': studentBorderColor,
-    '--supervisorBgColor': supervisorBgColor,
-    '--supervisorBorderColor': supervisorBorderColor,
-  } as React.CSSProperties;
+  // const dynamicStyles: React.CSSProperties = {
+  //   '--bothBgColor': bothBgColor,
+  //   '--bothBorderColor': bothBorderColor,
+  //   '--studentBgColor': studentBgColor,
+  //   '--studentBorderColor': studentBorderColor,
+  //   '--supervisorBgColor': supervisorBgColor,
+  //   '--supervisorBorderColor': supervisorBorderColor,
+  // } as React.CSSProperties;
 
-  const legendColors = [
-    { color: studentBgColor, label: `Student` },
-    { color: supervisorBgColor, label: `Supervisor` },
-    { color: bothBgColor, label: `Supervisor and Student` },
-  ];
+  // const legendColors = [
+  //   { color: studentBgColor, label: `Student` },
+  //   { color: supervisorBgColor, label: `Supervisor` },
+  //   { color: bothBgColor, label: `Supervisor and Student` },
+  // ];
 
   const [ evaluations, setEvaluations ] = useState<Evaluation[]>([]);
-  const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
+  // const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<Evaluation[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<Evaluation[]>([]);
   const [ selectedSemester, setSelectedSemester ] = useState(`SUMMER`);
   const [ selectedYear, setSelectedYear ] = useState(2025);
   const [ selectedTeam, setSelectedTeam ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
-  const [ contributions, setContributions ] = useState<Contribution[]>([]);
-  const [ totalContributions, setTotalContributions ] = useState<number>(0);
   const [ loading, setLoading ] = useState(true);
-
-  const location = useLocation();
-  const data = location.state as Data;
+  // const [ selectedEvaluation, setSelectedEvaluation ] = useState<Evaluation>();
 
   const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSemester(event.target.value);
@@ -144,10 +129,18 @@ const PastEvaluations: React.FC = () => {
     setSelectedYear(parseInt(event.target.value, 10));
   };
 
-  const checkIfCurrentYear = (timestamp: string | Date) => {
-    const date = new Date(timestamp);
-    return date.getFullYear() === new Date().getFullYear();
+  const navigateToPastEvals = (evaluation: Evaluation) => {
+    const info: Data = {
+      role: `STUDENT`, semester: evaluation.semester,
+      studentId: evaluation.studentId, team: evaluation.team, year: evaluation.year,
+    };
+    void navigate(`/past_evaluations`, { state: info });
   };
+
+  // const checkIfCurrentYear = (timestamp: string | Date) => {
+  //   const date = new Date(timestamp);
+  //   return date.getFullYear() === new Date().getFullYear();
+  // };
 
   useEffect(() => {
     const handleResize = () => {
@@ -165,58 +158,58 @@ const PastEvaluations: React.FC = () => {
     };
   }, []);
 
-  const getSemesterFromTimestamp = (timestamp: string | Date) => {
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    if (date >= new Date(year, 4, 12) && date <= new Date(year, 7, 9)) {
-      return `SUMMER`;
-    }
-    if (date >= new Date(year, 7, 25) && date <= new Date(year, 11, 5)) {
-      return `FALL`;
-    }
-    if (date >= new Date(year, 0, 12) && date <= new Date(year, 3, 24)) {
-      return `SPRING`;
-    }
-    return `UNKNOWN`;
-  };
+  // const getSemesterFromTimestamp = (timestamp: string | Date) => {
+  //   const date = new Date(timestamp);
+  //   const year = date.getFullYear();
+  //   if (date >= new Date(year, 4, 12) && date <= new Date(year, 7, 9)) {
+  //     return `SUMMER`;
+  //   }
+  //   if (date >= new Date(year, 7, 25) && date <= new Date(year, 11, 5)) {
+  //     return `FALL`;
+  //   }
+  //   if (date >= new Date(year, 0, 12) && date <= new Date(year, 3, 24)) {
+  //     return `SPRING`;
+  //   }
+  //   return `UNKNOWN`;
+  // };
 
-  const fetchGitData = async () => {
-    if (!user?.email) {
-      return;
-    }
+  // const fetchGitData = async () => {
+  //   if (!user?.email) {
+  //     return;
+  //   }
 
-    try {
-      const username = user.email.slice(user.email.indexOf(`@`) + 1);
-      const res = await fetch(`http://localhost:3001/gitData/`, {
-        body: JSON.stringify({ username }),
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
+  //   try {
+  //     const username = user.email.slice(user.email.indexOf(`@`) + 1);
+  //     const res = await fetch(`http://localhost:3001/gitData/`, {
+  //       body: JSON.stringify({ username }),
+  //       credentials: `include`,
+  //       headers: { 'Content-Type': `application/json` },
+  //       method: `POST`,
+  //     });
 
-      const resJson = await res.json();
-      const contributionList = resJson.data as Contribution[];
+  //     const resJson = await res.json();
+  //     const contributionList = resJson.data as Contribution[];
 
-      setContributions(contributionList.filter((item) =>
-        getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
-    } catch (err) {
-      console.error(`Git fetch error:`, err);
-    }
-  };
+  //     setContributions(contributionList.filter((item) =>
+  //       getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
+  //   } catch (err) {
+  //     console.error(`Git fetch error:`, err);
+  //   }
+  // };
 
-  const fetchRubricCategories = async () => {
-    try {
-      const res = await fetch(`http://localhost:3001/rubric`);
+  // const fetchRubricCategories = async () => {
+  //   try {
+  //     const res = await fetch(`http://localhost:3001/rubric`);
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const resJson = await res.json();
-      setRubricCategories(resJson as RubricCategory[]);
-    } catch (err) {
-      console.error(`Rubric categories fetch error:`, err);
-    }
-  };
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! status: ${res.status}`);
+  //     }
+  //     const resJson = await res.json();
+  //     setRubricCategories(resJson as RubricCategory[]);
+  //   } catch (err) {
+  //     console.error(`Rubric categories fetch error:`, err);
+  //   }
+  // };
 
   const fetchEvaluations = async () => {
     try {
@@ -232,7 +225,7 @@ const PastEvaluations: React.FC = () => {
       }
 
       const userJson = await userRes.json();
-      const userId = userJson.user.id;
+      // const userId = userJson.user.id;
 
       setUser({
         id: userJson.user.id,
@@ -243,9 +236,10 @@ const PastEvaluations: React.FC = () => {
         teamNames: userJson.user.teamNames,
       });
 
-      const targetUserId = data?.role === `SUPERVISOR` && data.studentId ? data.studentId : userId;
+      // const targetUserId = data?.role === `SUPERVISOR` && data.studentId ? data.studentId : userId;
 
-      const evalRes = await fetch(`http://localhost:3001/getEval/?userId=${targetUserId}`, {
+      console.log(`studentId: `, data);
+      const evalRes = await fetch(`http://localhost:3001/getEval/?userId=${data.studentId}`, {
         credentials: `include`,
         method: `GET`,
       });
@@ -255,7 +249,7 @@ const PastEvaluations: React.FC = () => {
       }
 
       const evaluationsData: Evaluation[] = await evalRes.json();
-      console.log(evaluationsData);
+      console.log(`evaluationsData: `, evaluationsData);
       setEvaluations(evaluationsData);
     } catch (err) {
       console.error(`Evaluations fetch error:`, err);
@@ -266,22 +260,11 @@ const PastEvaluations: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchRubricCategories();
+      // await fetchRubricCategories();
       await fetchEvaluations();
     };
     void fetchData();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      void fetchGitData();
-    }
-  }, [ user ]);
-
-  useEffect(() => {
-    const total = contributions.reduce((acc, contribution) => acc + contribution.contribution_count, 0);
-    setTotalContributions(total);
-  }, [ contributions ]);
 
   useEffect(() => {
     const studentEvals = evaluations.filter((evaluation) => evaluation.type === `STUDENT`);
@@ -298,47 +281,42 @@ const PastEvaluations: React.FC = () => {
   const distinctYears = Array.from(new Set(evaluations.map((item) => item.year)));
 
   const filteredStudentSemesterEvals = filteredStudentEvals.filter(
-    (evaluation) => evaluation.semester === data.semester && evaluation.year === data.year,
+    (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
   );
 
   const filteredSupervisorSemesterEvals = filteredSupervisorEvals.filter(
-    (evaluation) => evaluation.semester === data.semester && evaluation.year === data.year,
+    (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
   );
 
-  const filteredStudentTeamEvals = filteredStudentSemesterEvals.filter(
-    (evaluation) => evaluation.team === data.team,
-  );
+  // const filteredStudentTeamEvals = filteredStudentSemesterEvals.filter(
+  //   (evaluation) => evaluation.team === selectedTeam,
+  // );
 
-  const filteredSupervisorTeamEvals = filteredSupervisorSemesterEvals.filter(
-    (evaluation) => evaluation.team === data.team,
-  );
+  // const filteredSupervisorTeamEvals = filteredSupervisorSemesterEvals.filter(
+  //   (evaluation) => evaluation.team === selectedTeam,
+  // );
 
   const filteredStudentYearEvals = filteredStudentEvals.filter(
-    (evaluation) => evaluation.year === data.year,
+    (evaluation) => evaluation.year === selectedYear,
   );
 
   const filteredSupervisorYearEvals = filteredSupervisorEvals.filter(
-    (evaluation) => evaluation.year === data.year,
+    (evaluation) => evaluation.year === selectedYear,
   );
 
-  console.log(`data: `, data);
-
   // Convert evaluation results to a lookup map for easier access
-  const getEvaluationResults = (evaluation: Evaluation) => {
-    const resultsMap: Record<number, number> = {};
-    evaluation.results.forEach((result) => {
-      resultsMap[result.rubricCategoryId] = result.rubricPerformanceLevelId;
-    });
-    console.log(`resultsMap`, resultsMap);
-    return resultsMap;
-  };
+  // const getEvaluationResults = (evaluation: Evaluation) => {
+  //   const resultsMap: Record<number, number> = {};
+  //   evaluation.results.forEach((result) => {
+  //     resultsMap[result.rubricCategoryId] = result.rubricPerformanceLevelId;
+  //   });
+  //   return resultsMap;
+  // };
 
-  console.log(`filteredStudentTeamEvals[0]: `, filteredStudentTeamEvals[0]);
-
-  const studentTeamResults = filteredStudentTeamEvals[0] ? getEvaluationResults(filteredStudentTeamEvals[0]) : {};
-  const supervisorTeamResults = filteredSupervisorTeamEvals[0] ?
-    getEvaluationResults(filteredSupervisorTeamEvals[0]) :
-    {};
+  // const studentTeamResults = filteredStudentTeamEvals[0] ? getEvaluationResults(filteredStudentTeamEvals[0]) : {};
+  // const supervisorTeamResults = filteredSupervisorTeamEvals[0] ?
+  // getEvaluationResults(filteredSupervisorTeamEvals[0]) :
+  // {};
 
   return <>
     <div className="top-bar" ref={topBarRef}>
@@ -375,28 +353,10 @@ const PastEvaluations: React.FC = () => {
               ).map((team) =>
                 <option key={team} value={team}>{team}</option>)}
         </select>
-
-        <h3 className="semester-label">Git Contributions:</h3>
-        <h2>{totalContributions}</h2>
-      </div>
-
-      <div className="legend-outer">
-        {legendColors.map((item, index) =>
-          <div key={index} className="legend-item-container">
-            <div
-              style={{
-                backgroundColor: item.color,
-                height: `16px`,
-                marginRight: `8px`,
-                width: `16px`,
-              }}
-            />
-            <span>{item.label}</span>
-          </div>)}
       </div>
     </div>
 
-    <section className="past-evals-container">
+    {/* <section className="past-evals-container">
       <div className="rubric-table-wrapper">
         <table className="rubric-table">
           <thead>
@@ -444,8 +404,15 @@ const PastEvaluations: React.FC = () => {
           </tbody>
         </table>
       </div>
+    </section> */}
+
+    <section className="past-evals-container">
+      {evaluations.map((item) => <div>
+        <button className="semester-label" onClick={() => navigateToPastEvals(item)}>
+          {item.semester} {item.year} Team: {item.team}</button>
+      </div>)}
     </section>
   </>;
 };
 
-export default PastEvaluations;
+export default FilterEvaluations;
