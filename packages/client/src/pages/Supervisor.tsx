@@ -354,16 +354,19 @@ const Supervisor: React.FC = () => {
           className="search-input"
         />
         <div className="scroll-box student-list">
-          {filteredStudents.map((student, index) =>
-            <div className="student-row" key={index}>
-              <span className="student-name">{student.name}</span>
-              <button
-                onClick={() => openStudentInfoModal(index)}
-                className="button-change-info"
-              >
-                Change Info
-              </button>
-            </div>)}
+          {filteredStudents
+            .filter((s) =>
+              studentSearch ? s.name.toLowerCase().includes(studentSearch.toLowerCase()) : true)
+            .map((student, index) =>
+              <div className="student-row" key={index}>
+                <span className="student-name">{student.name}</span>
+                <button
+                  onClick={() => openStudentInfoModal(index)}
+                  className="button-change-info"
+                >
+                  Change Info
+                </button>
+              </div>)}
         </div>
       </div>
 

@@ -2,20 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sessionMiddleware = void 0;
 const tslib_1 = require("tslib");
+/* eslint-disable no-console */
 const express_1 = tslib_1.__importDefault(require("express"));
 const express_session_1 = tslib_1.__importDefault(require("express-session"));
 const connect_pg_simple_1 = tslib_1.__importDefault(require("connect-pg-simple"));
 const pg_1 = require("pg");
 const dotenv_1 = tslib_1.__importDefault(require("dotenv"));
 dotenv_1.default.config();
-// import cookieParser from 'cookieParser';
 const cors_1 = tslib_1.__importDefault(require("cors"));
-const auth_1 = tslib_1.__importDefault(require("./routes/auth")); // Import the router
-const eval_1 = tslib_1.__importDefault(require("./routes/eval")); // Import the evaluation router
+const auth_1 = tslib_1.__importDefault(require("./routes/auth"));
+const eval_1 = tslib_1.__importDefault(require("./routes/eval"));
 const supervisor_1 = tslib_1.__importDefault(require("./routes/supervisor"));
 const gitreports_1 = tslib_1.__importDefault(require("./routes/gitreports"));
 const rubric_1 = tslib_1.__importDefault(require("./routes/rubric"));
-const seed_1 = require("./seed"); // Adjust the path as needed
+const seed_1 = require("./seed");
 const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     yield (0, seed_1.seedRubricData)();
     const app = (0, express_1.default)();
@@ -34,7 +34,7 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     exports.sessionMiddleware = (0, express_session_1.default)({
         cookie: {
             httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: `lax`,
             secure: process.env.NODE_ENV === `production`,
         },
@@ -51,7 +51,7 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         res.send(`Welcome from TypeScript backend!`);
     });
     app.use(express_1.default.json()); // Use JSON middleware you slugs
-    app.use(exports.sessionMiddleware); // Session storage
+    app.use(exports.sessionMiddleware);
     app.use(auth_1.default);
     app.use(eval_1.default);
     app.use(rubric_1.default);
@@ -61,12 +61,10 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         res.status(404).json({ error: `Route not found`, path: req.path });
     });
     app.listen(PORT, () => {
-        // eslint-disable-next-line no-console
         console.log(`Server running on http://localhost:${PORT}`);
     });
 });
 main().catch((err) => {
-    // eslint-disable-next-line no-console
     console.error(err);
 });
 //# sourceMappingURL=index.js.map

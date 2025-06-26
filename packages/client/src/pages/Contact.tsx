@@ -5,17 +5,28 @@ import '../components/ButtonAndCard.css';
 
 const Contact: React.FC = () =>
   <div className="contact-page">
-    <h1 className="contact-title">Contact us</h1>
+    <h1 className="contact-title">Need Help?</h1>
+    <h2 className="contact-description">
+      Please contact us for any problems you experience,
+      <br />
+      or read the Frequently Asked Questions for common issues.
+    </h2>
 
     <div className="button-row">
-      <button className="button-email-contact">Email</button>
-      <button className="button-second-contact">Button</button>
+      <button
+        style={{ fontSize: `20px`, height: `50px`, width: `150px` }}
+        className="button-email-contact"
+        onClick={() => window.location.href = `mailto:mail@example.org`}
+      >
+        Email
+      </button>
+      <button
+        style={{ fontSize: `20px`, height: `50px`, width: `150px` }}
+        className="button-second-contact"
+      >
+        FAQ
+      </button>
     </div>
-
-    <p className="contact-description">
-      Please contact us for any problems you may face while using our website or any problems in general.
-      Also contact us for anything else you may need!
-    </p>
 
     <div className="logo-container">
       <img src={itscLogo} alt="ITSC Logo" className="itsc-logo" />

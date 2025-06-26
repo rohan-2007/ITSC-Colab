@@ -38,11 +38,11 @@
 }
 
 .contact-description {
-  max-width: 600px;
-  margin: 0 auto 40px;
-  font-size: 20px;
-  color: #444;
-  line-height: 1.5;
+   color: #909090;
+   font-size: 20px;
+   font-weight: 400;
+   padding: 0;
+   margin-bottom: 50px;
 }
 
 .itsc-logo {
@@ -50,4 +50,5 @@
   width: 100%;
   height: auto;
   margin-bottom: 100px;
+  margin-top: 150px;
 }

@@ -180,7 +180,7 @@ const PastEvaluations: React.FC = () => {
     return `UNKNOWN`;
   };
 
-  const fetchGitData = async () => {
+  const fetchGitData = React.useCallback(async () => {
     if (!user?.email) {
       return;
     }
@@ -202,7 +202,7 @@ const PastEvaluations: React.FC = () => {
     } catch (err) {
       console.error(`Git fetch error:`, err);
     }
-  };
+  }, [ user ]);
 
   const fetchRubricCategories = async () => {
     try {
@@ -218,7 +218,7 @@ const PastEvaluations: React.FC = () => {
     }
   };
 
-  const fetchEvaluations = async () => {
+  const fetchEvaluations = React.useCallback(async () => {
     try {
       const userRes = await fetch(`http://localhost:3001/me/`, {
         body: JSON.stringify({ returnData: true }),
@@ -262,7 +262,7 @@ const PastEvaluations: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ data ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -270,13 +270,13 @@ const PastEvaluations: React.FC = () => {
       await fetchEvaluations();
     };
     void fetchData();
-  }, []);
+  }, [ fetchEvaluations ]);
 
   useEffect(() => {
     if (user) {
       void fetchGitData();
     }
-  }, [ user ]);
+  }, [ user, fetchGitData ]);
 
   useEffect(() => {
     const total = contributions.reduce((acc, contribution) => acc + contribution.contribution_count, 0);
