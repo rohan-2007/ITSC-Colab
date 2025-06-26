@@ -86,7 +86,7 @@
 .student-select-table td {
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
-  text-align: left;
+  text-align: center;
 }
 
 .student-select-table tr.selected {

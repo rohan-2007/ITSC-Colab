@@ -153,7 +153,8 @@
 }
 
 .profile-actions {
-  margin-top: auto; 
+  margin-top: auto;
+  bottom: 10px; 
   padding-top: 15px;
   border-top: 1px solid #eee;
   text-align: right;
@@ -179,6 +180,8 @@
 
 .user-stats-section {
   grid-area: stats; /* Added grid area */
+  display: flex;
+  flex-direction: column;
 }
 
 .user-stats-section h2 {
@@ -196,8 +199,9 @@
   flex-wrap: wrap; 
   justify-content: space-around; 
   gap: 20px; 
-  height: 65%;
-  margin: 0;
+  height: 100%;
+  width: 100%;
+  margin: auto;
 }
 
 .stat {
