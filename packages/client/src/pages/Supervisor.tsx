@@ -214,6 +214,7 @@ const Supervisor: React.FC = () => {
     });
 
     closeStudentInfoModal();
+    window.location.reload();
   };
 
   const saveTeamName = async () => {
@@ -253,6 +254,7 @@ const Supervisor: React.FC = () => {
     setTeams((prev) =>
       prev.map((t, i) => i === selectedTeamIndex ? updatedTeam : t));
     closeTeamModal();
+    window.location.reload();
   };
 
   const deleteTeam = async () => {
@@ -271,6 +273,7 @@ const Supervisor: React.FC = () => {
 
     setTeams((prev) => prev.filter((_, i) => i !== selectedTeamIndex));
     closeTeamModal();
+    window.location.reload();
   };
 
   const toggleAssignedDropdown = (index: number) => {
