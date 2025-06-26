@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Profile.css';
-import '../components/buttonandcard.css';
+import '../components/buttonAndCard.css';
 import '../components/Modals.css';
 
 const fetchUrl = `http://localhost:3001`;
