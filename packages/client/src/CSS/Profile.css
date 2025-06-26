@@ -25,13 +25,14 @@
 
 .profile-page-container {
   padding: 20px;
-  padding-top: 90px;
+  padding-top: 40px;
   width: 100vw;
-  font-weight: 600; /* I thought this looked good u can change it if u want a - ALEX */
+  font-weight: 600; /* I thought this looked good u can change it if u want a - ALEX */ /* nope, i agree, thanks - KYLE */
   background-color: #f0f2f5;
   font-family: 'Inter', sans-serif;
   color: #333;
   box-sizing: border-box;
+  overflow-y:scroll;
 }
 
 .profile-header {
@@ -126,7 +127,17 @@
 
 .profile-info-item .info-label {
   font-weight: 600;
+  color: #444;
+  width: auto;
+}
+
+.wider {
+  min-width:178px;
+}
+
+.sub-title {
   color: #555;
+  font-size: 13px;
 }
 
 .profile-info-item .info-value {

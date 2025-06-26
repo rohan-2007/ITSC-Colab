@@ -24,6 +24,7 @@
 
 
 .home-container {
+  padding: 50px;
   display: flex;
   flex-direction: column;
   width: 100vw; 
@@ -31,18 +32,15 @@
   background-color: #f0f2f5; 
   font-family: 'Inter', sans-serif;
   color: #333;
-  padding-top: 0px;
-  padding-bottom: 120px; 
   box-sizing: border-box;
+  overflow:auto;
+  padding-bottom: 200px;
 }
 
 .main-content {
   flex: 1; 
-  padding: 20px;
-  max-width: 1200px;
-  overflow:auto;
   margin: 0 auto; 
-  width: 100%;
+  width: 80%;
   height: 100vh;
   display: grid; 
   gap: 30px; 

@@ -428,28 +428,6 @@ const Home: React.FC = () => {
             </div>
           </div>
         </section>}
-
-      <section className="quick-actions-section">
-        <h2>Quick Actions</h2>
-        <div className="quick-actions">
-          {user.role === `STUDENT` &&
-            <>
-              <button
-                onClick={() => navigate(`/past_evaluations`)}
-                className="btn primary-btn"
-              >View My Evaluations</button>
-              <button onClick={() => navigate(`/`)} className="btn secondary-btn">Request Feedback</button>
-            </>}
-          {user.role === `SUPERVISOR` &&
-            <>
-              <button
-                onClick={() => navigate(`/evaluations`)}
-                className="button-start-eval"
-              >Start New Evaluation</button>
-              <button onClick={() => navigate(`/student_select`)} className="button-view-reports">View Reports</button>
-            </>}
-        </div>
-      </section>
     </main>
   </div>;
 };

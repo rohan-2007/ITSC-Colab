@@ -26,7 +26,7 @@ export const limiter = rateLimit({
 
 export const meLimiter = rateLimit({
   legacyHeaders: false,
-  max: 5,
+  max: 10,
   message: {
     error: `Too many requests, please slow down.`,
   },
