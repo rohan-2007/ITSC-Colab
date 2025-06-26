@@ -24,6 +24,7 @@ interface Team {
   id?: number;
   assignedStudents: string[];
   assignedSupervisors: string[];
+  assignedUsers: string[];
   expanded: boolean;
   name: string;
   search: string;
@@ -38,6 +39,7 @@ const Supervisor: React.FC = () => {
     Array.from({ length: 1 }, (_, i) => ({
       assignedStudents: [],
       assignedSupervisors: [],
+      assignedUsers: [],
       expanded: false,
       name: `Team ${i + 1}`,
       search: ``,
@@ -155,6 +157,10 @@ const Supervisor: React.FC = () => {
             assignedSupervisors: fetchedSupervisors
               .filter((s) => team.memberIDs.includes(s.id))
               .map((s) => s.name),
+            assignedUsers: [
+              ...fetchedStudents.filter((s) => team.memberIDs.includes(s.id)).map((s) => s.name),
+              ...fetchedSupervisors.filter((s) => team.memberIDs.includes(s.id)).map((s) => s.name),
+            ],
             expanded: false,
             name: team.name,
             search: ``,
@@ -174,10 +180,10 @@ const Supervisor: React.FC = () => {
   const openStudentInfoModal = (index: number) => {
     setSelectedStudentIndex(index);
     setEditedStudent({
-      email: students[index].email,
-      name: students[index].name,
+      email: filteredStudents[index].email,
+      name: filteredStudents[index].name,
       newPassword: ``,
-      userId: students[index].id,
+      userId: filteredStudents[index].id,
     });
     setStudentInfoModalOpen(true);
   };
@@ -317,6 +323,7 @@ const Supervisor: React.FC = () => {
     const newTeam: Team = {
       assignedStudents: [],
       assignedSupervisors: [],
+      assignedUsers: [],
       expanded: false,
       name: `Team ${nextTeamNumber}`,
       search: ``,
@@ -377,14 +384,14 @@ const Supervisor: React.FC = () => {
                 <div className="team-tools">
                   <button className="button-edit-team" onClick={() => openEditTeamModal(index)}>✎</button>
                   <button className="button-display-students" onClick={() => toggleAssignedDropdown(index)}>
-                    {team.assignedStudents.length}
+                    {team.assignedUsers.length}
                   </button>
                 </div>
               </div>
               {team.showAssigned &&
                 <div className="assigned-dropdown">
-                  {team.assignedStudents.length ?
-                    team.assignedStudents.map((name, i) =>
+                  {team.assignedUsers.length ?
+                    team.assignedUsers.map((name, i) =>
                       <div key={i} className="assigned-student">{name}</div>) :
                     <div className="assigned-student none">No students assigned</div>}
                 </div>}
@@ -466,12 +473,7 @@ const Supervisor: React.FC = () => {
       <div className="modal-overlay-supervisor" onClick={closeTeamModal}>
         <div className="modal-change-team-supervisor" onClick={(e) => e.stopPropagation()}>
           <h4>Edit Team</h4>
-
-          <h3>
-            {` `}
-            <label htmlFor="teamName">Team Name</label>
-            {` `}
-          </h3>
+          <h3>Team Name</h3>
           <input
             id="teamName"
             type="text"

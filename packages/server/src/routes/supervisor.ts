@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser, Team } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
 import { requireAuth } from './auth';
 
@@ -22,7 +22,7 @@ router.post(`/students`, requireAuth, async (
     }
     const students = await prisma.user.findMany({
       include: { teams: true },
-      where: { supervisorId: { not: null } },
+      where: { role: Role.STUDENT },
     });
     res.status(200).json({
       message: `Fetched students`,
@@ -51,7 +51,7 @@ router.post(`/supervisors`, requireAuth, async (
     }
     const supervisors = await prisma.user.findMany({
       include: { teams: true },
-      where: { supervisorId: null },
+      where: { role: Role.SUPERVISOR },
     });
     res.status(200).json({
       message: `Fetched supervisors`,
