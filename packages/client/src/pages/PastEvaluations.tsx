@@ -126,7 +126,8 @@ const PastEvaluations: React.FC = () => {
   const [ selectedTeam, setSelectedTeam ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
   const [ contributions, setContributions ] = useState<Contribution[]>([]);
-  const [ totalContributions, setTotalContributions ] = useState<number>(0);
+  const [ totalContributions, setTotalContributions ] = useState<number[]>();
+  const [ contributionMonths, setContributionMonths ] = useState<string[]>();
   const [ loading, setLoading ] = useState(true);
 
   const location = useLocation();
@@ -282,8 +283,22 @@ const PastEvaluations: React.FC = () => {
   }, [ user, fetchGitData ]);
 
   useEffect(() => {
-    const total = contributions.reduce((acc, contribution) => acc + contribution.contribution_count, 0);
-    setTotalContributions(total);
+    const months = Array.from(new Set(contributions.map((contribution) =>
+      new Date(contribution.date).getMonth())));
+    console.log(`months: `, months);
+    console.log(`contribution months: `,
+      months.map((month) => new Date(2000, month, 1).toLocaleString(`default`, { month: `long` })));
+    setContributionMonths(months.map((month) => new Date(2000, month, 1).toLocaleString(`default`, { month: `long` })));
+    const contributionTotals: number[] = [];
+    months.map((month) => {
+      contributionTotals.push(contributions.filter((item) =>
+        month === new Date(item.date).getMonth()).reduce((acc, contribution) =>
+        acc + contribution.contribution_count, 0));
+    });
+    // const total = contributions.reduce((acc, contribution) => acc + contribution.contribution_count, 0);
+    setTotalContributions(contributionTotals);
+    console.log(`contribution totals: `, contributionTotals);
+    console.log(`contributions: `, contributions);
   }, [ contributions ]);
 
   useEffect(() => {
@@ -382,7 +397,9 @@ const PastEvaluations: React.FC = () => {
         </select>
 
         <h3 className="semester-label">Git Contributions:</h3>
-        <h2>{totalContributions}</h2>
+        {}
+        <pre>{totalContributions?.map((item, index) =>
+          `${contributionMonths ? contributionMonths[index] : null}: ${item}`)?.join(`\n`)}</pre>
       </div>
 
       <div className="legend-outer">
