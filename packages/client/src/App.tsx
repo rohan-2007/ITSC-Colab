@@ -54,13 +54,17 @@ const App: React.FC = () =>
       <Route
         path="/student_select"
         element={
-          <StudentSelect />
+          <RequireAuth>
+            <StudentSelect />
+          </RequireAuth>
         }
       />
       <Route
         path="/filter_evaluations"
         element={
-          <FilterEvaluations />
+          <RequireAuth>
+            <FilterEvaluations />
+          </RequireAuth>
         }
       />
     </Routes>

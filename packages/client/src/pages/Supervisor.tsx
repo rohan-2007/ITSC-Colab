@@ -466,12 +466,7 @@ const Supervisor: React.FC = () => {
       <div className="modal-overlay-supervisor" onClick={closeTeamModal}>
         <div className="modal-change-team-supervisor" onClick={(e) => e.stopPropagation()}>
           <h4>Edit Team</h4>
-
-          <h3>
-            {` `}
-            <label htmlFor="teamName">Team Name</label>
-            {` `}
-          </h3>
+          <h3>Team Name</h3>
           <input
             id="teamName"
             type="text"
