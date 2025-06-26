@@ -22,7 +22,6 @@
   scrollbar-color: #d55959 #e7e7e7;
 }
 
-
 .profile-page-container {
   padding: 20px;
   padding-top: 40px;
@@ -104,6 +103,11 @@
 
 .role-supervisor {
   background-color: #007bff;
+}
+
+.manage-student-card, .manage-teams-card {
+  overflow-y:scroll;
+  max-height: 400px;
 }
 
 .profile-email {
