@@ -11,6 +11,7 @@ import Supervisor from './pages/Supervisor';
 import RequireRole, { RequireAuth } from './components/RequireRole';
 import StudentSelect from './pages/StudentSelect';
 import FilterEvaluations from './pages/FilterEvaluations';
+import NotificationSystem from './components/NotificationContainer';
 
 const App: React.FC = () =>
   <Layout>
@@ -63,5 +64,6 @@ const App: React.FC = () =>
         }
       />
     </Routes>
+    <NotificationSystem />
   </Layout>;
 export default App;

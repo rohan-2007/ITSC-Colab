@@ -69,6 +69,7 @@
  align-items: center;
  gap: 0.75rem;
  border-bottom: 1px solid rgb(227, 227, 227);
+ padding-right:5px;
 }
 
 .team-section {

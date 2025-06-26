@@ -323,20 +323,6 @@ const Profile: React.FC = () => {
         <h2>{user.name}</h2>
         <span className={`profile-role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
         <p className="profile-email">{user.email}</p>
-        {(user.role === `SUPERVISOR`) &&
-          <button
-            className="button-edit-profile"
-            onClick={() => {
-              setNewName(user.name === `N/A` ? `` : user.name);
-              setNewEmail(user.email === `N/A` ? `` : user.email);
-              setNewPassword(``);
-              setError(null);
-              setShowEditModal(true);
-            }}
-            style={{ marginTop: `20px`, width: `100%` }}
-          >
-            Edit Profile
-          </button>}
       </div>
 
       <div className="profile-card profile-account-card">
@@ -358,16 +344,30 @@ const Profile: React.FC = () => {
           <span className="info-label">Member ID</span>
           <span className="info-value">#{user.id}</span>
         </div>
-        <div className="profile-info-item">
+        {user.role === `STUDENT` && <div className="profile-info-item">
           <span className="info-label">Supervisor</span>
           <span className="info-value">{user.supervisorName}</span>
-        </div>
+        </div>}
         <div className="profile-info-item">
           <span className="info-label">Team</span>
           <span className="info-value">
             {user.teamNames && user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}
           </span>
         </div>
+        {(user.role === `SUPERVISOR`) &&
+          <button
+            className="button-edit-profile"
+            onClick={() => {
+              setNewName(user.name === `N/A` ? `` : user.name);
+              setNewEmail(user.email === `N/A` ? `` : user.email);
+              setNewPassword(``);
+              setError(null);
+              setShowEditModal(true);
+            }}
+            style={{ marginTop: `20px`, width: `100%` }}
+          >
+            Edit Profile
+          </button>}
       </div>
 
       {user.role === `STUDENT` &&
@@ -413,14 +413,6 @@ const Profile: React.FC = () => {
               !gitContributionsLoading && !gitContributionsError && <p>Git contribution data not available.</p>}
           </div>
         </>}
-
-      {user.role === `SUPERVISOR` &&
-        <div className="profile-card profile-actions-card">
-          <h3>Supervisor Actions</h3>
-          <div className="profile-actions-buttons">
-            <p style={{ color: `#777`, textAlign: `center` }}>Additional supervisor actions can be placed here.</p>
-          </div>
-        </div>}
     </main>
 
     {showEditModal &&
