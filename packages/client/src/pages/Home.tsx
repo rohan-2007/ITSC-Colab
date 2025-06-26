@@ -185,7 +185,7 @@ const Home: React.FC = () => {
       g.append(`g`).attr(`transform`, `translate(${margin.left}, ${innerHeight})`).call(xAxis);
       g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth - margin.left).tickPadding(10));
     }
-  });
+  }, [ contributions, graphData, height, months, width ]);
 
   useEffect(() => {
     const getGitData = async () => {

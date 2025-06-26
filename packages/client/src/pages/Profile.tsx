@@ -351,7 +351,9 @@ const Profile: React.FC = () => {
         <div className="profile-info-item">
           <span className="info-label">Team</span>
           <span className="info-value">
-            {user.teamNames && user.teamNames.length > 0 ? user.teamNames : `Not Assigned`}
+            {Array.isArray(user.teamNames) ?
+              user.teamNames.length > 0 ? user.teamNames.join(`, `) : `Not Assigned` :
+              user.teamNames && user.teamNames !== `Not Assigned` ? user.teamNames : `Not Assigned`}
           </span>
         </div>
         {(user.role === `SUPERVISOR`) &&
