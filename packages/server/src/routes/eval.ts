@@ -141,6 +141,23 @@ router.get(`/getEval`, requireAuth, async (
   }
 });
 
+router.get(`/getSupervisorEvals`, requireAuth, async (
+  req: Request<unknown, unknown, number>,
+  res: Response,
+) => {
+  const targetId = Number(req.query.id);
+
+  const evaluations = await prisma.evaluation.findMany({
+    include: {
+      results: true,
+    },
+    where: { supervisorId: targetId },
+  });
+
+  res.status(200).json(evaluations);
+  return;
+});
+
 router.get(`/evalStatus`, requireAuth, async (req, res) => {
   const { semester, studentId, year } = req.query;
 

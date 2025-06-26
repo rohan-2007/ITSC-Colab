@@ -80,7 +80,11 @@ const Evaluations: React.FC = () => {
 
   const navigateToFilterEvaluations = () => {
     if (user?.role === `STUDENT`) {
-      const data: UserData = { studentId: user.id };
+      const data: UserData = { role: `STUDENT`, studentId: user.id };
+      void navigate(`/filter_evaluations`, { state: data });
+    }
+    if (user?.role === `SUPERVISOR`) {
+      const data: UserData = { role: `SUPERVISOR`, studentId: user.id };
       void navigate(`/filter_evaluations`, { state: data });
     }
   };
@@ -368,7 +372,7 @@ const Evaluations: React.FC = () => {
           <button className="view-eval-button" onClick={() => navigateToFilterEvaluations()}>
             View Past Evaluations</button>}
         {user?.role === `SUPERVISOR` &&
-          <button className="view-eval-button" onClick={() => navigate(`/student_select`)}>
+          <button className="view-eval-button" onClick={() => navigateToFilterEvaluations()}>
             View Past Student Evaluations</button>}
       </div>
     </div>

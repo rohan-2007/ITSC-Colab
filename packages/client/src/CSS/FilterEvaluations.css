@@ -1,0 +1,22 @@
+.filter-evals-container {
+  /* grid-area: profile; */
+  width: 100vh;
+  height: calc(100vh - var(--topBarHeight));
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-top: var(--topBarHeight); /* Slight offset for visual balance */
+  display: flex; /* Use flex to push the button to the bottom */
+  flex-direction: column;
+}
+
+.filter-evals-button {
+  display: block;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.student-select-box {
+  display: flex;
+}

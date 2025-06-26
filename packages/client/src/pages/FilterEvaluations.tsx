@@ -1,13 +1,34 @@
 /* eslint-disable no-console */
 import React, { useEffect, useRef, useState } from 'react';
 import './PastEvaluations.css';
+import '../CSS/FilterEvaluations.css';
 import { useLocation } from 'react-router';
 import '../components/ButtonAndCard.css';
 import { useNavigate } from 'react-router';
 import type { Data } from './PastEvaluations';
 
 export interface UserData {
+  role: string;
   studentId: number | null;
+}
+
+export interface Student {
+  id: number;
+  createdAt: string;
+  email: string;
+  name: string;
+  password: string;
+  role: string;
+  supervisorId: number;
+  teams: Team[];
+  updatedAt: string;
+}
+
+interface Team {
+  id: number;
+  createdAt: string;
+  name: string;
+  updatedAt: string;
 }
 
 export interface RubricCategory {
@@ -48,7 +69,7 @@ export interface Evaluation {
   semester: string;
   studentId: number;
   supervisorId: number | null;
-  team: string | null;
+  team: string;
   type: string;
   updatedAt: string;
   year: number;
@@ -107,14 +128,25 @@ const FilterEvaluations: React.FC = () => {
   // ];
 
   const [ evaluations, setEvaluations ] = useState<Evaluation[]>([]);
+  const [ displayedEvaluations, setDisplayedEvaluations ] = useState<Evaluation[]>([]);
   // const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
-  const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<Evaluation[]>([]);
-  const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<Evaluation[]>([]);
-  const [ selectedSemester, setSelectedSemester ] = useState(`SUMMER`);
-  const [ selectedYear, setSelectedYear ] = useState(2025);
+  // const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<Evaluation[]>([]);
+  // const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<Evaluation[]>([]);
+  const [ selectedSemester, setSelectedSemester ] = useState(``);
+  const [ selectedYear, setSelectedYear ] = useState<number>();
   const [ selectedTeam, setSelectedTeam ] = useState(``);
+  const [ selectedStudent, setSelectedStudent ] = useState<string>();
   const [ user, setUser ] = useState<User | null>(null);
   const [ loading, setLoading ] = useState(true);
+  const [ isSupervisor, setIsSupervisor ] = useState(false);
+  const [ students, setStudents ] = useState<Student[]>();
+
+  useEffect(() => {
+    if (data.role === `SUPERVISOR`) {
+      setIsSupervisor(true);
+    }
+  }, [ data.role ]);
+  // const [ uniqueEvals, setUniqueEvals ] = useState<Evaluation[]>();
   // const [ selectedEvaluation, setSelectedEvaluation ] = useState<Evaluation>();
 
   const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -129,13 +161,56 @@ const FilterEvaluations: React.FC = () => {
     setSelectedYear(parseInt(event.target.value, 10));
   };
 
+  const handleSelectedStudent = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStudent(event.target.value);
+  };
+
   const navigateToPastEvals = (evaluation: Evaluation) => {
     const info: Data = {
-      role: `STUDENT`, semester: evaluation.semester,
+      role: isSupervisor ? `SUPERVISOR` : `STUDENT`, semester: evaluation.semester,
       studentId: evaluation.studentId, team: evaluation.team, year: evaluation.year,
     };
     void navigate(`/past_evaluations`, { state: info });
   };
+
+  useEffect(() => {
+    void fetchStudents();
+  });
+
+  const fetchStudents = async () => {
+    if (!user) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001/students/`, {
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to fetch students`);
+        return;
+      }
+
+      const jsonData = await response.json();
+
+      console.log(`outside`);
+      if (jsonData?.students) {
+        console.log(`inside`);
+        setStudents(jsonData.students as Student[]);
+        console.log(`students fetched`);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error(`Student fetch error:`, err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // void fetchStudents();
 
   // const checkIfCurrentYear = (timestamp: string | Date) => {
   //   const date = new Date(timestamp);
@@ -239,18 +314,42 @@ const FilterEvaluations: React.FC = () => {
       // const targetUserId = data?.role === `SUPERVISOR` && data.studentId ? data.studentId : userId;
 
       console.log(`studentId: `, data);
-      const evalRes = await fetch(`http://localhost:3001/getEval/?userId=${data.studentId}`, {
-        credentials: `include`,
-        method: `GET`,
-      });
+      let evalRes;
+      if (data.role === `SUPERVISOR`) {
+        console.log(`data.studentId: `, data.studentId);
+        evalRes = await fetch(`http://localhost:3001/getSupervisorEvals/?id=${data.studentId}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+        console.log(`evalRes`, JSON.stringify(evalRes, null, 2));
+      } else {
+        console.log(`student`);
+        evalRes = await fetch(`http://localhost:3001/getEval/?userId=${userJson.user.id}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+      }
 
       if (!evalRes.ok) {
         throw new Error(`HTTP error! status: ${evalRes.status}`);
       }
 
-      const evaluationsData: Evaluation[] = await evalRes.json();
-      console.log(`evaluationsData: `, evaluationsData);
-      setEvaluations(evaluationsData);
+      let evaluationsData: Evaluation[] = await evalRes.json();
+      if (data.role === `SUPERVISOR`) {
+        evaluationsData = evaluationsData.filter((item) => item.supervisorId === data.studentId);
+      }
+      const seen = new Set();
+      // setUniqueEvals(Array.from(new Set(evaluationsData.map((item) =>
+      //   `${item.semester} ${item.year} Team: ${item.team}`))));
+      // console.log(`evaluationsData: `, );
+      setEvaluations(evaluationsData.filter((item) => {
+        const key = `${item.year} ${item.semester} ${item.team}`;
+        if (seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      }));
     } catch (err) {
       console.error(`Evaluations fetch error:`, err);
     } finally {
@@ -267,26 +366,58 @@ const FilterEvaluations: React.FC = () => {
   }, [ fetchEvaluations ]);
 
   useEffect(() => {
-    const studentEvals = evaluations.filter((evaluation) => evaluation.type === `STUDENT`);
-    const supervisorEvals = evaluations.filter((evaluation) => evaluation.type === `SUPERVISOR`);
+    setDisplayedEvaluations(evaluations);
+  }, [ evaluations ]);
 
-    setFilteredStudentEvals(studentEvals);
-    setFilteredSupervisorEvals(supervisorEvals);
-  }, [ evaluations, selectedSemester, selectedYear, selectedTeam ]);
+  // useEffect(() => {
+  //   const studentEvals = evaluations.filter((evaluation) => evaluation.type === `STUDENT`);
+  //   const supervisorEvals = evaluations.filter((evaluation) => evaluation.type === `SUPERVISOR`);
+
+  //   setFilteredStudentEvals(studentEvals);
+  //   setFilteredSupervisorEvals(supervisorEvals);
+  // }, [ evaluations, selectedSemester, selectedYear, selectedTeam ]);
+
+  useEffect(() => {
+    setDisplayedEvaluations(
+      evaluations.filter(
+        (item) =>
+          (!selectedYear || item.year === selectedYear) &&
+          (!selectedSemester || item.semester === selectedSemester) &&
+          (!selectedTeam || item.team === selectedTeam) &&
+          (!selectedStudent ||
+            item.studentId === students?.filter((student) => student.name === selectedStudent)[0].id),
+      ),
+    );
+  }, [ selectedYear, selectedStudent, selectedSemester, selectedTeam ]);
+
+  // useEffect(() => {
+  //   setDisplayedEvaluations(evaluations.filter((item) => item.semester === selectedSemester));
+  // }, [ selectedSemester ]);
+
+  // useEffect(() => {
+  //   setDisplayedEvaluations(evaluations.filter((item) => item.team === selectedTeam));
+  // }, [ selectedTeam ]);
 
   if (loading && user?.role !== `SUPERVISOR`) {
     return <div>Loading...</div>;
   }
 
   const distinctYears = Array.from(new Set(evaluations.map((item) => item.year)));
+  const distinctSemesters = Array.from(new Set(evaluations.map((item) => item.semester)));
+  const distinctTeams = Array.from(new Set(evaluations.map((item) => item.team)));
+  const distinctStudents = students?.filter((student) =>
+    Array.from(new Set(evaluations.map((item) => item.studentId))).includes(student.id));
 
-  const filteredStudentSemesterEvals = filteredStudentEvals.filter(
-    (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
-  );
+  console.log(`distinctStudents: `, distinctStudents);
+  console.log(`students: `, students);
 
-  const filteredSupervisorSemesterEvals = filteredSupervisorEvals.filter(
-    (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
-  );
+  // const filteredStudentSemesterEvals = filteredStudentEvals.filter(
+  //   (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
+  // );
+
+  // const filteredSupervisorSemesterEvals = filteredSupervisorEvals.filter(
+  //   (evaluation) => evaluation.semester === selectedSemester && evaluation.year === selectedYear,
+  // );
 
   // const filteredStudentTeamEvals = filteredStudentSemesterEvals.filter(
   //   (evaluation) => evaluation.team === selectedTeam,
@@ -296,13 +427,13 @@ const FilterEvaluations: React.FC = () => {
   //   (evaluation) => evaluation.team === selectedTeam,
   // );
 
-  const filteredStudentYearEvals = filteredStudentEvals.filter(
-    (evaluation) => evaluation.year === selectedYear,
-  );
+  // const filteredStudentYearEvals = filteredStudentEvals.filter(
+  //   (evaluation) => evaluation.year === selectedYear,
+  // );
 
-  const filteredSupervisorYearEvals = filteredSupervisorEvals.filter(
-    (evaluation) => evaluation.year === selectedYear,
-  );
+  // const filteredSupervisorYearEvals = filteredSupervisorEvals.filter(
+  //   (evaluation) => evaluation.year === selectedYear,
+  // );
 
   // Convert evaluation results to a lookup map for easier access
   // const getEvaluationResults = (evaluation: Evaluation) => {
@@ -323,6 +454,7 @@ const FilterEvaluations: React.FC = () => {
       <div className="left-section">
         <h3 className="semester-label">Year:</h3>
         <select id="year" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
+          <option value="" />
           {distinctYears.map((year) =>
             <option key={year} value={year}>{year}</option>)}
         </select>
@@ -330,29 +462,25 @@ const FilterEvaluations: React.FC = () => {
         <h3 className="semester-label">Semester:</h3>
         <select id="semester" className="dropdown" value={selectedSemester} onChange={handleSelectedSemester}>
           <option value="" />
-          {filteredStudentYearEvals.concat(filteredSupervisorYearEvals).length > 0 &&
-              Array.from(
-                new Set(
-                  filteredStudentYearEvals.concat(filteredSupervisorYearEvals).map((item) => item.semester),
-                ),
-              ).map((semester) =>
-                <option key={semester} value={semester}>{semester}</option>)}
+          {distinctSemesters.map((semester) =>
+            <option key={semester} value={semester}>{semester}</option>)}
         </select>
 
         <h3 className="semester-label">Team:</h3>
         <select id="team" className="dropdown" value={selectedTeam} onChange={handleSelectedTeam}>
           <option value="" />
-          {filteredStudentSemesterEvals.concat(filteredSupervisorSemesterEvals).length > 0 &&
-              Array.from(
-                new Set(
-                  filteredStudentSemesterEvals
-                    .concat(filteredSupervisorSemesterEvals)
-                    .map((item) => item.team)
-                    .filter((team): team is string => typeof team === `string` && team.length > 0),
-                ),
-              ).map((team) =>
-                <option key={team} value={team}>{team}</option>)}
+          {distinctTeams.map((team) =>
+            <option key={team} value={team}>{team}</option>)}
         </select>
+
+        {isSupervisor && <>
+          <h3 className="semester-label">Student:</h3>
+          <select id="student" className="dropdown" value={selectedStudent} onChange={handleSelectedStudent}>
+            <option value="" />
+            {distinctStudents?.map((student) =>
+              <option key={student.name} value={student.name}>{student.name}</option>)}
+          </select>
+        </>}
       </div>
     </div>
 
@@ -406,11 +534,10 @@ const FilterEvaluations: React.FC = () => {
       </div>
     </section> */}
 
-    <section className="past-evals-container">
-      {evaluations.map((item) => <div>
-        <button className="semester-label" onClick={() => navigateToPastEvals(item)}>
-          {item.semester} {item.year} Team: {item.team}</button>
-      </div>)}
+    <section className="filter-evals-container">
+      {displayedEvaluations?.map((item) =>
+        <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
+          {item.semester} {item.year} Team: {item.team}</button>)}
     </section>
   </>;
 };

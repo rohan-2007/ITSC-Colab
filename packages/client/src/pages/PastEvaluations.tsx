@@ -132,6 +132,8 @@ const PastEvaluations: React.FC = () => {
   const location = useLocation();
   const data = location.state as Data;
 
+  console.log(`location data: `, data);
+
   const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSemester(event.target.value);
   };
@@ -244,6 +246,7 @@ const PastEvaluations: React.FC = () => {
       });
 
       const targetUserId = data?.role === `SUPERVISOR` && data.studentId ? data.studentId : userId;
+      console.log(`targetUserId: `, targetUserId);
 
       const evalRes = await fetch(`http://localhost:3001/getEval/?userId=${targetUserId}`, {
         credentials: `include`,
@@ -255,7 +258,7 @@ const PastEvaluations: React.FC = () => {
       }
 
       const evaluationsData: Evaluation[] = await evalRes.json();
-      console.log(evaluationsData);
+      console.log(`evaluationsData: `, evaluationsData);
       setEvaluations(evaluationsData);
     } catch (err) {
       console.error(`Evaluations fetch error:`, err);
@@ -284,6 +287,7 @@ const PastEvaluations: React.FC = () => {
   }, [ contributions ]);
 
   useEffect(() => {
+    console.log(`evaluations: `, evaluations);
     const studentEvals = evaluations.filter((evaluation) => evaluation.type === `STUDENT`);
     const supervisorEvals = evaluations.filter((evaluation) => evaluation.type === `SUPERVISOR`);
 
@@ -322,6 +326,7 @@ const PastEvaluations: React.FC = () => {
   );
 
   console.log(`data: `, data);
+  console.log(`filteredStudentTeamEvals[0]: `, filteredStudentTeamEvals[0]);
 
   // Convert evaluation results to a lookup map for easier access
   const getEvaluationResults = (evaluation: Evaluation) => {
@@ -333,7 +338,7 @@ const PastEvaluations: React.FC = () => {
     return resultsMap;
   };
 
-  console.log(`filteredStudentTeamEvals[0]: `, filteredStudentTeamEvals[0]);
+  // console.log(`filteredStudentTeamEvals[0]: `, filteredStudentTeamEvals[0]);
 
   const studentTeamResults = filteredStudentTeamEvals[0] ? getEvaluationResults(filteredStudentTeamEvals[0]) : {};
   const supervisorTeamResults = filteredSupervisorTeamEvals[0] ?
