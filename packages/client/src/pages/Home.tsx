@@ -190,9 +190,13 @@ const Home: React.FC = () => {
   useEffect(() => {
     const getGitData = async () => {
       try {
-        const username = user?.email.slice(0, user.email.indexOf(`@`));
+        const username = user?.name;
 
         console.log(`username: `, username);
+
+        if (!username || username === undefined) {
+          return;
+        }
 
         const res = await fetch(`http://localhost:3001/gitData/`, {
           body: JSON.stringify({ username }),
@@ -210,9 +214,9 @@ const Home: React.FC = () => {
         const contributionList = resJson.data as Contribution[];
         console.log(`contributionList: `, contributionList);
 
-        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
+        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date) && item.user_login === user?.name));
 
-        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
+        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date) && item.user_login === user?.name));
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -376,7 +380,7 @@ const Home: React.FC = () => {
 
       <section className="user-stats-section">
         <h2>Your Progress</h2>
-        <div className="user-stats">
+        <div className="user-stats home-stats">
           <div className="stat">
             <h2>{user.evalsCompleted}</h2>
             <p>Evaluations Completed</p>

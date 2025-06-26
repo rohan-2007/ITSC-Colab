@@ -211,7 +211,7 @@ const FilterEvaluations: React.FC = () => {
   //   }
   // };
 
-  const fetchEvaluations = async () => {
+  const fetchEvaluations = React.useCallback(async () => {
     try {
       const userRes = await fetch(`http://localhost:3001/me/`, {
         body: JSON.stringify({ returnData: true }),
@@ -256,7 +256,7 @@ const FilterEvaluations: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ data ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -264,7 +264,7 @@ const FilterEvaluations: React.FC = () => {
       await fetchEvaluations();
     };
     void fetchData();
-  }, []);
+  }, [ fetchEvaluations ]);
 
   useEffect(() => {
     const studentEvals = evaluations.filter((evaluation) => evaluation.type === `STUDENT`);

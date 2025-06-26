@@ -13,11 +13,14 @@ router.post(`/gitData`, async (
 ) => {
   const { username } = req.body;
 
+  if (!username) {
+    res.status(400).json({ message: `No username provided` });
+    return;
+  }
+
   const data = await prisma.contributions.findMany({
     where: {
-      user_login: {
-        contains: username,
-      },
+      user_login: username,
     },
   });
 
