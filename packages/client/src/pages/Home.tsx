@@ -382,21 +382,24 @@ const Home: React.FC = () => {
             <p>Evaluations Completed</p>
           </div>
         </div>
+        <div className="profile-actions">
+          <button onClick={() => navigate(`/evaluations`)} className="button-view-profile">Evaluations</button>
+        </div>
       </section>
 
       {user.role === `STUDENT` && <section className="graph-section">
         <h2>Your Past Git Contributions</h2>
-        <div className="graph-div">
-          {/* <div className="stat">
-            <h2>{user.evalsCompleted}</h2>
-            <p>Evaluations Completed</p>
-          </div> */}
-          {/* <h3>contributions: {contributions}</h3> */}
-          {contributions ?
-            <svg ref={svgRef} className="graph" /> :
-            <h3>No Past Contributions</h3>}
-          <div id="tooltip" />
-        </div>
+        {contributions && contributions.length > 0 ?
+          <div className="graph-div">
+            {/* <div className="stat">
+              <h2>{user.evalsCompleted}</h2>
+              <p>Evaluations Completed</p>
+            </div> */}
+            {/* <h3>contributions: {contributions}</h3> */}
+            <svg ref={svgRef} className="graph" />
+            <div id="tooltip" />
+          </div> :
+          <p>No Past Contributions</p>}
       </section>}
 
       {user.role === `SUPERVISOR` &&
