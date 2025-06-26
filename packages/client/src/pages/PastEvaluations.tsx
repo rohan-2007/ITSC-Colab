@@ -121,7 +121,7 @@ const PastEvaluations: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<Evaluation[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<Evaluation[]>([]);
-  const [ selectedSemester, setSelectedSemester ] = useState(`SUMMER`);
+  const [ selectedSemester, setSelectedSemester ] = useState(``);
   const [ selectedYear, setSelectedYear ] = useState(2025);
   const [ selectedTeam, setSelectedTeam ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
