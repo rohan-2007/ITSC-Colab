@@ -378,10 +378,13 @@ const Profile: React.FC = () => {
             {selfEvalStatusError && <p className="error-message">{selfEvalStatusError}</p>}
             {selfEvalStatus && !selfEvalStatusLoading && !selfEvalStatusError ?
               <div className="profile-info-item">
-                <span className="info-label">
-                  Current Self-Evaluation (
-                  {getCurrentAcademicTerm().semester} {getCurrentAcademicTerm().year}
-                  )
+                <span className="info-label wider">
+                  Current Self-Evaluation
+                  <br />
+                  <span className="sub-title">(
+                    {getCurrentAcademicTerm().semester} {getCurrentAcademicTerm().year}
+                    )
+                  </span>
                 </span>
                 <span
                   className={`info-value ${
