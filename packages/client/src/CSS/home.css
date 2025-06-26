@@ -22,9 +22,8 @@
   scrollbar-color: #d55959 #e7e7e7;
 }
 
-
 .home-container {
-  padding: 50px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   width: 100vw; 
@@ -33,7 +32,7 @@
   font-family: 'Inter', sans-serif;
   color: #333;
   box-sizing: border-box;
-  overflow:auto;
+  overflow: auto;
   padding-bottom: 200px;
 }
 
@@ -41,19 +40,20 @@
   flex: 1; 
   margin: 0 auto; 
   width: 80%;
-  height: 100vh;
+  height: 100vh; /* Changed from height to min-height */
   display: grid; 
-  gap: 30px; 
+  gap: 20px; 
   grid-template-areas: var(--gridLayout); 
   grid-template-columns: 1fr 1fr; 
+  grid-template-rows: auto auto 1fr auto; /* Added explicit row sizing */
 
   @media (max-width: 768px) {
     grid-template-areas:
-      'header'
-      'profile'
-      'stats'
-      'actions';
-    grid-template-columns: 1fr;
+      'header header'
+      'graph graph'
+      'profile stats'
+      'actions actions';
+    grid-template-columns: 1fr 1fr;
     padding: 15px;
   }
 }
@@ -121,20 +121,21 @@
   font-size: 1.1em;
 }
 
+.profile-quick-info {
+  grid-area: profile; /* Added grid area */
+}
+
 .profile-quick-info h2 {
   font-size: 1.6em;
   color: #2c3e50;
   margin-top: 0;
-  margin-bottom: 20px;
   border-bottom: 2px solid #f44336;
-  padding-bottom: 10px;
   display: inline-block;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
   gap: 10px;
   font-size: 1.1em;
 }
@@ -158,6 +159,10 @@
   text-align: right;
 }
 
+.supervisor-todo-section {
+  grid-area: to-do; /* Added grid area */
+}
+
 .supervisor-todo-section td, th {
   text-align: center;
 }
@@ -170,6 +175,10 @@
   border-bottom: 2px solid #f44336; 
   padding-bottom: 10px;
   display: inline-block;
+}
+
+.user-stats-section {
+  grid-area: stats; /* Added grid area */
 }
 
 .user-stats-section h2 {
@@ -187,6 +196,7 @@
   flex-wrap: wrap; 
   justify-content: space-around; 
   gap: 20px; 
+  height: 65%;
   margin: 0;
 }
 
@@ -225,6 +235,10 @@
   font-weight: 500;
 }
 
+.quick-actions-section {
+  grid-area: actions; /* Added grid area */
+}
+
 .quick-actions-section h2 {
   font-size: 1.6em;
   color: #2c3e50;
@@ -249,26 +263,45 @@
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   margin-top: 20px;
+  min-width: 90%;
 }
 
 .graph-section {
-  grid-template-columns: 1/-1;
+  grid-area: graph; /* Added grid area */
+  background-color: #fff; /* Changed to white background for better contrast */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+}
+
+.graph-section h2 {
+  font-size: 1.6em;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f44336;
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.graph-div {
+  width: 100%;
+  height: 300px; /* Set a fixed height for the graph container */
 }
 
 .graph {
   width: 100%;
+  height: 100%;
 }
 
 #tooltip {
-   position: absolute; 
-   opacity: 0; 
-   background: white; 
-   border: 1px solid #ccc; 
-   padding: 5px; 
-   border-radius: 4px; 
-   pointer-events: none;
+  position: absolute; 
+  opacity: 0; 
+  background: white; 
+  border: 1px solid #ccc; 
+  padding: 5px; 
+  border-radius: 4px; 
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-
-/* .graph-div {
-  padding-bottom: 20px;
-} */

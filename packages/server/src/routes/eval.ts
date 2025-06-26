@@ -26,6 +26,14 @@ router.post(`/submitEval`, requireAuth, async (
 ): Promise<void> => {
   try {
     const { results, semester, studentId, supervisorId, team, type, year } = req.body;
+    console.log(`Creating evaluation with data:`, {
+      semester,
+      studentId,
+      supervisorId,
+      team,
+      type,
+      year,
+    });
 
     if (
       Number(req.session.userId) !== studentId &&

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { notify } from '../components/Notification';
 import { User } from './PastEvaluations';
 import '../CSS/evaluations.css';
 import '../components/buttonandcard.css';
@@ -68,7 +69,7 @@ const Evaluations: React.FC = () => {
   const [ isPreModalVisible, setIsPreModalVisible ] = useState(false);
   const [ selectedStudentId, setSelectedStudentId ] = useState<number | null>(null);
   const [ selectedSemester, setSelectedSemester ] = useState<`SPRING` | `SUMMER` | `FALL` | `N/A`>(assignSemester());
-  const [ message, setMessage ] = useState(``);
+  const [ message ] = useState(``);
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ selectedTeam, setSelectedTeam ] = useState(`no team`);
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategoryData[]>([]);
@@ -122,7 +123,7 @@ const Evaluations: React.FC = () => {
 
     if (currentSemester === `N/A`) {
       setCanStartSelfEval(false);
-      setMessage(`Evaluations can only be started during the SPRING, SUMMER, or FALL semesters.`);
+      notify(`Evaluations can only be started during the SPRING, SUMMER, or FALL semesters.`);
       return;
     }
 
@@ -253,21 +254,21 @@ const Evaluations: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      setMessage(`Error: User not found.`);
+      notify(`Error: User not found.`);
       return;
     }
     if (Object.keys(selections).length !== rubricCategories.length) {
-      setMessage(`Please make a selection for every rubric category.`);
+      notify(`Please make a selection for every rubric category.`);
       return;
     }
 
-    setMessage(`Submitting...`);
+    notify(`Submitting...`);
 
     const studentIdForEval = user.role === `SUPERVISOR` ? selectedStudentId : user.id;
     const supervisorIdForEval = user.role === `SUPERVISOR` ? user.id : user.supervisorId;
 
     if (!studentIdForEval) {
-      setMessage(`Error: A student must be selected.`);
+      notify(`Error: A student must be selected.`);
       return;
     }
 
@@ -298,8 +299,7 @@ const Evaluations: React.FC = () => {
         const errorMsg = typeof errorData.error === `string` ? errorData.error : `Failed to submit evaluation.`;
         throw new Error(String(errorMsg));
       }
-      setMessage(`Evaluation submitted successfully!`);
-      setTimeout(() => setMessage(``), 3000);
+      notify(`Evaluation submitted successfully!`);
       setIsFormVisible(false);
       if (user.role === `SUPERVISOR`) {
         void fetchAllStatuses();
@@ -308,7 +308,7 @@ const Evaluations: React.FC = () => {
         void fetchEvalStatusForCurrentUser();
       }
     } catch (err) {
-      setMessage(`Error: ${err instanceof Error ? err.message : String(err)}`);
+      notify(`Error: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 

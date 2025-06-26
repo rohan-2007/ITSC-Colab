@@ -145,6 +145,13 @@ export const seedRubricData = async (): Promise<void> => {
       }
     }
 
+    await prisma.$executeRaw`
+  SELECT setval(
+    pg_get_serial_sequence('"perf_review"."evaluation"', 'id'),
+    (SELECT MAX(id) FROM "perf_review"."evaluation")
+  )
+`;
+
     console.log(`✅ Rubric seeding complete with consistent IDs.`);
   } catch (error) {
     console.error(`❌ Failed to synchronize rubric data:`, error);

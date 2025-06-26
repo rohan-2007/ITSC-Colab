@@ -7,7 +7,6 @@ import '../CSS/home.css';
 import * as d3 from 'd3';
 import type { Contribution } from '../pages/PastEvaluations';
 import { Student } from './StudentSelect';
-import { PastEval } from './PastEvaluations';
 import '../components/ButtonAndCard.css';
 
 const fetchUrl = `http://localhost:${3001}`;
@@ -61,7 +60,17 @@ const checkIfCurrentYear = (timestamp: string | Date) => {
 };
 
 const currentSemester = assignSemester();
+
+interface PastEval {
+  semester: string;
+  studentId: number;
+  supervisorId: number;
+  type: string;
+  year: number;
+}
+
 interface User {
+  id: number;
   email: string;
   evalsCompleted: number;
   evalsGiven: PastEval[] | null;
@@ -242,6 +251,7 @@ const Home: React.FC = () => {
 
         if (jsonData && jsonData.user) {
           setUser({
+            id: jsonData.user.id,
             email: jsonData.user.email,
             evalsCompleted: jsonData.user.evaluationsCompleted.length,
             evalsGiven: jsonData.user.evaluationsGiven || null,
@@ -264,7 +274,10 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (user?.role === `SUPERVISOR`) {
-      document.documentElement.style.setProperty(`--gridLayout`, `'header header header'\n'profile stats to-do'\n'actions actions to-do'`);
+      document.documentElement.style.setProperty(
+        `--gridLayout`,
+        `'header header'\n'profile to-do'\n'stats to-do'`,
+      );
     } else {
       document.documentElement.style.setProperty(`--gridLayout`, `'header header'\n'graph graph'\n'profile stats'\n'actions actions'`);
     }
@@ -285,10 +298,7 @@ const Home: React.FC = () => {
 
         if (jsonData && jsonData.students) {
           const allStudents = jsonData.students as Student[];
-          const tempFilteredStudents = allStudents.filter(
-            (student) => student.teams.some((team) => user?.teamIDs?.includes(team.id)),
-          );
-          setStudents(tempFilteredStudents);
+          setStudents(allStudents);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -372,21 +382,24 @@ const Home: React.FC = () => {
             <p>Evaluations Completed</p>
           </div>
         </div>
+        <div className="profile-actions">
+          <button onClick={() => navigate(`/evaluations`)} className="button-view-profile">Evaluations</button>
+        </div>
       </section>
 
       {user.role === `STUDENT` && <section className="graph-section">
         <h2>Your Past Git Contributions</h2>
-        <div className="graph-div">
-          {/* <div className="stat">
-            <h2>{user.evalsCompleted}</h2>
-            <p>Evaluations Completed</p>
-          </div> */}
-          {/* <h3>contributions: {contributions}</h3> */}
-          {contributions ?
-            <svg ref={svgRef} className="graph" /> :
-            <h3>No Past Contributions</h3>}
-          <div id="tooltip" />
-        </div>
+        {contributions && contributions.length > 0 ?
+          <div className="graph-div">
+            {/* <div className="stat">
+              <h2>{user.evalsCompleted}</h2>
+              <p>Evaluations Completed</p>
+            </div> */}
+            {/* <h3>contributions: {contributions}</h3> */}
+            <svg ref={svgRef} className="graph" />
+            <div id="tooltip" />
+          </div> :
+          <p>No Past Contributions</p>}
       </section>}
 
       {user.role === `SUPERVISOR` &&
@@ -407,17 +420,18 @@ const Home: React.FC = () => {
                 </thead>
                 <tbody>
                   {students.length > 0 ?
-                    students.map((student) =>
-                      <tr
-                        key={student.id}
-                      >
-                        <td>{student.id}</td>
-                        <td>{student.name}</td>
-                        <td>{student.email}</td>
-                        {student.teams[0] ?
-                          <td>{student.teams.filter((t) => user.teamIDs?.includes(t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
-                        <td>{user.evalsGiven?.some((evaluation) => evaluation.studentId === student.id) ? `✅` : `❌`}</td>
-                      </tr>) :
+                    students
+                      .filter((student) => student.supervisorId === user.id)
+                      .map((student) =>
+                        <tr key={student.id}>
+                          <td>{student.id}</td>
+                          <td>{student.name}</td>
+                          <td>{student.email}</td>
+                          {student.teams[0] ?
+                            <td>{student.teams.filter((t) => user.teamIDs?.includes(t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
+                          <td>{user.evalsGiven?.some((evaluation) =>
+                            evaluation.studentId === student.id && evaluation.supervisorId === user.id && evaluation.type === `SUPERVISOR` && evaluation.semester === currentSemester && evaluation.year === new Date().getFullYear()) ? `✅` : `❌`}</td>
+                        </tr>) :
                     <tr>
                       <td colSpan={4} className="no-students-message">
                         No students found.
