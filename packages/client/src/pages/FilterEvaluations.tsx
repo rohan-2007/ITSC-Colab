@@ -211,19 +211,18 @@ const FilterEvaluations: React.FC = () => {
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      if (topBarRef.current) {
-        const height = topBarRef.current.offsetHeight;
-        document.documentElement.style.setProperty(`--topBarHeight`, `${height}px`);
-      }
-    };
+    if (!topBarRef.current) {
+      return;
+    }
 
-    handleResize();
-    window.addEventListener(`resize`, handleResize);
+    const observer = new ResizeObserver(() => {
+      const height = topBarRef.current!.offsetHeight;
+      document.documentElement.style.setProperty(`--topBarHeight`, `${height}px`);
+    });
 
-    return () => {
-      window.removeEventListener(`resize`, handleResize);
-    };
+    observer.observe(topBarRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   // const getSemesterFromTimestamp = (timestamp: string | Date) => {
@@ -442,7 +441,7 @@ const FilterEvaluations: React.FC = () => {
   // getEvaluationResults(filteredSupervisorTeamEvals[0]) :
   // {};
 
-  return <>
+  return <div>
     <div className="top-bar" ref={topBarRef}>
       <div className="left-section">
         <h3 className="semester-label">Year:</h3>
@@ -532,7 +531,7 @@ const FilterEvaluations: React.FC = () => {
         <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
           {item.semester} {item.year} Team: {item.team}</button>)}
     </section>
-  </>;
+  </div>;
 };
 
 export default FilterEvaluations;

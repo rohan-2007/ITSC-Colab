@@ -128,15 +128,18 @@ html, body, #root {
 
 .past-evals-container {
   /* grid-area: profile; */
-  width: auto;
-  height: calc(100vh - var(--topBarHeight));
+  width: 80vw;
+  /* height: 80vh; */
+  height: 100%;
+  /* height:auto; */
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 25px;
-  margin-top: var(--topBarHeight); /* Slight offset for visual balance */
+  margin-top: var(--topBarHeight); 
   display: flex; /* Use flex to push the button to the bottom */
   flex-direction: column;
+  /* overflow-y: auto; */
 }
 
 /* .past-evals-container * {
@@ -161,9 +164,9 @@ html, body, #root {
 
 .legend-outer {
   align-items: flex-start;
-  display: flex;
+  /* display: flex; */
   flex-direction: row; 
-  margin: 2vh; 
+  /* margin: 2vh;  */
   /* width: 33%; */
 }
 
@@ -172,4 +175,63 @@ html, body, #root {
   display: flex;
   margin: 4px;
   width: auto;
+}
+
+.eval-git-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.git-container {
+  /* width: 20vw; */
+  /* width: auto; */
+  padding: 10px;
+  margin: 20px;
+  width: 40%;
+}
+
+.contribution-month-entry {
+  margin: 0;
+  padding: 0;
+  font-size: larger;
+  font-weight: bold;
+  /* font-style: italic; */
+}
+
+ul {
+  padding-left: 0;
+  list-style-position: inside;
+  /* list-style: disc; */
+}
+
+.rubric-table-wrapper-past-eval {
+  height: 100%;
+  overflow-x: auto;
+}
+
+.rubric-table-past-eval {
+  /* width: 100%; */
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  min-width: 800px;
+  height: 100%;
+}
+
+.rubric-table-past-eval th,
+.rubric-table-past-eval td {
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rubric-table-past-eval thead {
+  background-color: #f9f9f9;
+}
+
+.rubric-table-past-eval th {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
 }

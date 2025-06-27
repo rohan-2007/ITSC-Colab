@@ -3,7 +3,8 @@
     Ensures that on pages with little content, the main area still takes up
     the full height of the screen, keeping the footer at the very bottom.
   */
-  min-height: 80vh;
+  /* min-height: 80vh; */
+  height: 83vh;
 
   /* Includes padding in the element's total width and height calculation. */
   box-sizing: border-box;
@@ -15,11 +16,12 @@
   grid-template-columns: 1fr; /* Single column layout */
   flex-direction: column;
   padding-bottom: 90px;
+  display: block;
   /* gap: 20px; Space between rows */
 }
 
 .layout-container {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   height: 100%;
 }
@@ -27,8 +29,10 @@
 header,
 footer {
   flex-shrink: 0;
+  height: 10vh;
+  display: block;
 }
 
 header {
-  margin-bottom: 90px;
+  /* margin-bottom: 90px; */
 }

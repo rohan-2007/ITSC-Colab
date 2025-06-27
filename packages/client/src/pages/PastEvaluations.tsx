@@ -147,26 +147,25 @@ const PastEvaluations: React.FC = () => {
     setSelectedYear(parseInt(event.target.value, 10));
   };
 
-  const checkIfCurrentYear = (timestamp: string | Date) => {
+  const checkIfEvalYear = (timestamp: string | Date) => {
     const date = new Date(timestamp);
-    return date.getFullYear() === new Date().getFullYear();
+    return date.getFullYear() === data.year;
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (topBarRef.current) {
-        const height = topBarRef.current.offsetHeight;
-        document.documentElement.style.setProperty(`--topBarHeight`, `${height}px`);
-      }
-    };
+  // useEffect(() => {
+  //   if (!topBarRef.current) {
+  //     return;
+  //   }
 
-    handleResize();
-    window.addEventListener(`resize`, handleResize);
+  //   const observer = new ResizeObserver(() => {
+  //     const height = topBarRef.current!.offsetHeight;
+  //     document.documentElement.style.setProperty(`--topBarHeight`, `${height}px`);
+  //   });
 
-    return () => {
-      window.removeEventListener(`resize`, handleResize);
-    };
-  }, []);
+  //   observer.observe(topBarRef.current);
+
+  //   return () => observer.disconnect();
+  // }, []);
 
   const getSemesterFromTimestamp = (timestamp: string | Date) => {
     const date = new Date(timestamp);
@@ -201,7 +200,7 @@ const PastEvaluations: React.FC = () => {
       const contributionList = resJson.data as Contribution[];
 
       setContributions(contributionList.filter((item) =>
-        getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date)));
+        getSemesterFromTimestamp(item.date) === data.semester && checkIfEvalYear(item.date)));
     } catch (err) {
       console.error(`Git fetch error:`, err);
     }
@@ -361,7 +360,7 @@ const PastEvaluations: React.FC = () => {
     {};
 
   return <>
-    <div className="top-bar" ref={topBarRef}>
+    {/* <div className="top-bar" ref={topBarRef}>
       <div className="left-section">
         <h3 className="semester-label">Year:</h3>
         <select id="year" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
@@ -401,72 +400,83 @@ const PastEvaluations: React.FC = () => {
         <pre>{totalContributions?.map((item, index) =>
           `${contributionMonths ? contributionMonths[index] : null}: ${item}`)?.join(`\n`)}</pre>
       </div>
-
-      <div className="legend-outer">
-        {legendColors.map((item, index) =>
-          <div key={index} className="legend-item-container">
-            <div
-              style={{
-                backgroundColor: item.color,
-                height: `16px`,
-                marginRight: `8px`,
-                width: `16px`,
-              }}
-            />
-            <span>{item.label}</span>
-          </div>)}
-      </div>
-    </div>
+    </div> */}
 
     <section className="past-evals-container">
-      <div className="rubric-table-wrapper">
-        <table className="rubric-table">
-          <thead>
-            <tr>
-              <th>Criteria</th>
-              {rubricCategories[0]?.levels.map((level) =>
-                <th key={level.id}>{level.level}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {rubricCategories.map((category) =>
-              <tr key={category.id}>
-                <td className="criteria-column">
-                  <strong>{category.title}</strong>
-                  <ul>
-                    {category.subItems?.map((subItem) =>
-                      <li key={subItem.id}>{subItem.name}</li>)}
-                  </ul>
-                </td>
-                {category.levels.map((level) => {
-                  let cellClass = `display-cell`;
+      <div className="eval-git-container">
+        <div className="rubric-table-wrapper-past-eval">
+          <table className="rubric-table-past-eval">
+            <thead>
+              <tr>
+                <th>Criteria</th>
+                {rubricCategories[0]?.levels.map((level) =>
+                  <th key={level.id}>{level.level}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {rubricCategories.map((category) =>
+                <tr key={category.id}>
+                  <td className="criteria-column">
+                    <strong>{category.title}</strong>
+                    <ul>
+                      {category.subItems?.map((subItem) =>
+                        <li key={subItem.id}>{subItem.name}</li>)}
+                    </ul>
+                  </td>
+                  {category.levels.map((level) => {
+                    let cellClass = `display-cell`;
 
-                  const studentSelected = studentTeamResults[category.id] === level.id;
-                  const supervisorSelected = supervisorTeamResults[category.id] === level.id;
+                    const studentSelected = studentTeamResults[category.id] === level.id;
+                    const supervisorSelected = supervisorTeamResults[category.id] === level.id;
 
-                  if (studentSelected && supervisorSelected) {
-                    cellClass += ` both-selected`;
-                  } else if (studentSelected) {
-                    cellClass += ` student-selected`;
-                  } else if (supervisorSelected) {
-                    cellClass += ` supervisor-selected`;
-                  }
+                    if (studentSelected && supervisorSelected) {
+                      cellClass += ` both-selected`;
+                    } else if (studentSelected) {
+                      cellClass += ` student-selected`;
+                    } else if (supervisorSelected) {
+                      cellClass += ` supervisor-selected`;
+                    }
 
-                  return <td
-                    key={level.id}
-                    style={dynamicStyles}
-                    className={cellClass}
-                  >
-                    <div className="level-text">
-                      {level.description}
-                    </div>
-                  </td>;
-                })}
-              </tr>)}
-          </tbody>
-        </table>
+                    return <td
+                      key={level.id}
+                      style={dynamicStyles}
+                      className={cellClass}
+                    >
+                      <div className="level-text">
+                        {level.description}
+                      </div>
+                    </td>;
+                  })}
+                </tr>)}
+            </tbody>
+          </table>
+        </div>
+        {user?.role === `STUDENT` &&
+          <section className="git-container">
+            <h2>Git Contributions for {data.semester} semester:</h2>
+            <ul>
+              {totalContributions?.map((item, index) =>
+                <li className="contribution-month-entry">
+                  {contributionMonths ? contributionMonths[index] : null}: {item}</li>)}
+            </ul>
+            <div className="legend-outer">
+              {legendColors.map((item, index) =>
+                <div key={index} className="legend-item-container">
+                  <div
+                    style={{
+                      backgroundColor: item.color,
+                      height: `16px`,
+                      marginRight: `8px`,
+                      width: `16px`,
+                    }}
+                  />
+                  <span>{item.label}</span>
+                </div>)}
+            </div>
+          </section>}
       </div>
     </section>
+
   </>;
 };
 
