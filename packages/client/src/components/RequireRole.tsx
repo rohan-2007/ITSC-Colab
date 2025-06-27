@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { notifyAfterReload } from './Notification';
 interface RequireRoleProps {
   allowedRoles: string[];
   children: React.ReactNode;
@@ -12,37 +12,25 @@ const RequireRole: React.FC<RequireRoleProps> = ({ allowedRoles, children }) => 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkRole = async () => {
+    const userData = localStorage.getItem(`userMeta`);
+
+    if (userData) {
       try {
-        const res = await fetch(`http://localhost:3001/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-
-        if (!res.ok) {
-          throw new Error(`Unauthorized`);
+        const user = JSON.parse(userData);
+        if (user?.role && allowedRoles.includes(String(user.role))) {
+          setAuthorized(true);
+        } else {
+          void navigate(`/home`); // User logged in, but role not allowed
         }
-
-        const data = await res.json();
-        if (typeof data.user.role === `string`) {
-          if (data?.user && allowedRoles.includes(String(data.user.role))) {
-            setAuthorized(true);
-          } else {
-            await navigate(data?.user ? `/home` : `/login`);
-          }
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.warn(e);
-        await navigate(`/login`);
-      } finally {
-        setLoading(false);
+      } catch {
+        notifyAfterReload(`Invalid user data in localStorage`);
+        void navigate(`/login`);
       }
-    };
+    } else {
+      void navigate(`/login`); // Not logged in
+    }
 
-    void checkRole();
+    setLoading(false);
   }, [ allowedRoles, navigate ]);
 
   if (loading) {
@@ -53,41 +41,32 @@ const RequireRole: React.FC<RequireRoleProps> = ({ allowedRoles, children }) => 
 };
 
 export default RequireRole;
+
 export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [ loading, setLoading ] = useState(true);
   const [ authenticated, setAuthenticated ] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const userData = localStorage.getItem(`userMeta`);
+
+    if (userData) {
       try {
-        const res = await fetch(`http://localhost:3001/me/`, {
-          body: JSON.stringify({ returnData: true }),
-          credentials: `include`,
-          headers: { 'Content-Type': `application/json` },
-          method: `POST`,
-        });
-
-        if (!res.ok) {
-          throw new Error(`Unauthorized`);
-        }
-
-        const data = await res.json();
-        if (data?.user) {
+        const user = JSON.parse(userData);
+        if (user?.role) {
           setAuthenticated(true);
         } else {
-          await navigate(`/login`);
+          void navigate(`/login`);
         }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.warn(e);
-        await navigate(`/login`);
-      } finally {
-        setLoading(false);
+      } catch {
+        notifyAfterReload(`Invalid user data in localStorage`);
+        void navigate(`/login`);
       }
-    };
+    } else {
+      void navigate(`/login`);
+    }
 
-    void checkAuth();
+    setLoading(false);
   }, [ navigate ]);
 
   if (loading) {

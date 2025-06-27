@@ -6,6 +6,36 @@ import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
 
 const router = Router();
+export const requireRole = (allowedRoles: Role[]) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session.userId) {
+      res.status(401).json({ error: `Not authenticated` });
+      return;
+    }
+
+    try {
+      const user = await prisma.user.findUnique({
+        select: { role: true },
+        where: { id: req.session.userId },
+      });
+      if (!user) {
+        res.status(404).json({ error: `User not found` });
+        return;
+      }
+
+      if (!allowedRoles.includes(user.role)) {
+        res.status(403).json({ error: `Forbidden: insufficient permissions` });
+        return;
+      }
+
+      next();
+    } catch (error) {
+      console.error(`requireRole error:`, error);
+      res.status(500).json({ error: `Internal server error` });
+      return;
+    }
+  };
+
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId) {
     res.status(401).json({ error: `Not authenticated` });

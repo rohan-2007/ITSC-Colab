@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { setNotifyHandler } from './Notification';
+import { notify, setNotifyHandler } from './Notification';
 
 interface Notification {
   id: number;
@@ -14,14 +14,33 @@ const NotificationSystem: React.FC = () => {
   const idRef = useRef(0);
 
   useEffect(() => {
+  // Set up notify handler
     setNotifyHandler((msg, duration = 4000) => {
-      const id = idRef.current += 1;
+      idRef.current += 1;
+      const id = idRef.current;
       setNotifications((prev) => [ ...prev, { id, duration, message: msg }]);
 
       setTimeout(() => {
         setNotifications((prev) => prev.filter((n) => n.id !== id));
       }, duration);
     });
+
+    // Handle queued notifications after reload
+    const queued = sessionStorage.getItem(`__queued_notifications__`);
+    if (queued) {
+      try {
+        const messages = JSON.parse(queued);
+        if (Array.isArray(messages)) {
+          messages.forEach((n: { duration: number, msg: string }) => {
+            notify(n.msg, n.duration);
+          });
+        }
+      } catch {
+        notify(`Failed to parse queued notifications`);
+      } finally {
+        sessionStorage.removeItem(`__queued_notifications__`);
+      }
+    }
   }, []);
 
   return createPortal(

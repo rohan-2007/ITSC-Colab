@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { notifyAfterReload } from '../components/Notification';
 import '../CSS/Supervisor.css';
 import '../components/buttonAndCard.css';
 import '../components/Modals.css';
@@ -214,6 +215,7 @@ const Supervisor: React.FC = () => {
     });
 
     closeStudentInfoModal();
+    notifyAfterReload(`User info successfully updated`);
     window.location.reload();
   };
 
@@ -254,6 +256,7 @@ const Supervisor: React.FC = () => {
     setTeams((prev) =>
       prev.map((t, i) => i === selectedTeamIndex ? updatedTeam : t));
     closeTeamModal();
+    notifyAfterReload(`Team info successfully updated`);
     window.location.reload();
   };
 
@@ -273,6 +276,7 @@ const Supervisor: React.FC = () => {
 
     setTeams((prev) => prev.filter((_, i) => i !== selectedTeamIndex));
     closeTeamModal();
+    notifyAfterReload(`Team successfully deleted`);
     window.location.reload();
   };
 

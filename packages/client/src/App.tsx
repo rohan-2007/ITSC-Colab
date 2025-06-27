@@ -15,13 +15,12 @@ import NotificationSystem from './components/NotificationContainer';
 
 const App: React.FC = () =>
   <Layout>
+    <NotificationSystem />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route
         path="/home"
-        element={
-          <Home />
-        }
+        element={<Home />}
       />
       <Route
         path="/past_evaluations"
@@ -36,38 +35,29 @@ const App: React.FC = () =>
       />
       <Route
         path="/evaluations"
-        element={
-          <RequireAuth>
-            <Evaluations />
-          </RequireAuth>
-        }
+        element={<RequireAuth>
+          <Evaluations />
+        </RequireAuth>}
       />
       <Route path="/contact" element={<Contact />} />
       <Route
         path="/supervisor"
-        element={
-          <RequireRole allowedRoles={[ `SUPERVISOR` ]}>
-            <Supervisor />
-          </RequireRole>
-        }
+        element={<RequireRole allowedRoles={[ `SUPERVISOR` ]}>
+          <Supervisor />
+        </RequireRole>}
       />
       <Route
         path="/student_select"
-        element={
-          <RequireAuth>
-            <StudentSelect />
-          </RequireAuth>
-        }
+        element={<RequireAuth>
+          <StudentSelect />
+        </RequireAuth>}
       />
       <Route
         path="/filter_evaluations"
-        element={
-          <RequireAuth>
-            <FilterEvaluations />
-          </RequireAuth>
-        }
+        element={<RequireAuth>
+          <FilterEvaluations />
+        </RequireAuth>}
       />
     </Routes>
-    <NotificationSystem />
   </Layout>;
 export default App;

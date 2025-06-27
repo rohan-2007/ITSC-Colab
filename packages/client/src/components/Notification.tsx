@@ -14,3 +14,11 @@ export const notify = (msg: string, duration?: number) => {
     notifyRef.current(msg, duration);
   }
 };
+
+const QUEUE_KEY = `__queued_notifications__`;
+
+export const notifyAfterReload = (msg: string, duration = 4000) => {
+  const existing = JSON.parse(sessionStorage.getItem(QUEUE_KEY) ?? `[]`);
+  const updated = [ ...existing, { duration, msg }];
+  sessionStorage.setItem(QUEUE_KEY, JSON.stringify(updated));
+};

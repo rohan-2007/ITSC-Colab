@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../CSS/Profile.css';
 import '../components/buttonAndCard.css';
 import '../components/Modals.css';
+import { notify, notifyAfterReload } from '../components/Notification';
 
 const fetchUrl = `http://localhost:3001`;
 
@@ -111,7 +112,7 @@ const Profile: React.FC = () => {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError(`An unknown error occurred while fetching your profile.`);
+          notify(`An unknown error occurred while fetching your profile.`);
         }
       } finally {
         setIsLoading(false);
@@ -230,7 +231,7 @@ const Profile: React.FC = () => {
   const handleSaveChanges = async () => {
     try {
       if (newPassword && newPassword.length < 6) {
-        setError(`Password must be at least 6 characters long.`);
+        notify(`Password must be at least 6 characters long.`);
         return;
       }
 
@@ -263,16 +264,17 @@ const Profile: React.FC = () => {
         const errorData: { error?: string } = await response.json().catch(() => ({
           error: `Failed to update profile.`,
         }));
-        throw new Error(typeof errorData.error === `string` ? errorData.error : `Failed to update profile.`);
+        notify(typeof errorData.error === `string` ? errorData.error : `Failed to update profile.`);
       }
 
       setShowEditModal(false);
+      notifyAfterReload(`Profile info successfully updated.`);
       window.location.reload();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError(`An unknown error occurred while updating your profile.`);
+        notify(`An unknown error occurred while updating your profile.`);
       }
     }
   };
