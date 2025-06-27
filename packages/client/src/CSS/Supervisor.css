@@ -227,7 +227,7 @@
   border-color: #d1d5db;
 }
 .modal-cancel-supervisor:hover {
-  background-color: #f9fafb;
+  background-color: red;
 }
 
 /* Delete Button (Destructive Action) */
@@ -345,4 +345,345 @@
   flex: 1;
   font-weight: 600;
   padding: 0.25rem 0;
+}
+
+/* Global Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: #e7e7e7;
+  border: 1px solid #cacaca;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  background-color: #d55959;
+}
+
+/* Optional: Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d55959 #e7e7e7;
+}
+
+/* --- 1. Modal Overlay --- */
+.modal-overlay-supervisor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(17, 24, 39, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* --- 2. Edit Team Modal --- */
+.modal-change-team-supervisor {
+  width: 90%;
+  max-width: 900px;
+  height: 85%;
+  max-height: 750px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.modal-change-team-supervisor>h4 {
+  grid-column: 1 / -1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-change-team-supervisor>h3 {
+  padding: 0;
+  margin: 0;
+}
+
+.modal-input-supervisor-team-name {
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  font-size: 1.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-input-supervisor-team-name:focus {
+  outline: none;
+  border-color: #d55959;
+  box-shadow: 0 0 0 3px rgba(213, 89, 89, 0.15);
+}
+
+.modal-change-team-supervisor .modal-form-group-supervisor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.modal-change-team-supervisor .modal-form-group-supervisor:nth-of-type(1) {
+  grid-column: 1 / 2;
+}
+
+.modal-change-team-supervisor .modal-form-group-supervisor:nth-of-type(2) {
+  grid-column: 2 / 3;
+}
+
+.modal-form-group-supervisor h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.modal-form-group-supervisor .modal-input-supervisor {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-form-group-supervisor .modal-input-supervisor:focus {
+  outline: none;
+  border-color: #d55959;
+  box-shadow: 0 0 0 3px rgba(213, 89, 89, 0.15);
+}
+
+.dropdown-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #f9fafb;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease-in-out;
+  color: #374151;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f2f5;
+}
+
+.dropdown-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #d55959;
+  flex-shrink: 0;
+}
+
+.modal-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  align-items: center;
+}
+
+.modal-buttons button {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-buttons button:active {
+  transform: scale(0.97);
+}
+
+.modal-save-supervisor {
+  background-color: #d55959;
+  color: white;
+  border-color: #d55959;
+}
+
+.modal-save-supervisor:hover {
+  background-color: #c04848;
+  border-color: #c04848;
+}
+
+.modal-cancel-supervisor {
+  background-color: #ffffff;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.modal-delete-supervisor {
+  margin-right: auto;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #fee2e2;
+}
+
+.modal-delete-supervisor:hover {
+  background-color: #fecaca;
+  color: #b91c1c;
+}
+
+/* --- 7. Team View Modal (NEW) --- */
+.modal-team-view {
+  width: 90%;
+  max-width: 700px; /* Slightly smaller than edit modal */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-height: 80vh;
+}
+
+.modal-team-view-header {
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.modal-team-view-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-team-view-header h2 {
+  margin: 0.25rem 0 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modal-team-view-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem 0;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  color: #d55959;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem; /* 14px */
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.modal-team-view-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  flex-grow: 1;
+  overflow: hidden; /* Let the columns handle their own scrolling */
+}
+
+.modal-team-view-column {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+}
+
+.modal-team-view-column h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  flex-shrink: 0;
+}
+
+.member-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  background-color: #ffffff;
+}
+
+.member-item {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  color: #374151;
+  background-color: #f9fafb;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.member-item:last-child {
+  margin-bottom: 0;
+}
+
+.member-item-empty {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center the single close button in the view modal footer */
+.modal-team-view .modal-buttons {
+  justify-content: center;
+}
+
+.modal-cancel-supervisor {
+  background-color: red;
+  color: white;
 }
