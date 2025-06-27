@@ -2,12 +2,12 @@ import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
-import { limiter, requireAuth } from './auth';
+import { limiter, requireAuth, requireRole } from './auth';
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const router = Router();
 
-router.post(`/students`, limiter, requireAuth, async (
+router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown>,
   res: Response,
 ) => {
@@ -71,7 +71,7 @@ interface StudentInfoChange {
   userId: number;
 }
 
-router.post(`/setUserInfo`, limiter, requireAuth, async (
+router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, StudentInfoChange>,
   res: Response,
 ) => {
@@ -164,7 +164,7 @@ interface TeamInfoChange {
   name: string;
 }
 
-router.post(`/setTeamInfo`, limiter, requireAuth, async (
+router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, TeamInfoChange>,
   res: Response,
 ) => {
@@ -207,7 +207,7 @@ interface NewTeamRequest {
   name: string;
 }
 
-router.post(`/createTeam`, limiter, requireAuth, async (
+router.post(`/createTeam`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, NewTeamRequest>,
   res: Response,
 ) => {
@@ -229,7 +229,7 @@ router.post(`/createTeam`, limiter, requireAuth, async (
   }
 });
 
-router.delete(`/deleteTeam/:id`, limiter, requireAuth, async (
+router.delete(`/deleteTeam/:id`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<{ id: string }, unknown>,
   res: Response,
 ) => {

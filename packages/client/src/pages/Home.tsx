@@ -95,15 +95,12 @@ const Home: React.FC = () => {
   const [ months, setMonths ] = useState<string[]>();
 
   useEffect(() => {
-    console.log(`contributions: `, contributions);
     if (svgRef.current && graphData && width && height && months && contributions) {
-      console.log(`graphData: `, graphData);
       setWidth(svgRef.current.clientWidth);
       setHeight(svgRef.current.clientHeight);
       const margin = { bottom: 20, left: 20, right: 20, top: 20 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.bottom - margin.top;
-      console.log(`width:`, innerWidth, `height:`, innerHeight);
       const svg = d3.select(svgRef.current);
       const xScale = d3.scaleTime().domain((d3.extent(graphData, (d) => d.x)) as [Date, Date]).range([ 0, innerWidth + margin.left ]);
       const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 5 ]).range([ innerHeight, 0 ]);
@@ -192,8 +189,6 @@ const Home: React.FC = () => {
       try {
         const username = user?.name;
 
-        console.log(`username: `, username);
-
         if (!username || username === undefined) {
           return;
         }
@@ -209,14 +204,9 @@ const Home: React.FC = () => {
 
         const resJson = await res.json();
 
-        console.log(`resJson: `, JSON.stringify(resJson, null, 2));
-
         const contributionList = resJson.data as Contribution[];
-        console.log(`contributionList: `, contributionList);
 
         setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date) && item.user_login === user?.name));
-
-        console.log(`filtered contributions: `, contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date) && item.user_login === user?.name));
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -275,6 +265,18 @@ const Home: React.FC = () => {
 
     void checkSession();
   }, [ navigate ]);
+
+  useEffect(() => {
+    if (user) {
+      const safeUserData = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        teamNames: user.teamNames,
+      };
+      localStorage.setItem(`userMeta`, JSON.stringify(safeUserData));
+    }
+  }, [ user ]);
 
   useEffect(() => {
     if (user?.role === `SUPERVISOR`) {
@@ -419,7 +421,6 @@ const Home: React.FC = () => {
                     <th>Email</th>
                     <th>Teams</th>
                     <th>Completed</th>
-                    {` `}
                   </tr>
                 </thead>
                 <tbody>

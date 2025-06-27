@@ -4,35 +4,16 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/ITSC_LOGO.png';
 
-const Navbar: React.FC = () => {
-  const [ isSupervisor, setIsSupervisor ] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    const fetchRole = async () => {
-      const response = await fetch(`http://localhost:3001/me/`, {
-        body: JSON.stringify({ returnData: true }),
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-      if (!response.ok) {
-        throw new Error(`Session not found. Please log in.`);
-      }
-      const data = await response.json();
-      if (data) {
-        setIsSupervisor(data.user.role === `SUPERVISOR`);
-      }
-    };
-    void fetchRole();
-  }, []);
-
-  return <header className="navbar">
+const Navbar: React.FC = () =>
+  <header className="navbar">
     <img src={logo} className="navbar-logo" />
     <nav className="nav-links">
       <Link to="/">Home</Link>
       <Link to="/evaluations">Evaluations</Link>
       <Link to="/profile">Profile</Link>
-      {isSupervisor && <Link to="/supervisor">Supervisor</Link>}
+      {(localStorage.getItem(`userMeta`) &&
+      JSON.parse(localStorage.getItem(`userMeta`) as string).role === `SUPERVISOR`) &&
+        <Link to="/supervisor">Supervisor</Link>}
       <Link to="/contact">Contact</Link>
     </nav>
     <button
@@ -46,5 +27,4 @@ const Navbar: React.FC = () => {
       }}
     >Log Out</button>
   </header>;
-};
 export default Navbar;
