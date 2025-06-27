@@ -1,8 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { prisma } from '../prisma';
+import { limiter } from './auth';
 
 const router = Router();
-router.get(`/rubric`, async (req: Request, res: Response): Promise<void> => {
+router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void> => {
   try {
     const rubricCategories = await prisma.rubricCategory.findMany({
       include: {

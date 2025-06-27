@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { prisma } from '../prisma';
+import limiter from './auth';
 
 const router = Router();
 
@@ -7,7 +8,7 @@ interface RequestBody {
   username: string;
 }
 
-router.post(`/gitData`, async (
+router.post(`/gitData`, limiter, async (
   req: Request<unknown, unknown, RequestBody>,
   res: Response,
 ) => {
