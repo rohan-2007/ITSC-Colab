@@ -6,6 +6,7 @@ import { notifyAfterReload } from '../components/Notification';
 import '../CSS/Supervisor.css';
 import '../components/buttonAndCard.css';
 import '../components/Modals.css';
+
 const fetchUrl = `http://localhost:${3001}`;
 interface Student {
   id: number;
@@ -26,35 +27,24 @@ interface Team {
   assignedStudents: string[];
   assignedSupervisors: string[];
   assignedUsers: string[];
-  expanded: boolean;
   name: string;
-  search: string;
-  showAssigned: boolean;
 }
 
 const Supervisor: React.FC = () => {
   const [ students, setStudents ] = useState<Student[]>([]);
   const [ supervisors, setSupervisors ] = useState<Supervisor[]>([]);
   const [ supervisorSearchTerm, setSupervisorSearchTerm ] = useState(``);
-  const [ teams, setTeams ] = useState<Team[]>(
-    Array.from({ length: 1 }, (_, i) => ({
-      assignedStudents: [],
-      assignedSupervisors: [],
-      assignedUsers: [],
-      expanded: false,
-      name: `Team ${i + 1}`,
-      search: ``,
-      showAssigned: false,
-    })),
-  );
+  const [ teams, setTeams ] = useState<Team[]>([]);
 
   const [ studentSearchTerm, setStudentSearchTerm ] = useState(``);
   const [ studentSearch, setStudentSearch ] = useState(``);
   const [ teamSearch, setTeamSearch ] = useState(``);
   const [ studentInfoModalOpen, setStudentInfoModalOpen ] = useState(false);
   const [ teamEditModalOpen, setTeamEditModalOpen ] = useState(false);
+  const [ teamMembersModalOpen, setMembersModalOpen ] = useState(false);
   const [ _selectedStudentIndex, setSelectedStudentIndex ] = useState<number | null>(null);
   const [ selectedTeamIndex, setSelectedTeamIndex ] = useState<number | null>(null);
+  const [ viewingTeamIndex, setViewingTeamIndex ] = useState<number | null>(null);
   const [ editedStudent, setEditedStudent ] = useState<{
     email: string;
     name: string;
@@ -150,23 +140,22 @@ const Supervisor: React.FC = () => {
             memberIDs: number[];
             name: string;
           }
-          const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => ({
-            id: team.id,
-            assignedStudents: fetchedStudents
+          const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => {
+            const assignedStudents = fetchedStudents
               .filter((s) => team.memberIDs.includes(s.id))
-              .map((s) => s.name),
-            assignedSupervisors: fetchedSupervisors
+              .map((s) => s.name);
+            const assignedSupervisors = fetchedSupervisors
               .filter((s) => team.memberIDs.includes(s.id))
-              .map((s) => s.name),
-            assignedUsers: [
-              ...fetchedStudents.filter((s) => team.memberIDs.includes(s.id)).map((s) => s.name),
-              ...fetchedSupervisors.filter((s) => team.memberIDs.includes(s.id)).map((s) => s.name),
-            ],
-            expanded: false,
-            name: team.name,
-            search: ``,
-            showAssigned: false,
-          }));
+              .map((s) => s.name);
+
+            return {
+              id: team.id,
+              assignedStudents,
+              assignedSupervisors,
+              assignedUsers: [ ...assignedStudents, ...assignedSupervisors ],
+              name: team.name,
+            };
+          });
 
           setTeams(newTeams);
         }
@@ -204,6 +193,16 @@ const Supervisor: React.FC = () => {
   const closeStudentInfoModal = () => {
     setStudentInfoModalOpen(false);
     setSelectedStudentIndex(null);
+  };
+
+  const openTeamMembersModal = (index: number) => {
+    setViewingTeamIndex(index);
+    setMembersModalOpen(true);
+  };
+
+  const closeTeamMembersModal = () => {
+    setMembersModalOpen(false);
+    setViewingTeamIndex(null);
   };
 
   const saveStudentInfo = async () => {
@@ -280,22 +279,18 @@ const Supervisor: React.FC = () => {
     window.location.reload();
   };
 
-  const toggleAssignedDropdown = (index: number) => {
-    setTeams((prev) =>
-      prev.map((team, i) =>
-        i === index ? { ...team, showAssigned: !team.showAssigned } : team));
-  };
-
   const handleStudentToggle = (teamIndex: number, studentName: string) => {
     setTeams((prev) =>
       prev.map((team, i) => {
         if (i === teamIndex) {
           const isAssigned = team.assignedStudents.includes(studentName);
+          const newAssignedStudents = isAssigned ?
+            team.assignedStudents.filter((name) => name !== studentName) :
+            [ ...team.assignedStudents, studentName ];
           return {
             ...team,
-            assignedStudents: isAssigned ?
-              team.assignedStudents.filter((name) => name !== studentName) :
-              [ ...team.assignedStudents, studentName ],
+            assignedStudents: newAssignedStudents,
+            assignedUsers: [ ...newAssignedStudents, ...team.assignedSupervisors ],
           };
         }
         return team;
@@ -308,21 +303,17 @@ const Supervisor: React.FC = () => {
         if (i === teamIndex) {
           const assigned = team.assignedSupervisors || [];
           const isAssigned = assigned.includes(supervisorName);
+          const newAssignedSupervisors = isAssigned ?
+            assigned.filter((n) => n !== supervisorName) :
+            [ ...assigned, supervisorName ];
           return {
             ...team,
-            assignedSupervisors: isAssigned ?
-              assigned.filter((n) => n !== supervisorName) :
-              [ ...assigned, supervisorName ],
+            assignedSupervisors: newAssignedSupervisors,
+            assignedUsers: [ ...team.assignedStudents, ...newAssignedSupervisors ],
           };
         }
         return team;
       }));
-  };
-
-  const updateTeamSearch = (teamIndex: number, value: string) => {
-    setTeams((prev) =>
-      prev.map((team, i) =>
-        i === teamIndex ? { ...team, search: value } : team));
   };
 
   const addNewTeam = () => {
@@ -331,10 +322,7 @@ const Supervisor: React.FC = () => {
       assignedStudents: [],
       assignedSupervisors: [],
       assignedUsers: [],
-      expanded: false,
-      name: `Team ${nextTeamNumber}`,
-      search: ``,
-      showAssigned: false,
+      name: `New Team ${nextTeamNumber}`,
     };
     setTeams((prev) => [ ...prev, newTeam ]);
   };
@@ -393,41 +381,11 @@ const Supervisor: React.FC = () => {
                 <span className="team-name-span">{team.name}</span>
                 <div className="team-tools">
                   <button className="button-edit-team" onClick={() => openEditTeamModal(index)}>✎</button>
-                  <button className="button-display-students" onClick={() => toggleAssignedDropdown(index)}>
-                    {team.assignedUsers.length}
+                  <button className="button-display-students" onClick={() => openTeamMembersModal(index)}>
+                    ⓘ
                   </button>
                 </div>
               </div>
-              {team.showAssigned &&
-                <div className="assigned-dropdown">
-                  {team.assignedUsers.length ?
-                    team.assignedUsers.map((name, i) =>
-                      <div key={i} className="assigned-student">{name}</div>) :
-                    <div className="assigned-student none">No students assigned</div>}
-                </div>}
-              {team.expanded &&
-                <div className="dropdown">
-                  <input
-                    type="text"
-                    placeholder="Search students..."
-                    value={team.search}
-                    onChange={(e) => updateTeamSearch(index, e.target.value)}
-                    className="dropdown-search"
-                  />
-                  <div className="dropdown-scroll">
-                    {students
-                      .filter((s) => s.name.toLowerCase().includes(team.search.toLowerCase()))
-                      .map((student, sIndex) =>
-                        <label key={sIndex} className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            checked={team.assignedStudents.includes(student.name)}
-                            onChange={() => handleStudentToggle(index, student.name)}
-                          />
-                          {student.name}
-                        </label>)}
-                  </div>
-                </div>}
             </div>)}
         </div>
       </div>
@@ -437,7 +395,6 @@ const Supervisor: React.FC = () => {
       <div className="modal-overlay-supervisor" onClick={closeStudentInfoModal}>
         <div className="modal-student-info-modal" onClick={(e) => e.stopPropagation()}>
           <h3>Edit Student Information</h3>
-
           <div className="modal-form-group-supervisor">
             <label htmlFor="studentName">Student Name</label>
             <input
@@ -448,7 +405,6 @@ const Supervisor: React.FC = () => {
               className="modal-input-supervisor"
             />
           </div>
-
           <div className="modal-form-group-supervisor">
             <label htmlFor="studentEmail">Email</label>
             <input
@@ -459,7 +415,6 @@ const Supervisor: React.FC = () => {
               className="modal-input-supervisor"
             />
           </div>
-
           <div className="modal-form-group-supervisor">
             <label htmlFor="studentPassword">New Password</label>
             <input
@@ -471,7 +426,6 @@ const Supervisor: React.FC = () => {
               className="modal-input-supervisor"
             />
           </div>
-
           <div className="modal-buttons">
             <button onClick={saveStudentInfo} className="modal-save">Save</button>
             <button onClick={closeStudentInfoModal} className="modal-cancel-supervisor">Cancel</button>
@@ -479,16 +433,73 @@ const Supervisor: React.FC = () => {
         </div>
       </div>}
 
+    {/* --- View Team Members Modal --- */}
+    {teamMembersModalOpen && viewingTeamIndex !== null && (() => {
+      const team = teams[viewingTeamIndex];
+      if (!team) {
+        return null;
+      }
+
+      const studentMembers = team.assignedStudents;
+      const supervisorMembers = team.assignedSupervisors;
+
+      return <div className="modal-overlay-supervisor" onClick={closeTeamMembersModal}>
+        <div className="modal-team-view" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-team-view-header">
+            <h4>Team Details</h4>
+            <h2>{team.name}</h2>
+          </div>
+
+          <div className="modal-team-view-stats">
+            <div className="stat-item">
+              <span className="stat-number">{studentMembers.length + supervisorMembers.length}</span>
+              <span className="stat-label">Total Members</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{supervisorMembers.length}</span>
+              <span className="stat-label">Supervisors</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{studentMembers.length}</span>
+              <span className="stat-label">Students</span>
+            </div>
+          </div>
+
+          <div className="modal-team-view-content">
+            <div className="modal-team-view-column">
+              <h3>Supervisors</h3>
+              <div className="member-list">
+                {supervisorMembers.length > 0 ?
+                  supervisorMembers.map((name, i) => <div key={`sup-${i}`} className="member-item">{name}</div>) :
+                  <div className="member-item-empty">No supervisors assigned.</div>}
+              </div>
+            </div>
+            <div className="modal-team-view-column">
+              <h3>Students</h3>
+              <div className="member-list">
+                {studentMembers.length > 0 ?
+                  studentMembers.map((name, i) => <div key={`stu-${i}`} className="member-item">{name}</div>) :
+                  <div className="member-item-empty">No students assigned.</div>}
+              </div>
+            </div>
+          </div>
+          <div className="modal-buttons">
+            <button onClick={closeTeamMembersModal} className="modal-cancel-supervisor">Close</button>
+          </div>
+        </div>
+      </div>;
+    })()}
+
     {teamEditModalOpen && selectedTeamIndex !== null &&
       <div className="modal-overlay-supervisor" onClick={closeTeamModal}>
         <div className="modal-change-team-supervisor" onClick={(e) => e.stopPropagation()}>
           <h4>Edit Team</h4>
-          <h3>Team Name</h3>
           <input
             id="teamName"
             type="text"
             value={editedTeamName}
             onChange={(e) => setEditedTeamName(e.target.value)}
+            placeholder="Enter Team Name"
             className="modal-input-supervisor-team-name"
           />
 
@@ -500,9 +511,7 @@ const Supervisor: React.FC = () => {
               value={studentSearchTerm}
               onChange={(e) => setStudentSearchTerm(e.target.value)}
               className="modal-input-supervisor"
-              style={{ marginBottom: `10px` }}
             />
-
             <div className="dropdown-scroll">
               {students
                 .filter((student) =>
@@ -520,7 +529,6 @@ const Supervisor: React.FC = () => {
                 })}
             </div>
           </div>
-          {/* ───────── Assign Supervisors (NEW) ───────── */}
           <div className="modal-form-group-supervisor">
             <h3>Assign Supervisors</h3>
             <input
@@ -529,9 +537,7 @@ const Supervisor: React.FC = () => {
               value={supervisorSearchTerm}
               onChange={(e) => setSupervisorSearchTerm(e.target.value)}
               className="modal-input-supervisor"
-              style={{ marginBottom: `10px` }}
             />
-
             <div className="dropdown-scroll">
               {supervisors
                 .filter((s) =>
@@ -553,9 +559,9 @@ const Supervisor: React.FC = () => {
           </div>
 
           <div className="modal-buttons">
-            <button onClick={saveTeamName} className="modal-save-supervisor">Save</button>
-            <button onClick={closeTeamModal} className="modal-cancel-supervisor">Cancel</button>
             <button onClick={deleteTeam} className="modal-delete-supervisor">Delete</button>
+            <button onClick={closeTeamModal} className="modal-cancel-supervisor">Cancel</button>
+            <button onClick={saveTeamName} className="modal-save-supervisor">Save Changes</button>
           </div>
         </div>
       </div>}
