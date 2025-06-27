@@ -2,7 +2,7 @@
 import { Request, Response, Router } from 'express';
 import { Role, Semester } from '../../../../generated/prisma';
 import { prisma } from '../prisma';
-import { requireAuth } from './auth';
+import { limiter, requireAuth } from './auth';
 
 const router = Router();
 interface EvaluationResultBody {
@@ -20,7 +20,7 @@ interface EvaluationBody {
   year: number;
 }
 
-router.post(`/submitEval`, requireAuth, async (
+router.post(`/submitEval`, limiter, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
 ): Promise<void> => {
@@ -72,7 +72,7 @@ router.post(`/submitEval`, requireAuth, async (
   }
 });
 
-router.get(`/getEval`, requireAuth, async (
+router.get(`/getEval`, limiter, requireAuth, async (
   req: Request<unknown, unknown, unknown, { evaluationId?: number, userId?: number }>,
   res: Response,
 ): Promise<void> => {
@@ -141,7 +141,7 @@ router.get(`/getEval`, requireAuth, async (
   }
 });
 
-router.get(`/getSupervisorEvals`, requireAuth, async (
+router.get(`/getSupervisorEvals`, limiter, requireAuth, async (
   req: Request<unknown, unknown, number>,
   res: Response,
 ) => {
@@ -189,6 +189,7 @@ router.get(`/evalStatus`, requireAuth, async (req, res) => {
 
 router.get(
   `/evalStatus/self`,
+  limiter,
   requireAuth,
   async (
     req: Request,
@@ -221,7 +222,7 @@ router.get(
   },
 );
 
-router.get(`/supervisorEvals`, requireAuth, async (
+router.get(`/supervisorEvals`, limiter, requireAuth, async (
   req: Request,
   res: Response,
 ): Promise<void> => {

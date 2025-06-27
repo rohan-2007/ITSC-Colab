@@ -14,7 +14,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
-export const limiter = rateLimit({
+export const loginLimiter = rateLimit({
   legacyHeaders: false,
   max: 10,
   message: {
@@ -24,14 +24,24 @@ export const limiter = rateLimit({
   windowMs: 10 * 1000,
 });
 
-export const meLimiter = rateLimit({
+export const limiter = rateLimit({
   legacyHeaders: false,
   max: 10,
   message: {
     error: `Too many requests, please slow down.`,
   },
   standardHeaders: true,
-  windowMs: 1000,
+  windowMs: 2 * 1000,
+});
+
+export const meLimiter = rateLimit({
+  legacyHeaders: false,
+  max: 5,
+  message: {
+    error: `Too many requests, please slow down.`,
+  },
+  standardHeaders: true,
+  windowMs: 500,
 });
 
 interface SignupRequestBody {
@@ -43,7 +53,7 @@ interface SignupRequestBody {
   teamName?: string;
 }
 
-router.post(`/signup`, limiter, async (
+router.post(`/signup`, loginLimiter, async (
   req: Request<unknown, unknown, SignupRequestBody>,
   res: Response,
 ) => {
@@ -119,7 +129,7 @@ interface LoginRequestBody {
   password: string;
 }
 
-router.post(`/login`, limiter, async (
+router.post(`/login`, loginLimiter, async (
   req: Request<unknown, unknown, LoginRequestBody>,
   res: Response,
 ) => {
@@ -153,7 +163,7 @@ router.post(`/login`, limiter, async (
   }
 });
 
-router.post(`/logout`, limiter, (req: Request, res: Response) => {
+router.post(`/logout`, loginLimiter, (req: Request, res: Response) => {
   req.session.destroy((err) => {
     if (err) {
       console.error(`Session destruction failed:`, err);

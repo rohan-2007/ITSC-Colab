@@ -174,48 +174,41 @@ const FilterEvaluations: React.FC = () => {
   };
 
   useEffect(() => {
-    void fetchStudents();
-  });
-
-  const fetchStudents = async () => {
-    if (!user) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:3001/students/`, {
-        credentials: `include`,
-        headers: { 'Content-Type': `application/json` },
-        method: `POST`,
-      });
-
-      if (!response.ok) {
-        console.error(`Failed to fetch students`);
+    const fetchStudents = async () => {
+      if (!user) {
         return;
       }
 
-      const jsonData = await response.json();
+      try {
+        const response = await fetch(`http://localhost:3001/students/`, {
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
 
-      console.log(`outside`);
-      if (jsonData?.students) {
-        console.log(`inside`);
-        setStudents(jsonData.students as Student[]);
-        console.log(`students fetched`);
+        if (!response.ok) {
+          console.error(`Failed to fetch students`);
+          return;
+        }
+
+        const jsonData = await response.json();
+
+        console.log(`outside`);
+        if (jsonData?.students) {
+          console.log(`inside`);
+          setStudents(jsonData.students as Student[]);
+          console.log(`students fetched`);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error(`Student fetch error:`, err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    } catch (err) {
-      console.error(`Student fetch error:`, err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  // void fetchStudents();
-
-  // const checkIfCurrentYear = (timestamp: string | Date) => {
-  //   const date = new Date(timestamp);
-  //   return date.getFullYear() === new Date().getFullYear();
-  // };
+    void fetchStudents();
+  });
 
   useEffect(() => {
     const handleResize = () => {
@@ -388,7 +381,7 @@ const FilterEvaluations: React.FC = () => {
             item.studentId === students?.filter((student) => student.name === selectedStudent)[0].id),
       ),
     );
-  }, [ selectedYear, selectedStudent, selectedSemester, selectedTeam ]);
+  }, [ evaluations, selectedYear, selectedStudent, selectedSemester, selectedTeam, students ]);
 
   // useEffect(() => {
   //   setDisplayedEvaluations(evaluations.filter((item) => item.semester === selectedSemester));
