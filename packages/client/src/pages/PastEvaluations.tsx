@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './PastEvaluations.css';
 import { useLocation } from 'react-router';
 import '../components/ButtonAndCard.css';
@@ -77,20 +77,20 @@ export interface User {
   teamNames?: string[] | null;
 }
 
-const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
-  const today = new Date();
-  const year = today.getFullYear();
-  if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
-    return `SUMMER`;
-  }
-  if (today >= new Date(year, 7, 25) && today <= new Date(year, 11, 5)) {
-    return `FALL`;
-  }
-  if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
-    return `SPRING`;
-  }
-  return `N/A`;
-};
+// const assignSemester = (): `SPRING` | `SUMMER` | `FALL` | `N/A` => {
+//   const today = new Date();
+//   const year = today.getFullYear();
+//   if (today >= new Date(year, 4, 12) && today <= new Date(year, 7, 9)) {
+//     return `SUMMER`;
+//   }
+//   if (today >= new Date(year, 7, 25) && today <= new Date(year, 11, 5)) {
+//     return `FALL`;
+//   }
+//   if (today >= new Date(year, 0, 12) && today <= new Date(year, 3, 24)) {
+//     return `SPRING`;
+//   }
+//   return `N/A`;
+// };
 
 const PastEvaluations: React.FC = () => {
   const studentBgColor = `#abadb0`;
@@ -100,7 +100,7 @@ const PastEvaluations: React.FC = () => {
   const bothBgColor = `#3e84ed`;
   const bothBorderColor = `#e0bb63`;
 
-  const topBarRef = useRef<HTMLDivElement>(null);
+  // const topBarRef = useRef<HTMLDivElement>(null);
 
   const dynamicStyles: React.CSSProperties = {
     '--bothBgColor': bothBgColor,
@@ -121,9 +121,9 @@ const PastEvaluations: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
   const [ filteredStudentEvals, setFilteredStudentEvals ] = useState<Evaluation[]>([]);
   const [ filteredSupervisorEvals, setFilteredSupervisorEvals ] = useState<Evaluation[]>([]);
-  const [ selectedSemester, setSelectedSemester ] = useState(``);
-  const [ selectedYear, setSelectedYear ] = useState(2025);
-  const [ selectedTeam, setSelectedTeam ] = useState(``);
+  const [ selectedSemester, _setSelectedSemester ] = useState(``);
+  const [ selectedYear, _setSelectedYear ] = useState(2025);
+  const [ selectedTeam, _setSelectedTeam ] = useState(``);
   const [ user, setUser ] = useState<User | null>(null);
   const [ contributions, setContributions ] = useState<Contribution[]>([]);
   const [ totalContributions, setTotalContributions ] = useState<number[]>();
@@ -135,17 +135,17 @@ const PastEvaluations: React.FC = () => {
 
   console.log(`location data: `, data);
 
-  const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSemester(event.target.value);
-  };
+  // const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedSemester(event.target.value);
+  // };
 
-  const handleSelectedTeam = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTeam(event.target.value);
-  };
+  // const handleSelectedTeam = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedTeam(event.target.value);
+  // };
 
-  const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(parseInt(event.target.value, 10));
-  };
+  // const handleSelectedYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedYear(parseInt(event.target.value, 10));
+  // };
 
   const checkIfEvalYear = (timestamp: string | Date) => {
     const date = new Date(timestamp);
@@ -197,8 +197,8 @@ const PastEvaluations: React.FC = () => {
       });
 
       const resJson = await res.json();
-      const contributionList = resJson.data.userContributions as Contribution[];
-      // console.log(`contributionList: `, resJson.data);
+      const contributionList = resJson.contributions as Contribution[];
+      console.log(`contributionList: `, resJson);
 
       setContributions(contributionList.filter((item) =>
         getSemesterFromTimestamp(item.date) === data.semester && checkIfEvalYear(item.date)));
@@ -314,7 +314,7 @@ const PastEvaluations: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const distinctYears = Array.from(new Set(evaluations.map((item) => item.year)));
+  // const distinctYears = Array.from(new Set(evaluations.map((item) => item.year)));
 
   const filteredStudentSemesterEvals = filteredStudentEvals.filter(
     (evaluation) => evaluation.semester === data.semester && evaluation.year === data.year,
@@ -332,13 +332,13 @@ const PastEvaluations: React.FC = () => {
     (evaluation) => evaluation.team === data.team,
   );
 
-  const filteredStudentYearEvals = filteredStudentEvals.filter(
-    (evaluation) => evaluation.year === data.year,
-  );
+  // const filteredStudentYearEvals = filteredStudentEvals.filter(
+  //   (evaluation) => evaluation.year === data.year,
+  // );
 
-  const filteredSupervisorYearEvals = filteredSupervisorEvals.filter(
-    (evaluation) => evaluation.year === data.year,
-  );
+  // const filteredSupervisorYearEvals = filteredSupervisorEvals.filter(
+  //   (evaluation) => evaluation.year === data.year,
+  // );
 
   console.log(`data: `, data);
   console.log(`filteredStudentTeamEvals[0]: `, filteredStudentTeamEvals[0]);
@@ -456,9 +456,9 @@ const PastEvaluations: React.FC = () => {
           <section className="git-container">
             <h2>Git Contributions for {data.semester} semester:</h2>
             <ul>
-              {totalContributions?.map((item, index) =>
+              {totalContributions && totalContributions?.length > 0 ? totalContributions.map((item, index) =>
                 <li className="contribution-month-entry">
-                  {contributionMonths ? contributionMonths[index] : null}: {item}</li>)}
+                  {contributionMonths ? contributionMonths[index] : null}: {item}</li>) : <h4>No Contributions</h4>}
             </ul>
             <div className="legend-outer">
               {legendColors.map((item, index) =>

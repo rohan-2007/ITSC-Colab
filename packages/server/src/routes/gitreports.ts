@@ -65,6 +65,27 @@ router.post(`/gitData`, limiter, async (
     return;
   }
 
+  if (username && !teamIDs) {
+    const allUserContributions = await prisma.contributions.findMany({
+      where: {
+        user_login: username,
+      },
+    });
+
+    if (!allUserContributions) {
+      res.status(404).json({
+        message: `Could not find any user contributions`,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      contributions: allUserContributions,
+      message: `Fetched all user contributions`,
+    });
+    return;
+  }
+
   // 1. Determine the current semester's date range
   const { semester, year } = getCurrentSemesterInfo();
   const dateRange = getSemesterDateRange(semester, year);

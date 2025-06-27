@@ -202,12 +202,12 @@ const Home: React.FC = () => {
         });
 
       // --- Legend ---
-      const legend = svg.append(`g`).attr(`transform`, `translate(${margin.left + 10}, ${margin.top - 30})`);
-      legend.append(`circle`).attr(`cx`, 0).attr(`cy`, 0).attr(`r`, 5).style(`fill`, `teal`);
-      legend.append(`text`).attr(`x`, 10).attr(`y`, 0).text(`Your Contributions`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
+      const legend = svg.append(`g`).attr(`transform`, `translate(${margin.left + 20}, ${margin.top - 10})`);
+      legend.append(`line`).attr(`x1`, 0).attr(`y1`, 0).attr(`x2`, 20).attr(`y2`, 0).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
+      legend.append(`text`).attr(`x`, 25).attr(`y`, 0).text(`Your Contributions`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
       if (teamAverageData && teamAverageData.length > 0) {
-        legend.append(`line`).attr(`x1`, 140).attr(`y1`, 0).attr(`x2`, 150).attr(`y2`, 0).attr(`stroke`, `orange`).attr(`stroke-width`, 2).attr(`stroke-dasharray`, `5,5`);
-        legend.append(`text`).attr(`x`, 155).attr(`y`, 0).text(`Team Average`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
+        legend.append(`line`).attr(`x1`, 140).attr(`y1`, 0).attr(`x2`, 160).attr(`y2`, 0).attr(`stroke`, `orange`).attr(`stroke-width`, 2).attr(`stroke-dasharray`, `5,5`);
+        legend.append(`text`).attr(`x`, 165).attr(`y`, 0).text(`Team Average`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
       }
     }
   }, [ contributions, graphData, height, months, teamAverageData, width ]);
