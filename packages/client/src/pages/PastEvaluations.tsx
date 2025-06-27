@@ -197,7 +197,8 @@ const PastEvaluations: React.FC = () => {
       });
 
       const resJson = await res.json();
-      const contributionList = resJson.data as Contribution[];
+      const contributionList = resJson.data.userContributions as Contribution[];
+      // console.log(`contributionList: `, resJson.data);
 
       setContributions(contributionList.filter((item) =>
         getSemesterFromTimestamp(item.date) === data.semester && checkIfEvalYear(item.date)));

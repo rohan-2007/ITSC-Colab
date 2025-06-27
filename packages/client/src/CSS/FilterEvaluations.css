@@ -1,24 +1,47 @@
 .filter-evals-container {
   /* grid-area: profile; */
-  width: 100vh;
-  height: calc(100vh - var(--topBarHeight));
+  width: 95vw;
+  height: 60vh;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 25px;
-  margin-top: var(--topBarHeight); /* Slight offset for visual balance */
+  margin-top: 5%; /* Slight offset for visual balance */
   display: flex; /* Use flex to push the button to the bottom */
   flex-direction: column;
 }
 
 .filter-evals-button {
-  display: block;
+  /* display: block; */
   font-size: 20px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
+  background-color: red;
+  color: white;
 }
 
 .student-select-box {
   display: flex;
+}
+
+.eval-table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  height: 100%;
+}
+
+.eval-select-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  /* height: 80vh; */
+}
+
+.eval-select-table th,
+.eval-select-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
 }
 
 .top-bar {
