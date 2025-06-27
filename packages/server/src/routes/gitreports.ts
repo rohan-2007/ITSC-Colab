@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { prisma } from '../prisma';
-import limiter from './auth';
+// import PrismaUser from '../prisma'; // Removed because it's not a type
+import limiter, { requireAuth } from './auth';
 
 const router = Router();
 
@@ -54,7 +55,7 @@ interface RequestBody {
   username: string;
 }
 
-router.post(`/gitData`, limiter, async (
+router.post(`/gitData`, limiter, requireAuth, async (
   req: Request<unknown, unknown, RequestBody>,
   res: Response,
 ) => {

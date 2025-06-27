@@ -61,6 +61,7 @@ interface User {
   role: string;
   teamIDs: number[] | null;
   teamNames: [] | null;
+  teams: [] | null;
 }
 // --- End of interfaces ---
 
@@ -293,9 +294,11 @@ const Home: React.FC = () => {
             evalsGiven: jsonData.user.evaluationsGiven || null,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamIDs: jsonData.user.safeTeamIDs || null,
+            teamIDs: jsonData.user.teamMembers,
             teamNames: jsonData.user.teamNames || null,
+            teams: jsonData.user.teamIDs || null,
           });
+          console.log(user?.teamIDs);
         }
       } catch (err) {
         console.error(`[Home useEffect] Session check failed:`, err);

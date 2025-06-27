@@ -265,29 +265,53 @@ router.post(`/me`, meLimiter, requireAuth, async (
             (e: Evaluation) => e?.type === Role.SUPERVISOR,
           );
         }
-
+        // Fetch all students on the same teams as the user
+        const teams = await prisma.team.findMany({
+          include: {
+            members: {
+              select: { id: true, email: true, name: true },
+              where: { role: `STUDENT` },
+            },
+          },
+          where: {
+            members: {
+              some: { id: req.session.userId },
+            },
+          },
+        });
+        console.log(teams);
+        interface TeamMember {
+          id: number;
+          name: string;
+        }
+        const teamMembers: TeamMember[] = [];
+        teams.forEach((team) => {
+          team.members.forEach((student) => {
+            teamMembers.push(student);
+          });
+        });
+        console.log(teamMembers);
         res.status(200).json({
           message: `Fetched user info`,
           user: {
             id, createdAt, email, evaluationsCompleted, evaluationsGiven,
             evaluationsReceived, name, role, safeTeamIDs,
-            supervisorId, supervisorName, teamNames,
+            supervisorId, supervisorName, teamMembers,
+            teamNames,
           },
         });
-      } else {
-        res.status(200).json({
-          message: `User session found, no data requested`,
-          sessionActive: true,
-        });
-        return;
       }
-    } else {
       res.status(200).json({
-        message: `User session found`,
+        message: `User session found, no data requested`,
         sessionActive: true,
       });
       return;
     }
+    res.status(200).json({
+      message: `User session found`,
+      sessionActive: true,
+    });
+    return;
   } catch (err) {
     console.error(`Fetch error:`, err);
     if (!res.headersSent) {
