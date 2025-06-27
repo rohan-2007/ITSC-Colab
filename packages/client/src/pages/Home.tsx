@@ -11,6 +11,7 @@ import '../components/ButtonAndCard.css';
 
 const fetchUrl = `http://localhost:${3001}`;
 
+// --- Helper functions (assignSemester, etc.) remain the same ---
 const assignSemester = (): string => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -34,33 +35,15 @@ const assignSemester = (): string => {
   return `UNKNOWN`;
 };
 
-const getSemesterFromTimestamp = (timestamp: string | Date) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  if (date >= new Date(year, 4, 12) && date <= new Date(year, 7, 9)) {
-    return `SUMMER`;
-  }
-  if (date >= new Date(year, 7, 25) && date <= new Date(year, 11, 5)) {
-    return `FALL`;
-  }
-  if (date >= new Date(year, 0, 12) && date <= new Date(year, 3, 24)) {
-    return `SPRING`;
-  }
-  return `UNKNOWN`;
-};
-
 const getMonthFromTimestamp = (timestamp: string | Date) => {
   const date = new Date(timestamp);
   return date.toLocaleString(`default`, { month: `long` });
 };
-
-const checkIfCurrentYear = (timestamp: string | Date) => {
-  const date = new Date(timestamp);
-  return date.getFullYear() === new Date().getFullYear();
-};
+// --- End of helper functions ---
 
 const currentSemester = assignSemester();
 
+// --- Interfaces (PastEval, User) remain the same ---
 interface PastEval {
   semester: string;
   studentId: number;
@@ -79,6 +62,7 @@ interface User {
   teamIDs: number[] | null;
   teamNames: [] | null;
 }
+// --- End of interfaces ---
 
 const Home: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -92,109 +76,155 @@ const Home: React.FC = () => {
   const [ height, setHeight ] = useState<number>(200);
   const [ width, setWidth ] = useState<number>(400);
   const [ contributions, setContributions ] = useState<Contribution[] | null>(null);
+  const [ teamAverageData, setTeamAverageData ] = useState<Array<{ x: Date, y: number }> | null>(null); // State for team average
   const [ months, setMonths ] = useState<string[]>();
 
   useEffect(() => {
+    // Check if data is ready for drawing
     if (svgRef.current && graphData && width && height && months && contributions) {
       setWidth(svgRef.current.clientWidth);
       setHeight(svgRef.current.clientHeight);
-      const margin = { bottom: 20, left: 20, right: 20, top: 20 };
+
+      const margin = { bottom: 30, left: 40, right: 20, top: 20 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.bottom - margin.top;
+
       const svg = d3.select(svgRef.current);
-      const xScale = d3.scaleTime().domain((d3.extent(graphData, (d) => d.x)) as [Date, Date]).range([ 0, innerWidth + margin.left ]);
-      const yScale = d3.scaleLinear().domain([ 0, Math.max(...graphData.map((d) => d.y)) + 5 ]).range([ innerHeight, 0 ]);
+      svg.selectAll(`*`).remove();
+
+      const allXValues = [ ...graphData.map((d) => d.x), ...teamAverageData ? teamAverageData.map((d) => d.x) : [] ];
+      const allYValues = [ ...graphData.map((d) => d.y), ...teamAverageData ? teamAverageData.map((d) => d.y) : [] ];
+      if (allXValues.length === 0) {
+        return;
+      }
+
+      const xScale = d3.scaleTime().domain(d3.extent(allXValues) as [Date, Date]).range([ 0, innerWidth ]);
+      const maxY = d3.max(allYValues) ?? 0;
+      const yScale = d3.scaleLinear().domain([ 0, Math.max(maxY + 5, 5) ]).range([ innerHeight, 0 ]);
       graphData.sort((a, b) => a.x.getTime() - b.x.getTime());
+      teamAverageData?.sort((a, b) => a.x.getTime() - b.x.getTime());
+
+      // Create a Map for efficient lookup of team average data by date
+      const teamDataMap = new Map(teamAverageData?.map((item) => [ item.x.getTime(), item.y ]));
+
       const line = d3.line<{ x: Date, y: number }>().x((d) => xScale(d.x)).y((d) => yScale(d.y)).curve(d3.curveCardinal);
 
-      svg.selectAll(`*`).remove();
-      // const targetTickSpacing = 60; // pixels per tick
-      // const tickCount = Math.floor(innerWidth / targetTickSpacing);
-      const g = svg.append(`g`);
-      const dateLabels = contributions.map((d) => new Date(d.date));
+      const g = svg.append(`g`).attr(`transform`, `translate(${margin.left},${margin.top})`);
+
       const xAxis = d3.axisBottom(xScale)
-        .ticks(graphData.length)
-        .tickFormat((d, i) => {
-          const date = dateLabels[i];
+        .ticks(5)
+        .tickFormat((domainValue: Date | d3.NumberValue) => {
+          const date = domainValue instanceof Date ? domainValue : new Date(domainValue as number);
           return d3.timeFormat(`%b %d`)(date);
         });
+      g.append(`g`).attr(`transform`, `translate(0, ${innerHeight})`).call(xAxis);
+      g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth).tickPadding(10)).selectAll(`.tick line`).attr(`stroke`, `#e0e0e0`);
 
-      const focusLine = g.append(`line`)
-        .attr(`stroke`, `gray`)
-        .attr(`stroke-width`, 1)
-        .attr(`y1`, 0)
-        .attr(`y2`, innerHeight)
-        .style(`opacity`, 0);
+      if (teamAverageData && teamAverageData.length > 0) {
+        g.append(`path`)
+          .datum(teamAverageData)
+          .attr(`fill`, `none`)
+          .attr(`stroke`, `orange`)
+          .attr(`stroke-width`, 2)
+          .attr(`stroke-dasharray`, `5,5`)
+          .attr(`d`, line);
+      }
 
-      svg.append(`rect`)
-        .attr(`width`, innerWidth)
-        .attr(`height`, innerHeight)
-        .attr(`fill`, `none`)
-        .attr(`pointer-events`, `all`)
-        .on(`mousemove`, (event: MouseEvent) => {
-          const [ x ] = d3.pointer(event);
-          focusLine
-            .attr(`x1`, x)
-            .attr(`x2`, x)
-            .style(`opacity`, 1);
-
-          // Optional: snap to nearest point
-          const xDate = xScale.invert(x); // for scaleTime
-          const i = d3.bisector((d: typeof graphData[0]) => d.x).center(graphData, xDate);
-          const d = graphData[i];
-
-          // You can now move your tooltip to d.x, d.y
-          d3.select(`#tooltip`)
-            .style(`opacity`, 1)
-            .html(`📅 ${d3.timeFormat(`%b %d, %Y`)(d.x)}<br/>📊 ${d.y} contributions`)
-            .style(`left`, `${event.pageX + 10}px`)
-            .style(`top`, `${event.pageY - 28}px`);
-        })
-        .on(`mouseout`, () => {
-          focusLine.style(`opacity`, 0);
-          d3.select(`#tooltip`).style(`opacity`, 0);
-        });
-      // g.append(`path`).datum(graphData).attr(`d`, line).attr(`fill`, `none`).attr(`stroke`, `teal`).attr(`stroke-width`, 2);
-      g.selectAll(`circle`)
-        .data(graphData)
-        .enter()
-        .append(`circle`)
-        .attr(`cx`, (d) => xScale(d.x))
-        .attr(`cy`, (d) => yScale(d.y))
-        .attr(`r`, 4)
-        .attr(`fill`, `teal`)
-        .on(`mouseover`, (event, d) => {
-          d3.select(`#tooltip`)
-            .style(`opacity`, 1)
-            .html(`📅 ${d3.timeFormat(`%b %d, %Y`)(d.x)}<br/>📊 ${d.y} contributions`)
-            .style(`left`, `${event.pageX + 10}px`)
-            .style(`top`, `${event.pageY - 28}px`);
-        })
-        .on(`mouseout`, () => {
-          d3.select(`#tooltip`).style(`opacity`, 0);
-        });
       g.append(`path`)
         .datum(graphData)
         .attr(`fill`, `none`)
         .attr(`stroke`, `teal`)
         .attr(`stroke-width`, 2)
         .attr(`d`, line);
-      g.append(`g`).attr(`transform`, `translate(${margin.left}, ${innerHeight})`).call(xAxis);
-      g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth - margin.left).tickPadding(10));
+
+      // Draw user points (without hover events, as the rect will handle them)
+      g.selectAll(`user-points`)
+        .data(graphData)
+        .enter()
+        .append(`circle`)
+        .attr(`cx`, (d) => xScale(d.x))
+        .attr(`cy`, (d) => yScale(d.y))
+        .attr(`r`, 4)
+        .attr(`fill`, `teal`);
+
+      // --- NEW INTERACTIVITY LOGIC ---
+
+      // 1. Create a vertical line that will follow the cursor
+      const focusLine = g.append(`line`)
+        .attr(`stroke`, `gray`)
+        .attr(`stroke-width`, 1)
+        .attr(`y1`, 0)
+        .attr(`y2`, innerHeight)
+        .style(`opacity`, 0); // Initially hidden
+
+      // 2. Create an invisible rectangle to capture mouse events
+      g.append(`rect`)
+        .attr(`width`, innerWidth)
+        .attr(`height`, innerHeight)
+        .attr(`fill`, `none`)
+        .attr(`pointer-events`, `all`)
+        .on(`mousemove`, (event: MouseEvent) => {
+          // Find the date closest to the cursor's x-position
+          const [ mouseX ] = d3.pointer(event);
+          const xDate = xScale.invert(mouseX);
+
+          // Use a bisector to find the nearest data point in the user's data array
+          const bisectDate = d3.bisector((d: typeof graphData[0]) => d.x).center;
+          const i = bisectDate(graphData, xDate);
+          const d = graphData[i];
+
+          if (!d) {
+            return;
+          } // Exit if no data point is found
+
+          // Get the corresponding team average from our map
+          const teamValue = teamDataMap.get(d.x.getTime()) || 0;
+
+          // Move the focus line to the snapped data point's x position
+          focusLine
+            .attr(`x1`, xScale(d.x))
+            .attr(`x2`, xScale(d.x))
+            .style(`opacity`, 1);
+
+          // Update the tooltip with both user and team data
+          d3.select(`#tooltip`)
+            .style(`opacity`, 1)
+            .html(`📅 ${d3.timeFormat(`%b %d, %Y`)(d.x)}<br/>
+                   👤 You: ${d.y.toFixed(2)}<br/>
+                   👥 Team Avg: ${teamValue.toFixed(2)}`)
+            .style(`left`, `${event.pageX + 10}px`)
+            .style(`top`, `${event.pageY - 28}px`);
+        })
+        .on(`mouseout`, () => {
+          // Hide the focus line and tooltip when the mouse leaves the graph
+          focusLine.style(`opacity`, 0);
+          d3.select(`#tooltip`).style(`opacity`, 0);
+        });
+
+      // --- Legend ---
+      const legend = svg.append(`g`).attr(`transform`, `translate(${margin.left + 10}, ${margin.top - 30})`);
+      legend.append(`circle`).attr(`cx`, 0).attr(`cy`, 0).attr(`r`, 5).style(`fill`, `teal`);
+      legend.append(`text`).attr(`x`, 10).attr(`y`, 0).text(`Your Contributions`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
+      if (teamAverageData && teamAverageData.length > 0) {
+        legend.append(`line`).attr(`x1`, 140).attr(`y1`, 0).attr(`x2`, 150).attr(`y2`, 0).attr(`stroke`, `orange`).attr(`stroke-width`, 2).attr(`stroke-dasharray`, `5,5`);
+        legend.append(`text`).attr(`x`, 155).attr(`y`, 0).text(`Team Average`).style(`font-size`, `12px`).attr(`alignment-baseline`, `middle`);
+      }
     }
-  }, [ contributions, graphData, height, months, width ]);
+  }, [ contributions, graphData, height, months, teamAverageData, width ]);
 
   useEffect(() => {
     const getGitData = async () => {
       try {
         const username = user?.name;
+        const teamIDs = user?.teamIDs; // Get user's team IDs
 
         if (!username || username === undefined) {
           return;
         }
 
+        // Send username and teamIDs to the backend
         const res = await fetch(`http://localhost:3001/gitData/`, {
-          body: JSON.stringify({ username }),
+          body: JSON.stringify({ teamIDs, username }),
           credentials: `include`,
           headers: {
             'Content-Type': `application/json`,
@@ -204,9 +234,18 @@ const Home: React.FC = () => {
 
         const resJson = await res.json();
 
-        const contributionList = resJson.data as Contribution[];
+        // Destructure the new response format
+        const userContributionList = resJson.data.userContributions as Contribution[];
+        const teamAverageList = resJson.data.teamAverageContributions as Array<{ average_contributions: number, date: string }>;
 
-        setContributions(contributionList.filter((item) => getSemesterFromTimestamp(item.date) === assignSemester() && checkIfCurrentYear(item.date) && item.user_login === user?.name));
+        // The data is now pre-filtered by the backend. No need for client-side filtering.
+        setContributions(userContributionList);
+
+        const processedTeamData = teamAverageList.map((item) => ({
+          x: new Date(item.date),
+          y: item.average_contributions,
+        }));
+        setTeamAverageData(processedTeamData);
       } catch (err) {
         if (err instanceof Error) {
           throw new Error(`git fetch error: ${err.message}`);
@@ -216,7 +255,9 @@ const Home: React.FC = () => {
       }
     };
 
-    void getGitData();
+    if (user?.role === `STUDENT`) {
+      void getGitData();
+    }
   }, [ user ]);
 
   useEffect(() => {
@@ -224,6 +265,7 @@ const Home: React.FC = () => {
     setGraphData(contributions?.map((item) => ({ x: new Date(item.date), y: item.contribution_count })));
   }, [ contributions ]);
 
+  // --- Session checking and other useEffects remain the same ---
   useEffect(() => {
     const checkSession = async () => {
       setIsLoading(true);
@@ -289,6 +331,9 @@ const Home: React.FC = () => {
     }
 
     const fetchTeamStudents = async () => {
+      if (user?.role !== `SUPERVISOR`) {
+        return;
+      }
       try {
         const response = await fetch(`http://localhost:3001/students/`, {
           credentials: `include`,
@@ -317,7 +362,9 @@ const Home: React.FC = () => {
 
     void fetchTeamStudents();
   }, [ user ]);
+  // --- End of other useEffects ---
 
+  // --- JSX for loading, error, and user states remain the same ---
   if (isLoading) {
     return <div className="home-container">
       <main className="main-content">
@@ -345,6 +392,7 @@ const Home: React.FC = () => {
       </main>
     </div>;
   }
+  // --- End of conditional rendering ---
 
   return <div className="home-container">
     <main className="main-content">
@@ -394,14 +442,11 @@ const Home: React.FC = () => {
       </section>
 
       {user.role === `STUDENT` && <section className="graph-section">
-        <h2>Your Past Git Contributions</h2>
+        <h2>Git Contributions</h2>
+        {` `}
+        {/* Updated Title */}
         {contributions && contributions.length > 0 ?
           <div className="graph-div">
-            {/* <div className="stat">
-              <h2>{user.evalsCompleted}</h2>
-              <p>Evaluations Completed</p>
-            </div> */}
-            {/* <h3>contributions: {contributions}</h3> */}
             <svg ref={svgRef} className="graph" />
             <div id="tooltip" />
           </div> :
