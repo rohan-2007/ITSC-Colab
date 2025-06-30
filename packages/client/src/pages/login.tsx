@@ -105,6 +105,11 @@ const Login: React.FC = () => {
           method: `POST`,
         });
 
+        if (!response.ok) {
+          setMessage(`Invalid credentials`);
+          return;
+        }
+
         const responseJson = await response.json();
 
         void navigate(`/home`);
@@ -131,6 +136,7 @@ const Login: React.FC = () => {
       document.getElementById(`signupMainBtn`)!.style.display = `block`;
       document.getElementById(`loginMainBtn`)!.style.display = `block`;
     }
+    setMessage(``);
   };
 
   const togglePopupLogin = () => {
@@ -142,6 +148,7 @@ const Login: React.FC = () => {
       document.getElementById(`loginMainBtn`)!.style.display = `block`;
       document.getElementById(`signupMainBtn`)!.style.display = `block`;
     }
+    setMessage(``);
   };
 
   const [ signupErrors, setSignupErrors ] = useState({

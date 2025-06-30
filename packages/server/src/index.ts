@@ -8,6 +8,7 @@ dotenv.config();
 
 import cors from 'cors';
 import type { RequestHandler } from 'express';
+import config from 'config';
 import authRouter from './routes/auth';
 import evalRouter from './routes/eval';
 import supervisorRouter from './routes/supervisor';
@@ -28,7 +29,8 @@ const main = async () => {
     credentials: true,
     origin: clientURLs,
   }));
-  const PORT = 3001;
+
+  const PORT = config.get<number>(`port`);
 
   const PgSession = pgSession(session);
 
