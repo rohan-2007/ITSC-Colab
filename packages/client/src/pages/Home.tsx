@@ -128,6 +128,16 @@ const Home: React.FC = () => {
           .attr(`stroke-width`, 2)
           .attr(`stroke-dasharray`, `5,5`)
           .attr(`d`, line);
+
+        // Draw points for team average data as well
+        g.selectAll(`user-points`)
+          .data(teamAverageData)
+          .enter()
+          .append(`circle`)
+          .attr(`cx`, (d) => xScale(d.x))
+          .attr(`cy`, (d) => yScale(d.y))
+          .attr(`r`, 4)
+          .attr(`fill`, `orange`);
       }
 
       g.append(`path`)
