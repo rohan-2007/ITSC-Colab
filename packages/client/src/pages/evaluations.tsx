@@ -497,7 +497,7 @@ const Evaluations: React.FC = () => {
     {isFormVisible &&
       <div id="evaluation-modal" className="modal-overlay-evaluations">
         <div className="modal-content-evaluations" style={{ height: `80%`, overflow: `scroll` }}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="submit-eval-form">
             <div className="form-header">
               <h2>{user?.role === `STUDENT` ? `Student Self-Evaluation` : `Supervisor Evaluation`}</h2>
               <div className="semester-selector">
@@ -549,7 +549,7 @@ const Evaluations: React.FC = () => {
                         );
 
                         if (!categorySpecificLevel) {
-                          // fuck, if this happens.
+                          // if this happens.
                           return <td key={`${category.id}-${levelType.level}`}>N/A</td>;
                         }
 

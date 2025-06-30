@@ -291,3 +291,7 @@
 .tc {
   text-align: center;
 }
+
+.submit-eval-form {
+  overflow-y: auto;
+}

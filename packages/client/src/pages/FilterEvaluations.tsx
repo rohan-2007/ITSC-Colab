@@ -142,6 +142,8 @@ const FilterEvaluations: React.FC = () => {
   const [ isSupervisor, setIsSupervisor ] = useState(false);
   const [ students, setStudents ] = useState<Student[]>();
 
+  console.log(`Selected year: `, selectedYear);
+
   useEffect(() => {
     if (data.role === `SUPERVISOR`) {
       setIsSupervisor(true);
@@ -322,6 +324,7 @@ const FilterEvaluations: React.FC = () => {
           credentials: `include`,
           method: `GET`,
         });
+        console.log(`evalRes`, JSON.stringify(evalRes, null, 2));
       }
 
       if (!evalRes.ok) {
@@ -337,7 +340,7 @@ const FilterEvaluations: React.FC = () => {
       //   `${item.semester} ${item.year} Team: ${item.team}`))));
       // console.log(`evaluationsData: `, );
       setEvaluations(evaluationsData.filter((item) => {
-        const key = `${item.year} ${item.semester} ${item.team}`;
+        const key = `${item.year} ${item.semester} ${item.team} ${item.studentId}`;
         if (seen.has(key)) {
           return false;
         }
@@ -396,6 +399,8 @@ const FilterEvaluations: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  console.log(`evals: `, evaluations);
+
   const distinctYears = Array.from(new Set(evaluations.map((item) => item.year)));
   const distinctSemesters = Array.from(new Set(evaluations.map((item) => item.semester)));
   const distinctTeams = Array.from(new Set(evaluations.map((item) => item.team)));
@@ -447,30 +452,50 @@ const FilterEvaluations: React.FC = () => {
     <div className="top-bar" ref={topBarRef}>
       <div className="left-section">
         <h3 className="semester-label">Year:</h3>
-        <select id="year" className="dropdown" value={selectedYear} onChange={handleSelectedYear}>
-          <option value="" />
+        <select
+          id="year"
+          className={`dropdown ${!selectedYear ? `default-option` : ``}`}
+          value={selectedYear}
+          onChange={handleSelectedYear}
+        >
+          <option value="">Select year</option>
           {distinctYears.map((year) =>
             <option key={year} value={year}>{year}</option>)}
         </select>
 
         <h3 className="semester-label">Semester:</h3>
-        <select id="semester" className="dropdown" value={selectedSemester} onChange={handleSelectedSemester}>
-          <option value="" />
+        <select
+          id="semester"
+          className={`dropdown ${!selectedSemester ? `default-option` : ``}`}
+          value={selectedSemester}
+          onChange={handleSelectedSemester}
+        >
+          <option value="" className="default-option">Select semester</option>
           {distinctSemesters.map((semester) =>
             <option key={semester} value={semester}>{semester}</option>)}
         </select>
 
         <h3 className="semester-label">Team:</h3>
-        <select id="team" className="dropdown" value={selectedTeam} onChange={handleSelectedTeam}>
-          <option value="" />
+        <select
+          id="team"
+          className={`dropdown ${!selectedTeam ? `default-option` : ``}`}
+          value={selectedTeam}
+          onChange={handleSelectedTeam}
+        >
+          <option value="" className="default-option">Select team</option>
           {distinctTeams.map((team) =>
             <option key={team} value={team}>{team}</option>)}
         </select>
 
         {isSupervisor && <>
           <h3 className="semester-label">Student:</h3>
-          <select id="student" className="dropdown" value={selectedStudent} onChange={handleSelectedStudent}>
-            <option value="" />
+          <select
+            id="student"
+            className={`dropdown ${!selectedStudent ? `default-option` : ``}`}
+            value={selectedStudent}
+            onChange={handleSelectedStudent}
+          >
+            <option value="" className="default-option">Select student</option>
             {distinctStudents?.map((student) =>
               <option key={student.name} value={student.name}>{student.name}</option>)}
           </select>

@@ -27,3 +27,13 @@
  align-items: center;
  gap: 12px;
 }
+
+.centered-page-login {
+  /* align-items: center;
+  justify-content: center; */
+  margin-top: 50px;
+}
+
+.centered-page-login h1 {
+  text-align: center;
+}
