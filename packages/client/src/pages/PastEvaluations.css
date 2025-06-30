@@ -235,3 +235,9 @@ ul {
   font-weight: 600;
   color: #333;
 }
+
+.no-criteria {
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+}

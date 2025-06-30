@@ -2,10 +2,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/ITSC_LOGO.png';
 
-const Navbar: React.FC = () =>
-  <header className="navbar">
+const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+
+  return <header className="navbar">
     <img src={logo} className="navbar-logo" />
     <nav className="nav-links">
       <Link to="/">Home</Link>
@@ -28,4 +31,5 @@ const Navbar: React.FC = () =>
       }}
     >Log Out</button>
   </header>;
+};
 export default Navbar;

@@ -133,6 +133,8 @@ const PastEvaluations: React.FC = () => {
   const location = useLocation();
   const data = location.state as Data;
 
+  let alreadyDisplayed: boolean = false;
+
   console.log(`location data: `, data);
 
   // const handleSelectedSemester = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -429,24 +431,41 @@ const PastEvaluations: React.FC = () => {
 
                     const studentSelected = studentTeamResults[category.id] === level.id;
                     const supervisorSelected = supervisorTeamResults[category.id] === level.id;
+                    console.log(`supervisorTeamResults[category.id]`, supervisorTeamResults);
 
-                    if (studentSelected && supervisorSelected) {
-                      cellClass += ` both-selected`;
-                    } else if (studentSelected) {
-                      cellClass += ` student-selected`;
-                    } else if (supervisorSelected) {
-                      cellClass += ` supervisor-selected`;
+                    if (!(category.id in supervisorTeamResults) && !(category.id in studentTeamResults)) {
+                      if (!alreadyDisplayed) {
+                        alreadyDisplayed = true;
+                        return <td
+                          key={level.id}
+                          style={dynamicStyles}
+                          className={cellClass}
+                          colSpan={category.levels.length}
+                        >
+                          <div className="level-text no-criteria">
+                            This criterion is not available for this evaluation
+                          </div>
+                        </td>;
+                      }
+                    } else {
+                      if (studentSelected && supervisorSelected) {
+                        cellClass += ` both-selected`;
+                      } else if (studentSelected) {
+                        cellClass += ` student-selected`;
+                      } else if (supervisorSelected) {
+                        cellClass += ` supervisor-selected`;
+                      }
+
+                      return <td
+                        key={level.id}
+                        style={dynamicStyles}
+                        className={cellClass}
+                      >
+                        <div className="level-text">
+                          {level.description}
+                        </div>
+                      </td>;
                     }
-
-                    return <td
-                      key={level.id}
-                      style={dynamicStyles}
-                      className={cellClass}
-                    >
-                      <div className="level-text">
-                        {level.description}
-                      </div>
-                    </td>;
                   })}
                 </tr>)}
             </tbody>
