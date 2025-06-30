@@ -109,7 +109,9 @@ const Supervisor: React.FC = () => {
         }
 
         setFilteredStudents(
-          fetchedStudents.filter((student) => student.supervisorId === userData.id),
+          fetchedStudents
+            .filter((student) => student.supervisorId === userData.id)
+            .sort((a, b) => a.name.localeCompare(b.name)),
         );
 
         const supRes = await fetch(`${fetchUrl}/supervisors`, {
@@ -143,10 +145,12 @@ const Supervisor: React.FC = () => {
           const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => {
             const assignedStudents = fetchedStudents
               .filter((s) => team.memberIDs.includes(s.id))
-              .map((s) => s.name);
+              .map((s) => s.name)
+              .sort((a, b) => a.localeCompare(b));
             const assignedSupervisors = fetchedSupervisors
               .filter((s) => team.memberIDs.includes(s.id))
-              .map((s) => s.name);
+              .map((s) => s.name)
+              .sort((a, b) => a.localeCompare(b));
 
             return {
               id: team.id,
@@ -156,7 +160,8 @@ const Supervisor: React.FC = () => {
               name: team.name,
             };
           });
-
+          // Sort teams alphabetically by name before accessing
+          newTeams.sort((a, b) => a.name.localeCompare(b.name));
           setTeams(newTeams);
         }
       };
@@ -327,8 +332,10 @@ const Supervisor: React.FC = () => {
     setTeams((prev) => [ ...prev, newTeam ]);
   };
 
-  const filteredTeams = teams.filter((team) =>
-    team.name.toLowerCase().includes(teamSearch.toLowerCase()));
+  const filteredTeams = teams
+    .filter((team) =>
+      team.name.toLowerCase().includes(teamSearch.toLowerCase()))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return <div className="supervisor-page">
     <header className="evaluations-header">

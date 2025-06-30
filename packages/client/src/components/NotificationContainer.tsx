@@ -14,7 +14,6 @@ const NotificationSystem: React.FC = () => {
   const idRef = useRef(0);
 
   useEffect(() => {
-  // Set up notify handler
     setNotifyHandler((msg, duration = 4000) => {
       idRef.current += 1;
       const id = idRef.current;
@@ -25,7 +24,6 @@ const NotificationSystem: React.FC = () => {
       }, duration);
     });
 
-    // Handle queued notifications after reload
     const queued = sessionStorage.getItem(`__queued_notifications__`);
     if (queued) {
       try {
@@ -121,7 +119,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-// Keyframes (safe for runtime style injection)
 const styleSheet = document.createElement(`style`);
 styleSheet.innerText = `
 @keyframes shrink {

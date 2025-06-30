@@ -1,4 +1,3 @@
-/* Defaults */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -49,9 +48,7 @@ button {
  flex-wrap: wrap;
 }
 
-/* End of Defaults */
 
-/* LOGIN PAGE */
 
 .loginButton:hover,
 .signUpButton:hover {
@@ -84,9 +81,7 @@ button {
  cursor: pointer;
   font-family: inherit;
 }
-/* END OF LOGIN */
 
-/* HOME PAGE */
 .button-view-reports {
   background-color: red;
   color: white;
@@ -147,9 +142,7 @@ button {
 .button-view-profile:hover {
   transform: scale(1.05);
 }
-/* End of home */
 
-/* PROFILE PAGE */
 .button-edit-profile:hover {
   transform: scale(1.05);
 }
@@ -165,9 +158,7 @@ button {
  transition: all 0.3s ease;
  cursor: pointer;
 }
-/* End of profile */
 
-/* SUPERVISOR PAGE */
 .button-new-team {
   background-color: red;
   color: white;
@@ -260,9 +251,7 @@ button {
  transition: all 0.3s ease;
  cursor: pointer;
 }
-/* End of supervisor page */
 
-/* This is the "completed" button in supervisor eval */
 .btn.select-btn {
   background-color: #007bff;
   color: white;
@@ -296,7 +285,6 @@ button {
   justify-content: center;
 }
 
-/* CONTACT PAGE */
 .button-row {
   display: flex;
   flex-direction: row;
@@ -324,9 +312,7 @@ button {
 .button-second-contact:hover {
   transform: scale(1.05);
 }
-/* END OF CONTACT PAGE */
 
-/* Evaluations page, select table for supervisors */
 .btn.select-btn {
   background-color: #007bff;
   color: white;
@@ -421,9 +407,7 @@ button {
 .student-select-table tbody tr:hover {
   background-color: #f0f2f5;
 }
-/* end of eval page */
 
-/* STUDENT SELECT PAGE */
 .view-eval-student {
   background-color: red !important;
   color: white;
@@ -441,16 +425,9 @@ button {
 .view-eval-student:hover {
   transform: scale(1.05);
 }
-/* end of student select */
-
-/*
-
-CARDS
-
-*/
 
 
-/* SUPERVISOR PAGE CARDS */
+
 .manage-teams-card,
 .manage-student-card {
  background: #ffffff;
@@ -477,9 +454,7 @@ CARDS
  align-items: center;
  margin-bottom: 1rem;
 }
-/* End Supervisor page cards */
 
-/* PROFILE PAGE CARDS */
 .profile-details-card {
   align-items: center;
   text-align: center;
@@ -488,6 +463,8 @@ CARDS
 .profile-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  text-overflow: ellipsis;
+  overflow: auto;
 }
 
 .profile-card {
@@ -511,9 +488,7 @@ CARDS
   justify-content: space-between;
   height: 30%;
 }
-/* End of profile page cards */
 
-/* HOME CARDS */
 .supervisor-todo-section {
   grid-area: to-do;
   background: #ffffff;
@@ -551,9 +526,7 @@ CARDS
   padding: 25px;
   margin-top: 10px;
 }
-/* end of home cards */
 
-/* EVALUATIONS CARDS */
 .eval-cards {
   background-color: #ffffff;
   border-radius: 12px;
@@ -564,12 +537,10 @@ CARDS
   width: 400px;
   max-width: 100%;
 }
-/* end of eval card */
 
-/* STUDENT SELECT CARDS */
 .student-select-card {
   background-color: #ffffff;
-  padding: 2rem 2rem 1.25rem 2rem; /* reduced bottom padding */
+  padding: 2rem 2rem 1.25rem 2rem;
   border-radius: 12px;
   max-width: 700px;
   width: 100%;
@@ -580,4 +551,3 @@ CARDS
   justify-content: flex-start; 
   height: fit-content; 
 }
-/* end of student select */

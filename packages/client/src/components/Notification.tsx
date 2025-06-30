@@ -1,4 +1,3 @@
-// NotificationEmitter.ts
 type NotifyFunction = (msg: string, duration?: number) => void;
 
 const notifyRef: { current: NotifyFunction | null } = {

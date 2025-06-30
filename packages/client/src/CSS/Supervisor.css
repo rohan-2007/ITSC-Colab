@@ -1,4 +1,3 @@
-/* Global Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 16px;
 }
@@ -16,78 +15,59 @@
   background-color: #d55959;
 }
 
-/* Optional: Firefox support */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d55959 #e7e7e7;
 }
-/* --- 1. Modal Overlay --- */
-/*
-  Creates a semi-transparent, blurred background to focus the user's
-  attention on the modal content.
-*/
 .modal-overlay-supervisor {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(17, 24, 39, 0.6); /* Dark, semi-transparent background */
+  background-color: rgba(17, 24, 39, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px); /* Modern blur effect for the background */
+  backdrop-filter: blur(4px);
 }
 
-/* --- 2. Modal Container & Layout --- */
-/*
-  Defines the main modal window and its internal layout using CSS Grid.
-  This creates a responsive header, a two-column content area, and a footer.
-*/
 .modal-change-team-supervisor {
-  /* Sizing */
   width: 90%;
   max-width: 900px;
   height: 85%;
   max-height: 750px;
 
-  /* Grid Layout */
   display: grid;
-  grid-template-rows: auto auto 1fr auto; /* Header, Team Name, Content, Footer */
+  grid-template-rows: auto auto 1fr auto;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem 1.5rem; /* row-gap column-gap */
+  gap: 1rem 1.5rem;
   
-  /* Appearance */
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden; /* Prevents content from spilling past rounded corners */
+  overflow: hidden;
 }
 
-/* --- 3. Modal Header & Team Name Input --- */
-/*
-  Assigns the header and team name input to span the full width of the grid.
-*/
 .modal-change-team-supervisor > h4 {
-  grid-column: 1 / -1; /* Span across both columns */
-  font-size: 1.5rem; /* 24px */
+  grid-column: 1 / -1;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #111827; /* Very dark gray for high contrast */
+  color: #111827;
   margin: 0;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb; /* Subtle separator line */
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* The label is better than the h3, so we hide the h3 */
 .modal-change-team-supervisor > h3 {
   padding: 0;
   margin: 0;
 }
 
 .modal-input-supervisor-team-name {
-  grid-column: 1 / -1; /* Span across both columns */
+  grid-column: 1 / -1;
   width: 95%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -103,36 +83,28 @@
 }
 
 
-/* --- 4. Assignment Sections (Students & Supervisors) --- */
-/*
-  Styles and positions the two main content sections into their
-  respective grid columns.
-*/
 .modal-change-team-supervisor .modal-form-group-supervisor {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  overflow: hidden; /* Important for child scrolling */
+  overflow: hidden;
 }
 
-/* Assign the first group to the left column */
 .modal-change-team-supervisor .modal-form-group-supervisor:nth-of-type(1) {
   grid-column: 1 / 2;
 }
 
-/* Assign the second group to the right column */
 .modal-change-team-supervisor .modal-form-group-supervisor:nth-of-type(2) {
   grid-column: 2 / 3;
 }
 
 .modal-form-group-supervisor h3 {
-  font-size: 1.125rem; /* 18px */
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
 
-/* Search input within the assignment sections */
 .modal-form-group-supervisor .modal-input-supervisor {
   width: 93%;
   padding: 0.6rem 0.8rem;
@@ -149,14 +121,13 @@
 }
 
 
-/* --- 5. Scrollable Lists & Items --- */
 .dropdown-scroll {
-  flex-grow: 1; /* Makes the list fill all available vertical space */
+  flex-grow: 1;
   overflow-y: auto;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 0.5rem;
-  background-color: #f9fafb; /* Light background to differentiate the list area */
+  background-color: #f9fafb;
 }
 
 .dropdown-item {
@@ -166,7 +137,7 @@
   padding: 0.6rem 0.75rem;
   border-radius: 6px;
   cursor: pointer;
-  user-select: none; /* Prevent text selection when clicking */
+  user-select: none;
   transition: background-color 0.15s ease-in-out;
   color: #374151;
 }
@@ -179,22 +150,20 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #d55959; /* Modern way to style checkbox color */
+  accent-color: #d55959;
   flex-shrink: 0;
 }
 
 
-/* --- 6. Modal Footer & Action Buttons --- */
 .modal-buttons {
-  grid-column: 1 / -1; /* Span both columns */
+  grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end; /* Align primary buttons to the right */
+  justify-content: flex-end;
   gap: 0.75rem;
   padding-top: 1.5rem;
   border-top: 1px solid #e5e7eb;
 }
 
-/* Base style for all footer buttons */
 .modal-buttons button {
   padding: 0.65rem 1.25rem;
   font-size: 0.95rem;
@@ -206,10 +175,9 @@
 }
 
 .modal-buttons button:active {
-  transform: scale(0.97); /* Click feedback */
+  transform: scale(0.97);
 }
 
-/* Save Button (Primary Action) */
 .modal-save-supervisor {
   background-color: #d55959;
   color: white;
@@ -220,7 +188,6 @@
   border-color: #c04848;
 }
 
-/* Cancel Button (Secondary Action) */
 .modal-cancel-supervisor {
   background-color: #ffffff;
   color: #4b5563;
@@ -230,9 +197,8 @@
   background-color: red;
 }
 
-/* Delete Button (Destructive Action) */
 .modal-delete-supervisor {
-  margin-right: auto; /* Pushes this button to the far left, separating it */
+  margin-right: auto;
   background-color: #fee2e2;
   color: #dc2626;
   border-color: #fee2e2;
@@ -347,7 +313,6 @@
   padding: 0.25rem 0;
 }
 
-/* Global Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 16px;
 }
@@ -365,13 +330,11 @@
   background-color: #d55959;
 }
 
-/* Optional: Firefox support */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d55959 #e7e7e7;
 }
 
-/* --- 1. Modal Overlay --- */
 .modal-overlay-supervisor {
   position: fixed;
   top: 0;
@@ -386,7 +349,6 @@
   backdrop-filter: blur(4px);
 }
 
-/* --- 2. Edit Team Modal --- */
 .modal-change-team-supervisor {
   width: 90%;
   max-width: 900px;
@@ -559,10 +521,9 @@
   color: #b91c1c;
 }
 
-/* --- 7. Team View Modal (NEW) --- */
 .modal-team-view {
   width: 90%;
-  max-width: 700px; /* Slightly smaller than edit modal */
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -612,14 +573,14 @@
 
 .stat-number {
   display: block;
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
   font-weight: 700;
   color: #d55959;
 }
 
 .stat-label {
   display: block;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   color: #4b5563;
   margin-top: 0.25rem;
 }
@@ -629,7 +590,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   flex-grow: 1;
-  overflow: hidden; /* Let the columns handle their own scrolling */
+  overflow: hidden;
 }
 
 .modal-team-view-column {
@@ -678,7 +639,6 @@
   justify-content: center;
 }
 
-/* Center the single close button in the view modal footer */
 .modal-team-view .modal-buttons {
   justify-content: center;
 }
