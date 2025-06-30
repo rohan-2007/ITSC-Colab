@@ -23,6 +23,7 @@ const Navbar: React.FC = () =>
           credentials: `include`,
           method: `POST`,
         });
+        localStorage.clear();
         window.location.reload();
       }}
     >Log Out</button>
