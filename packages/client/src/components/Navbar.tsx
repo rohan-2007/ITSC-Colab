@@ -26,8 +26,8 @@ const Navbar: React.FC = () => {
           credentials: `include`,
           method: `POST`,
         });
-        // window.location.reload();
-        await navigate(`/`);
+        localStorage.clear();
+        window.location.reload();
       }}
     >Log Out</button>
   </header>;

@@ -19,6 +19,7 @@ const Login: React.FC = () => {
   const PORT = 3001;
 
   useEffect(() => {
+    localStorage.clear();
     const checkSession = async () => {
       const response = await fetch(`${fetchUrl}/me/`, {
         body: JSON.stringify({ returnData: true }),

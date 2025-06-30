@@ -11,7 +11,7 @@ import '../components/ButtonAndCard.css';
 
 const fetchUrl = `http://localhost:${3001}`;
 
-// --- Helper functions (assignSemester, etc.) remain the same ---
+// --- Helper functions ---
 const assignSemester = (): string => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -39,17 +39,27 @@ const getMonthFromTimestamp = (timestamp: string | Date) => {
   const date = new Date(timestamp);
   return date.toLocaleString(`default`, { month: `long` });
 };
+
+const createLocalDate = (dateString: string | number | Date) => {
+  const date = new Date(dateString);
+  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+};
 // --- End of helper functions ---
 
 const currentSemester = assignSemester();
 
-// --- Interfaces (PastEval, User) remain the same ---
+// --- Interfaces ---
 interface PastEval {
   semester: string;
   studentId: number;
   supervisorId: number;
   type: string;
   year: number;
+}
+
+interface TeamAverageContribution {
+  average_contributions: number;
+  date: string;
 }
 
 interface User {
@@ -76,7 +86,7 @@ const Home: React.FC = () => {
   const [ height, setHeight ] = useState<number>(200);
   const [ width, setWidth ] = useState<number>(400);
   const [ contributions, setContributions ] = useState<Contribution[] | null>(null);
-  const [ teamAverageData, setTeamAverageData ] = useState<Array<{ x: Date, y: number }> | null>(null); // State for team average
+  const [ teamAverageData, setTeamAverageData ] = useState<Array<{ x: Date, y: number }> | null>(null);
   const [ months, setMonths ] = useState<string[]>();
 
   useEffect(() => {
@@ -115,7 +125,7 @@ const Home: React.FC = () => {
         .ticks(5)
         .tickFormat((domainValue: Date | d3.NumberValue) => {
           const date = domainValue instanceof Date ? domainValue : new Date(domainValue as number);
-          return d3.timeFormat(`%b %d`)(date);
+          return d3.timeFormat(`%b %d`)(createLocalDate(date));
         });
       g.append(`g`).attr(`transform`, `translate(0, ${innerHeight})`).call(xAxis);
       g.append(`g`).call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth).tickPadding(10)).selectAll(`.tick line`).attr(`stroke`, `#e0e0e0`);
@@ -130,7 +140,7 @@ const Home: React.FC = () => {
           .attr(`d`, line);
 
         // Draw points for team average data as well
-        g.selectAll(`user-points`)
+        g.selectAll(`.team-points`)
           .data(teamAverageData)
           .enter()
           .append(`circle`)
@@ -148,7 +158,7 @@ const Home: React.FC = () => {
         .attr(`d`, line);
 
       // Draw user points (without hover events, as the rect will handle them)
-      g.selectAll(`user-points`)
+      g.selectAll(`.user-points`)
         .data(graphData)
         .enter()
         .append(`circle`)
@@ -244,9 +254,16 @@ const Home: React.FC = () => {
 
         const resJson = await res.json();
 
-        // Destructure the new response format
-        const userContributionList = resJson.data.userContributions as Contribution[];
-        const teamAverageList = resJson.data.teamAverageContributions as Array<{ average_contributions: number, date: string }>;
+        // Destructure the new response format with proper typing
+        const userContributionList = (resJson.data.userContributions as Contribution[]).map((item: Contribution) => ({
+          ...item,
+          date: createLocalDate(item.date).toISOString(),
+        }));
+
+        const teamAverageList = (resJson.data.teamAverageContributions as TeamAverageContribution[]).map((item: TeamAverageContribution) => ({
+          ...item,
+          date: createLocalDate(item.date),
+        }));
 
         // The data is now pre-filtered by the backend. No need for client-side filtering.
         setContributions(userContributionList);
@@ -258,9 +275,9 @@ const Home: React.FC = () => {
         setTeamAverageData(processedTeamData);
       } catch (err) {
         if (err instanceof Error) {
-          throw new Error(`git fetch error: ${err.message}`);
+          console.error(`git fetch error: ${err.message}`);
         } else {
-          throw new Error(`an unknown git fetch error`);
+          console.error(`an unknown git fetch error`);
         }
       }
     };
@@ -272,7 +289,11 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     setMonths(Array.from(new Set(contributions?.map((item) => getMonthFromTimestamp(item.date)))));
-    setGraphData(contributions?.map((item) => ({ x: new Date(item.date), y: item.contribution_count })));
+
+    setGraphData(contributions?.map((item) => ({
+      x: new Date(item.date),
+      y: item.contribution_count,
+    })));
   }, [ contributions ]);
 
   // --- Session checking and other useEffects remain the same ---
@@ -363,9 +384,9 @@ const Home: React.FC = () => {
         }
       } catch (err) {
         if (err instanceof Error) {
-          throw new Error(`Error while fetching students: ${err.message}`);
+          console.error(`Error while fetching students: ${err.message}`);
         } else {
-          throw new Error(`an unknown students fetch error`);
+          console.error(`an unknown students fetch error`);
         }
       }
     };
@@ -453,8 +474,6 @@ const Home: React.FC = () => {
 
       {user.role === `STUDENT` && <section className="graph-section">
         <h2>Git Contributions</h2>
-        {` `}
-        {/* Updated Title */}
         {contributions && contributions.length > 0 ?
           <div className="graph-div">
             <svg ref={svgRef} className="graph" />
