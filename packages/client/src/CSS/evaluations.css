@@ -1,4 +1,3 @@
-/* Global Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 16px;
 }
@@ -16,7 +15,6 @@
   background-color: #d55959;
 }
 
-/* Optional: Firefox support */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d55959 #e7e7e7;
@@ -148,10 +146,10 @@
   z-index: 1;
 }
 
-.student-select-table th:nth-child(1) { width: 15%; } /* ID */
-.student-select-table th:nth-child(2) { width: 35%; } /* Name */
-.student-select-table th:nth-child(3) { width: 35%; } /* Email */
-.student-select-table th:nth-child(4) { width: 15%; text-align: center; } /* Action */
+.student-select-table th:nth-child(1) { width: 15%; }
+.student-select-table th:nth-child(2) { width: 35%; }
+.student-select-table th:nth-child(3) { width: 35%; }
+.student-select-table th:nth-child(4) { width: 15%; text-align: center; }
 
 .student-select-table td:nth-child(4) {
   text-align: center;

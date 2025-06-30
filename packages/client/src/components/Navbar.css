@@ -1,27 +1,26 @@
-/* src/components/Navbar.css */
 .navbar {
   height: fit-content;
   width: 100%;
-  padding: 0.4rem; /* Padding already set */
+  padding: 0.4rem;
   display: flex;
-  justify-content: flex-start; /* pushes content to the left */
+  justify-content: flex-start;
   align-items: center;
-  position: fixed; /* Makes it stick to the top */
+  position: fixed;
   top: 0;
   left: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-bottom: 4px solid #f44336;
-  background-color: white; /* Ensure navbar has a background */
-  z-index: 1000; /* Ensure it stays on top of other content */
+  background-color: white;
+  z-index: 1000;
 }
 
 .nav-links {
-  margin-left: 2rem; /* Increased margin for better spacing from logo, matches image */
+  margin-left: 2rem;
   display: flex;
-  gap: 1.5rem; /* Space between links */
+  gap: 1.5rem;
 }
 .logout-btn {
-  margin-left: auto; /* Pushes the button to the far right */
+  margin-left: auto;
   margin-right: 20px;
   padding: 0.5rem 1.2rem;
   background-color: #f44336;
@@ -43,17 +42,17 @@
   text-decoration: none;
   color: #333;
   font-weight: 500;
-  padding: 0.5rem 0; /* Add some vertical padding for clickable area */
+  padding: 0.5rem 0;
   transition: color 0.2s ease-in-out;
 }
 
 .nav-links a:hover {
-  color: #f44336; /* Hover color changed to red for consistency */
+  color: #f44336;
 }
 
 .navbar-logo {
   height: 4em;
-  padding: 0.4em 2em; /* Keep existing padding */
+  padding: 0.4em 2em;
   will-change: filter;
   transition: filter 300ms;
 }

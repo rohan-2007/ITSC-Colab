@@ -20,14 +20,14 @@ const RequireRole: React.FC<RequireRoleProps> = ({ allowedRoles, children }) => 
         if (user?.role && allowedRoles.includes(String(user.role))) {
           setAuthorized(true);
         } else {
-          void navigate(`/home`); // User logged in, but role not allowed
+          void navigate(`/home`);
         }
       } catch {
         notifyAfterReload(`Invalid user data in localStorage`);
         void navigate(`/login`);
       }
     } else {
-      void navigate(`/login`); // Not logged in
+      void navigate(`/login`);
     }
 
     setLoading(false);

@@ -1,11 +1,10 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/ITSC_LOGO.png';
 
 const Navbar: React.FC = () => <header className="navbar">
-  <img src={logo} className="navbar-logo" />
+  <img src={logo} className="navbar-logo" alt="ITSC Logo" />
   <nav className="nav-links">
     <Link to="/">Home</Link>
     <Link to="/evaluations">Evaluations</Link>

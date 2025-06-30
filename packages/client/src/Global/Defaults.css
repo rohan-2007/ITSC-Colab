@@ -1,9 +1,7 @@
-/* Defaults */
 .tc {
   text-align: center;
 }
 
-/* Global Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 16px;
 }
@@ -21,10 +19,8 @@
   background-color: #d55959;
 }
 
-/* Optional: Firefox support */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d55959 #e7e7e7;
 }
 
-/* End of Defaults */
