@@ -210,3 +210,7 @@
 .profile-card p {
   line-height: 1.5;
 }
+
+.profile-card h2 {
+  word-break: break-word; /* makes the header wrap in profile card */
+}

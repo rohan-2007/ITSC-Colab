@@ -61,7 +61,7 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         res.status(404).json({ error: `Route not found`, path: req.path });
     });
     app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Server running on port:${PORT}`);
     });
 });
 main().catch((err) => {
