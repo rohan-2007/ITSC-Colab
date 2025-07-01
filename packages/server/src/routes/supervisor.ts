@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 import { limiter, requireAuth, requireRole } from './auth';
 
