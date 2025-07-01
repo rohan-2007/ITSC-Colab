@@ -12,3 +12,4 @@ lerna-debug.log
 .vscode/settings.json
 !prisma/migrations/
 !prisma/schema.prisma
+packages/database/.env
