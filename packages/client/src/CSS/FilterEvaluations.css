@@ -41,9 +41,25 @@
 }
 
 .top-bar {
-  height: 10%;
+  /* height: 10%; */
 }
 
 .default-option {
   color: rgb(112, 112, 112);
 }
+
+.section {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.label-select-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
