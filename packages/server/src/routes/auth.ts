@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import rateLimit from 'express-rate-limit';
-import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 
 const router = Router();

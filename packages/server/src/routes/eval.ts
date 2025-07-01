@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Request, Response, Router } from 'express';
-import { Role, Semester } from '../../../../generated/prisma';
+import { Role, Semester } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 import { limiter, requireAuth } from './auth';
 
