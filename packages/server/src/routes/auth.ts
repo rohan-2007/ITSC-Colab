@@ -61,7 +61,7 @@ export const limiter = rateLimit({
     error: `Too many requests, please slow down.`,
   },
   standardHeaders: true,
-  windowMs: 2 * 1000,
+  windowMs: 1 * 1000,
 });
 
 export const meLimiter = rateLimit({
