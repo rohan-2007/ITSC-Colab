@@ -31,6 +31,10 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1.5rem;
+  max-width: 100%;
+  /* table-layout: fixed; */
+  /* border-collapse: collapse; */
+  text-align: center;
 }
 
 .eval-select-table th,

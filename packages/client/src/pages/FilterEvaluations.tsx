@@ -566,7 +566,7 @@ const FilterEvaluations: React.FC = () => {
           {item.semester} {item.year} Team: {item.team}</button>)} */}
 
       <div className="eval-table-container">
-        <table className="student-select-table eval-select-table">
+        <table className="eval-select-table">
           <thead>
             <tr>
               <th>Name</th>
