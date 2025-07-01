@@ -67,7 +67,7 @@ router.post(`/supervisors`, limiter, requireAuth, async (
 interface StudentInfoChange {
   email?: string;
   name?: string;
-  password?: string;
+  newPassword?: string;
   userId: number;
 }
 
@@ -75,7 +75,7 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, StudentInfoChange>,
   res: Response,
 ) => {
-  const { email, name, password, userId } = req.body;
+  const { email, name, newPassword: password, userId } = req.body;
 
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({

@@ -329,7 +329,11 @@ const Supervisor: React.FC = () => {
       assignedUsers: [],
       name: `New Team ${nextTeamNumber}`,
     };
-    setTeams((prev) => [ ...prev, newTeam ]);
+    setTeams((prev) => {
+      const updatedTeams = [ ...prev, newTeam ];
+      updatedTeams.sort((a, b) => a.name.localeCompare(b.name));
+      return updatedTeams;
+    });
   };
 
   const filteredTeams = teams
