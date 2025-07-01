@@ -183,9 +183,9 @@ const Login: React.FC = () => {
       email: formData.email ? `` : `Email is required.`,
       name: formData.name ? `` : `Name is required.`,
       password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
-      /* supervisorEmail:
+      supervisorEmail:
         formData.supervisorEmail ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
-          teamName: formData.teamName ? `` : `Team is required`, */
+      teamName: formData.teamName ? `` : `Team is required`,
     };
     setSignupErrors(newErrors);
     return Object.values(newErrors).every((e) => e === ``);

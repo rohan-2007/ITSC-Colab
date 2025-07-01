@@ -76,7 +76,7 @@ const Evaluations: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategoryData[]>([]);
   const [ selections, setSelections ] = useState<Selections>({});
   const [ studentSearch, setStudentSearch ] = useState(``);
-  const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
+  const [ _studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
   const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
   const [ evaluations, setEvaluations ] = useState<Evaluation[]>([]);
 
@@ -505,10 +505,10 @@ const Evaluations: React.FC = () => {
                   </thead>
                   <tbody>
                     {filteredStudents.length > 0 ?
-                      filteredStudents.map((student: Student) => {
-                        const status = studentsEvalStatus[student.id];
-                        const isCompleted = status ? status.supervisorCompleted : false;
-                        return <tr
+                      filteredStudents.map((student: Student) =>
+                        // const status = studentsEvalStatus[student.id];
+                        // const _isCompleted = status ? status.supervisorCompleted : false;
+                        <tr
                           key={student.id}
                           className={selectedStudentId === student.id ? `selected` : ``}
                         >
@@ -520,13 +520,12 @@ const Evaluations: React.FC = () => {
                               type="button"
                               className="btn select-btn"
                               onClick={() => setSelectedStudentId(student.id)}
-                              disabled={isCompleted}
+                              // disabled={isCompleted}
                             >
-                              {isCompleted ? `Completed` : `Select`}
+                              Select
                             </button>
                           </td>
-                        </tr>;
-                      }) :
+                        </tr>) :
                       <tr>
                         <td colSpan={4} className="no-students-message">
                           No students found.
@@ -558,7 +557,7 @@ const Evaluations: React.FC = () => {
                 setIsPreModalVisible(false);
               }}
               disabled={user?.role === `SUPERVISOR` &&
-                (selectedStudentId === null || studentsEvalStatus[selectedStudentId]?.supervisorCompleted)}
+                (selectedStudentId === null)}
             >Proceed to Evaluation</button>}
         </div>
       </div>
