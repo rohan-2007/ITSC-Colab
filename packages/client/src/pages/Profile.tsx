@@ -45,6 +45,29 @@ const getCurrentAcademicTerm = (): { semester: `FALL` | `SPRING` | `SUMMER`, yea
   return { semester, year };
 };
 
+const getSemesterDateRange = (
+  semester: `FALL` | `SPRING` | `SUMMER`,
+  year: number,
+): { endDate: Date, startDate: Date } => {
+  switch (semester) {
+    case `SPRING`:
+      return {
+        endDate: new Date(year, 3, 24), // Apr 24
+        startDate: new Date(year, 0, 12), // Jan 12
+      };
+    case `SUMMER`:
+      return {
+        endDate: new Date(year, 7, 9), // Aug 9
+        startDate: new Date(year, 4, 12), // May 12
+      };
+    case `FALL`:
+      return {
+        endDate: new Date(year, 11, 5), // Dec 5
+        startDate: new Date(year, 7, 25), // Aug 25
+      };
+  }
+};
+
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const [ user, setUser ] = useState<UserProfile | null>(null);
@@ -174,12 +197,31 @@ const Profile: React.FC = () => {
             throw new Error(`Failed to fetch Git contributions.`);
           }
           const data = await response.json();
-          if (Array.isArray(data.data)) {
-            setGitContributions(data.data as GitContribution[]);
+
+          // Handle the response - could be either format
+          let allContributions: GitContribution[] = [];
+          if (data.data && Array.isArray(data.data.userContributions)) {
+            allContributions = data.data.userContributions as GitContribution[];
+          } else if (Array.isArray(data.data)) {
+            allContributions = data.data as GitContribution[];
+          } else if (Array.isArray(data.contributions)) {
+            allContributions = data.contributions as GitContribution[];
           } else {
             setGitContributions([]);
             setGitContributionsError(`Git contribution data is not in the expected format.`);
+            return;
           }
+
+          // Filter contributions for current semester
+          const { semester: currentSemester, year: currentYear } = getCurrentAcademicTerm();
+          const { endDate, startDate } = getSemesterDateRange(currentSemester, currentYear);
+
+          const semesterContributions = allContributions.filter((contribution) => {
+            const contributionDate = new Date(contribution.date);
+            return contributionDate >= startDate && contributionDate <= endDate;
+          });
+
+          setGitContributions(semesterContributions);
         } catch (err) {
           setGitContributionsError(err instanceof Error ? err.message : `Unknown error fetching Git contributions`);
         } finally {
@@ -279,6 +321,14 @@ const Profile: React.FC = () => {
     }
   };
 
+  // Calculate total contributions for the semester
+  const getTotalContributions = () => {
+    if (!gitContributions || gitContributions.length === 0) {
+      return 0;
+    }
+    return gitContributions.reduce((total, contribution) => total + contribution.contribution_count, 0);
+  };
+
   if (isLoading) {
     return <div className="profile-page-container">
       <main className="profile-content">
@@ -375,48 +425,49 @@ const Profile: React.FC = () => {
       </div>
 
       {user.role === `STUDENT` &&
-        <>
-          <div className="profile-card student-evaluations-card">
-            <h3>My Evaluation Status</h3>
-            {selfEvalStatusLoading && <p>Loading evaluation status...</p>}
-            {selfEvalStatusError && <p className="error-message">{selfEvalStatusError}</p>}
-            {selfEvalStatus && !selfEvalStatusLoading && !selfEvalStatusError ?
-              <div className="profile-info-item">
-                <span className="info-label wider">
-                  Current Self-Evaluation
-                  <br />
-                  <span className="sub-title">(
-                    {getCurrentAcademicTerm().semester} {getCurrentAcademicTerm().year}
-                    )
-                  </span>
-                </span>
-                <span
-                  className={`info-value ${
-                    selfEvalStatus.studentCompleted ? `status-completed` : `status-pending`
-                  }`}
-                >
-                  {selfEvalStatus.studentCompleted ? `Completed` : `Pending`}
-                </span>
-              </div> :
-              !selfEvalStatusLoading && !selfEvalStatusError && <p>Could not retrieve evaluation status.</p>}
-          </div>
+        <div className="profile-card student-evaluations-card">
+          <h3>
+            My Status
+            <span className="sub-title">
+              {` (${getCurrentAcademicTerm().semester}`} {`${getCurrentAcademicTerm().year})`}
+            </span>
+          </h3>
 
-          <div className="profile-card student-git-card">
-            <h3>Git Contributions</h3>
-            {gitContributionsLoading && <p>Loading Git contributions...</p>}
-            {gitContributionsError && <p className="error-message">{gitContributionsError}</p>}
-            {gitContributions && !gitContributionsLoading && !gitContributionsError ?
-              gitContributions.length > 0 ?
-                <div className="profile-info-item">
-                  <span className="info-label">Total Recorded Commits</span>
-                  <span className="info-value">
-                    {gitContributions.reduce((sum, contrib) => sum + (contrib.contribution_count || 0), 0)}
-                  </span>
-                </div> :
-                <p>No Git contribution data found for '{user.name}'.</p> :
-              !gitContributionsLoading && !gitContributionsError && <p>Git contribution data not available.</p>}
-          </div>
-        </>}
+          {selfEvalStatusLoading && <p>Loading status...</p>}
+          {selfEvalStatusError && <p className="error-message">{selfEvalStatusError}</p>}
+          {selfEvalStatus && !selfEvalStatusLoading && !selfEvalStatusError ?
+            <div className="profile-info-item">
+              <span className="info-label wider">
+                Current Self-Evaluation
+                <br />
+
+              </span>
+              <span
+                className={`info-value ${
+                  selfEvalStatus.studentCompleted ? `status-completed` : `status-pending`
+                }`}
+              >
+                {selfEvalStatus.studentCompleted ? `Completed` : `Pending`}
+              </span>
+            </div> :
+            !selfEvalStatusLoading && !selfEvalStatusError && <p>Could not retrieve evaluation status.</p>}
+
+          {gitContributionsLoading && <p>Loading Git contributions...</p>}
+          {gitContributionsError && <p className="error-message">{gitContributionsError}</p>}
+          {gitContributions && !gitContributionsLoading && !gitContributionsError ?
+            <div className="profile-info-item">
+              <span className="info-label wider">
+                Git Contributions
+                <br />
+              </span>
+              <span>
+                {getTotalContributions() > 0 ?
+                  `${getTotalContributions()} (${getCurrentAcademicTerm().semester})` :
+                  `No contributions this semester`}
+              </span>
+            </div> :
+            !gitContributionsLoading && !gitContributionsError && <p>Could not retrieve git status.</p>}
+        </div>}
     </main>
 
     {showEditModal &&
