@@ -152,6 +152,7 @@ router.post(`/teams`, limiter, requireAuth, async (
         }
         return {
           id: team.id,
+          leadSupervisorId: team.leadSupervisorId as number | null,
           leadSupervisorName,
           memberIDs: members.map((m) => m.id),
           name: team.name,
@@ -167,10 +168,9 @@ router.post(`/teams`, limiter, requireAuth, async (
     }
   }
 });
-
 interface TeamInfoChange {
   id: number;
-  leadSupervisorId: number;
+  leadSupervisorId?: number;
   memberIDs: number[];
   name: string;
 }
@@ -191,11 +191,18 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       return;
     }
 
-    await prisma.team.update({
+    const updateData: {
+      leadSupervisor?: { connect: { id: number } };
+    } = {};
+
+    if (typeof leadSupervisorId === `number`) {
+      updateData.leadSupervisor = {
+        connect: { id: leadSupervisorId },
+      };
+    }
+
+    const updatedTeam = await prisma.team.update({
       data: {
-        leadSupervisor: {
-          connect: { id: leadSupervisorId },
-        },
         members: {
           set: memberIDs.map((id2) => ({ id: id2 })),
         },
@@ -206,7 +213,7 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 
     res.status(200).json({
       message: `Successfully set team info!`,
-      team,
+      team: updatedTeam,
     });
   } catch (err) {
     console.error(`Fetch error:`, err);
