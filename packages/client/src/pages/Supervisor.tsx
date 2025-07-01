@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notifyAfterReload } from '../components/Notification';
 import '../CSS/Supervisor.css';
-import '../components/buttonAndCard.css'; // Assuming this might have some base styles, though my CSS largely overrides it for this component
-import '../components/Modals.css'; // Make sure this is correctly linked
+import '../components/buttonAndCard.css';
+import '../components/Modals.css';
 
 const fetchUrl = `http://localhost:${3001}`;
 interface Student {
@@ -61,7 +61,7 @@ const Supervisor: React.FC = () => {
   const navigate = useNavigate();
 
   // Helper function to check if current user can edit a student
-  const canEditStudent = (student: Student): boolean => {
+  const canEditStudent = React.useCallback((student: Student): boolean => {
     if (!currentUserId) {
       return false;
     }
@@ -74,7 +74,7 @@ const Supervisor: React.FC = () => {
     // Lead supervisors can edit any student on their teams
     const userTeams = teams.filter((team) => team.leadSupervisorId === currentUserId);
     return userTeams.some((team) => team.assignedStudents.includes(student.name));
-  };
+  }, [ currentUserId, teams ]);
 
   useEffect(() => {
     const run = async () => {
@@ -214,7 +214,7 @@ const Supervisor: React.FC = () => {
 
       setFilteredStudents(filteredList);
     }
-  }, [ teams, currentUserId, students ]);
+  }, [ teams, currentUserId, students, canEditStudent ]);
 
   const openStudentInfoModal = (index: number) => {
     setSelectedStudentIndex(index);
