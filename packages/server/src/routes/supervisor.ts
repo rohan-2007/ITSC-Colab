@@ -140,14 +140,24 @@ router.post(`/teams`, limiter, requireAuth, async (
     }
     const teams = await prisma.team.findMany({ include: { members: true } });
 
-    const formattedTeams = teams.map((team) => {
-      const members = team.members as Array<{ id: number }>;
-      return {
-        id: team.id,
-        memberIDs: members.map((m) => m.id),
-        name: team.name,
-      };
-    });
+    const formattedTeams = await Promise.all(
+      teams.map(async (team) => {
+        const members = team.members as Array<{ id: number }>;
+        let leadSupervisorName = `None`;
+        if (team.leadSupervisorId) {
+          const supervisor = await prisma.user.findUnique({
+            where: { id: team.leadSupervisorId as number },
+          });
+          leadSupervisorName = supervisor?.name || `None`;
+        }
+        return {
+          id: team.id,
+          leadSupervisorName,
+          memberIDs: members.map((m) => m.id),
+          name: team.name,
+        };
+      }),
+    );
 
     res.status(200).json({ teams: formattedTeams });
   } catch (err) {
@@ -160,6 +170,7 @@ router.post(`/teams`, limiter, requireAuth, async (
 
 interface TeamInfoChange {
   id: number;
+  leadSupervisorId: number;
   memberIDs: number[];
   name: string;
 }
@@ -168,7 +179,7 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, TeamInfoChange>,
   res: Response,
 ) => {
-  const { id, memberIDs, name } = req.body;
+  const { id, leadSupervisorId, memberIDs, name } = req.body;
 
   try {
     const team: Team | null = await prisma.team.findUnique({
@@ -182,6 +193,9 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 
     await prisma.team.update({
       data: {
+        leadSupervisor: {
+          connect: { id: leadSupervisorId },
+        },
         members: {
           set: memberIDs.map((id2) => ({ id: id2 })),
         },
