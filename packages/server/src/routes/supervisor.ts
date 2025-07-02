@@ -4,7 +4,6 @@ import { User as PrismaUser, Role, Team } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 import { limiter, requireAuth, requireRole } from './auth';
 
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const router = Router();
 
 router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
@@ -28,8 +27,7 @@ router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       message: `Fetched students`,
       students,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -57,8 +55,7 @@ router.post(`/supervisors`, limiter, requireAuth, async (
       message: `Fetched supervisors`,
       supervisors,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -117,8 +114,7 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
         name: updatedUser.name,
       },
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -146,13 +142,13 @@ router.post(`/teams`, limiter, requireAuth, async (
         let leadSupervisorName = `None`;
         if (team.leadSupervisorId) {
           const supervisor = await prisma.user.findUnique({
-            where: { id: team.leadSupervisorId as number },
+            where: { id: team.leadSupervisorId },
           });
           leadSupervisorName = supervisor?.name || `None`;
         }
         return {
           id: team.id,
-          leadSupervisorId: team.leadSupervisorId as number | null,
+          leadSupervisorId: team.leadSupervisorId,
           leadSupervisorName,
           memberIDs: members.map((m) => m.id),
           name: team.name,
@@ -161,8 +157,7 @@ router.post(`/teams`, limiter, requireAuth, async (
     );
 
     res.status(200).json({ teams: formattedTeams });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -215,8 +210,7 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       message: `Successfully set team info!`,
       team: updatedTeam,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -244,8 +238,7 @@ router.post(`/createTeam`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     });
 
     res.status(201).json({ message: `Team created`, team: newTeam });
-  } catch (err) {
-    console.error(`Create team error:`, err);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });
@@ -258,8 +251,7 @@ router.delete(`/deleteTeam/:id`, limiter, requireRole([ Role.SUPERVISOR ]), asyn
   try {
     await prisma.team.delete({ where: { id } });
     res.status(200).json({ message: `Team deleted` });
-  } catch (err) {
-    console.error(`Delete team error:`, err);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });

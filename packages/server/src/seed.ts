@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -42,8 +41,7 @@ async function main() {
   await src.end();
 }
 
-main().catch((e) => {
-  console.error(e);
+main().catch(() => {
   process.exit(1);
 }).finally(async () => {
   await prisma.$disconnect();
@@ -121,7 +119,6 @@ export const seedRubricData = async (): Promise<void> => {
           }
         }
 
-        // SubItems
         for (let subIdx = 0; subIdx < category.subItems.length; subIdx += 1) {
           const item = category.subItems[subIdx];
           const itemId = (categoryId * 100) + (subIdx + 1);
@@ -151,10 +148,7 @@ export const seedRubricData = async (): Promise<void> => {
     (SELECT MAX(id) FROM "perf_review"."evaluation")
   )
 `;
-
-    console.log(`✅ Rubric seeding complete with consistent IDs.`);
-  } catch (error) {
-    console.error(`❌ Failed to synchronize rubric data:`, error);
+  } catch {
     process.exit(1);
   }
 };

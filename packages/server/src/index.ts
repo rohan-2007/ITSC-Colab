@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import express from 'express';
 import session from 'express-session';
 import pgSession from 'connect-pg-simple';
@@ -56,7 +55,7 @@ const main = async () => {
   app.get(`/`, (_req, res) => {
     res.send(`Welcome from TypeScript backend!`);
   });
-  app.use(express.json()); // Use JSON middleware you slugs
+  app.use(express.json());
   app.use(sessionMiddleware);
   app.use(authRouter);
   app.use(evalRouter);
@@ -69,10 +68,9 @@ const main = async () => {
   });
 
   app.listen(PORT, () => {
-    console.log(`Server running on port:${ PORT }`);
   });
 };
 
-main().catch((err) => {
-  console.error(err);
+main().catch(() => {
+  process.exit(1);
 });
