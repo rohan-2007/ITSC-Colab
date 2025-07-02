@@ -107,13 +107,13 @@ const Login: React.FC = () => {
           method: `POST`,
         });
 
+        const responseJson = await response.json();
+        console.log(`responseJson`, responseJson);
+
         if (!response.ok) {
           setMessage(`Invalid credentials`);
           return;
         }
-
-        const responseJson = await response.json();
-
         void navigate(`/home`);
         window.location.reload();
         setProfileText(`Hi, ${responseJson.user.name}`);
