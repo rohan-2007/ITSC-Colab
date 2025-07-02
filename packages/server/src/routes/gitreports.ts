@@ -4,7 +4,7 @@ import limiter from './auth';
 
 const router = Router();
 
-const getCurrentSemesterInfo = (): { semester: string, year: number } => {
+const _getCurrentSemesterInfo = (): { semester: string, year: number } => {
   const today = new Date();
   const year = today.getFullYear();
   const summerStart = new Date(year, 4, 12);
@@ -27,7 +27,7 @@ const getCurrentSemesterInfo = (): { semester: string, year: number } => {
   return { semester: `UNKNOWN`, year };
 };
 
-const getSemesterDateRange = (semester: string, year: number): { endDate: Date, startDate: Date } | null => {
+const _getSemesterDateRange = (semester: string, year: number): { endDate: Date, startDate: Date } | null => {
   switch (semester) {
     case `SPRING`:
       return { endDate: new Date(year, 3, 24), startDate: new Date(year, 0, 12) };
@@ -38,6 +38,11 @@ const getSemesterDateRange = (semester: string, year: number): { endDate: Date, 
     default:
       return null;
   }
+};
+
+const getMonthDateRange = (year: number): { endDate: Date, startDate: Date } | null => {
+  const month = new Date().getMonth();
+  return { endDate: new Date(year, month + 1, 1), startDate: new Date(year, month, 1) };
 };
 
 interface RequestBody {
@@ -77,8 +82,8 @@ router.post(`/gitData`, limiter, async (
     return;
   }
 
-  const { semester, year } = getCurrentSemesterInfo();
-  const dateRange = getSemesterDateRange(semester, year);
+  // const { semester, year } = getCurrentSemesterInfo();
+  const dateRange = getMonthDateRange(new Date().getFullYear());
 
   if (!dateRange) {
     res.status(200).json({

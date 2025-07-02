@@ -577,7 +577,7 @@ const FilterEvaluations: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedEvaluations.map((item) =>
+            {displayedEvaluations && displayedEvaluations.length > 0 ? displayedEvaluations.map((item) =>
               <tr>
                 <td className="display-cell">
                   <div className="level-text">
@@ -605,7 +605,9 @@ const FilterEvaluations: React.FC = () => {
                   <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
                     view</button>
                 </td>
-              </tr>)}
+              </tr>) : <tr>
+              <td colSpan={5}>No past evaluations</td>
+            </tr>}
           </tbody>
         </table>
       </div>

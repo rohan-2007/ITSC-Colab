@@ -92,6 +92,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     // Check if data is ready for drawing
     if (svgRef.current && graphData && width && height && months && contributions) {
+      console.log(`graphData: `, graphData);
       setWidth(svgRef.current.clientWidth);
       setHeight(svgRef.current.clientHeight);
 
@@ -254,6 +255,7 @@ const Home: React.FC = () => {
 
         const resJson = await res.json();
 
+        console.log(`resJson: `, resJson);
         // Destructure the new response format with proper typing
         const userContributionList = (resJson.data.userContributions as Contribution[]).map((item: Contribution) => ({
           ...item,
@@ -264,6 +266,8 @@ const Home: React.FC = () => {
           ...item,
           date: createLocalDate(item.date),
         }));
+
+        console.log(`userContributionList: `, userContributionList);
 
         // The data is now pre-filtered by the backend. No need for client-side filtering.
         setContributions(userContributionList);
@@ -479,7 +483,7 @@ const Home: React.FC = () => {
             <svg ref={svgRef} className="graph" />
             <div id="tooltip" />
           </div> :
-          <p>No Past Contributions</p>}
+          <p>No past contributions for this month</p>}
       </section>}
 
       {user.role === `SUPERVISOR` &&
