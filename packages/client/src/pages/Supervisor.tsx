@@ -107,7 +107,7 @@ const Supervisor: React.FC = () => {
         return;
       }
     } catch {
-      console.error(`student enable/disable error occured`);
+      throw new Error(`student enable/disable error occured`);
     }
   };
 

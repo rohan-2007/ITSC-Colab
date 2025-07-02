@@ -128,7 +128,7 @@
 .student-select-table {
   width: 100%;
   max-width: 100%;
-  table-layout: fixed;
+  /* table-layout: fixed; */
   border-collapse: collapse;
   text-align: center;
 }

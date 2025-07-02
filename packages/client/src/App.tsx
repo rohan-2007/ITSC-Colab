@@ -12,6 +12,7 @@ import RequireRole, { RequireAuth } from './components/RequireRole';
 import StudentSelect from './pages/StudentSelect';
 import FilterEvaluations from './pages/FilterEvaluations';
 import NotificationSystem from './components/NotificationContainer';
+import EditRubric from './pages/EditRubric';
 
 const App: React.FC = () =>
   <Layout>
@@ -56,6 +57,12 @@ const App: React.FC = () =>
         path="/filter_evaluations"
         element={<RequireAuth>
           <FilterEvaluations />
+        </RequireAuth>}
+      />
+      <Route
+        path="/change_rubric"
+        element={<RequireAuth>
+          <EditRubric />
         </RequireAuth>}
       />
     </Routes>
