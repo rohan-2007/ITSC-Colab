@@ -167,7 +167,8 @@ router.post(`/login`, loginLimiter, async (
       where: { email },
     });
 
-    if (!user) {
+    if (!user || !user.enabled) {
+      // console.log(`inside user enabled`);
       res.status(404).json({ error: `User not found` });
       return;
     }
@@ -220,7 +221,7 @@ router.post(`/me`, meLimiter, requireAuth, async (
       where: { id: req.session.userId },
     });
 
-    if (!user) {
+    if (!user || !user.enabled) {
       res.status(404).json({ error: `User not found` });
       return;
     }

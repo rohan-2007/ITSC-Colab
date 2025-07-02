@@ -11,6 +11,7 @@ const fetchUrl = `http://localhost:${3001}`;
 interface Student {
   id: number;
   email: string;
+  enabled: boolean;
   name: string;
   password: string;
   supervisorId: number;
@@ -50,6 +51,7 @@ const Supervisor: React.FC = () => {
   const [ viewingTeamIndex, setViewingTeamIndex ] = useState<number | null>(null);
   const [ editedStudent, setEditedStudent ] = useState<{
     email: string;
+    enabled?: boolean;
     name: string;
     newPassword?: string;
     userId: number;
@@ -75,6 +77,39 @@ const Supervisor: React.FC = () => {
     const userTeams = teams.filter((team) => team.leadSupervisorId === currentUserId);
     return userTeams.some((team) => team.assignedStudents.includes(student.name));
   }, [ currentUserId, teams ]);
+
+  const toggleEnableDisable = async (student: Student) => {
+    setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: !s.enabled } : s));
+
+    setEditedStudent({
+      email: student.email,
+      enabled: !student.enabled,
+      name: student.name,
+      newPassword: student.password,
+      userId: student.id,
+    });
+
+    try {
+      const res = await fetch(`${fetchUrl}/setUserInfo/`, {
+        body: JSON.stringify({
+          email: student.email,
+          enabled: !student.enabled,
+          name: student.name,
+          password: student.password,
+          userId: student.id,
+        }),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!res.ok) {
+        return;
+      }
+    } catch {
+      console.error(`student enable/disable error occured`);
+    }
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -424,12 +459,28 @@ const Supervisor: React.FC = () => {
             .map((student, index) =>
               <div className="student-row" key={index}>
                 <span className="student-name">{student.name}</span>
-                <button
-                  onClick={() => openStudentInfoModal(index)}
-                  className="button-change-info"
-                >
-                  Change Info
-                </button>
+                <div className="supervisor-btn-div">
+                  <button
+                    onClick={() => openStudentInfoModal(index)}
+                    className="button-change-info supervisor-btn"
+                  >
+                    Change Info
+                  </button>
+                  {!student.enabled &&
+                    <button
+                      onClick={() => toggleEnableDisable(student)}
+                      className="button-change-info supervisor-btn-enable"
+                    >
+                      Enable
+                    </button>}
+                  {student.enabled &&
+                    <button
+                      onClick={() => toggleEnableDisable(student)}
+                      className="button-change-info supervisor-btn-disable"
+                    >
+                      Disable
+                    </button>}
+                </div>
               </div>)}
         </div>
       </div>

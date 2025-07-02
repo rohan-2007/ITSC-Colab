@@ -63,6 +63,7 @@ router.post(`/supervisors`, limiter, requireAuth, async (
 });
 interface StudentInfoChange {
   email?: string;
+  enabled?: boolean;
   name?: string;
   newPassword?: string;
   userId: number;
@@ -72,7 +73,7 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, StudentInfoChange>,
   res: Response,
 ) => {
-  const { email, name, newPassword: password, userId } = req.body;
+  const { email, enabled, name, newPassword: password, userId } = req.body;
 
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
@@ -85,6 +86,10 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     }
 
     const updateData: Partial<PrismaUser> = {};
+
+    if (updateData.enabled || !updateData.enabled) {
+      updateData.enabled = enabled;
+    }
 
     if (email && email.trim() !== ``) {
       updateData.email = email;

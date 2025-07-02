@@ -647,3 +647,33 @@
   background-color: red;
   color: white;
 }
+
+.supervisor-btn-div {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 10px;
+}
+
+.supervisor-btn {
+  width: 100px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.supervisor-btn-enable {
+  width: 100px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
+}
+
+.supervisor-btn-disable {
+  width: 100px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: blue;
+}
