@@ -503,10 +503,10 @@ const Profile: React.FC = () => {
               placeholder="New password (leave blank to keep current)"
             />
           </label>
-          <div className="modal-buttons">
-            <button className="button-default" onClick={handleSaveChanges}>Save Changes</button>
+          <div className="modal-buttons-profile">
+            <button className="button-modal-profile-save" onClick={handleSaveChanges}>Save Changes</button>
             <button
-              className="button-default"
+              className="button-modal-profile"
               onClick={() => {
                 setShowEditModal(false);
                 setError(null);

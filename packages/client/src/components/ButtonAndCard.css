@@ -48,7 +48,13 @@ button {
  flex-wrap: wrap;
 }
 
-
+.modal-buttons-profile {
+ display: flex;
+ justify-content: space-between;
+ gap: 0.5rem;
+ flex-wrap: wrap;
+ margin-top: 20px;
+}
 
 .loginButton:hover,
 .signUpButton:hover {
@@ -551,4 +557,33 @@ button {
   flex-direction: column;
   justify-content: flex-start; 
   height: fit-content; 
+}
+
+.button-modal-profile:hover,
+.button-modal-profile-save:hover {
+  transform: scale(1.05);
+}
+
+.button-modal-profile {
+ font-size: 16px;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ cursor: pointer;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
+}
+
+.button-modal-profile-save {
+background-color: #dc2626;
+    color: white;
+ font-size: 16px;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ cursor: pointer;
+ margin-bottom: 5px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+  font-family: inherit;
 }
