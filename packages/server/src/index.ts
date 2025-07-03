@@ -68,6 +68,7 @@ const main = async () => {
   });
 
   app.listen(PORT, () => {
+    console.log(`server running on PORT 3001`);
   });
 };
 
