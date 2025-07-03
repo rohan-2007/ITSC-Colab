@@ -1,82 +1,108 @@
 [
   {
+    "displayOrder": 1,
     "name": "critical_thinking",
-    "title": "Critical Thinking/Problem Solving",
-    "subItems": ["Problem solving", "Adaptability"],
     "performanceLevels": [
       {
-        "level": "Starting",
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "Starting"
       },
       {
-        "level": "InProgress",
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgress"
       },
       {
-        "level": "Competitive",
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
+        "level": "Competitive"
       }
     ],
-    "displayOrder": 1
+    "subItems": [
+      "Problem solving",
+      "Adaptability"
+    ],
+    "title": "Critical Thinking/Problem Solving"
   },
   {
+    "displayOrder": 2,
     "name": "technical_proficiency",
-    "title": "Technical Proficiency",
-    "subItems": ["Git (source version control)", "GitHub", "Application administration", "(Knowledge Speed Productivity)"],
     "performanceLevels": [
       {
-        "level": "Starting",
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "Starting"
       },
       {
-        "level": "InProgress",
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+        "description": "Demonstrates outstanding adaptability to situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations. heyyy",
+        "level": "Competitive"
       },
       {
-        "level": "Competitive",
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+        "description": "Adapts to new situationsdwd effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgress"
       }
     ],
-    "displayOrder": 2
+    "subItems": [
+      "Git (source version control)",
+      "GitHub",
+      "Application administration",
+      "(Knowledge Speed Productivity)"
+    ],
+    "title": "Technical Proficiency"
   },
   {
+    "displayOrder": 3,
     "name": "teamwork",
-    "title": "Teamwork",
-    "subItems": ["Collaboration", "Prioritization", "Accountability", "Initiative", "Flexibility", "Integrity", "Resilience", "How do you approach tasks"],
     "performanceLevels": [
       {
-        "level": "Starting",
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "Starting"
       },
       {
-        "level": "InProgress",
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
+        "level": "Competitive"
       },
       {
-        "level": "Competitive",
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+        "description": "Adapts to situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgress"
       }
     ],
-    "displayOrder": 3
+    "subItems": [
+      "Collaboration",
+      "Prioritization",
+      "Accountability",
+      "Initiative",
+      "Flexibility",
+      "Integrity",
+      "Resilience",
+      "How do you approach tasks"
+    ],
+    "title": "Teamwork"
   },
   {
+    "displayOrder": 4,
     "name": "personal_disposition",
-    "title": "Personal Disposition",
-    "subItems": ["Communication", "Time management", "Organization", "Attention to detail", "Delegation", "Speed of learning", "Patience", "Proactive Communication"],
     "performanceLevels": [
       {
-        "level": "Starting",
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback."
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgress"
       },
       {
-        "level": "InProgress",
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability."
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",
+        "level": "Starting"
       },
       {
-        "level": "Competitive",
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations."
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or ",
+        "level": "Competitive"
       }
     ],
-    "displayOrder": 4
+    "subItems": [
+      "Communication",
+      "Time management",
+      "Organization",
+      "Attention to detail",
+      "Delegation",
+      "Speed of learning",
+      "Patience",
+      "Proactive Communication"
+    ],
+    "title": "Personal Disposition"
   }
 ]
