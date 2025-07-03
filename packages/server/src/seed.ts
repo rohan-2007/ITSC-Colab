@@ -57,97 +57,100 @@ export const seedRubricData = async (): Promise<void> => {
       const category = rubricData[i];
       const categoryId = i + 1;
 
-      const existingCategory = await prisma.rubricCategory.findUnique({
-        include: {
-          levels: true,
-          subItems: true,
-        },
-        where: { name: category.name },
-      });
-
-      if (!existingCategory) {
-        await prisma.rubricCategory.create({
-          data: {
-            id: categoryId,
-            displayOrder: category.displayOrder,
-            levels: {
-              create: category.performanceLevels.map((level, idx) => ({
-                id: (categoryId * 100) + (idx + 1),
-                description: level.description,
-                level: level.level,
-              })),
-            },
-            name: category.name,
-            subItems: {
-              create: category.subItems.map((item, idx) => ({
-                id: (categoryId * 100) + (idx + 1),
-                name: item,
-              })),
-            },
-            title: category.title,
+      let existingCategory;
+      try {
+        existingCategory = await prisma.rubricCategory.findUnique({
+          include: {
+            levels: true,
+            subItems: true,
           },
+          where: { name: category.name },
         });
-      } else {
-        if (existingCategory.id !== categoryId) {
-          await prisma.rubricCategory.update({
-            data: { id: categoryId },
-            where: { id: existingCategory.id },
+      } catch {
+        return;
+      }
+
+      // If no data or data is empty, use local contents
+      if (
+        !existingCategory ||
+        !existingCategory.levels?.length ||
+        !existingCategory.subItems?.length
+      ) {
+        try {
+          // Upsert category from local file
+          await prisma.rubricCategory.upsert({
+            create: {
+              id: categoryId,
+              displayOrder: category.displayOrder,
+              levels: {
+                create: category.performanceLevels.map((level, idx) => ({
+                  id: (categoryId * 100) + (idx + 1),
+                  description: level.description,
+                  level: level.level,
+                })),
+              },
+              name: category.name,
+              subItems: {
+                create: category.subItems.map((item, idx) => ({
+                  id: (categoryId * 100) + (idx + 1),
+                  name: item,
+                })),
+              },
+              title: category.title,
+            },
+            update: {
+              displayOrder: category.displayOrder,
+              title: category.title,
+            },
+            where: { name: category.name },
           });
+        } catch {
+          return;
         }
-
-        for (let levelIdx = 0; levelIdx < category.performanceLevels.length; levelIdx += 1) {
-          const level = category.performanceLevels[levelIdx];
-          const levelId = (categoryId * 100) + (levelIdx + 1);
-          const existingLevel = existingCategory.levels.find(
-            (l) => l.level === level.level && l.description === level.description,
-          );
-
-          if (!existingLevel) {
-            await prisma.rubricPerformanceLevel.create({
-              data: {
-                id: levelId,
-                description: level.description,
-                level: level.level,
-                rubricCategoryId: categoryId,
-              },
-            });
-          } else if (existingLevel.id !== levelId) {
-            await prisma.rubricPerformanceLevel.update({
-              data: { id: levelId },
-              where: { id: existingLevel.id },
-            });
+      } else {
+        // Otherwise, replace local contents with database
+        try {
+          // Overwrite local file with database data
+          const dbCategory = await prisma.rubricCategory.findUnique({
+            include: {
+              levels: true,
+              subItems: true,
+            },
+            where: { name: category.name },
+          });
+          if (dbCategory) {
+            rubricData[i] = {
+              displayOrder: dbCategory.displayOrder,
+              name: dbCategory.name,
+              performanceLevels: dbCategory.levels.map((l) => ({
+                description: l.description,
+                level: l.level,
+              })),
+              subItems: dbCategory.subItems.map((s) => s.name),
+              title: dbCategory.title,
+            };
+            try {
+              fs.writeFileSync(rubricPath, JSON.stringify(rubricData, null, 2), `utf-8`);
+            } catch {
+              return;
+            }
           }
-        }
-
-        for (let subIdx = 0; subIdx < category.subItems.length; subIdx += 1) {
-          const item = category.subItems[subIdx];
-          const itemId = (categoryId * 100) + (subIdx + 1);
-          const existingSub = existingCategory.subItems.find((s) => s.name === item);
-
-          if (!existingSub) {
-            await prisma.rubricSubItem.create({
-              data: {
-                id: itemId,
-                name: item,
-                rubricCategoryId: categoryId,
-              },
-            });
-          } else if (existingSub.id !== itemId) {
-            await prisma.rubricSubItem.update({
-              data: { id: itemId },
-              where: { id: existingSub.id },
-            });
-          }
+        } catch {
+          return;
         }
       }
     }
 
-    await prisma.$executeRaw`
-  SELECT setval(
-    pg_get_serial_sequence('"perf_review"."evaluation"', 'id'),
-    (SELECT MAX(id) FROM "perf_review"."evaluation")
-  )
-`;
+    try {
+      await prisma.$executeRaw`
+        SELECT setval(
+          pg_get_serial_sequence('"perf_review"."evaluation"', 'id'),
+          (SELECT MAX(id) FROM "perf_review"."evaluation")
+        )
+      `;
+    } catch {
+      return;
+    }
   } catch {
     process.exit(1);
   }
