@@ -181,7 +181,7 @@
   grid-area: stats;
   display: flex;
   flex-direction: column;
-  max-height: 300px;
+  max-height: 400px;
 }
 
 .user-stats-section h2 {
@@ -203,6 +203,10 @@
   height: 100%;
   width: 100%;
   margin: auto;
+}
+
+.user-stats-b {
+  overflow-y:scroll;
 }
 
 .home-stats {
@@ -266,8 +270,7 @@
 }
 
 .todo-table-container {
-  max-height: 50vh; 
-  overflow-y: auto;
+  max-height: 50vh;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   margin-top: 20px;

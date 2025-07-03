@@ -511,7 +511,7 @@ const Home: React.FC = () => {
       {user.role === `STUDENT` &&
         <section className="user-stats-section">
           <h2>To-Do List</h2>
-          <div className="user-stats">
+          <div className="user-stats-b">
             <div className="todo-table-container">
               <table className="student-select-table">
                 <thead>
@@ -535,11 +535,19 @@ const Home: React.FC = () => {
                         e.type === `STUDENT` &&
                         (`teamId` in e ? (e as any).teamId === team.id : true));
 
+                      const navUrl = `/evaluations?evaluation=open&team=${encodeURIComponent(team.name)}`;
+
                       return <tr key={team.id}>
                         <td>{team.id}</td>
                         <td>{team.name ?? `Unknown`}</td>
                         <td>{leadSupervisorName}</td>
-                        <td>{completed ? `✅` : `❌`}</td>
+                        <td>
+                          {completed ?
+                            `✅` :
+                            <button onClick={() => navigate(navUrl)}>
+                              Go To
+                            </button>}
+                        </td>
                       </tr>;
                     }) :
                     <tr>
