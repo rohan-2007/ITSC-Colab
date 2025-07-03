@@ -12,6 +12,18 @@
         "level": "Competitive"
       },
       {
+        "description": "scenic",
+        "level": "radiant"
+      },
+      {
+        "description": "thinking problem",
+        "level": "Intermediate"
+      },
+      {
+        "description": "",
+        "level": ""
+      },
+      {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
       }
@@ -35,17 +47,29 @@
         "level": "Competitive"
       },
       {
+        "description": "dynamic",
+        "level": "Intermediate"
+      },
+      {
+        "description": "",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": ""
+      },
+      {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
       }
     ],
     "subItems": [
-      "GitHubgf",
       "Git (source version control)",
+      "GitHub",
       "Application administration",
       "(Knowledge Speed Productivity)"
     ],
-    "title": "Technical Proficiency and"
+    "title": "Technical Proficiency"
   },
   {
     "displayOrder": 3,
@@ -60,13 +84,25 @@
         "level": "Competitive"
       },
       {
+        "description": "",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": "Intermediate"
+      },
+      {
+        "description": "",
+        "level": ""
+      },
+      {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
       }
     ],
     "subItems": [
-      "Initiativenth",
       "Collaboration",
+      "Initiativenth",
       "Prioritization",
       "Accountability",
       "Flexibility",
@@ -87,6 +123,18 @@
       {
         "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or ",
         "level": "Competitive"
+      },
+      {
+        "description": "",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": "Intermediate"
+      },
+      {
+        "description": "",
+        "level": ""
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",

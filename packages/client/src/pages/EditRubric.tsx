@@ -120,6 +120,25 @@ const EditRubric: React.FC = () => {
     }
   };
 
+  const createNewLevel = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ addLevel: true }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      await fetchRubricCategories();
+      console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
   const changeCategory = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const categoryId = parseInt(name);
@@ -149,6 +168,27 @@ const EditRubric: React.FC = () => {
     }
   };
 
+  const deleteLevel = async (levelId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ deletedLevel: levelId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      console.log(`in deleteLevel`);
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      await fetchRubricCategories();
+      // console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
   return <div className="rubric-table-wrapper-past-eval">
     <table className="rubric-table-past-eval">
       <thead>
@@ -157,11 +197,16 @@ const EditRubric: React.FC = () => {
           {rubricCategories[0]?.levels.map((level) =>
             <th key={level.id}>
               <input
+                className="change-rubric-input"
                 value={level.level}
                 name={`${level.level}`}
                 onChange={changeLevel}
               />
+              <button onClick={() => deleteLevel(level.id)}>Delete</button>
             </th>)}
+          <th>
+            <button onClick={createNewLevel}>Add Level</button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -170,6 +215,7 @@ const EditRubric: React.FC = () => {
             <td className="criteria-column">
               <strong>
                 <input
+                  className="change-rubric-input"
                   value={category.title}
                   name={`${category.id}`}
                   onChange={changeCategory}
@@ -179,6 +225,7 @@ const EditRubric: React.FC = () => {
                 {category.subItems?.map((subItem) =>
                   <li key={subItem.id}>
                     <input
+                      className="change-rubric-input"
                       value={subItem.name}
                       name={`${subItem.id}_${category.id}`}
                       onChange={changeSubItem}
@@ -222,13 +269,13 @@ const EditRubric: React.FC = () => {
                 // style={dynamicStyles}
                 className={cellClass}
               >
-                <div className="level-text">
-                  <input
-                    value={matchingLevel?.description}
-                    name={`${category.id}_${matchingLevel?.id}`}
-                    onChange={changeDescription}
-                  />
-                </div>
+
+                <input
+                  className="change-rubric-input"
+                  value={matchingLevel?.description}
+                  name={`${category.id}_${matchingLevel?.id}`}
+                  onChange={changeDescription}
+                />
               </td>;
             //   }
             })}
