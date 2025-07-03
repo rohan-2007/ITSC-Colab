@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useDeferredValue, useEffect, useState } from 'react';
 import type { RubricCategory } from './PastEvaluations';
+
+interface RubricRequestBody {
+  categoryId?: number;
+  description?: string;
+  level?: string;
+  levelId?: number;
+  prevLevel?: string;
+}
 
 const EditRubric: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
@@ -22,13 +30,74 @@ const EditRubric: React.FC = () => {
     void fetchRubricCategories();
   }, []);
 
+  const changeDescription = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const [ category, level ] = name.split(`_`);
+    const categoryId = parseInt(category, 10);
+    const levelId = parseInt(level, 10);
+    setRubricCategories((prev) => prev.map((c) => {
+      if (c.id !== categoryId) {
+        return c;
+      }
+
+      return {
+        ...c,
+        levels: c.levels.map((l) =>
+          l.id === levelId ? { ...l, description: value } : l),
+      };
+    }));
+
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ categoryId, description: value, levelId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+    } catch {
+      return;
+    }
+  };
+
+  const changeLevel = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRubricCategories((prev) => prev.map((c) => ({
+      ...c,
+      levels: c.levels.map((l) =>
+        l.level === name ? { ...l, level: value } : l),
+    })));
+
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ level: value, prevLevel: name }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+    } catch {
+      return;
+    }
+  };
+
   return <div className="rubric-table-wrapper-past-eval">
     <table className="rubric-table-past-eval">
       <thead>
         <tr>
           <th>Criteria</th>
           {rubricCategories[0]?.levels.map((level) =>
-            <th key={level.id}>{level.level}</th>)}
+            <th key={level.id}>
+              <input
+                value={level.level}
+                name={`${level.level}`}
+                onChange={changeLevel}
+              />
+            </th>)}
         </tr>
       </thead>
       <tbody>
@@ -41,7 +110,8 @@ const EditRubric: React.FC = () => {
                   <li key={subItem.id}>{subItem.name}</li>)}
               </ul>
             </td>
-            {category.levels.map((level) => {
+            {rubricCategories[0]?.levels.map((headerLevel) => {
+              const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
               const cellClass = `display-cell`;
 
               //   const studentSelected = studentTeamResults[category.id] === level.id;
@@ -72,12 +142,16 @@ const EditRubric: React.FC = () => {
               //   }
 
               return <td
-                key={level.id}
+                key={headerLevel.id}
                 // style={dynamicStyles}
                 className={cellClass}
               >
                 <div className="level-text">
-                  {level.description}
+                  <input
+                    value={matchingLevel?.description}
+                    name={`${category.id}_${matchingLevel?.id}`}
+                    onChange={changeDescription}
+                  />
                 </div>
               </td>;
             //   }
