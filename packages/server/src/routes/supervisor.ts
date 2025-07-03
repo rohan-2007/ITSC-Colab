@@ -203,6 +203,7 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 
     const updatedTeam = await prisma.team.update({
       data: {
+        ...(updateData.leadSupervisor && { leadSupervisor: updateData.leadSupervisor }),
         members: {
           set: memberIDs.map((id2) => ({ id: id2 })),
         },
