@@ -64,6 +64,7 @@ model RubricCategory {
   name         String   @unique
   title        String
   displayOrder Int      @default(0)
+  deletedAt    DateTime?
 
   levels   RubricPerformanceLevel[]
   subItems RubricSubItem[]
@@ -88,6 +89,7 @@ model RubricPerformanceLevel {
   rubricCategoryId   Int
   level              String
   description        String
+  deletedAt          DateTime?
 
   rubricCategory     RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
   evaluationResults  EvaluationResult[]
