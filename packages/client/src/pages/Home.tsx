@@ -529,7 +529,7 @@ const Home: React.FC = () => {
 
                       const completed = evaluations.some((e) =>
                         e.studentId === user.id &&
-                        e.supervisorId === team.leadSupervisorId &&
+                        e.team === team.name &&
                         e.semester === currentSemester &&
                         e.year === new Date().getFullYear() &&
                         e.type === `STUDENT` &&

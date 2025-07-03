@@ -157,7 +157,7 @@ const Evaluations: React.FC = () => {
     // }
   };
 
-  const fetchStudents = async () => {
+  const fetchStudents = React.useCallback(async () => {
     const response = await fetch(`${fetchUrl}/students/`, {
       credentials: `include`,
       headers: { 'Content-Type': `application/json` },
@@ -174,7 +174,7 @@ const Evaluations: React.FC = () => {
       );
       setStudents(tempFilteredStudents);
     }
-  };
+  }, [ user ]);
 
   const fetchEvaluations = React.useCallback(async (evalUser: User) => {
     try {
@@ -338,7 +338,7 @@ const Evaluations: React.FC = () => {
     };
     void fetchUserAndHandleParams();
     void getRubricData();
-  }, [ navigate, fetchEvaluations, searchParams, students, _studentsEvalStatus ]); // Add searchParams to dependency array, also students and _studentsEvalStatus if used for conditional fetches.
+  }, [ navigate, fetchEvaluations, fetchStudents, searchParams, students, _studentsEvalStatus ]); // Add searchParams to dependency array, also students and _studentsEvalStatus if used for conditional fetches.
 
   const handleSelect = (categoryId: number, levelId: number, target: HTMLElement) => {
     Array.from(document.getElementsByClassName(`level-cell`)).forEach((el) => {

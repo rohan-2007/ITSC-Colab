@@ -4,47 +4,6 @@ import limiter from './auth';
 
 const router = Router();
 
-const _getCurrentSemesterInfo = (): { semester: string, year: number } => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const summerStart = new Date(year, 4, 12);
-  const summerEnd = new Date(year, 7, 9);
-  const fallStart = new Date(year, 7, 25);
-  const fallEnd = new Date(year, 11, 5);
-  const springStart = new Date(year, 0, 12);
-  const springEnd = new Date(year, 3, 24);
-
-  if (today >= summerStart && today <= summerEnd) {
-    return { semester: `SUMMER`, year };
-  }
-  if (today >= fallStart && today <= fallEnd) {
-    return { semester: `FALL`, year };
-  }
-  if (today >= springStart && today <= springEnd) {
-    return { semester: `SPRING`, year };
-  }
-
-  return { semester: `UNKNOWN`, year };
-};
-
-const _getSemesterDateRange = (semester: string, year: number): { endDate: Date, startDate: Date } | null => {
-  switch (semester) {
-    case `SPRING`:
-      return { endDate: new Date(year, 3, 24), startDate: new Date(year, 0, 12) };
-    case `SUMMER`:
-      return { endDate: new Date(year, 7, 9), startDate: new Date(year, 4, 12) };
-    case `FALL`:
-      return { endDate: new Date(year, 11, 5), startDate: new Date(year, 7, 25) };
-    default:
-      return null;
-  }
-};
-
-const getMonthDateRange = (year: number): { endDate: Date, startDate: Date } | null => {
-  const month = new Date().getMonth();
-  return { endDate: new Date(year, month + 1, 1), startDate: new Date(year, month, 1) };
-};
-
 interface RequestBody {
   teamIDs?: number[];
   username: string;
@@ -70,7 +29,7 @@ router.post(`/gitData`, limiter, async (
 
     if (!allUserContributions) {
       res.status(404).json({
-        message: `Could not find any user contributions`,
+        message: `Could not find any user contributions for ${ username }`,
       });
       return;
     }
@@ -82,18 +41,11 @@ router.post(`/gitData`, limiter, async (
     return;
   }
 
-  // const { semester, year } = getCurrentSemesterInfo();
-  const dateRange = getMonthDateRange(new Date().getFullYear());
-
-  if (!dateRange) {
-    res.status(200).json({
-      data: { teamAverageContributions: [], userContributions: [] },
-      message: `No active semester found.`,
-    });
-    return;
-  }
-
-  const { endDate, startDate } = dateRange;
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const startDate = new Date(year, month, 1);
+  const endDate = now;
 
   const dateFilter = {
     date: {
@@ -140,7 +92,6 @@ router.post(`/gitData`, limiter, async (
         const currentCount = contributionsByDate.get(dateKey) || 0;
         contributionsByDate.set(dateKey, currentCount + contribution.contribution_count);
       });
-
       teamAverageContributions = Array.from(contributionsByDate.entries()).map(([ date, totalContributions ]) => ({
         average_contributions: totalContributions / teamMemberCount,
         date,
@@ -150,7 +101,7 @@ router.post(`/gitData`, limiter, async (
 
   res.status(200).json({
     data: { teamAverageContributions, userContributions },
-    message: `Fetched git data for the current semester.`,
+    message: `Fetched git data for the current month.`,
   });
   return;
 });
