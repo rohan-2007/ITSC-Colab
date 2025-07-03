@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 import { NextFunction, Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
 import rateLimit from 'express-rate-limit';
-import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 
 const router = Router();
@@ -29,8 +28,7 @@ export const requireRole = (allowedRoles: Role[]) =>
       }
 
       next();
-    } catch (error) {
-      console.error(`requireRole error:`, error);
+    } catch {
       res.status(500).json({ error: `Internal server error` });
       return;
     }
@@ -61,7 +59,7 @@ export const limiter = rateLimit({
     error: `Too many requests, please slow down.`,
   },
   standardHeaders: true,
-  windowMs: 2 * 1000,
+  windowMs: 1 * 1000,
 });
 
 export const meLimiter = rateLimit({
@@ -146,8 +144,7 @@ router.post(`/signup`, loginLimiter, async (
       message: `User created`,
       user: { id: newUser.id, email: newUser.email, name: newUser.name },
     });
-  } catch (err) {
-    console.error(`Signup error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -170,7 +167,8 @@ router.post(`/login`, loginLimiter, async (
       where: { email },
     });
 
-    if (!user) {
+    if (!user || !user.enabled) {
+      // console.log(`inside user enabled`);
       res.status(404).json({ error: `User not found` });
       return;
     }
@@ -185,8 +183,7 @@ router.post(`/login`, loginLimiter, async (
       message: `Login successful`,
       user: { id: user.id, name: user.name },
     });
-  } catch (err) {
-    console.error(`Login error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -196,7 +193,6 @@ router.post(`/login`, loginLimiter, async (
 router.post(`/logout`, loginLimiter, (req: Request, res: Response) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error(`Session destruction failed:`, err);
       return res.status(500).json({ message: `Could not log out` });
     }
 
@@ -225,7 +221,7 @@ router.post(`/me`, meLimiter, requireAuth, async (
       where: { id: req.session.userId },
     });
 
-    if (!user) {
+    if (!user || !user.enabled) {
       res.status(404).json({ error: `User not found` });
       return;
     }
@@ -288,8 +284,7 @@ router.post(`/me`, meLimiter, requireAuth, async (
       });
       return;
     }
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }

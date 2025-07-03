@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @stylistic/max-len */
 /* eslint-disable no-console */
 import React, { useRef } from 'react';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import '../CSS/home.css';
 import * as d3 from 'd3';
 import type { Contribution } from '../pages/PastEvaluations';
+import { Evaluation } from './PastEvaluations';
 import { Student } from './StudentSelect';
 import '../components/ButtonAndCard.css';
 
@@ -79,6 +81,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const [ user, setUser ] = useState<User | null>(null);
+  const [ evaluations, setEvaluations ] = useState<Evaluation[]>([]);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
   const [ students, setStudents ] = useState<Student[]>([]);
@@ -90,8 +93,27 @@ const Home: React.FC = () => {
   const [ months, setMonths ] = useState<string[]>();
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (!user) {
+        return;
+      }
+
+      const res = await fetch(`http://localhost:3001/getEval/?userId=${user.id}`, {
+        credentials: `include`,
+      });
+      const data = await res.json();
+      setEvaluations(data);
+    };
+
+    if (user && user.role === `STUDENT`) {
+      void fetchData();
+    }
+  }, [ user ]);
+
+  useEffect(() => {
     // Check if data is ready for drawing
     if (svgRef.current && graphData && width && height && months && contributions) {
+      console.log(`graphData: `, graphData);
       setWidth(svgRef.current.clientWidth);
       setHeight(svgRef.current.clientHeight);
 
@@ -254,6 +276,7 @@ const Home: React.FC = () => {
 
         const resJson = await res.json();
 
+        console.log(`resJson: `, resJson);
         // Destructure the new response format with proper typing
         const userContributionList = (resJson.data.userContributions as Contribution[]).map((item: Contribution) => ({
           ...item,
@@ -264,6 +287,8 @@ const Home: React.FC = () => {
           ...item,
           date: createLocalDate(item.date),
         }));
+
+        console.log(`userContributionList: `, userContributionList);
 
         // The data is now pre-filtered by the backend. No need for client-side filtering.
         setContributions(userContributionList);
@@ -459,7 +484,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="user-stats-section">
+      {user.role === `SUPERVISOR` && <section className="user-stats-section">
         <h2>Your Progress</h2>
         <div className="user-stats home-stats">
           <div className="stat">
@@ -470,7 +495,34 @@ const Home: React.FC = () => {
         <div className="profile-actions">
           <button onClick={() => navigate(`/evaluations`)} className="button-view-profile">Evaluations</button>
         </div>
-      </section>
+      </section>}
+
+      {user.role === `STUDENT` &&
+        <section className="user-stats-section">
+          <h2>Your Progress</h2>
+          <div className="user-stats home-stats">
+            <div className="stat">
+              <h2>
+                {evaluations.some(
+                  (e) =>
+                    e.studentId === user.id &&
+              e.semester === assignSemester() &&
+              e.year === new Date().getFullYear(),
+                ) ?
+                  `Evaluation completed for this semester!` :
+                  `You haven't submitted an evaluation for this semester.`}
+              </h2>
+            </div>
+          </div>
+          <div className="profile-actions">
+            <button
+              onClick={() => navigate(`/evaluations`)}
+              className="button-view-profile"
+            >
+              Evaluations
+            </button>
+          </div>
+        </section>}
 
       {user.role === `STUDENT` && <section className="graph-section">
         <h2>Git Contributions</h2>
@@ -479,7 +531,7 @@ const Home: React.FC = () => {
             <svg ref={svgRef} className="graph" />
             <div id="tooltip" />
           </div> :
-          <p>No Past Contributions</p>}
+          <p>No past contributions for this month</p>}
       </section>}
 
       {user.role === `SUPERVISOR` &&

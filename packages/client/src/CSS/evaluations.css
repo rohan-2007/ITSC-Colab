@@ -119,6 +119,7 @@
 .student-table-container {
   max-height: 250px; 
   overflow-y: auto;
+  overflow-x: auto;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   margin-top: 20px;
@@ -126,6 +127,8 @@
 
 .student-select-table {
   width: 100%;
+  max-width: 100%;
+  /* table-layout: fixed; */
   border-collapse: collapse;
   text-align: center;
 }
@@ -135,6 +138,9 @@
   padding: 14px 16px;
   border-bottom: 1px solid #e0e0e0;
   vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .student-select-table thead th {

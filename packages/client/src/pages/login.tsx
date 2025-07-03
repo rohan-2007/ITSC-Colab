@@ -49,7 +49,9 @@ const Login: React.FC = () => {
   });
 
   async function handleSignUp() {
-    validateSignUp();
+    if (!validateSignUp()) {
+      return;
+    }
     setIsLoading(true);
     setMessage(`Sending signup request...`);
 
@@ -106,7 +108,12 @@ const Login: React.FC = () => {
         });
 
         const responseJson = await response.json();
+        // console.log(`responseJson`, responseJson);
 
+        if (!response.ok) {
+          setMessage(`Invalid credentials`);
+          return;
+        }
         void navigate(`/home`);
         window.location.reload();
         setProfileText(`Hi, ${responseJson.user.name}`);
@@ -123,6 +130,14 @@ const Login: React.FC = () => {
   };
 
   const togglePopupSignup = () => {
+    setMessage(``);
+    setSignupErrors({
+      email: ``,
+      name: ``,
+      password: ``,
+      supervisorEmail: ``,
+      teamName: ``,
+    });
     setIsOpenSignup(!isOpenSignup);
     if (!isOpenSignup) {
       document.getElementById(`signupMainBtn`)!.style.display = `none`;
@@ -134,6 +149,11 @@ const Login: React.FC = () => {
   };
 
   const togglePopupLogin = () => {
+    setMessage(``);
+    setLoginErrors({
+      email: ``,
+      password: ``,
+    });
     setIsOpenLogin(!isOpenLogin);
     if (!isOpenLogin) {
       document.getElementById(`loginMainBtn`)!.style.display = `none`;
@@ -142,6 +162,7 @@ const Login: React.FC = () => {
       document.getElementById(`loginMainBtn`)!.style.display = `block`;
       document.getElementById(`signupMainBtn`)!.style.display = `block`;
     }
+    // setMessage(``);
   };
 
   const [ signupErrors, setSignupErrors ] = useState({
@@ -149,6 +170,7 @@ const Login: React.FC = () => {
     name: ``,
     password: ``,
     supervisorEmail: ``,
+    teamName: ``,
   });
 
   const [ loginErrors, setLoginErrors ] = useState({
@@ -161,8 +183,8 @@ const Login: React.FC = () => {
       email: formData.email ? `` : `Email is required.`,
       name: formData.name ? `` : `Name is required.`,
       password: formData.password.length >= 8 ? `` : `Password must be at least 8 characters.`,
-      supervisorEmail:
-        formData.supervisorEmail ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
+      supervisorEmail: formData.isSupervisor ? `` : formData.supervisorEmail ? `` : `Supervisor is required.`,
+      teamName: formData.teamName ? `` : `Team is required`,
     };
     setSignupErrors(newErrors);
     return Object.values(newErrors).every((e) => e === ``);
@@ -257,6 +279,7 @@ const Login: React.FC = () => {
 
             <span>Team Name:</span>
             <input type="text" name="teamName" value={formData.teamName} onChange={handleChange} />
+            {signupErrors.teamName && <div className="error">{signupErrors.teamName}</div>}
 
             <div className="submit-signup-login-group">
               <button type="submit" onClick={handleSignUp}>Sign Up</button>

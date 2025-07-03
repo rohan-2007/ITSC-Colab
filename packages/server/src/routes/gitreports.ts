@@ -4,21 +4,15 @@ import limiter from './auth';
 
 const router = Router();
 
-// --- NEW HELPER FUNCTIONS ---
-
-/**
- * Determines the current semester name ('SPRING', 'SUMMER', 'FALL') and year.
- */
-const getCurrentSemesterInfo = (): { semester: string, year: number } => {
+const _getCurrentSemesterInfo = (): { semester: string, year: number } => {
   const today = new Date();
   const year = today.getFullYear();
-  // Using the same date boundaries as the frontend for consistency
-  const summerStart = new Date(year, 4, 12); // May 12
-  const summerEnd = new Date(year, 7, 9); // Aug 9
-  const fallStart = new Date(year, 7, 25); // Aug 25
-  const fallEnd = new Date(year, 11, 5); // Dec 5
-  const springStart = new Date(year, 0, 12); // Jan 12
-  const springEnd = new Date(year, 3, 24); // Apr 24
+  const summerStart = new Date(year, 4, 12);
+  const summerEnd = new Date(year, 7, 9);
+  const fallStart = new Date(year, 7, 25);
+  const fallEnd = new Date(year, 11, 5);
+  const springStart = new Date(year, 0, 12);
+  const springEnd = new Date(year, 3, 24);
 
   if (today >= summerStart && today <= summerEnd) {
     return { semester: `SUMMER`, year };
@@ -33,10 +27,7 @@ const getCurrentSemesterInfo = (): { semester: string, year: number } => {
   return { semester: `UNKNOWN`, year };
 };
 
-/**
- * Returns the start and end dates for a given semester and year.
- */
-const getSemesterDateRange = (semester: string, year: number): { endDate: Date, startDate: Date } | null => {
+const _getSemesterDateRange = (semester: string, year: number): { endDate: Date, startDate: Date } | null => {
   switch (semester) {
     case `SPRING`:
       return { endDate: new Date(year, 3, 24), startDate: new Date(year, 0, 12) };
@@ -45,8 +36,13 @@ const getSemesterDateRange = (semester: string, year: number): { endDate: Date, 
     case `FALL`:
       return { endDate: new Date(year, 11, 5), startDate: new Date(year, 7, 25) };
     default:
-      return null; // Return null if the semester is not valid
+      return null;
   }
+};
+
+const getMonthDateRange = (year: number): { endDate: Date, startDate: Date } | null => {
+  const month = new Date().getMonth();
+  return { endDate: new Date(year, month + 1, 1), startDate: new Date(year, month, 1) };
 };
 
 interface RequestBody {
@@ -86,11 +82,9 @@ router.post(`/gitData`, limiter, async (
     return;
   }
 
-  // 1. Determine the current semester's date range
-  const { semester, year } = getCurrentSemesterInfo();
-  const dateRange = getSemesterDateRange(semester, year);
+  // const { semester, year } = getCurrentSemesterInfo();
+  const dateRange = getMonthDateRange(new Date().getFullYear());
 
-  // If we are not in a valid semester, return empty data.
   if (!dateRange) {
     res.status(200).json({
       data: { teamAverageContributions: [], userContributions: [] },
@@ -101,22 +95,20 @@ router.post(`/gitData`, limiter, async (
 
   const { endDate, startDate } = dateRange;
 
-  // 2. Build the date filter for the Prisma query
   const dateFilter = {
     date: {
-      gte: startDate, // gte: Greater than or equal to
-      lte: endDate, // lte: Less than or equal to
+      gte: startDate,
+      lte: endDate,
     },
   };
 
-  // 3. Fetch individual user's contributions for the current semester
   const userContributions = await prisma.contributions.findMany({
     orderBy: {
       date: `asc`,
     },
     where: {
       user_login: username,
-      ...dateFilter, // Apply the date filter
+      ...dateFilter,
     },
   });
 
@@ -135,11 +127,10 @@ router.post(`/gitData`, limiter, async (
     const teamMemberCount = teamMemberNames.length;
 
     if (teamMemberCount > 0) {
-      // 4. Fetch team contributions for the current semester
       const allTeamContributions = await prisma.contributions.findMany({
         where: {
           user_login: { in: teamMemberNames },
-          ...dateFilter, // Apply the same date filter
+          ...dateFilter,
         },
       });
 

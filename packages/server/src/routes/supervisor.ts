@@ -1,10 +1,9 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import { User as PrismaUser, Role, Team } from '../../../../generated/prisma';
+import { User as PrismaUser, Role, Team } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 import { limiter, requireAuth, requireRole } from './auth';
 
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const router = Router();
 
 router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
@@ -28,8 +27,7 @@ router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       message: `Fetched students`,
       students,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -57,8 +55,7 @@ router.post(`/supervisors`, limiter, requireAuth, async (
       message: `Fetched supervisors`,
       supervisors,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -66,8 +63,9 @@ router.post(`/supervisors`, limiter, requireAuth, async (
 });
 interface StudentInfoChange {
   email?: string;
+  enabled?: boolean;
   name?: string;
-  password?: string;
+  newPassword?: string;
   userId: number;
 }
 
@@ -75,7 +73,7 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, StudentInfoChange>,
   res: Response,
 ) => {
-  const { email, name, password, userId } = req.body;
+  const { email, enabled, name, newPassword: password, userId } = req.body;
 
   try {
     const user: PrismaUser | null = await prisma.user.findUnique({
@@ -88,6 +86,10 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     }
 
     const updateData: Partial<PrismaUser> = {};
+
+    if (updateData.enabled || !updateData.enabled) {
+      updateData.enabled = enabled;
+    }
 
     if (email && email.trim() !== ``) {
       updateData.email = email;
@@ -117,8 +119,7 @@ router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
         name: updatedUser.name,
       },
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -140,26 +141,36 @@ router.post(`/teams`, limiter, requireAuth, async (
     }
     const teams = await prisma.team.findMany({ include: { members: true } });
 
-    const formattedTeams = teams.map((team) => {
-      const members = team.members as Array<{ id: number }>;
-      return {
-        id: team.id,
-        memberIDs: members.map((m) => m.id),
-        name: team.name,
-      };
-    });
+    const formattedTeams = await Promise.all(
+      teams.map(async (team) => {
+        const members = team.members as Array<{ id: number }>;
+        let leadSupervisorName = `None`;
+        if (team.leadSupervisorId) {
+          const supervisor = await prisma.user.findUnique({
+            where: { id: team.leadSupervisorId },
+          });
+          leadSupervisorName = supervisor?.name || `None`;
+        }
+        return {
+          id: team.id,
+          leadSupervisorId: team.leadSupervisorId,
+          leadSupervisorName,
+          memberIDs: members.map((m) => m.id),
+          name: team.name,
+        };
+      }),
+    );
 
     res.status(200).json({ teams: formattedTeams });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
   }
 });
-
 interface TeamInfoChange {
   id: number;
+  leadSupervisorId?: number;
   memberIDs: number[];
   name: string;
 }
@@ -168,7 +179,7 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, TeamInfoChange>,
   res: Response,
 ) => {
-  const { id, memberIDs, name } = req.body;
+  const { id, leadSupervisorId, memberIDs, name } = req.body;
 
   try {
     const team: Team | null = await prisma.team.findUnique({
@@ -180,7 +191,17 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       return;
     }
 
-    await prisma.team.update({
+    const updateData: {
+      leadSupervisor?: { connect: { id: number } };
+    } = {};
+
+    if (typeof leadSupervisorId === `number`) {
+      updateData.leadSupervisor = {
+        connect: { id: leadSupervisorId },
+      };
+    }
+
+    const updatedTeam = await prisma.team.update({
       data: {
         members: {
           set: memberIDs.map((id2) => ({ id: id2 })),
@@ -192,10 +213,9 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 
     res.status(200).json({
       message: `Successfully set team info!`,
-      team,
+      team: updatedTeam,
     });
-  } catch (err) {
-    console.error(`Fetch error:`, err);
+  } catch {
     if (!res.headersSent) {
       res.status(500).json({ error: `Internal server error` });
     }
@@ -223,8 +243,7 @@ router.post(`/createTeam`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     });
 
     res.status(201).json({ message: `Team created`, team: newTeam });
-  } catch (err) {
-    console.error(`Create team error:`, err);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });
@@ -237,8 +256,7 @@ router.delete(`/deleteTeam/:id`, limiter, requireRole([ Role.SUPERVISOR ]), asyn
   try {
     await prisma.team.delete({ where: { id } });
     res.status(200).json({ message: `Team deleted` });
-  } catch (err) {
-    console.error(`Delete team error:`, err);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });

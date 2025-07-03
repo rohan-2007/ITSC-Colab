@@ -450,56 +450,63 @@ const FilterEvaluations: React.FC = () => {
 
   return <div>
     <div className="top-bar" ref={topBarRef}>
-      <div className="left-section">
-        <h3 className="semester-label">Year:</h3>
-        <select
-          id="year"
-          className={`dropdown ${!selectedYear ? `default-option` : ``}`}
-          value={selectedYear}
-          onChange={handleSelectedYear}
-        >
-          <option value="">Select year</option>
-          {distinctYears.map((year) =>
-            <option key={year} value={year}>{year}</option>)}
-        </select>
-
-        <h3 className="semester-label">Semester:</h3>
-        <select
-          id="semester"
-          className={`dropdown ${!selectedSemester ? `default-option` : ``}`}
-          value={selectedSemester}
-          onChange={handleSelectedSemester}
-        >
-          <option value="" className="default-option">Select semester</option>
-          {distinctSemesters.map((semester) =>
-            <option key={semester} value={semester}>{semester}</option>)}
-        </select>
-
-        <h3 className="semester-label">Team:</h3>
-        <select
-          id="team"
-          className={`dropdown ${!selectedTeam ? `default-option` : ``}`}
-          value={selectedTeam}
-          onChange={handleSelectedTeam}
-        >
-          <option value="" className="default-option">Select team</option>
-          {distinctTeams.map((team) =>
-            <option key={team} value={team}>{team}</option>)}
-        </select>
-
-        {isSupervisor && <>
-          <h3 className="semester-label">Student:</h3>
+      <div className="section">
+        <div className="label-select-div">
+          <h3 className="semester-label">Year:</h3>
           <select
-            id="student"
-            className={`dropdown ${!selectedStudent ? `default-option` : ``}`}
-            value={selectedStudent}
-            onChange={handleSelectedStudent}
+            id="year"
+            className={`dropdown-eval ${!selectedYear ? `default-option` : ``}`}
+            value={selectedYear}
+            onChange={handleSelectedYear}
           >
-            <option value="" className="default-option">Select student</option>
-            {distinctStudents?.map((student) =>
-              <option key={student.name} value={student.name}>{student.name}</option>)}
+            <option value="">Select year</option>
+            {distinctYears.map((year) =>
+              <option key={year} value={year}>{year}</option>)}
           </select>
-        </>}
+        </div>
+
+        <div className="label-select-div">
+          <h3 className="semester-label">Semester:</h3>
+          <select
+            id="semester"
+            className={`dropdown-eval ${!selectedSemester ? `default-option` : ``}`}
+            value={selectedSemester}
+            onChange={handleSelectedSemester}
+          >
+            <option value="" className="default-option">Select semester</option>
+            {distinctSemesters.map((semester) =>
+              <option key={semester} value={semester}>{semester}</option>)}
+          </select>
+        </div>
+
+        <div className="label-select-div">
+          <h3 className="semester-label">Team:</h3>
+          <select
+            id="team"
+            className={`dropdown-eval ${!selectedTeam ? `default-option` : ``}`}
+            value={selectedTeam}
+            onChange={handleSelectedTeam}
+          >
+            <option value="" className="default-option">Select team</option>
+            {distinctTeams.map((team) =>
+              <option key={team} value={team}>{team}</option>)}
+          </select>
+        </div>
+
+        {isSupervisor &&
+          <div className="label-select-div">
+            <h3 className="semester-label">Student:</h3>
+            <select
+              id="student"
+              className={`dropdown-eval ${!selectedStudent ? `default-option` : ``}`}
+              value={selectedStudent}
+              onChange={handleSelectedStudent}
+            >
+              <option value="" className="default-option">Select student</option>
+              {distinctStudents?.map((student) =>
+                <option key={student.name} value={student.name}>{student.name}</option>)}
+            </select>
+          </div>}
       </div>
     </div>
 
@@ -559,7 +566,7 @@ const FilterEvaluations: React.FC = () => {
           {item.semester} {item.year} Team: {item.team}</button>)} */}
 
       <div className="eval-table-container">
-        <table className="student-select-table eval-select-table">
+        <table className="eval-select-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -570,7 +577,7 @@ const FilterEvaluations: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedEvaluations.map((item) =>
+            {displayedEvaluations && displayedEvaluations.length > 0 ? displayedEvaluations.map((item) =>
               <tr>
                 <td className="display-cell">
                   <div className="level-text">
@@ -598,7 +605,9 @@ const FilterEvaluations: React.FC = () => {
                   <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
                     view</button>
                 </td>
-              </tr>)}
+              </tr>) : <tr>
+              <td colSpan={5}>No past evaluations</td>
+            </tr>}
           </tbody>
         </table>
       </div>

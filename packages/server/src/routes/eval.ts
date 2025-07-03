@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { Request, Response, Router } from 'express';
-import { Role, Semester } from '../../../../generated/prisma';
+import { Role, Semester } from '../../../generated/prisma';
 import { prisma } from '../prisma';
 import { limiter, requireAuth } from './auth';
 
@@ -26,14 +25,6 @@ router.post(`/submitEval`, limiter, requireAuth, async (
 ): Promise<void> => {
   try {
     const { results, semester, studentId, supervisorId, team, type, year } = req.body;
-    console.log(`Creating evaluation with data:`, {
-      semester,
-      studentId,
-      supervisorId,
-      team,
-      type,
-      year,
-    });
 
     if (
       Number(req.session.userId) !== studentId &&
@@ -66,8 +57,7 @@ router.post(`/submitEval`, limiter, requireAuth, async (
       evaluationId: newEval.id,
       message: `Evaluation submitted successfully`,
     });
-  } catch (error) {
-    console.error(`Submit evaluation error:`, error);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });
@@ -135,8 +125,7 @@ router.get(`/getEval`, limiter, requireAuth, async (
     }
 
     res.status(400).json({ error: `Provide either evaluationId or userId as query param` });
-  } catch (error) {
-    console.error(`Get evaluation error:`, error);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });
@@ -215,8 +204,7 @@ router.get(
       const studentCompleted = evaluations.length > 0;
 
       res.status(200).json({ studentCompleted });
-    } catch (error) {
-      console.error(`Get self evaluation status error:`, error);
+    } catch {
       res.status(500).json({ error: `Internal server error` });
     }
   },
@@ -273,8 +261,7 @@ router.get(`/supervisorEvals`, limiter, requireAuth, async (
     }
 
     res.status(200).json(statuses);
-  } catch (error) {
-    console.error(`Get supervisor evaluation statuses error:`, error);
+  } catch {
     res.status(500).json({ error: `Internal server error` });
   }
 });

@@ -7,6 +7,7 @@ import '../CSS/evaluations.css';
 import '../components/buttonandcard.css';
 import '../components/Modals.css';
 import { UserData } from './FilterEvaluations';
+import type { Evaluation } from './PastEvaluations';
 
 const fetchUrl = `http://localhost:3001`;
 
@@ -75,8 +76,9 @@ const Evaluations: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategoryData[]>([]);
   const [ selections, setSelections ] = useState<Selections>({});
   const [ studentSearch, setStudentSearch ] = useState(``);
-  const [ studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
+  const [ _studentsEvalStatus, setStudentsEvalStatus ] = useState<Record<number, EvalStatus>>({});
   const [ canStartSelfEval, setCanStartSelfEval ] = useState(true);
+  const [ evaluations, setEvaluations ] = useState<Evaluation[]>([]);
 
   const navigateToFilterEvaluations = () => {
     if (user?.role === `STUDENT`) {
@@ -121,9 +123,9 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  const fetchEvalStatusForCurrentUser = async () => {
+  const fetchEvalStatusForCurrentUser = () => {
     const currentSemester = assignSemester();
-    const currentYear = new Date().getFullYear();
+    // const currentYear = new Date().getFullYear();
 
     if (currentSemester === `N/A`) {
       setCanStartSelfEval(false);
@@ -131,27 +133,27 @@ const Evaluations: React.FC = () => {
       return;
     }
 
-    try {
-      const response = await fetch(
-        `${fetchUrl}/evalStatus/self?semester=${currentSemester}&year=${currentYear}`,
-        {
-          credentials: `include`,
-          method: `GET`,
-        },
-      );
+    // try {
+    //   const response = await fetch(
+    //     `${fetchUrl}/evalStatus/self?semester=${currentSemester}&year=${currentYear}`,
+    //     {
+    //       credentials: `include`,
+    //       method: `GET`,
+    //     },
+    //   );
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch self-evaluation status`);
-      }
+    //   if (!response.ok) {
+    //     throw new Error(`Failed to fetch self-evaluation status`);
+    //   }
 
-      const data = await response.json() as { studentCompleted: boolean };
-      setCanStartSelfEval(!data.studentCompleted);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
+    //   const data = await response.json() as { studentCompleted: boolean };
+    //   setCanStartSelfEval(!data.studentCompleted);
+    // } catch (err) {
+    //   const errorMsg = err instanceof Error ? err.message : String(err);
 
-      console.warn(`Error fetching self-evaluation status: ${errorMsg}`);
-      setCanStartSelfEval(true);
-    }
+    //   console.warn(`Error fetching self-evaluation status: ${errorMsg}`);
+    //   setCanStartSelfEval(true);
+    // }
   };
 
   const fetchStudents = async () => {
@@ -172,6 +174,53 @@ const Evaluations: React.FC = () => {
       setStudents(tempFilteredStudents);
     }
   };
+
+  const fetchEvaluations = React.useCallback(async (evalUser: User) => {
+    try {
+      console.log(`Eval user: ${JSON.stringify(evalUser, null, 2)}`);
+      let evalRes;
+      if (evalUser?.role === `SUPERVISOR`) {
+        console.log(`data.studentId: `, evalUser.id);
+        evalRes = await fetch(`http://localhost:3001/getSupervisorEvals/?id=${evalUser.id}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+        console.log(`evalRes`, JSON.stringify(evalRes, null, 2));
+      } else {
+        console.log(`student`);
+        console.log(`Eval userId: ${evalUser.id}`);
+        evalRes = await fetch(`http://localhost:3001/getEval/?userId=${evalUser.id}`, {
+          credentials: `include`,
+          method: `GET`,
+        });
+        console.log(`evalRes`, JSON.stringify(evalRes, null, 2));
+      }
+
+      if (!evalRes.ok) {
+        throw new Error(`HTTP error! status: ${evalRes.status}`);
+      }
+
+      let evaluationsData: Evaluation[] = await evalRes.json();
+      console.log(`evaluationsData: `, evaluationsData);
+      if (evalUser?.role === `SUPERVISOR`) {
+        evaluationsData = evaluationsData.filter((item) => item.supervisorId === evalUser.id);
+      }
+      const seen = new Set();
+      // setUniqueEvals(Array.from(new Set(evaluationsData.map((item) =>
+      //   `${item.semester} ${item.year} Team: ${item.team}`))));
+      // console.log(`evaluationsData: `, );
+      setEvaluations(evaluationsData.filter((item) => {
+        const key = `${item.year} ${item.semester} ${item.team} ${item.studentId}`;
+        if (seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      }));
+    } catch (err) {
+      console.error(`Evaluations fetch error:`, err);
+    }
+  }, [ user ]);
 
   const getRubricData = async () => {
     try {
@@ -231,6 +280,7 @@ const Evaluations: React.FC = () => {
         }
         const data = await response.json();
         setUser(data.user as User);
+        await fetchEvaluations(data.user as User);
         setSelectedTeam((data.user.teamNames?.[0] as string) || `no team`);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
@@ -266,7 +316,7 @@ const Evaluations: React.FC = () => {
       return;
     }
 
-    notify(`Submitting...`);
+    // notify(`Submitting...`);
 
     const studentIdForEval = user.role === `SUPERVISOR` ? selectedStudentId : user.id;
     const supervisorIdForEval = user.role === `SUPERVISOR` ? user.id : user.supervisorId;
@@ -290,6 +340,25 @@ const Evaluations: React.FC = () => {
       type: user.role,
       year: new Date().getFullYear(),
     };
+
+    console.log(`evaluationBody: `, evaluationBody);
+    console.log(`evaluations: `, evaluations);
+
+    const evalExists = evaluations.some(
+      (evaluation) => evaluation.semester === evaluationBody.semester &&
+      evaluation.year === evaluationBody.year &&
+      evaluation.team === evaluationBody.team &&
+      evaluation.type === evaluationBody.type &&
+      evaluation.studentId === evaluationBody.studentId &&
+      evaluation.supervisorId === evaluationBody.supervisorId,
+    );
+
+    console.log(`evalExists: `, evalExists);
+
+    if (evalExists) {
+      notify(`Evaluation already exists for ${evaluationBody.semester} ${evaluationBody.year}.`);
+      return;
+    }
 
     try {
       const response = await fetch(`${fetchUrl}/submitEval`, {
@@ -357,7 +426,7 @@ const Evaluations: React.FC = () => {
               await fetchAllStatuses();
             }
             if (user?.role === `STUDENT` && user.id) {
-              await fetchEvalStatusForCurrentUser();
+              fetchEvalStatusForCurrentUser();
             }
           }}
         >
@@ -436,10 +505,10 @@ const Evaluations: React.FC = () => {
                   </thead>
                   <tbody>
                     {filteredStudents.length > 0 ?
-                      filteredStudents.map((student: Student) => {
-                        const status = studentsEvalStatus[student.id];
-                        const isCompleted = status ? status.supervisorCompleted : false;
-                        return <tr
+                      filteredStudents.map((student: Student) =>
+                        // const status = studentsEvalStatus[student.id];
+                        // const _isCompleted = status ? status.supervisorCompleted : false;
+                        <tr
                           key={student.id}
                           className={selectedStudentId === student.id ? `selected` : ``}
                         >
@@ -451,13 +520,12 @@ const Evaluations: React.FC = () => {
                               type="button"
                               className="btn select-btn"
                               onClick={() => setSelectedStudentId(student.id)}
-                              disabled={isCompleted}
+                              // disabled={isCompleted}
                             >
-                              {isCompleted ? `Completed` : `Select`}
+                              Select
                             </button>
                           </td>
-                        </tr>;
-                      }) :
+                        </tr>) :
                       <tr>
                         <td colSpan={4} className="no-students-message">
                           No students found.
@@ -479,7 +547,7 @@ const Evaluations: React.FC = () => {
             }}
           >Cancel
           </button>
-          {(user?.role === `STUDENT` ? canStartSelfEval : user?.role === `SUPERVISOR`) &&
+          {(user?.role === `STUDENT` || user?.role === `SUPERVISOR`) &&
             <button
               id="proceed-to-eval-btn"
               className="proceed-eval"
@@ -489,7 +557,7 @@ const Evaluations: React.FC = () => {
                 setIsPreModalVisible(false);
               }}
               disabled={user?.role === `SUPERVISOR` &&
-                (selectedStudentId === null || studentsEvalStatus[selectedStudentId]?.supervisorCompleted)}
+                (selectedStudentId === null)}
             >Proceed to Evaluation</button>}
         </div>
       </div>

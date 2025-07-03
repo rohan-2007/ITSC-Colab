@@ -149,10 +149,13 @@ const PastEvaluations: React.FC = () => {
   //   setSelectedYear(parseInt(event.target.value, 10));
   // };
 
-  const checkIfEvalYear = (timestamp: string | Date) => {
-    const date = new Date(timestamp);
-    return date.getFullYear() === data.year;
-  };
+  const checkIfEvalYear = React.useCallback(
+    (timestamp: string | Date) => {
+      const date = new Date(timestamp);
+      return date.getFullYear() === data.year;
+    },
+    [ data.year ],
+  );
 
   // useEffect(() => {
   //   if (!topBarRef.current) {
@@ -207,7 +210,7 @@ const PastEvaluations: React.FC = () => {
     } catch (err) {
       console.error(`Git fetch error:`, err);
     }
-  }, [ user ]);
+  }, [ user, checkIfEvalYear, data.semester ]);
 
   const fetchRubricCategories = async () => {
     try {
