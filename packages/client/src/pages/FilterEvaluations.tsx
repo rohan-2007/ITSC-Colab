@@ -577,37 +577,39 @@ const FilterEvaluations: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedEvaluations && displayedEvaluations.length > 0 ? displayedEvaluations.map((item) =>
+            {displayedEvaluations && displayedEvaluations.length > 0 ?
+              displayedEvaluations.map((item) =>
+                <tr>
+                  <td className="display-cell">
+                    <div className="level-text">
+                      {isSupervisor ? distinctStudents?.filter(
+                        (student) => student.id === item.studentId,
+                      )[0].name : user?.username}
+                    </div>
+                  </td>
+                  <td className="display-cell">
+                    <div className="level-text">
+                      {item.semester}
+                    </div>
+                  </td>
+                  <td className="display-cell">
+                    <div className="level-text">
+                      {item.year}
+                    </div>
+                  </td>
+                  <td className="display-cell">
+                    <div className="level-text">
+                      {item.team}
+                    </div>
+                  </td>
+                  <td>
+                    <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
+                      view</button>
+                  </td>
+                </tr>) :
               <tr>
-                <td className="display-cell">
-                  <div className="level-text">
-                    {isSupervisor ? distinctStudents?.filter(
-                      (student) => student.id === item.studentId,
-                    )[0].name : user?.username}
-                  </div>
-                </td>
-                <td className="display-cell">
-                  <div className="level-text">
-                    {item.semester}
-                  </div>
-                </td>
-                <td className="display-cell">
-                  <div className="level-text">
-                    {item.year}
-                  </div>
-                </td>
-                <td className="display-cell">
-                  <div className="level-text">
-                    {item.team}
-                  </div>
-                </td>
-                <td>
-                  <button className="filter-evals-button" onClick={() => navigateToPastEvals(item)}>
-                    view</button>
-                </td>
-              </tr>) : <tr>
-              <td colSpan={5}>No past evaluations</td>
-            </tr>}
+                <td colSpan={5}>No past evaluations</td>
+              </tr>}
           </tbody>
         </table>
       </div>

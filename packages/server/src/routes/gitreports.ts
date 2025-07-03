@@ -29,7 +29,7 @@ router.post(`/gitData`, limiter, async (
 
     if (!allUserContributions) {
       res.status(404).json({
-        message: `Could not find any user contributions`,
+        message: `Could not find any user contributions for ${ username }`,
       });
       return;
     }
@@ -92,7 +92,6 @@ router.post(`/gitData`, limiter, async (
         const currentCount = contributionsByDate.get(dateKey) || 0;
         contributionsByDate.set(dateKey, currentCount + contribution.contribution_count);
       });
-
       teamAverageContributions = Array.from(contributionsByDate.entries()).map(([ date, totalContributions ]) => ({
         average_contributions: totalContributions / teamMemberCount,
         date,
