@@ -184,7 +184,7 @@
   animation: fadeIn 0.3s;
   width: 100%;
   max-width: 650px;
-  height: 55%;
+  height: auto;
 }
 
 #pre-eval-modal .modal-content-evaluations h2,

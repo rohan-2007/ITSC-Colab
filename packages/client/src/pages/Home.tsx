@@ -64,6 +64,13 @@ interface TeamAverageContribution {
   date: string;
 }
 
+interface Team {
+  id: number;
+  leadSupervisor: { name: string };
+  leadSupervisorId: number;
+  name: string;
+}
+
 interface User {
   id: number;
   email: string;
@@ -71,8 +78,7 @@ interface User {
   evalsGiven: PastEval[] | null;
   name: string;
   role: string;
-  teamIDs: number[] | null;
-  teamNames: [] | null;
+  teams: Team[] | null;
 }
 // --- End of interfaces ---
 
@@ -258,7 +264,7 @@ const Home: React.FC = () => {
     const getGitData = async () => {
       try {
         const username = user?.name;
-        const teamIDs = user?.teamIDs; // Get user's team IDs
+        const teamIDs = user?.teams ? user.teams.map((team) => team.id) : []; // Get user's team IDs safely
 
         if (!username || username === undefined) {
           return;
@@ -349,8 +355,7 @@ const Home: React.FC = () => {
             evalsGiven: jsonData.user.evaluationsGiven || null,
             name: jsonData.user.name,
             role: jsonData.user.role,
-            teamIDs: jsonData.user.safeTeamIDs || null,
-            teamNames: jsonData.user.teamNames || null,
+            teams: jsonData.user.teams || null,
           });
         }
       } catch (err) {
@@ -370,7 +375,7 @@ const Home: React.FC = () => {
         id: user.id,
         name: user.name,
         role: user.role,
-        teamNames: user.teamNames,
+        teamNames: user.teams ? user.teams.map((team) => team.name) : [],
       };
       localStorage.setItem(`userMeta`, JSON.stringify(safeUserData));
     }
@@ -474,10 +479,10 @@ const Home: React.FC = () => {
           <span className="info-label">Email:</span>
           <span className="info-value">{user.email}</span>
         </div>
-        {user.teamNames &&
+        {user.teams &&
           <div className="info-item">
             <span className="info-label">Teams:</span>
-            <span className="info-value">{user.teamNames.length > 0 ? user.teamNames.join(`, `) : `Not Assigned`}</span>
+            <span className="info-value">{user.teams.length > 0 ? user.teams.map((team) => team.name).join(`, `) : `Not Assigned`}</span>
           </div>}
         <div className="profile-actions">
           <button onClick={() => navigate(`/profile`)} className="button-view-profile">View Full Profile</button>
@@ -496,31 +501,52 @@ const Home: React.FC = () => {
           <button onClick={() => navigate(`/evaluations`)} className="button-view-profile">Evaluations</button>
         </div>
       </section>}
-
       {user.role === `STUDENT` &&
         <section className="user-stats-section">
-          <h2>Your Progress</h2>
-          <div className="user-stats home-stats">
-            <div className="stat">
-              <h2>
-                {evaluations.some(
-                  (e) =>
-                    e.studentId === user.id &&
-              e.semester === assignSemester() &&
-              e.year === new Date().getFullYear(),
-                ) ?
-                  `Evaluation completed for this semester!` :
-                  `You haven't submitted an evaluation for this semester.`}
-              </h2>
+          <h2>To-Do List</h2>
+          <div className="user-stats">
+            <div className="todo-table-container">
+              <table className="student-select-table">
+                <thead>
+                  <tr>
+                    <th>Team ID</th>
+                    <th>Team Name</th>
+                    <th>Lead Supervisor</th>
+                    <th>Completed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {user.teams && user.teams.length > 0 ?
+                    user.teams.map((team) => {
+                      // Find the lead supervisor's name
+                      const leadSupervisorName = team.leadSupervisor?.name || `Unknown`;
+
+                      // Check if the user has already submitted an evaluation for this team
+                      const completed = evaluations.some((e) =>
+                        e.studentId === user.id &&
+        e.supervisorId === team.leadSupervisorId &&
+        e.semester === currentSemester &&
+        e.year === new Date().getFullYear() &&
+        e.type === `STUDENT` &&
+        // If your Evaluation type has teamId, include this check:
+        (`teamId` in e ? (e as any).teamId === team.id : true));
+
+                      return <tr key={team.id}>
+                        <td>{team.id}</td>
+                        <td>{team.name ?? `Unknown`}</td>
+                        <td>{leadSupervisorName}</td>
+                        <td>{completed ? `✅` : `❌`}</td>
+                      </tr>;
+                    }) :
+                    <tr>
+                      <td colSpan={4} className="no-students-message">
+                        No teams found.
+                      </td>
+                    </tr>}
+                </tbody>
+
+              </table>
             </div>
-          </div>
-          <div className="profile-actions">
-            <button
-              onClick={() => navigate(`/evaluations`)}
-              className="button-view-profile"
-            >
-              Evaluations
-            </button>
           </div>
         </section>}
 
@@ -559,7 +585,7 @@ const Home: React.FC = () => {
                           <td>{student.name}</td>
                           <td>{student.email}</td>
                           {student.teams[0] ?
-                            <td>{student.teams.filter((t) => user.teamIDs?.includes(t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
+                            <td>{student.teams.filter((t) => user.teams?.some((ut) => ut.id === t.id)).map((team) => team.name).join(`, `)}</td> : <td>No team</td>}
                           <td>{user.evalsGiven?.some((evaluation) =>
                             evaluation.studentId === student.id && evaluation.supervisorId === user.id && evaluation.type === `SUPERVISOR` && evaluation.semester === currentSemester && evaluation.year === new Date().getFullYear()) ? `✅` : `❌`}</td>
                         </tr>) :
