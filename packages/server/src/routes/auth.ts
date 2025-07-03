@@ -262,12 +262,24 @@ router.post(`/me`, meLimiter, requireAuth, async (
           );
         }
 
+        const teams = await prisma.team.findMany({
+          select: {
+            id: true,
+            leadSupervisor: { select: { name: true } },
+            leadSupervisorId: true,
+            name: true,
+          },
+          where: {
+            id: { in: safeTeamIDs },
+          },
+        });
+
         res.status(200).json({
           message: `Fetched user info`,
           user: {
             id, createdAt, email, evaluationsCompleted, evaluationsGiven,
             evaluationsReceived, name, role, safeTeamIDs,
-            supervisorId, supervisorName, teamNames,
+            supervisorId, supervisorName, teamNames, teams,
           },
         });
       } else {

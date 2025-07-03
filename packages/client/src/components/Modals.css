@@ -184,7 +184,7 @@
   animation: fadeIn 0.3s;
   width: 100%;
   max-width: 650px;
-  height: 55%;
+  height: auto;
 }
 
 #pre-eval-modal .modal-content-evaluations h2,
@@ -206,8 +206,14 @@
 }
 
 #evaluation-modal .modal-content-evaluations {
-  max-width: 1200px;
+  min-width: 98.2vw;
+  min-height: 99vh;
   text-align: left;
+  padding: 20px;
+  margin: 0;
+  left: -5px;
+  top: -5px;
+  position: absolute;
 }
 
 .modal-footer-evaluations {

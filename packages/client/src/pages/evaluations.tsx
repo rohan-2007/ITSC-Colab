@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { notify } from '../components/Notification';
 import { User } from './PastEvaluations';
 import '../CSS/evaluations.css';
@@ -64,6 +64,7 @@ interface EvalStatus {
 
 const Evaluations: React.FC = () => {
   const navigate = useNavigate();
+  const [ searchParams ] = useSearchParams();
   const [ user, setUser ] = useState<User | null>(null);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ isFormVisible, setIsFormVisible ] = useState(false);
@@ -220,7 +221,7 @@ const Evaluations: React.FC = () => {
     } catch (err) {
       console.error(`Evaluations fetch error:`, err);
     }
-  }, [ user ]);
+  }, []);
 
   const getRubricData = async () => {
     try {
@@ -267,7 +268,7 @@ const Evaluations: React.FC = () => {
   }, [ rubricCategories ]);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserAndHandleParams = async () => {
       try {
         const response = await fetch(`${fetchUrl}/me/`, {
           body: JSON.stringify({ returnData: true }),
@@ -279,9 +280,54 @@ const Evaluations: React.FC = () => {
           throw new Error(`Session not found. Please log in.`);
         }
         const data = await response.json();
-        setUser(data.user as User);
-        await fetchEvaluations(data.user as User);
-        setSelectedTeam((data.user.teamNames?.[0] as string) || `no team`);
+        const currentUser = data.user as User; // Store the user data
+        setUser(currentUser);
+        await fetchEvaluations(currentUser);
+        setSelectedTeam((currentUser.teamNames?.[0] as string) || `no team`);
+
+        // --- Handle URL Parameters ---
+        const openEvaluation = searchParams.get(`evaluation`);
+        const teamNameParam = searchParams.get(`team`);
+        const studentIdParam = searchParams.get(`studentId`); // For supervisors
+
+        // Logic for 'evaluation=open'
+        if (openEvaluation === `open`) {
+          // Always open the pre-modal. The existing modal logic for students/supervisors
+          // handles the specific checks (e.g., if self-eval is already done, or student selection for supervisors).
+          setIsPreModalVisible(true);
+
+          if (currentUser.role === `SUPERVISOR`) {
+            // If supervisor, immediately fetch students and their statuses for the modal
+            await fetchStudents();
+            await fetchAllStatuses();
+          } else if (currentUser.role === `STUDENT`) {
+            // For students, fetch their self-eval status
+            fetchEvalStatusForCurrentUser();
+          }
+        }
+
+        // Logic for 'team=TeamName' (e.g., ?team=Team_A)
+        if (teamNameParam && currentUser.teamNames?.includes(teamNameParam)) {
+          setSelectedTeam(teamNameParam);
+        }
+
+        // Logic for 'studentId=N' (for supervisors only)
+        if (currentUser.role === `SUPERVISOR` && studentIdParam) {
+          const parsedStudentId = parseInt(studentIdParam, 10);
+          if (!isNaN(parsedStudentId)) {
+            setSelectedStudentId(parsedStudentId);
+            // Ensure students and statuses are loaded if supervisor and studentId is provided
+            if (!students.length) { // Only fetch if not already loaded by openEvaluation
+              await fetchStudents();
+            }
+            // Ensure statuses are loaded if supervisor and studentId is provided
+            // This might already be done by fetchAllStatuses if openEvaluation was 'open'
+            if (Object.keys(_studentsEvalStatus).length === 0) {
+              await fetchAllStatuses();
+            }
+          }
+        }
+        // --- End URL Parameter Handling ---
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
 
@@ -290,9 +336,9 @@ const Evaluations: React.FC = () => {
         setIsLoading(false);
       }
     };
-    void fetchUser();
+    void fetchUserAndHandleParams();
     void getRubricData();
-  }, [ navigate ]);
+  }, [ navigate, fetchEvaluations, searchParams, students, _studentsEvalStatus ]); // Add searchParams to dependency array, also students and _studentsEvalStatus if used for conditional fetches.
 
   const handleSelect = (categoryId: number, levelId: number, target: HTMLElement) => {
     Array.from(document.getElementsByClassName(`level-cell`)).forEach((el) => {
