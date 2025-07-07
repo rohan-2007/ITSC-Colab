@@ -406,7 +406,7 @@ const Home: React.FC = () => {
         return;
       }
       try {
-        const response = await fetch(`http://localhost:3001/students/`, {
+        const response = await fetch(`http://localhost:3001/students/?filtered=true`, {
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
@@ -590,7 +590,6 @@ const Home: React.FC = () => {
                 <tbody>
                   {students.length > 0 ?
                     students
-                      .filter((student) => student.supervisorId === user.id)
                       .map((student) =>
                         <tr key={student.id}>
                           <td>{student.id}</td>

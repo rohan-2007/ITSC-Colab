@@ -261,7 +261,6 @@ const Supervisor: React.FC = () => {
         setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: student.enabled } : s));
         return;
       }
-      // Reload to reflect sorted changes everywhere
       notifyAfterReload(`Student ${!student.enabled ? `enabled` : `disabled`} successfully.`);
       window.location.reload();
     } catch {
@@ -385,18 +384,15 @@ const Supervisor: React.FC = () => {
 
   useEffect(() => {
     if (currentUserId && students.length > 0 && supervisors.length > 0 && teams.length > 0) {
-      // Find the current supervisor's name
       const currentSupervisor = supervisors.find((s) => s.id === currentUserId);
       if (!currentSupervisor) {
         return;
       }
       const currentSupervisorName = currentSupervisor.name;
 
-      // Find all teams the current supervisor is a member of
       const supervisorTeams = teams.filter((team) =>
         (team.assignedSupervisors || []).includes(currentSupervisorName));
 
-      // Create a set of all student names from those teams for quick lookup
       const visibleStudentNames = new Set<string>();
       supervisorTeams.forEach((team) => {
         team.assignedStudents.forEach((studentName) => {
@@ -404,25 +400,20 @@ const Supervisor: React.FC = () => {
         });
       });
 
-      // Filter the students based on the new visibility rules
       const visibleStudents = students.filter((student) => {
-        // Condition 1: Student is in one of the supervisor's teams
         const isInSupervisorsTeam = visibleStudentNames.has(student.name);
-        // Condition 2: Student is disabled
         const isDisabled = !student.enabled;
 
         return isInSupervisorsTeam || isDisabled;
       });
 
-      // Sort the filtered list: disabled students go to the bottom, then sort alphabetically
       visibleStudents.sort((a, b) => {
         if (a.enabled && !b.enabled) {
-          return -1; // a (enabled) comes first
+          return -1;
         }
         if (!a.enabled && b.enabled) {
-          return 1; // b (enabled) comes first
+          return 1;
         }
-        // If both are enabled or both are disabled, sort by name
         return a.name.localeCompare(b.name);
       });
 

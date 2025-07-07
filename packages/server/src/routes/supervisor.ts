@@ -11,7 +11,10 @@ router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   res: Response,
 ) => {
   try {
-    const user: PrismaUser | null = await prisma.user.findUnique({
+    type UserWithTeams = PrismaUser & { teams: Team[] };
+
+    const user: UserWithTeams | null = await prisma.user.findUnique({
+      include: { teams: true },
       where: { id: req.session.userId },
     });
 
@@ -21,12 +24,28 @@ router.post(`/students`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     }
 
     const includeDisabled = req.query.includeDisabled === `true`;
+    const filtered = req.query.filtered === `true`; // NOTE: corrected logic
+
+    let teamIds: number[] = [];
+
+    if (filtered) {
+      teamIds = user.teams.map((team) => team.id);
+    }
 
     const students = await prisma.user.findMany({
       include: { teams: true },
       where: {
         role: Role.STUDENT,
         ...(includeDisabled ? {} : { enabled: true }),
+        ...(filtered ?
+            {
+              teams: {
+                some: {
+                  id: { in: teamIds },
+                },
+              },
+            } :
+            {}),
       },
     });
 
