@@ -183,7 +183,7 @@ router.post(`/login`, loginLimiter, async (
     }
 
     if (!user.enabled) {
-      res.status(404).json({ error: `User not found` });
+      res.status(404).json({ error: `Your account is currently disabled` });
       return;
     }
 
