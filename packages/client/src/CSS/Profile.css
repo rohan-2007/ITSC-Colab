@@ -212,5 +212,5 @@
 }
 
 .profile-card h2 {
-  word-break: break-word; /* makes the header wrap in profile card */
+  word-break: break-word;
 }
