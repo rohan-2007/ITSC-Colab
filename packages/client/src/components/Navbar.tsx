@@ -24,7 +24,6 @@ const Navbar: React.FC = () => {
           credentials: `include`,
           method: `POST`,
         });
-        // window.location.reload();
         await navigate(`/`);
         window.location.reload();
       }}

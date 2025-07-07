@@ -32,8 +32,6 @@
   border-collapse: collapse;
   margin-bottom: 1.5rem;
   max-width: 100%;
-  /* table-layout: fixed; */
-  /* border-collapse: collapse; */
   text-align: center;
 }
 
@@ -42,10 +40,6 @@
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
   text-align: center;
-}
-
-.top-bar {
-  /* height: 10%; */
 }
 
 .default-option {
