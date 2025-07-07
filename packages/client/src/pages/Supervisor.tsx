@@ -9,6 +9,152 @@ import '../components/buttonAndCard.css';
 import '../components/Modals.css';
 
 const fetchUrl = `http://localhost:${3001}`;
+
+interface NewUserData {
+  email: string;
+  name: string;
+  password: string;
+  role: `STUDENT` | `SUPERVISOR`;
+  supervisorId?: number;
+}
+
+interface CreateUserModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (userData: NewUserData) => void;
+  supervisors: Supervisor[];
+}
+
+const CreateUserModal: React.FC<CreateUserModalProps> = ({ isOpen, onClose, onCreate, supervisors }) => {
+  const [ name, setName ] = useState(``);
+  const [ email, setEmail ] = useState(``);
+  const [ password, setPassword ] = useState(``);
+  const [ role, setRole ] = useState<`STUDENT` | `SUPERVISOR`>(`STUDENT`);
+  const [ supervisorId, setSupervisorId ] = useState(``);
+  const [ error, setError ] = useState(``);
+
+  useEffect(() => {
+    if (isOpen) {
+      setName(``);
+      setEmail(``);
+      setPassword(``);
+      setRole(`STUDENT`);
+      setError(``);
+      if (supervisors && supervisors.length > 0) {
+        setSupervisorId(supervisors[0].id.toString());
+      } else {
+        setSupervisorId(``);
+      }
+    }
+  }, [ isOpen, supervisors ]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(``);
+
+    if (!name || !email || !password || !role) {
+      setError(`Please fill out all required fields.`);
+      return;
+    }
+    if (role === `STUDENT` && !supervisorId) {
+      setError(`A supervisor must be selected for a new student.`);
+      return;
+    }
+
+    const userData: NewUserData = {
+      email,
+      name,
+      password,
+      role,
+      ...role === `STUDENT` && { supervisorId: parseInt(supervisorId, 10) },
+    };
+
+    onCreate(userData);
+  };
+
+  return <div className="modal-overlay-supervisor" onClick={onClose}>
+    <div className="modal-create-user" onClick={(e) => e.stopPropagation()}>
+      <h4>Create New User</h4>
+      <form onSubmit={handleSubmit} className="create-user-form">
+        <div className="form-group-create">
+          <label htmlFor="create-name">Full Name</label>
+          <input
+            id="create-name"
+            type="text"
+            placeholder="e.g., Jane Doe"
+            value={name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group-create">
+          <label htmlFor="create-email">Email Address</label>
+          <input
+            id="create-email"
+            type="email"
+            placeholder="e.g., jane.doe@example.com"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group-create">
+          <label htmlFor="create-password">Initial Password</label>
+          <input
+            id="create-password"
+            type="password"
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group-create">
+          <label htmlFor="create-role">Role</label>
+          <select
+            id="create-role"
+            value={role}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRole(e.target.value as `STUDENT` | `SUPERVISOR`)}
+          >
+            <option value="STUDENT">Student</option>
+            <option value="SUPERVISOR">Supervisor</option>
+          </select>
+        </div>
+
+        {role === `STUDENT` &&
+          <div className="form-group-create">
+            <label htmlFor="create-supervisor">Assign Supervisor</label>
+            <select
+              id="create-supervisor"
+              value={supervisorId}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSupervisorId(e.target.value)}
+              required={role === `STUDENT`}
+            >
+              {supervisors && supervisors.length > 0 ?
+                supervisors.map((s) =>
+                  <option key={s.id} value={s.id}>{s.name}</option>) :
+                <option value="" disabled>No supervisors available</option>}
+            </select>
+          </div>}
+
+        {error && <p className="error-message">{error}</p>}
+
+        <div className="modal-buttons">
+          <button type="button" onClick={onClose} className="modal-cancel-supervisor">
+            Cancel
+          </button>
+          <button type="submit" className="modal-save-supervisor">
+            Create User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>;
+};
+
 interface Student {
   id: number;
   email: string;
@@ -61,7 +207,31 @@ const Supervisor: React.FC = () => {
   const [ editedPrimarySupervisorId, setEditedPrimarySupervisorId ] = useState<number | undefined>(undefined);
   const [ filteredStudents, setFilteredStudents ] = useState<Student[]>([]);
 
+  const [ isCreateUserModalOpen, setCreateUserModalOpen ] = useState(false);
+
   const navigate = useNavigate();
+
+  const handleCreateUser = async (userData: NewUserData) => {
+    try {
+      const response = await fetch(`${fetchUrl}/createUser`, {
+        body: JSON.stringify(userData),
+        credentials: `include`,
+        headers: { 'Content-Type': `application/json` },
+        method: `POST`,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json() as { error?: string };
+        throw new Error(errorData.error || `Failed to create user`);
+      }
+
+      setCreateUserModalOpen(false);
+      notifyAfterReload(`User created successfully!`);
+      window.location.reload();
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    }
+  };
 
   const canEditStudent = React.useCallback((student: Student): boolean => {
     if (!currentUserId) {
@@ -427,7 +597,12 @@ const Supervisor: React.FC = () => {
     </header>
     <div className="main-content-2">
       <div className="manage-student-card">
-        <h2>Manage Student Information</h2>
+        <div className="manage-teams-card-header">
+          <h2>Manage Student Information</h2>
+          <button onClick={() => setCreateUserModalOpen(true)} className="button-new-team">
+            + Create User
+          </button>
+        </div>
         <input
           type="text"
           placeholder="Search students..."
@@ -735,6 +910,14 @@ const Supervisor: React.FC = () => {
           </div>
         </div>
       </div>}
+
+    <CreateUserModal
+      isOpen={isCreateUserModalOpen}
+      onClose={() => setCreateUserModalOpen(false)}
+      onCreate={handleCreateUser}
+      supervisors={supervisors}
+    />
+
   </div>;
 };
 
