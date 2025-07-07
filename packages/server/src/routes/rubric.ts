@@ -5,6 +5,7 @@ import { limiter } from './auth';
 const router = Router();
 
 interface RubricRequestBody {
+  addCategory?: boolean;
   addLevel?: boolean;
   categoryId?: number;
   categoryTitle?: string;
@@ -54,7 +55,8 @@ router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void
 router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, RubricRequestBody>, res: Response) => {
   const {
     addLevel, categoryId, categoryTitle, deletedLevel, description,
-    level, levelId, prevLevel, subItem, subItemId,
+    // eslint-disable-next-line sort-keys-custom-order/object-keys
+    level, levelId, prevLevel, subItem, subItemId, addCategory,
   } = req.body;
 
   if (description && categoryId && levelId) {
@@ -110,19 +112,33 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       return;
     }
   } else if (addLevel) {
-    const categories = await prisma.rubricCategory.findMany();
-    const levelData = await prisma.rubricPerformanceLevel.findMany();
-    const levels = levelData.filter((l) => l.rubricCategoryId === 1).length;
+    try {
+      const categories = await prisma.rubricCategory.findMany();
+      const levelData = await prisma.rubricPerformanceLevel.findMany();
+      const levels = levelData.filter((l) => l.rubricCategoryId === 1).length;
 
-    for (const category of categories) {
-      await prisma.rubricPerformanceLevel.create({
-        data: {
-          id: category.id * 100 + levels + 1,
-          description: ``,
-          level: ``,
-          rubricCategoryId: category.id,
-        },
-      });
+      let newLevel: any = null;
+
+      for (const category of categories) {
+        const created = await prisma.rubricPerformanceLevel.create({
+          data: {
+            id: category.id * 100 + levels + 1,
+            description: ``,
+            level: ``,
+            rubricCategoryId: category.id,
+          },
+        });
+
+        if (category.id === categories[0].id) {
+          newLevel = created;
+        }
+      }
+
+      res.status(200).json(newLevel);
+      return;
+    } catch (error) {
+      res.status(500).json({ error, message: `Internal Server Error` });
+      return;
     }
   } else if (deletedLevel) {
     try {
@@ -130,7 +146,7 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       const time = new Date();
 
       await prisma.$executeRaw`
-        UPDATE "rubricPerformanceLevel"
+        UPDATE "perf_review"."rubricPerformanceLevel"
         SET "deletedAt" = ${ time }
         WHERE "id" % 10 = ${ levelNumber };
       `;
@@ -141,7 +157,48 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       res.status(500).json({ error, message: `Internal Server Error` });
       return;
     }
+  } else if (addCategory) {
+    try {
+      const newCategory = await prisma.rubricCategory.create({
+        data: {
+          name: ``, // Or generate something unique
+          title: ``,
+        },
+      });
+
+      // Step 2: Fetch existing levels to clone
+      const existingLevels = await prisma.rubricPerformanceLevel.findMany({
+        select: { level: true },
+        where: { rubricCategoryId: /* pick a base one or default template */ 1 }, // optional
+      });
+
+      // Step 3: Create new levels with custom IDs
+      await Promise.all(existingLevels.map((lvl, i) =>
+        prisma.rubricPerformanceLevel.create({
+          data: {
+            id: newCategory.id * 100 + (i + 1), // 👈 manual ID
+            description: ``,
+            level: lvl.level,
+            rubricCategoryId: newCategory.id,
+          },
+        })));
+
+      // Optional: Return the category with levels
+      const fullCategory = await prisma.rubricCategory.findUnique({
+        include: { levels: true },
+        where: { id: newCategory.id },
+      });
+
+      res.status(200).json(fullCategory);
+      return;
+    } catch (err) {
+      console.error(`Error creating rubric category:`, err);
+      res.status(500).json({ err, message: `Failed to create rubric category` });
+    }
+    return;
   }
+
+  res.status(400).json({ error: `Invalid request` });
 });
 
 export default router;

@@ -133,6 +133,19 @@ const EditRubric: React.FC = () => {
       const resJson = await res.json();
       console.log(`resJson`, resJson);
 
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          levels: [
+            ...category.levels,
+            {
+              ...resJson,
+              id: category.id * 100 + (category.levels.length + 1),
+              rubricCategoryId: category.id,
+            },
+          ],
+        })));
+
       await fetchRubricCategories();
       console.log(`updatedCategories: `, rubricCategories);
     } catch {
@@ -183,8 +196,44 @@ const EditRubric: React.FC = () => {
       const resJson = await res.json();
       console.log(`resJson`, resJson);
 
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          levels: category.levels.filter((level) => level.id !== levelId),
+        })));
+
       await fetchRubricCategories();
       // console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
+  const createNewCriterion = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ addCategory: true }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson: RubricCategory = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        [ ...prev, {
+          ...resJson,
+          id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1,
+          levels: resJson.levels.map((level) => ({
+            ...level,
+            id: resJson.id * 100 + level.id,
+            rubricCategoryId: resJson.id,
+          })), title: ``,
+        }]);
+
+      await fetchRubricCategories();
+      console.log(`updatedCategories: `, rubricCategories);
     } catch {
       return;
     }
@@ -195,16 +244,18 @@ const EditRubric: React.FC = () => {
       <thead>
         <tr>
           <th>Criteria</th>
-          {rubricCategories[0]?.levels.map((level) =>
-            <th key={level.id}>
-              <input
-                className="change-rubric-input"
-                value={level.level}
-                name={`${level.level}`}
-                onChange={changeLevel}
-              />
-              <button onClick={() => deleteLevel(level.id)}>Delete</button>
-            </th>)}
+          {rubricCategories[0]?.levels
+            .filter((level) => !level.deletedAt)
+            .map((level) =>
+              <th key={level.id}>
+                <input
+                  className="change-rubric-input"
+                  value={level.level}
+                  name={`${level.level}`}
+                  onChange={changeLevel}
+                />
+                <button onClick={() => deleteLevel(level.id)}>Delete</button>
+              </th>)}
           <th>
             <button onClick={createNewLevel}>Add Level</button>
           </th>
@@ -233,6 +284,7 @@ const EditRubric: React.FC = () => {
                     />
                   </li>)}
               </ul>
+              <button>Delete</button>
             </td>
             {rubricCategories[0]?.levels.map((headerLevel) => {
               const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
@@ -281,6 +333,11 @@ const EditRubric: React.FC = () => {
             //   }
             })}
           </tr>)}
+        <tr>
+          <td>
+            <button onClick={createNewCriterion}>Add Criterion</button>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>;

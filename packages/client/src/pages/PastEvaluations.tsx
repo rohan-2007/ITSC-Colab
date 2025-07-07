@@ -41,9 +41,10 @@ export interface RubricSubItem {
 
 export interface RubricPerformanceLevel {
   id: number;
+  deletedAt?: string | null;
   description: string;
   level: string;
-  rubricCategoryId: number;
+  rubricCategoryId: number; // Optional field for soft delete
 }
 
 export interface EvaluationResult {
