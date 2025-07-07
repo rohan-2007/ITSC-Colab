@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notifyAfterReload } from '../components/Notification';
@@ -62,18 +63,15 @@ const Supervisor: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Helper function to check if current user can edit a student
   const canEditStudent = React.useCallback((student: Student): boolean => {
     if (!currentUserId) {
       return false;
     }
 
-    // Original supervisor can always edit their students
     if (student.supervisorId === currentUserId) {
       return true;
     }
 
-    // Lead supervisors can edit any student on their teams
     const userTeams = teams.filter((team) => team.leadSupervisorId === currentUserId);
     return userTeams.some((team) => team.assignedStudents.includes(student.name));
   }, [ currentUserId, teams ]);
@@ -104,49 +102,50 @@ const Supervisor: React.FC = () => {
       });
 
       if (!res.ok) {
+        setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: student.enabled } : s));
         return;
       }
     } catch {
-      throw new Error(`student enable/disable error occured`);
+      setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: student.enabled } : s));
+      throw new Error(`student enable/disable error occurred`);
     }
   };
 
   useEffect(() => {
-    const run = async () => {
-      const checkSession = async () => {
-        try {
-          const response = await fetch(`${fetchUrl}/me/`, {
-            body: JSON.stringify({ returnData: true }),
-            credentials: `include`,
-            headers: { 'Content-Type': `application/json` },
-            method: `POST`,
-          });
+    const checkSession = async () => {
+      try {
+        const response = await fetch(`${fetchUrl}/me/`, {
+          body: JSON.stringify({ returnData: true }),
+          credentials: `include`,
+          headers: { 'Content-Type': `application/json` },
+          method: `POST`,
+        });
 
-          if (!response.ok) {
-            await navigate(`/login`);
-            return null;
-          }
-
-          const jsonData = await response.json();
-          if (jsonData && jsonData.user) {
-            const userData: { id: number } = { id: jsonData.user.id };
-            setCurrentUserId(userData.id);
-            return userData;
-          }
-          return null;
-        } catch {
+        if (!response.ok) {
           await navigate(`/login`);
           return null;
         }
-      };
 
+        const jsonData = await response.json();
+        if (jsonData && jsonData.user) {
+          const userData: { id: number } = { id: jsonData.user.id };
+          setCurrentUserId(userData.id);
+          return userData;
+        }
+        return null;
+      } catch {
+        await navigate(`/login`);
+        return null;
+      }
+    };
+
+    const run = async () => {
       const userData = await checkSession();
       if (!userData) {
         return;
       }
-
       const fetchData = async () => {
-        const studentsResponse = await fetch(`${fetchUrl}/students/`, {
+        const studentsResponse = await fetch(`${fetchUrl}/students/?includeDisabled=true`, {
           credentials: `include`,
           headers: { 'Content-Type': `application/json` },
           method: `POST`,
@@ -214,24 +213,9 @@ const Supervisor: React.FC = () => {
               name: team.name,
             };
           });
-          // Sort teams alphabetically by name before accessing
           newTeams.sort((a, b) => a.name.localeCompare(b.name));
           setTeams(newTeams);
         }
-
-        // Filter students based on new permissions
-        const filteredList = fetchedStudents.filter((student) => {
-          // Original supervisor condition
-          if (student.supervisorId === userData.id) {
-            return true;
-          }
-
-          // Lead supervisor condition - check if user is lead supervisor of any team containing this student
-          // This will be updated once teams are loaded
-          return false;
-        }).sort((a, b) => a.name.localeCompare(b.name));
-
-        setFilteredStudents(filteredList);
       };
 
       await fetchData();
@@ -240,7 +224,6 @@ const Supervisor: React.FC = () => {
     void run();
   }, [ navigate ]);
 
-  // Update filtered students when teams change
   useEffect(() => {
     if (currentUserId && students.length > 0 && teams.length > 0) {
       const filteredList = students
@@ -310,10 +293,11 @@ const Supervisor: React.FC = () => {
     }
 
     const team = teams[selectedTeamIndex];
-    const updatedTeam = { ...team, leadSupervisorId: editedLeadSupervisorId, name: editedTeamName.trim() };
     const memberIDs = students
-      .filter((s) => updatedTeam.assignedStudents.includes(s.name))
+      .filter((s) => team.assignedStudents.includes(s.name))
       .map((s) => s.id);
+
+    const updatedTeam = { ...team, leadSupervisorId: editedLeadSupervisorId, name: editedTeamName.trim() };
 
     const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) =>
       (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
@@ -334,7 +318,7 @@ const Supervisor: React.FC = () => {
       const res = await fetch(`${fetchUrl}/createTeam`, {
         body: JSON.stringify({
           leadSupervisorId: editedLeadSupervisorId,
-          memberIDs,
+          memberIDs: updatedMemberIDs,
           name: updatedTeam.name,
         }),
         credentials: `include`,
@@ -347,7 +331,6 @@ const Supervisor: React.FC = () => {
       }
     }
 
-    // Update lead supervisor name
     const leadSupervisor = supervisors.find((s) => s.id === editedLeadSupervisorId);
     updatedTeam.leadSupervisorName = leadSupervisor?.name || `None`;
 
@@ -457,7 +440,8 @@ const Supervisor: React.FC = () => {
             .filter((s) =>
               studentSearch ? s.name.toLowerCase().includes(studentSearch.toLowerCase()) : true)
             .map((student, index) =>
-              <div className="student-row" key={index}>
+              <div className="student-row" key={student.id}>
+                {` `}
                 <span className="student-name">{student.name}</span>
                 <div className="supervisor-btn-div">
                   <button
@@ -518,11 +502,22 @@ const Supervisor: React.FC = () => {
     </div>
 
     {studentInfoModalOpen &&
-      <div className="modal-overlay-supervisor" onClick={closeStudentInfoModal}>
-        {/* Added 'active' class for animation trigger */}
+      <div
+        className="modal-overlay-supervisor"
+        onClick={closeStudentInfoModal}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === `Enter` || e.key === ` ` || e.key === `Escape`) {
+            closeStudentInfoModal();
+          }
+        }}
+      >
         <div
           className={`modal-student-info-modal ${studentInfoModalOpen ? `active` : ``}`}
           onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
         >
           <h3>Edit Student Information</h3>
           <div className="modal-form-group-supervisor">
@@ -563,7 +558,6 @@ const Supervisor: React.FC = () => {
         </div>
       </div>}
 
-    {/* --- View Team Members Modal --- */}
     {teamMembersModalOpen && viewingTeamIndex !== null && (() => {
       const team = teams[viewingTeamIndex];
       if (!team) {
@@ -573,9 +567,28 @@ const Supervisor: React.FC = () => {
       const studentMembers = team.assignedStudents;
       const supervisorMembers = team.assignedSupervisors;
 
-      return <div className="modal-overlay-supervisor" onClick={closeTeamMembersModal}>
-        {/* Added 'active' class for animation trigger */}
-        <div className={`modal-team-view ${teamMembersModalOpen ? `active` : ``}`} onClick={(e) => e.stopPropagation()}>
+      return <div
+        className="modal-overlay-supervisor"
+        onClick={closeTeamMembersModal}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === `Enter` || e.key === ` ` || e.key === `Escape`) {
+            closeTeamMembersModal();
+          }
+        }}
+      >
+        <div
+          className={`modal-team-view ${teamMembersModalOpen ? `active` : ``}`}
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          onKeyDown={(e) => {
+            if (e.key === `Escape` || e.key === `Enter` || e.key === ` `) {
+              e.stopPropagation();
+            }
+          }}
+        >
           <div className="modal-team-view-header">
             <h4>Team Details</h4>
             <h2>{team.name}</h2>
@@ -626,10 +639,16 @@ const Supervisor: React.FC = () => {
 
     {teamEditModalOpen && selectedTeamIndex !== null &&
       <div className="modal-overlay-supervisor" onClick={closeTeamModal}>
-        {/* Added 'active' class for animation trigger */}
         <div
           className={`modal-change-team-supervisor ${teamEditModalOpen ? `active` : ``}`}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === `Escape` || e.key === `Enter` || e.key === ` `) {
+              e.stopPropagation();
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
         >
           <h4>Edit Team</h4>
           <input
@@ -664,6 +683,7 @@ const Supervisor: React.FC = () => {
             />
             <div className="dropdown-scroll">
               {students
+                .filter((student) => student.enabled)
                 .filter((student) =>
                   student.name.toLowerCase().includes(studentSearchTerm.toLowerCase()))
                 .map((student) => {

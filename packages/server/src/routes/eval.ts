@@ -19,6 +19,7 @@ interface EvaluationBody {
   year: number;
 }
 
+// No changes to this route: allows submitting evaluations for any student.
 router.post(`/submitEval`, limiter, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
@@ -75,13 +76,14 @@ router.get(`/getEval`, limiter, requireAuth, async (
       const evalRecord = await prisma.evaluation.findUnique({
         include: {
           results: { include: { rubricPerformanceLevel: true } },
-          student: { select: { id: true, email: true, name: true, supervisorId: true } },
+          student: { select: { id: true, email: true, enabled: true, name: true, supervisorId: true } },
           supervisor: { select: { id: true, email: true, name: true } },
         },
         where: { id: evaluationId },
       });
 
-      if (!evalRecord) {
+      // Hide evaluations belonging to enabled students
+      if (!evalRecord || evalRecord.student.enabled) {
         res.status(404).json({ error: `Evaluation not found` });
         return;
       }
@@ -96,14 +98,19 @@ router.get(`/getEval`, limiter, requireAuth, async (
     }
 
     if (targetUserId) {
+      // Check if the target student exists and is not enabled
+      const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
+      if (!targetUser || targetUser.enabled) {
+        // Return empty array to hide the existence/status of the enabled user
+        res.status(200).json([]);
+        return;
+      }
+
       const sessionUser = await prisma.user.findUnique({ where: { id: sessionUserId } });
-
       const isOwnRequest = targetUserId === sessionUserId;
-
       let isSupervisorRequest = false;
       if (sessionUser?.role === `SUPERVISOR`) {
-        const student = await prisma.user.findUnique({ where: { id: targetUserId } });
-        if (student?.supervisorId === sessionUserId) {
+        if (targetUser.supervisorId === sessionUserId) {
           isSupervisorRequest = true;
         }
       }
@@ -134,46 +141,70 @@ router.get(`/getSupervisorEvals`, limiter, requireAuth, async (
   req: Request<unknown, unknown, number>,
   res: Response,
 ) => {
-  const targetId = Number(req.query.id);
+  try {
+    const targetId = Number(req.query.id);
 
-  const evaluations = await prisma.evaluation.findMany({
-    include: {
-      results: true,
-    },
-    where: { supervisorId: targetId },
-  });
+    const evaluations = await prisma.evaluation.findMany({
+      include: {
+        results: true,
+      },
+      // Exclude evaluations where the student is enabled
+      where: {
+        student: {
+          enabled: false,
+        },
+        supervisorId: targetId,
+      },
+    });
 
-  res.status(200).json(evaluations);
-  return;
+    res.status(200).json(evaluations);
+  } catch {
+    res.status(500).json({ error: `Internal server error` });
+  }
 });
 
 router.get(`/evalStatus`, requireAuth, async (req, res) => {
-  const { semester, studentId, year } = req.query;
+  try {
+    const { semester, studentId, year } = req.query;
 
-  const evaluations = await prisma.evaluation.findMany({
-    where: {
-      semester: semester as Semester,
-      studentId: Number(studentId),
-      year: Number(year),
-    },
-  });
+    // Check if student exists and is not enabled
+    const student = await prisma.user.findUnique({
+      where: { id: Number(studentId) },
+    });
 
-  let studentCompleted = false;
-  let supervisorCompleted = false;
-
-  for (const ev of evaluations) {
-    if (ev.type === `STUDENT`) {
-      studentCompleted = true;
+    if (!student || student.enabled) {
+      // Treat enabled students as "not found" to hide their status
+      res.status(404).json({ error: `Student not found` });
+      return;
     }
-    if (ev.type === `SUPERVISOR`) {
-      supervisorCompleted = true;
+
+    const evaluations = await prisma.evaluation.findMany({
+      where: {
+        semester: semester as Semester,
+        studentId: Number(studentId),
+        year: Number(year),
+      },
+    });
+
+    let studentCompleted = false;
+    let supervisorCompleted = false;
+
+    for (const ev of evaluations) {
+      if (ev.type === `STUDENT`) {
+        studentCompleted = true;
+      }
+      if (ev.type === `SUPERVISOR`) {
+        supervisorCompleted = true;
+      }
     }
+
+    res.status(200).json({
+      studentCompleted,
+      supervisorCompleted,
+    });
+  } catch {
+    res.status(500).json({ error: `Internal server error` });
   }
-
-  res.status(200).json({
-    studentCompleted,
-    supervisorCompleted,
-  });
 });
 
 router.get(
@@ -188,11 +219,21 @@ router.get(
     const studentId = req.session.userId;
 
     if (!studentId || !semester || !year) {
-      res.status(400).json({ error: `Missing required query parameters: studentId, semester, year` });
+      res.status(400).json({ error: `Missing required query parameters: semester, year` });
       return;
     }
 
     try {
+      const student = await prisma.user.findUnique({
+        where: { id: Number(studentId) },
+      });
+
+      // Prevent enabled users from checking their status
+      if (!student || student.enabled) {
+        res.status(403).json({ error: `Account is enabled.` });
+        return;
+      }
+
       const evaluations = await prisma.evaluation.findMany({
         where: {
           semester: semester as Semester,
@@ -223,9 +264,13 @@ router.get(`/supervisorEvals`, limiter, requireAuth, async (
   }
 
   try {
+    // Fetch only students who are NOT enabled
     const myStudents = await prisma.user.findMany({
       select: { id: true },
-      where: { supervisorId: Number(supervisorId) },
+      where: {
+        enabled: false,
+        supervisorId: Number(supervisorId),
+      },
     });
 
     if (myStudents.length === 0) {
@@ -241,13 +286,14 @@ router.get(`/supervisorEvals`, limiter, requireAuth, async (
       },
       where: {
         semester: semester as Semester,
-        studentId: { in: studentIds },
+        studentId: { in: studentIds }, // studentIds is already filtered
         year: Number(year),
       },
     });
 
     const statuses: Record<number, { studentCompleted: boolean, supervisorCompleted: boolean }> = {};
 
+    // Initialize statuses for non-enabled students only
     for (const id of studentIds) {
       statuses[id] = { studentCompleted: false, supervisorCompleted: false };
     }

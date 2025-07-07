@@ -4,34 +4,6 @@
     "name": "critical_thinking",
     "performanceLevels": [
       {
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
-        "level": "InProgressdf"
-      },
-      {
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
-        "level": "Competitive"
-      },
-      {
-        "description": "scenic",
-        "level": "radiant"
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
         "description": "thinking problem",
         "level": "Intermediate"
       },
@@ -40,8 +12,56 @@
         "level": ""
       },
       {
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgressdf"
+      },
+      {
+        "description": "testing",
+        "level": "Competitive"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "scenic",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       }
     ],
     "subItems": [
@@ -55,16 +75,24 @@
     "name": "technical_proficiency",
     "performanceLevels": [
       {
+        "description": "dynamic",
+        "level": "Intermediate"
+      },
+      {
+        "description": "",
+        "level": ""
+      },
+      {
         "description": "Adapts to new situationsdwd effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
       },
       {
-        "description": "Demonstrates outstanding adaptability to situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations. heyyy",
-        "level": "Competitive"
+        "description": "",
+        "level": "this is added"
       },
       {
-        "description": "dynamic",
-        "level": "Intermediate"
+        "description": "",
+        "level": "this is added"
       },
       {
         "description": "",
@@ -72,27 +100,39 @@
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
+      },
+      {
+        "description": "criteria 2",
+        "level": "Competitive"
       },
       {
         "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
+        "level": "this is added"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       }
     ],
     "subItems": [
@@ -108,30 +148,6 @@
     "name": "teamwork",
     "performanceLevels": [
       {
-        "description": "Adapts to situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
-        "level": "InProgressdf"
-      },
-      {
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
-        "level": "Competitive"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
         "description": "",
         "level": "Intermediate"
       },
@@ -140,12 +156,56 @@
         "level": ""
       },
       {
+        "description": "Adapts to situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgressdf"
+      },
+      {
         "description": "",
-        "level": ""
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
+        "level": "Competitive"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
         "level": "StartingLevel"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       }
     ],
     "subItems": [
@@ -165,26 +225,6 @@
     "name": "personal_disposition",
     "performanceLevels": [
       {
-        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
-        "level": "InProgressdf"
-      },
-      {
-        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or ",
-        "level": "Competitive"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
-        "description": "",
-        "level": ""
-      },
-      {
         "description": "",
         "level": "Intermediate"
       },
@@ -193,16 +233,56 @@
         "level": ""
       },
       {
-        "description": "",
-        "level": ""
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "InProgressdf"
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "radiant"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or ",
+        "level": "Competitive"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",
         "level": "StartingLevel"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": "this is added"
       }
     ],
     "subItems": [
