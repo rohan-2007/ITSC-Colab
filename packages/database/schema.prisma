@@ -80,6 +80,7 @@ model RubricSubItem {
   name             String
   rubricCategoryId Int
   rubricCategory   RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
+  deletedAt          DateTime?
 
   @@map("rubricSubItem")
   @@schema("perf_review")

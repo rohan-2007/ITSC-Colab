@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import type { RubricCategory } from './PastEvaluations';
-
+import '../CSS/EditRubric.css';
 // interface RubricRequestBody {
 //   categoryId?: number;
 //   categoryTitle?: string;
@@ -32,7 +32,7 @@ const EditRubric: React.FC = () => {
     void fetchRubricCategories();
   }, []);
 
-  const changeDescription = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeDescription = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const [ category, level ] = name.split(`_`);
     const categoryId = parseInt(category, 10);
@@ -266,6 +266,59 @@ const EditRubric: React.FC = () => {
     }
   };
 
+  const addSubItem = async (categoryId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ addSubItem: true, categoryId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          subItems: [
+            ...category.subItems,
+            resJson,
+          ],
+        })));
+
+      await fetchRubricCategories();
+      console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
+  const deleteSubItem = async (subItemId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ deletedSubItem: subItemId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          subItems: category.subItems.filter((si) => si.id !== subItemId),
+        })));
+
+      await fetchRubricCategories();
+      // console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
   return <div className="rubric-table-wrapper-past-eval">
     <table className="rubric-table-past-eval">
       <thead>
@@ -281,10 +334,10 @@ const EditRubric: React.FC = () => {
                   name={`${level.level}`}
                   onChange={changeLevel}
                 />
-                <button onClick={() => deleteLevel(level.id)}>Delete</button>
+                <button onClick={() => deleteLevel(level.id)} className="edit-rubric-btn">Delete Level</button>
               </th>)}
           <th>
-            <button onClick={createNewLevel}>Add Level</button>
+            <button onClick={createNewLevel} className="edit-rubric-btn">Add Level</button>
           </th>
         </tr>
       </thead>
@@ -302,16 +355,29 @@ const EditRubric: React.FC = () => {
               </strong>
               <ul>
                 {category.subItems?.map((subItem) =>
-                  <li key={subItem.id}>
+                  <li key={subItem.id} className="subitem-list-item">
                     <input
                       className="change-rubric-input"
                       value={subItem.name}
                       name={`${subItem.id}_${category.id}`}
                       onChange={changeSubItem}
                     />
+                    <button
+                      onClick={() => deleteSubItem(subItem.id)}
+                      className="edit-rubric-btn delete-subitem-btn"
+                    >Delete Sub-Criterion</button>
                   </li>)}
               </ul>
-              <button onClick={() => deleteCriterion(category.id)}>Delete</button>
+              <div className="subitem-button-group">
+                <button
+                  onClick={() => addSubItem(category.id)}
+                  className="edit-rubric-btn add-subitem-btn"
+                >Add Sub-Criterion</button>
+                <button
+                  onClick={() => deleteCriterion(category.id)}
+                  className="edit-rubric-btn"
+                >Delete Criterion</button>
+              </div>
             </td>
             {rubricCategories[0]?.levels.map((headerLevel) => {
               const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
@@ -350,11 +416,11 @@ const EditRubric: React.FC = () => {
                 className={cellClass}
               >
 
-                <input
+                <textarea
                   className="change-rubric-input"
                   value={matchingLevel?.description}
                   name={`${category.id}_${matchingLevel?.id}`}
-                  onChange={changeDescription}
+                  onChange={(e) => changeDescription(e)}
                 />
               </td>;
             //   }
@@ -362,7 +428,7 @@ const EditRubric: React.FC = () => {
           </tr>)}
         <tr>
           <td>
-            <button onClick={createNewCriterion}>Add Criterion</button>
+            <button onClick={createNewCriterion} className="edit-rubric-btn">Add Criterion</button>
           </td>
         </tr>
       </tbody>

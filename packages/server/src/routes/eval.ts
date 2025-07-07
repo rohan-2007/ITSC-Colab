@@ -97,7 +97,7 @@ router.get(`/getEval`, limiter, requireAuth, async (
 
     if (targetUserId) {
       const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
-      if (!targetUser || targetUser.enabled) {
+      if (!targetUser || !targetUser.enabled) {
         res.status(200).json([]);
         return;
       }
