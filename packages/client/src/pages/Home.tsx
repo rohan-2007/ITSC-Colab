@@ -60,9 +60,9 @@ interface TeamAverageContribution {
 
 interface Team {
   id: number;
-  leadSupervisor: { name: string };
-  leadSupervisorId: number;
   name: string;
+  primarySupervisor: { name: string };
+  primarySupervisorId: number;
 }
 
 interface User {
@@ -518,14 +518,14 @@ const Home: React.FC = () => {
                   <tr>
                     <th>Team ID</th>
                     <th>Team Name</th>
-                    <th>Lead Supervisor</th>
+                    <th>Primary Supervisor</th>
                     <th>Completed</th>
                   </tr>
                 </thead>
                 <tbody>
                   {user.teams && user.teams.length > 0 ?
                     user.teams.map((team) => {
-                      const leadSupervisorName = team.leadSupervisor?.name || `Unknown`;
+                      const primarySupervisorName = team.primarySupervisor?.name || `Unknown`;
 
                       const completed = evaluations.some((e) =>
                         e.studentId === user.id &&
@@ -540,7 +540,7 @@ const Home: React.FC = () => {
                       return <tr key={team.id}>
                         <td>{team.id}</td>
                         <td>{team.name ?? `Unknown`}</td>
-                        <td>{leadSupervisorName}</td>
+                        <td>{primarySupervisorName}</td>
                         <td>
                           {completed ?
                             `✅` :

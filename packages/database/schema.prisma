@@ -22,7 +22,7 @@ model User {
   evaluationsReceived Evaluation[] @relation("StudentEvaluations")
   evaluationsGiven    Evaluation[] @relation("SupervisorEvaluations")
   teams               Team[]       @relation("UserTeams")
-  leadSupervisorTeams Team[]       @relation("LeadSupervisorTeams")
+  primarySupervisorTeams Team[]       @relation("primarySupervisorTeams")
   enabled             Boolean      @default(true)
   disabledAt          DateTime?
 
@@ -33,11 +33,11 @@ model User {
 model Team {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  leadSupervisorId Int?
+  primarySupervisorId Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   members   User[]   @relation("UserTeams")
-  leadSupervisor   User?    @relation("LeadSupervisorTeams", fields: [leadSupervisorId], references: [id])
+  primarySupervisor   User?    @relation("primarySupervisorTeams", fields: [primarySupervisorId], references: [id])
   @@schema("perf_review")
 }
 
