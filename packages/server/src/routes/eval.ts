@@ -19,7 +19,6 @@ interface EvaluationBody {
   year: number;
 }
 
-// No changes to this route: allows submitting evaluations for any student.
 router.post(`/submitEval`, limiter, requireAuth, async (
   req: Request<unknown, unknown, EvaluationBody>,
   res: Response,
@@ -82,7 +81,6 @@ router.get(`/getEval`, limiter, requireAuth, async (
         where: { id: evaluationId },
       });
 
-      // Hide evaluations belonging to enabled students
       if (!evalRecord || evalRecord.student.enabled) {
         res.status(404).json({ error: `Evaluation not found` });
         return;
@@ -98,10 +96,8 @@ router.get(`/getEval`, limiter, requireAuth, async (
     }
 
     if (targetUserId) {
-      // Check if the target student exists and is not enabled
       const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
       if (!targetUser || targetUser.enabled) {
-        // Return empty array to hide the existence/status of the enabled user
         res.status(200).json([]);
         return;
       }
@@ -148,7 +144,6 @@ router.get(`/getSupervisorEvals`, limiter, requireAuth, async (
       include: {
         results: true,
       },
-      // Exclude evaluations where the student is enabled
       where: {
         student: {
           enabled: false,
@@ -167,13 +162,11 @@ router.get(`/evalStatus`, requireAuth, async (req, res) => {
   try {
     const { semester, studentId, year } = req.query;
 
-    // Check if student exists and is not enabled
     const student = await prisma.user.findUnique({
       where: { id: Number(studentId) },
     });
 
     if (!student || student.enabled) {
-      // Treat enabled students as "not found" to hide their status
       res.status(404).json({ error: `Student not found` });
       return;
     }
@@ -228,7 +221,6 @@ router.get(
         where: { id: Number(studentId) },
       });
 
-      // Prevent enabled users from checking their status
       if (!student || student.enabled) {
         res.status(403).json({ error: `Account is enabled.` });
         return;
@@ -264,7 +256,6 @@ router.get(`/supervisorEvals`, limiter, requireAuth, async (
   }
 
   try {
-    // Fetch only students who are NOT enabled
     const myStudents = await prisma.user.findMany({
       select: { id: true },
       where: {
@@ -286,14 +277,13 @@ router.get(`/supervisorEvals`, limiter, requireAuth, async (
       },
       where: {
         semester: semester as Semester,
-        studentId: { in: studentIds }, // studentIds is already filtered
+        studentId: { in: studentIds },
         year: Number(year),
       },
     });
 
     const statuses: Record<number, { studentCompleted: boolean, supervisorCompleted: boolean }> = {};
 
-    // Initialize statuses for non-enabled students only
     for (const id of studentIds) {
       statuses[id] = { studentCompleted: false, supervisorCompleted: false };
     }

@@ -67,9 +67,7 @@ const main = async () => {
     res.status(404).json({ error: `Route not found`, path: req.path });
   });
 
-  app.listen(PORT, () => {
-    console.log(`server running on PORT 3001`);
-  });
+  app.listen(PORT);
 };
 
 main().catch(() => {

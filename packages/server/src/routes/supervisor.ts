@@ -151,12 +151,10 @@ router.post(`/teams`, limiter, requireAuth, async (
       res.status(404).json({ error: `User not a supervisor or not found` });
       return;
     }
-    // Exclude disabled students from team members
     const teams = await prisma.team.findMany({ include: { members: true } });
 
     const formattedTeams = await Promise.all(
       teams.map(async (team) => {
-        // Filter out disabled students from members
         const members = await prisma.user.findMany({
           where: {
             id: { in: team.members.map((m: { id: number }) => m.id) },
@@ -214,7 +212,6 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       return;
     }
 
-    // Only allow enabled students to be added as members
     const enabledMemberIDs = await prisma.user.findMany({
       select: { id: true },
       where: {
@@ -269,7 +266,6 @@ router.post(`/createTeam`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 ) => {
   const { memberIDs, name } = req.body;
   try {
-    // Only allow enabled students to be added as members
     const enabledMemberIDs = await prisma.user.findMany({
       select: { id: true },
       where: {
