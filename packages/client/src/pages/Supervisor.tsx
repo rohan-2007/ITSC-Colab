@@ -193,7 +193,6 @@ const Supervisor: React.FC = () => {
   const [ studentInfoModalOpen, setStudentInfoModalOpen ] = useState(false);
   const [ teamEditModalOpen, setTeamEditModalOpen ] = useState(false);
   const [ teamMembersModalOpen, setMembersModalOpen ] = useState(false);
-  const [ _selectedStudentIndex, setSelectedStudentIndex ] = useState<number | null>(null);
   const [ selectedTeamIndex, setSelectedTeamIndex ] = useState<number | null>(null);
   const [ viewingTeamIndex, setViewingTeamIndex ] = useState<number | null>(null);
   const [ editedStudent, setEditedStudent ] = useState<{
@@ -233,19 +232,6 @@ const Supervisor: React.FC = () => {
     }
   };
 
-  const canEditStudent = React.useCallback((student: Student): boolean => {
-    if (!currentUserId) {
-      return false;
-    }
-
-    if (student.supervisorId === currentUserId) {
-      return true;
-    }
-
-    const userTeams = teams.filter((team) => team.primarySupervisorId === currentUserId);
-    return userTeams.some((team) => team.assignedStudents.includes(student.name));
-  }, [ currentUserId, teams ]);
-
   const toggleEnableDisable = async (student: Student) => {
     setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: !s.enabled } : s));
 
@@ -275,6 +261,9 @@ const Supervisor: React.FC = () => {
         setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: student.enabled } : s));
         return;
       }
+      // Reload to reflect sorted changes everywhere
+      notifyAfterReload(`Student ${!student.enabled ? `enabled` : `disabled`} successfully.`);
+      window.location.reload();
     } catch {
       setStudents((prev) => prev.map((s) => s.id === student.id ? { ...s, enabled: student.enabled } : s));
       throw new Error(`student enable/disable error occurred`);
@@ -395,22 +384,58 @@ const Supervisor: React.FC = () => {
   }, [ navigate ]);
 
   useEffect(() => {
-    if (currentUserId && students.length > 0 && teams.length > 0) {
-      const filteredList = students
-        .filter((student) => canEditStudent(student))
-        .sort((a, b) => a.name.localeCompare(b.name));
+    if (currentUserId && students.length > 0 && supervisors.length > 0 && teams.length > 0) {
+      // Find the current supervisor's name
+      const currentSupervisor = supervisors.find((s) => s.id === currentUserId);
+      if (!currentSupervisor) {
+        return;
+      }
+      const currentSupervisorName = currentSupervisor.name;
 
-      setFilteredStudents(filteredList);
+      // Find all teams the current supervisor is a member of
+      const supervisorTeams = teams.filter((team) =>
+        (team.assignedSupervisors || []).includes(currentSupervisorName));
+
+      // Create a set of all student names from those teams for quick lookup
+      const visibleStudentNames = new Set<string>();
+      supervisorTeams.forEach((team) => {
+        team.assignedStudents.forEach((studentName) => {
+          visibleStudentNames.add(studentName);
+        });
+      });
+
+      // Filter the students based on the new visibility rules
+      const visibleStudents = students.filter((student) => {
+        // Condition 1: Student is in one of the supervisor's teams
+        const isInSupervisorsTeam = visibleStudentNames.has(student.name);
+        // Condition 2: Student is disabled
+        const isDisabled = !student.enabled;
+
+        return isInSupervisorsTeam || isDisabled;
+      });
+
+      // Sort the filtered list: disabled students go to the bottom, then sort alphabetically
+      visibleStudents.sort((a, b) => {
+        if (a.enabled && !b.enabled) {
+          return -1; // a (enabled) comes first
+        }
+        if (!a.enabled && b.enabled) {
+          return 1; // b (enabled) comes first
+        }
+        // If both are enabled or both are disabled, sort by name
+        return a.name.localeCompare(b.name);
+      });
+
+      setFilteredStudents(visibleStudents);
     }
-  }, [ teams, currentUserId, students, canEditStudent ]);
+  }, [ teams, currentUserId, students, supervisors ]);
 
-  const openStudentInfoModal = (index: number) => {
-    setSelectedStudentIndex(index);
+  const openStudentInfoModal = (student: Student) => {
     setEditedStudent({
-      email: filteredStudents[index].email,
-      name: filteredStudents[index].name,
+      email: student.email,
+      name: student.name,
       newPassword: ``,
-      userId: filteredStudents[index].id,
+      userId: student.id,
     });
     setStudentInfoModalOpen(true);
   };
@@ -431,7 +456,6 @@ const Supervisor: React.FC = () => {
 
   const closeStudentInfoModal = () => {
     setStudentInfoModalOpen(false);
-    setSelectedStudentIndex(null);
   };
 
   const openTeamMembersModal = (index: number) => {
@@ -614,13 +638,15 @@ const Supervisor: React.FC = () => {
           {filteredStudents
             .filter((s) =>
               studentSearch ? s.name.toLowerCase().includes(studentSearch.toLowerCase()) : true)
-            .map((student, index) =>
+            .map((student) =>
               <div className="student-row" key={student.id}>
                 {` `}
-                <span className="student-name">{student.name}</span>
+                <span className={`student-name ${!student.enabled ? `disabled-student-text` : ``}`}>
+                  {student.name} {!student.enabled && `(Disabled)`}
+                </span>
                 <div className="supervisor-btn-div">
                   <button
-                    onClick={() => openStudentInfoModal(index)}
+                    onClick={() => openStudentInfoModal(student)}
                     className="button-change-info supervisor-btn"
                   >
                     Change Info
@@ -858,9 +884,17 @@ const Supervisor: React.FC = () => {
             />
             <div className="dropdown-scroll">
               {students
-                .filter((student) => student.enabled)
                 .filter((student) =>
                   student.name.toLowerCase().includes(studentSearchTerm.toLowerCase()))
+                .sort((a, b) => {
+                  if (a.enabled && !b.enabled) {
+                    return -1;
+                  }
+                  if (!a.enabled && b.enabled) {
+                    return 1;
+                  }
+                  return a.name.localeCompare(b.name);
+                })
                 .map((student) => {
                   const isCheckedStudent = teams[selectedTeamIndex].assignedStudents.includes(student.name);
                   return <label key={student.id} className="dropdown-item">
@@ -868,8 +902,11 @@ const Supervisor: React.FC = () => {
                       type="checkbox"
                       checked={isCheckedStudent}
                       onChange={() => handleStudentToggle(selectedTeamIndex, student.name)}
+                      disabled={!student.enabled}
                     />
                     {student.name}
+                    {` `}
+                    {!student.enabled && `(Disabled)`}
                   </label>;
                 })}
             </div>
