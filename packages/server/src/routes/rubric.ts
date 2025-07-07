@@ -55,9 +55,18 @@ router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void
 
 router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, RubricRequestBody>, res: Response) => {
   const {
-    addLevel, categoryId, categoryTitle, deletedLevel, description,
-    // eslint-disable-next-line sort-keys-custom-order/object-keys
-    level, levelId, prevLevel, subItem, subItemId, addCategory, deletedCategory,
+    addCategory,
+    addLevel,
+    categoryId,
+    categoryTitle,
+    deletedCategory,
+    deletedLevel,
+    description,
+    level,
+    levelId,
+    prevLevel,
+    subItem,
+    subItemId,
   } = req.body;
 
   if (description && categoryId && levelId) {
@@ -160,43 +169,33 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
     }
   } else if (addCategory) {
     try {
-      console.log(`Creating new rubric category...`);
-
       const existingCategories = await prisma.rubricCategory.findMany();
       const newCategory = await prisma.rubricCategory.create({
         data: {
-          // id: existingCategories.length + 1, // 👈 manual ID
-          displayOrder: existingCategories.length + 1, // 👈 manual display order
-          name: `new`, // Or generate something unique
+          displayOrder: existingCategories.length + 1,
+          name: `new`,
           title: ``,
         },
       });
 
-      console.log(`New category created with ID: ${ newCategory.id }`);
-
-      // Step 2: Fetch existing levels to clone
       const existingLevels = await prisma.rubricPerformanceLevel.findMany({
         select: { level: true },
         where: {
-          deletedAt: null, // Ensure we only clone active levels
-          rubricCategoryId: /* pick a base one or default template */ 1,
-        }, // optional
+          deletedAt: null,
+          rubricCategoryId: 1,
+        },
       });
 
-      // Step 3: Create new levels with custom IDs
       await Promise.all(existingLevels.map((lvl, i) =>
         prisma.rubricPerformanceLevel.create({
           data: {
-            id: newCategory.id * 100 + (i + 1), // 👈 manual ID
+            id: newCategory.id * 100 + (i + 1),
             description: ``,
             level: lvl.level,
             rubricCategoryId: newCategory.id,
           },
         })));
 
-      console.log(`New levels created for category ID: ${ newCategory.id }`);
-
-      // Optional: Return the category with levels
       const fullCategory = await prisma.rubricCategory.findUnique({
         include: { levels: true },
         where: { id: newCategory.id },
@@ -205,7 +204,6 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       res.status(200).json(fullCategory);
       return;
     } catch (err) {
-      console.error(`Error creating rubric category:`, err);
       res.status(500).json({ err, message: `Failed to create rubric category` });
     }
     return;

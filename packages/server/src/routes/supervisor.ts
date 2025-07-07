@@ -259,10 +259,15 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       return;
     }
 
+    const allMemberIDs = new Set(memberIDs);
+    if (typeof primarySupervisorId === `number`) {
+      allMemberIDs.add(primarySupervisorId);
+    }
+
     const enabledMemberIDs = await prisma.user.findMany({
       select: { id: true },
       where: {
-        id: { in: memberIDs },
+        id: { in: Array.from(allMemberIDs) },
         OR: [
           { role: { not: Role.STUDENT } },
           { enabled: true, role: Role.STUDENT },
@@ -271,18 +276,18 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     });
 
     const updateData: {
-      primarySupervisor?: { connect: { id: number } };
+      leadSupervisor?: { connect: { id: number } };
     } = {};
 
     if (typeof primarySupervisorId === `number`) {
-      updateData.primarySupervisor = {
+      updateData.leadSupervisor = {
         connect: { id: primarySupervisorId },
       };
     }
 
     const updatedTeam = await prisma.team.update({
       data: {
-        ...(updateData.primarySupervisor && { primarySupervisor: updateData.primarySupervisor }),
+        ...(updateData.leadSupervisor && { leadSupervisor: updateData.leadSupervisor }),
         members: {
           set: enabledMemberIDs.map((u) => ({ id: u.id })),
         },
