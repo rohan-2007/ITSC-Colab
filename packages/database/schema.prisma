@@ -24,6 +24,7 @@ model User {
   teams               Team[]       @relation("UserTeams")
   leadSupervisorTeams Team[]       @relation("LeadSupervisorTeams")
   enabled             Boolean      @default(true)
+  disabledAt          DateTime?
 
   @@map("user")
   @@schema("perf_review")

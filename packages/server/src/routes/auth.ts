@@ -167,8 +167,17 @@ router.post(`/login`, loginLimiter, async (
       where: { email },
     });
 
-    if (!user || !user.enabled) {
-      // console.log(`inside user enabled`);
+    if (!user) {
+      res.status(404).json({ error: `User not found` });
+      return;
+    }
+
+    if (user.role === Role.STUDENT && !user.enabled) {
+      res.status(403).json({ error: `Student account is disabled` });
+      return;
+    }
+
+    if (!user.enabled) {
       res.status(404).json({ error: `User not found` });
       return;
     }
