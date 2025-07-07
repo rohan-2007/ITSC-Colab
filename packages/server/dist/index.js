@@ -59,8 +59,7 @@ const main = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     app.use((req, res) => {
         res.status(404).json({ error: `Route not found`, path: req.path });
     });
-    app.listen(PORT, () => {
-    });
+    app.listen(PORT);
 });
 main().catch(() => {
     process.exit(1);
