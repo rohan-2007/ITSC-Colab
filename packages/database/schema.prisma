@@ -86,7 +86,7 @@ model RubricSubItem {
 }
 
 model RubricPerformanceLevel {
-  id                 Int                @id
+  id                 Int                @id @default(autoincrement())
   rubricCategoryId   Int
   level              String
   description        String

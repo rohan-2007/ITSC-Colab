@@ -9,6 +9,7 @@ interface RubricRequestBody {
   addLevel?: boolean;
   categoryId?: number;
   categoryTitle?: string;
+  deletedCategory?: number;
   deletedLevel?: number;
   description?: string;
   level?: string;
@@ -56,7 +57,7 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
   const {
     addLevel, categoryId, categoryTitle, deletedLevel, description,
     // eslint-disable-next-line sort-keys-custom-order/object-keys
-    level, levelId, prevLevel, subItem, subItemId, addCategory,
+    level, levelId, prevLevel, subItem, subItemId, addCategory, deletedCategory,
   } = req.body;
 
   if (description && categoryId && levelId) {
@@ -88,7 +89,7 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
   } else if (categoryTitle) {
     try {
       const updatedCategoryName = await prisma.rubricCategory.update({
-        data: { title: categoryTitle },
+        data: { name: categoryTitle, title: categoryTitle },
         where: { id: categoryId },
       });
 
@@ -159,17 +160,27 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
     }
   } else if (addCategory) {
     try {
+      console.log(`Creating new rubric category...`);
+
+      const existingCategories = await prisma.rubricCategory.findMany();
       const newCategory = await prisma.rubricCategory.create({
         data: {
-          name: ``, // Or generate something unique
+          // id: existingCategories.length + 1, // 👈 manual ID
+          displayOrder: existingCategories.length + 1, // 👈 manual display order
+          name: `new`, // Or generate something unique
           title: ``,
         },
       });
 
+      console.log(`New category created with ID: ${ newCategory.id }`);
+
       // Step 2: Fetch existing levels to clone
       const existingLevels = await prisma.rubricPerformanceLevel.findMany({
         select: { level: true },
-        where: { rubricCategoryId: /* pick a base one or default template */ 1 }, // optional
+        where: {
+          deletedAt: null, // Ensure we only clone active levels
+          rubricCategoryId: /* pick a base one or default template */ 1,
+        }, // optional
       });
 
       // Step 3: Create new levels with custom IDs
@@ -182,6 +193,8 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
             rubricCategoryId: newCategory.id,
           },
         })));
+
+      console.log(`New levels created for category ID: ${ newCategory.id }`);
 
       // Optional: Return the category with levels
       const fullCategory = await prisma.rubricCategory.findUnique({
@@ -196,6 +209,22 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       res.status(500).json({ err, message: `Failed to create rubric category` });
     }
     return;
+  } else if (deletedCategory) {
+    try {
+      const time = new Date();
+
+      await prisma.$executeRaw`
+        UPDATE "perf_review"."rubricCategory"
+        SET "deletedAt" = ${ time }
+        WHERE "id" = ${ deletedCategory };
+      `;
+
+      res.status(200).json({ message: `deleted category successfully` });
+      return;
+    } catch (error) {
+      res.status(500).json({ error, message: `Internal Server Error` });
+      return;
+    }
   }
 
   res.status(400).json({ error: `Invalid request` });

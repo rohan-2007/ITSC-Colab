@@ -163,6 +163,7 @@ const EditRubric: React.FC = () => {
 
       return {
         ...c,
+        name: value,
         title: value,
       };
     }));
@@ -222,18 +223,44 @@ const EditRubric: React.FC = () => {
       console.log(`resJson`, resJson);
 
       setRubricCategories((prev) =>
-        [ ...prev, {
-          ...resJson,
-          id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1,
-          levels: resJson.levels.map((level) => ({
-            ...level,
-            id: resJson.id * 100 + level.id,
-            rubricCategoryId: resJson.id,
-          })), title: ``,
-        }]);
+        [ ...prev, resJson ]);
+
+      // {
+      //     ...resJson,
+      //     id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1,
+      //     levels: resJson.levels.map((level) => ({
+      //       ...level,
+      //       id: resJson.id * 100 + level.id,
+      //       rubricCategoryId: resJson.id,
+      //     })), title: ``,
+      //   }
 
       await fetchRubricCategories();
       console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
+  const deleteCriterion = async (criterionId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ deletedCategory: criterionId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      console.log(`in deleteCriterion`);
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        prev.filter((category) => category.id !== criterionId));
+
+      await fetchRubricCategories();
+      // console.log(`updatedCategories: `, rubricCategories);
     } catch {
       return;
     }
@@ -284,7 +311,7 @@ const EditRubric: React.FC = () => {
                     />
                   </li>)}
               </ul>
-              <button>Delete</button>
+              <button onClick={() => deleteCriterion(category.id)}>Delete</button>
             </td>
             {rubricCategories[0]?.levels.map((headerLevel) => {
               const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
