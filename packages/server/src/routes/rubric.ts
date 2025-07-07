@@ -26,6 +26,9 @@ router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void
     const rubricCategories = await prisma.rubricCategory.findMany({
       include: {
         levels: {
+          orderBy: {
+            id: `asc`,
+          },
           select: {
             id: true,
             description: true,

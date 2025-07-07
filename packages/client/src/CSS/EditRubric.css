@@ -33,6 +33,10 @@
     padding: 0.5em;
 }
 
+.delete-level-btn {
+    margin-left: 0;
+}
+
 .subitem-list-item {
     display: flex;
 }
