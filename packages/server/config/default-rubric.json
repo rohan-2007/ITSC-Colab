@@ -5,6 +5,10 @@
     "performanceLevels": [
       {
         "description": "",
+        "level": "col 6"
+      },
+      {
+        "description": "",
         "level": "this is added"
       },
       {
@@ -41,14 +45,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "scenic",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -62,6 +58,10 @@
       {
         "description": "customer",
         "level": "Custom"
+      },
+      {
+        "description": "scenic",
+        "level": "radiant"
       },
       {
         "description": "thinking problem",
@@ -98,6 +98,10 @@
       {
         "description": "",
         "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -111,6 +115,10 @@
     "displayOrder": 2,
     "name": "technical_proficiency",
     "performanceLevels": [
+      {
+        "description": "",
+        "level": "col 6"
+      },
       {
         "description": "Adapts to new situationsdwd effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
@@ -145,14 +153,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -166,6 +166,10 @@
       {
         "description": "salesman",
         "level": "Custom"
+      },
+      {
+        "description": "",
+        "level": "radiant"
       },
       {
         "description": "dynamic",
@@ -206,6 +210,10 @@
       {
         "description": "",
         "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -220,6 +228,10 @@
     "displayOrder": 3,
     "name": "teamwork",
     "performanceLevels": [
+      {
+        "description": "",
+        "level": "col 6"
+      },
       {
         "description": "",
         "level": "this is added"
@@ -258,14 +270,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -279,6 +283,10 @@
       {
         "description": "pilot",
         "level": "Custom"
+      },
+      {
+        "description": "",
+        "level": "radiant"
       },
       {
         "description": "",
@@ -315,6 +323,10 @@
       {
         "description": "",
         "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -333,6 +345,10 @@
     "displayOrder": 4,
     "name": "personal_disposition",
     "performanceLevels": [
+      {
+        "description": "",
+        "level": "col 6"
+      },
       {
         "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
@@ -375,14 +391,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -392,6 +400,10 @@
       {
         "description": "driver",
         "level": "Custom"
+      },
+      {
+        "description": "",
+        "level": "radiant"
       },
       {
         "description": "",
@@ -428,6 +440,10 @@
       {
         "description": "",
         "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [

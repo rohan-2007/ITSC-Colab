@@ -81,7 +81,7 @@ router.get(`/getEval`, limiter, requireAuth, async (
         where: { id: evaluationId },
       });
 
-      if (!evalRecord || evalRecord.student.enabled) {
+      if (!evalRecord || !evalRecord.student.enabled) {
         res.status(404).json({ error: `Evaluation not found` });
         return;
       }
@@ -102,19 +102,19 @@ router.get(`/getEval`, limiter, requireAuth, async (
         return;
       }
 
-      const sessionUser = await prisma.user.findUnique({ where: { id: sessionUserId } });
-      const isOwnRequest = targetUserId === sessionUserId;
-      let isSupervisorRequest = false;
-      if (sessionUser?.role === `SUPERVISOR`) {
-        if (targetUser.supervisorId === sessionUserId) {
-          isSupervisorRequest = true;
-        }
-      }
+      // const sessionUser = await prisma.user.findUnique({ where: { id: sessionUserId } });
+      // const isOwnRequest = targetUserId === sessionUserId;
+      // let isSupervisorRequest = false;
+      // if (sessionUser?.role === `SUPERVISOR`) {
+      //   if (targetUser.supervisorId === sessionUserId) {
+      //     isSupervisorRequest = true;
+      //   }
+      // }
 
-      if (!isOwnRequest && !isSupervisorRequest) {
-        res.status(403).json({ error: `Forbidden: You are not authorized to retrieve these evaluations.` });
-        return;
-      }
+      // if (!isOwnRequest && !isSupervisorRequest) {
+      //   res.status(403).json({ error: `Forbidden: You are not authorized to retrieve these evaluations.` });
+      //   return;
+      // }
 
       const evaluations = await prisma.evaluation.findMany({
         include: {
@@ -146,7 +146,7 @@ router.get(`/getSupervisorEvals`, limiter, requireAuth, async (
       },
       where: {
         student: {
-          enabled: false,
+          enabled: true,
         },
         supervisorId: targetId,
       },
@@ -166,7 +166,7 @@ router.get(`/evalStatus`, requireAuth, async (req, res) => {
       where: { id: Number(studentId) },
     });
 
-    if (!student || student.enabled) {
+    if (!student || !student.enabled) {
       res.status(404).json({ error: `Student not found` });
       return;
     }
