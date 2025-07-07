@@ -76,6 +76,53 @@ interface StudentInfoChange {
   userId: number;
 }
 
+router.post(`/createUser`, limiter, requireRole([ Role.SUPERVISOR ]), async (
+  req: Request<unknown, unknown, { email: string, enabled?: boolean, name: string, password: string, role: Role }>,
+  res: Response,
+) => {
+  const { email, enabled = true, name, password, role } = req.body;
+
+  if (!email || !name || !password || !role) {
+    res.status(400).json({ error: `Missing required fields` });
+    return;
+  }
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      res.status(409).json({ error: `User with this email already exists` });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        enabled,
+        name,
+        password: hashedPassword,
+        role,
+      },
+    });
+
+    res.status(201).json({
+      message: `User created successfully`,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        enabled: newUser.enabled,
+        name: newUser.name,
+        role: newUser.role,
+      },
+    });
+  } catch {
+    if (!res.headersSent) {
+      res.status(500).json({ error: `Internal server error` });
+    }
+  }
+});
+
 router.post(`/setUserInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, StudentInfoChange>,
   res: Response,
