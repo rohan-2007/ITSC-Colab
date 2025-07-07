@@ -9,15 +9,27 @@
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
       },
       {
         "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
       },
       {
-        "description": "testing",
-        "level": "Competitive"
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "Starting"
+      },
+      {
+        "description": "here",
+        "level": "column name"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "",
@@ -33,7 +45,7 @@
       },
       {
         "description": "",
-        "level": "this is added"
+        "level": "col 6"
       },
       {
         "description": "scenic",
@@ -44,12 +56,16 @@
         "level": "this is added"
       },
       {
-        "description": "",
-        "level": "this is added"
+        "description": "testing",
+        "level": "Competitive"
       },
       {
-        "description": "",
-        "level": "this is added"
+        "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
+        "level": "Competitive"
+      },
+      {
+        "description": "customer",
+        "level": "Custom"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
@@ -60,8 +76,24 @@
         "level": "added another"
       },
       {
+        "description": "react here",
+        "level": "react"
+      },
+      {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "this zustand",
+        "level": "zustand"
+      },
+      {
+        "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
+        "level": "In Progress"
       }
     ],
     "subItems": [
@@ -79,10 +111,6 @@
         "level": "Intermediate"
       },
       {
-        "description": "",
-        "level": ""
-      },
-      {
         "description": "Adapts to new situationsdwd effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
       },
@@ -91,8 +119,32 @@
         "level": "this is added"
       },
       {
+        "description": "here",
+        "level": "column name"
+      },
+      {
+        "description": "Demonstrates limited technical skills and knowledge. Struggles to perform tasks and complete issues/tickets.",
+        "level": "Starting"
+      },
+      {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "col 6"
+      },
+      {
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "",
@@ -103,20 +155,16 @@
         "level": "this is added"
       },
       {
-        "description": "",
-        "level": "this is added"
-      },
-      {
-        "description": "",
-        "level": "this is added"
+        "description": "Performs complex tasks, and consistently demonstrates a high level of technical expertise and innovation.",
+        "level": "Competitive"
       },
       {
         "description": "criteria 2",
         "level": "Competitive"
       },
       {
-        "description": "",
-        "level": "this is added"
+        "description": "salesman",
+        "level": "Custom"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
@@ -131,8 +179,24 @@
         "level": "this is added"
       },
       {
+        "description": "react here",
+        "level": "react"
+      },
+      {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "this zustand",
+        "level": "zustand"
+      },
+      {
+        "description": "Capable of performing and solving problems. Can meet the technical requirements of the role consistently. Consistently learning new, relevant tools.",
+        "level": "In Progress"
       }
     ],
     "subItems": [
@@ -153,13 +217,25 @@
       },
       {
         "description": "",
-        "level": ""
+        "level": "this is added"
       },
       {
         "description": "Adapts to situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
       },
       {
+        "description": "here",
+        "level": "column name"
+      },
+      {
+        "description": "Works in isolation and avoids collaboration. Shows resistance to sharing information or knowledge with others or does so with a bad attitude.",
+        "level": "Starting"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
         "description": "",
         "level": "this is added"
       },
@@ -170,6 +246,14 @@
       {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "col 6"
+      },
+      {
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "",
@@ -180,20 +264,16 @@
         "level": "this is added"
       },
       {
-        "description": "",
-        "level": "this is added"
-      },
-      {
-        "description": "",
-        "level": "this is added"
-      },
-      {
         "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or situations.",
         "level": "Competitive"
       },
       {
-        "description": "",
-        "level": "this is added"
+        "description": "Inspires and uplifts teams to maintain a team-oriented focus, while focusing on accountability, initiative flexibility and collaboration.",
+        "level": "Competitive"
+      },
+      {
+        "description": "pilot",
+        "level": "Custom"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
@@ -206,6 +286,22 @@
       {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "react here",
+        "level": "react"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "this zustand",
+        "level": "zustand"
+      },
+      {
+        "description": "Maintains team-oriented mind frame by being accountable, taking initiative, and being flexible on tasks needed to support team goals.",
+        "level": "In Progress"
       }
     ],
     "subItems": [
@@ -229,10 +325,6 @@
         "level": "Intermediate"
       },
       {
-        "description": "",
-        "level": ""
-      },
-      {
         "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgressdf"
       },
@@ -241,8 +333,40 @@
         "level": "this is added"
       },
       {
+        "description": "here",
+        "level": "column name"
+      },
+      {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "Demonstrates low interpersonal skills such as communication and time management. This is evidenced by the lack of active listening during team meetings or conversations and struggles to perform tasks in a timely manner.",
+        "level": "Starting"
+      },
+      {
+        "description": "",
+        "level": "col 6"
+      },
+      {
+        "description": "High interpersonal skills can be seen through an understanding and implementation of nuance in conversations, adapting communication style as needed to convey ideas clearly and professionally.",
+        "level": "Competitive"
+      },
+      {
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "",
@@ -253,24 +377,12 @@
         "level": "this is added"
       },
       {
-        "description": "",
-        "level": "this is added"
-      },
-      {
-        "description": "",
-        "level": "this is added"
-      },
-      {
-        "description": "",
-        "level": "this is added"
-      },
-      {
         "description": "Demonstrates outstanding adaptability to new situations and challenges. Embraces feedback and seeks opportunities for growth. Thrives and inspires others to adapt to new projects or ",
         "level": "Competitive"
       },
       {
-        "description": "",
-        "level": "this is added"
+        "description": "driver",
+        "level": "Custom"
       },
       {
         "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",
@@ -283,6 +395,22 @@
       {
         "description": "",
         "level": "this is added"
+      },
+      {
+        "description": "react here",
+        "level": "react"
+      },
+      {
+        "description": "",
+        "level": "this is added"
+      },
+      {
+        "description": "this zustand",
+        "level": "zustand"
+      },
+      {
+        "description": "Shows good range of interpersonal skills through effective communication in verbal and written channels and accomplishing tasks in a timely manner.",
+        "level": "In Progress"
       }
     ],
     "subItems": [
