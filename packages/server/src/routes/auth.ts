@@ -88,8 +88,13 @@ router.post(`/signup`, loginLimiter, async (
   const { email, name, password, role, supervisorEmail, teamName } = req.body;
 
   try {
-    const existingUser: PrismaUser | null = await prisma.user.findUnique({
-      where: { email },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { name },
+        ],
+      },
     });
 
     let supervisorId: number | null = null;
@@ -178,7 +183,7 @@ router.post(`/login`, loginLimiter, async (
     }
 
     if (!user.enabled) {
-      res.status(404).json({ error: `User not found` });
+      res.status(404).json({ error: `Your account is currently disabled` });
       return;
     }
 

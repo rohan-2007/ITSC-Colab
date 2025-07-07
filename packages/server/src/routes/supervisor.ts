@@ -77,20 +77,30 @@ interface StudentInfoChange {
 }
 
 router.post(`/createUser`, limiter, requireRole([ Role.SUPERVISOR ]), async (
-  req: Request<unknown, unknown, { email: string, enabled?: boolean, name: string, password: string, role: Role }>,
+  req: Request<unknown, unknown, {
+    email: string; enabled?: boolean;
+    name: string; password: string; role: Role; supervisorId?: number;
+  }>,
   res: Response,
 ) => {
   const { email, enabled = true, name, password, role } = req.body;
 
-  if (!email || !name || !password || !role) {
+  if (!email || !name || !password || !role || (role === Role.STUDENT && !req.body.supervisorId)) {
     res.status(400).json({ error: `Missing required fields` });
     return;
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { name },
+        ],
+      },
+    });
     if (existingUser) {
-      res.status(409).json({ error: `User with this email already exists` });
+      res.status(409).json({ error: `User with this email/name already exists` });
       return;
     }
 
@@ -103,6 +113,7 @@ router.post(`/createUser`, limiter, requireRole([ Role.SUPERVISOR ]), async (
         name,
         password: hashedPassword,
         role,
+        supervisorId: req.body.supervisorId || null,
       },
     });
 
@@ -114,6 +125,7 @@ router.post(`/createUser`, limiter, requireRole([ Role.SUPERVISOR ]), async (
         enabled: newUser.enabled,
         name: newUser.name,
         role: newUser.role,
+        supervisorId: newUser.supervisorId,
       },
     });
   } catch {
