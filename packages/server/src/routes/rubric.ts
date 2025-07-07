@@ -125,7 +125,6 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       });
     }
   } else if (deletedLevel) {
-    // console.log(`deleted level: `, deletedLevel);
     try {
       const levelNumber = deletedLevel % 10;
       const time = new Date();

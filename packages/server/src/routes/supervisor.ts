@@ -151,12 +151,10 @@ router.post(`/teams`, limiter, requireAuth, async (
       res.status(404).json({ error: `User not a supervisor or not found` });
       return;
     }
-    // Exclude disabled students from team members
     const teams = await prisma.team.findMany({ include: { members: true } });
 
     const formattedTeams = await Promise.all(
       teams.map(async (team) => {
-        // Filter out disabled students from members
         const members = await prisma.user.findMany({
           where: {
             id: { in: team.members.map((m: { id: number }) => m.id) },
@@ -167,19 +165,19 @@ router.post(`/teams`, limiter, requireAuth, async (
           },
         });
 
-        let leadSupervisorName = `None`;
+        let primarySupervisorName = `None`;
         if (team.leadSupervisorId) {
           const supervisor = await prisma.user.findUnique({
             where: { id: team.leadSupervisorId },
           });
-          leadSupervisorName = supervisor?.name || `None`;
+          primarySupervisorName = supervisor?.name || `None`;
         }
         return {
           id: team.id,
-          leadSupervisorId: team.leadSupervisorId,
-          leadSupervisorName,
           memberIDs: members.map((m) => m.id),
           name: team.name,
+          primarySupervisorId: team.leadSupervisorId,
+          primarySupervisorName,
         };
       }),
     );
@@ -193,16 +191,16 @@ router.post(`/teams`, limiter, requireAuth, async (
 });
 interface TeamInfoChange {
   id: number;
-  leadSupervisorId?: number;
   memberIDs: number[];
   name: string;
+  primarySupervisorId?: number;
 }
 
 router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
   req: Request<unknown, unknown, TeamInfoChange>,
   res: Response,
 ) => {
-  const { id, leadSupervisorId, memberIDs, name } = req.body;
+  const { id, memberIDs, name, primarySupervisorId } = req.body;
 
   try {
     const team: Team | null = await prisma.team.findUnique({
@@ -214,7 +212,6 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
       return;
     }
 
-    // Only allow enabled students to be added as members
     const enabledMemberIDs = await prisma.user.findMany({
       select: { id: true },
       where: {
@@ -227,18 +224,18 @@ router.post(`/setTeamInfo`, limiter, requireRole([ Role.SUPERVISOR ]), async (
     });
 
     const updateData: {
-      leadSupervisor?: { connect: { id: number } };
+      primarySupervisor?: { connect: { id: number } };
     } = {};
 
-    if (typeof leadSupervisorId === `number`) {
-      updateData.leadSupervisor = {
-        connect: { id: leadSupervisorId },
+    if (typeof primarySupervisorId === `number`) {
+      updateData.primarySupervisor = {
+        connect: { id: primarySupervisorId },
       };
     }
 
     const updatedTeam = await prisma.team.update({
       data: {
-        ...(updateData.leadSupervisor && { leadSupervisor: updateData.leadSupervisor }),
+        ...(updateData.primarySupervisor && { primarySupervisor: updateData.primarySupervisor }),
         members: {
           set: enabledMemberIDs.map((u) => ({ id: u.id })),
         },
@@ -269,7 +266,6 @@ router.post(`/createTeam`, limiter, requireRole([ Role.SUPERVISOR ]), async (
 ) => {
   const { memberIDs, name } = req.body;
   try {
-    // Only allow enabled students to be added as members
     const enabledMemberIDs = await prisma.user.findMany({
       select: { id: true },
       where: {

@@ -70,14 +70,12 @@ export const seedRubricData = async (): Promise<void> => {
         return;
       }
 
-      // If no data or data is empty, use local contents
       if (
         !existingCategory ||
         !existingCategory.levels?.length ||
         !existingCategory.subItems?.length
       ) {
         try {
-          // Upsert category from local file
           await prisma.rubricCategory.upsert({
             create: {
               id: categoryId,
@@ -108,9 +106,7 @@ export const seedRubricData = async (): Promise<void> => {
           return;
         }
       } else {
-        // Otherwise, replace local contents with database
         try {
-          // Overwrite local file with database data
           const dbCategory = await prisma.rubricCategory.findUnique({
             include: {
               levels: true,

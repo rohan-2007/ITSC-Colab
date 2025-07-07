@@ -29,9 +29,9 @@ interface Team {
   assignedStudents: string[];
   assignedSupervisors: string[];
   assignedUsers: string[];
-  leadSupervisorId?: number;
-  leadSupervisorName?: string;
   name: string;
+  primarySupervisorId?: number;
+  primarySupervisorName?: string;
 }
 
 const Supervisor: React.FC = () => {
@@ -58,7 +58,7 @@ const Supervisor: React.FC = () => {
     userId: number;
   } | null>(null);
   const [ editedTeamName, setEditedTeamName ] = useState(``);
-  const [ editedLeadSupervisorId, setEditedLeadSupervisorId ] = useState<number | undefined>(undefined);
+  const [ editedPrimarySupervisorId, setEditedPrimarySupervisorId ] = useState<number | undefined>(undefined);
   const [ filteredStudents, setFilteredStudents ] = useState<Student[]>([]);
 
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const Supervisor: React.FC = () => {
       return true;
     }
 
-    const userTeams = teams.filter((team) => team.leadSupervisorId === currentUserId);
+    const userTeams = teams.filter((team) => team.primarySupervisorId === currentUserId);
     return userTeams.some((team) => team.assignedStudents.includes(student.name));
   }, [ currentUserId, teams ]);
 
@@ -188,10 +188,10 @@ const Supervisor: React.FC = () => {
         if (teamsResponse.ok && teamsData.teams) {
           interface TeamFromApi {
             id: number;
-            leadSupervisorId?: number;
-            leadSupervisorName: string;
             memberIDs: number[];
             name: string;
+            primarySupervisorId?: number;
+            primarySupervisorName: string;
           }
           const newTeams = (teamsData.teams as TeamFromApi[]).map((team) => {
             const assignedStudents = fetchedStudents
@@ -208,9 +208,9 @@ const Supervisor: React.FC = () => {
               assignedStudents,
               assignedSupervisors,
               assignedUsers: [ ...assignedStudents, ...assignedSupervisors ],
-              leadSupervisorId: team.leadSupervisorId,
-              leadSupervisorName: team.leadSupervisorName,
               name: team.name,
+              primarySupervisorId: team.primarySupervisorId,
+              primarySupervisorName: team.primarySupervisorName,
             };
           });
           newTeams.sort((a, b) => a.name.localeCompare(b.name));
@@ -248,7 +248,7 @@ const Supervisor: React.FC = () => {
   const openEditTeamModal = (index: number) => {
     setSelectedTeamIndex(index);
     setEditedTeamName(teams[index].name);
-    setEditedLeadSupervisorId(teams[index].leadSupervisorId);
+    setEditedPrimarySupervisorId(teams[index].primarySupervisorId);
     setTeamEditModalOpen(true);
   };
 
@@ -256,7 +256,7 @@ const Supervisor: React.FC = () => {
     setTeamEditModalOpen(false);
     setSelectedTeamIndex(null);
     setEditedTeamName(``);
-    setEditedLeadSupervisorId(undefined);
+    setEditedPrimarySupervisorId(undefined);
   };
 
   const closeStudentInfoModal = () => {
@@ -297,7 +297,7 @@ const Supervisor: React.FC = () => {
       .filter((s) => team.assignedStudents.includes(s.name))
       .map((s) => s.id);
 
-    const updatedTeam = { ...team, leadSupervisorId: editedLeadSupervisorId, name: editedTeamName.trim() };
+    const updatedTeam = { ...team, name: editedTeamName.trim(), primarySupervisorId: editedPrimarySupervisorId };
 
     const updatedMemberIDs = memberIDs.concat(supervisors.filter((s) =>
       (updatedTeam.assignedSupervisors || []).includes(s.name)).map((s) => s.id));
@@ -306,9 +306,9 @@ const Supervisor: React.FC = () => {
       await fetch(`${fetchUrl}/setTeamInfo`, {
         body: JSON.stringify({
           id: team.id,
-          leadSupervisorId: editedLeadSupervisorId,
           memberIDs: updatedMemberIDs,
           name: updatedTeam.name,
+          primarySupervisorId: editedPrimarySupervisorId,
         }),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -317,9 +317,9 @@ const Supervisor: React.FC = () => {
     } else {
       const res = await fetch(`${fetchUrl}/createTeam`, {
         body: JSON.stringify({
-          leadSupervisorId: editedLeadSupervisorId,
           memberIDs: updatedMemberIDs,
           name: updatedTeam.name,
+          primarySupervisorId: editedPrimarySupervisorId,
         }),
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
@@ -331,8 +331,8 @@ const Supervisor: React.FC = () => {
       }
     }
 
-    const leadSupervisor = supervisors.find((s) => s.id === editedLeadSupervisorId);
-    updatedTeam.leadSupervisorName = leadSupervisor?.name || `None`;
+    const primarySupervisor = supervisors.find((s) => s.id === editedPrimarySupervisorId);
+    updatedTeam.primarySupervisorName = primarySupervisor?.name || `None`;
 
     setTeams((prev) =>
       prev.map((t, i) => i === selectedTeamIndex ? updatedTeam : t));
@@ -404,9 +404,9 @@ const Supervisor: React.FC = () => {
       assignedStudents: [],
       assignedSupervisors: [],
       assignedUsers: [],
-      leadSupervisorId: undefined,
-      leadSupervisorName: `None`,
       name: `New Team ${nextTeamNumber}`,
+      primarySupervisorId: undefined,
+      primarySupervisorName: `None`,
     };
     setTeams((prev) => {
       const updatedTeams = [ ...prev, newTeam ];
@@ -487,7 +487,7 @@ const Supervisor: React.FC = () => {
               <div className="student-row">
                 <div className="team-info">
                   <span className="team-name-span">{team.name}</span>
-                  <span className="team-lead-supervisor"> Lead: {team.leadSupervisorName}</span>
+                  <span className="team-lead-supervisor"> Lead: {team.primarySupervisorName}</span>
                 </div>
                 <div className="team-tools">
                   <button className="button-edit-team" onClick={() => openEditTeamModal(index)}>✎</button>
@@ -593,7 +593,7 @@ const Supervisor: React.FC = () => {
             <h4>Team Details</h4>
             <h2>{team.name}</h2>
             <div className="lead-supervisor-info">
-              <strong>Lead Supervisor: {team.leadSupervisorName}</strong>
+              <strong>Primary Supervisor: {team.primarySupervisorName}</strong>
             </div>
           </div>
 
@@ -659,13 +659,13 @@ const Supervisor: React.FC = () => {
             placeholder="Enter Team Name"
             className="modal-input-supervisor-team-name"
           />
-          <h3>Lead Supervisor</h3>
+          <h3>Primary Supervisor</h3>
           <select
-            value={editedLeadSupervisorId || ``}
-            onChange={(e) => setEditedLeadSupervisorId(e.target.value ? parseInt(e.target.value) : undefined)}
+            value={editedPrimarySupervisorId || ``}
+            onChange={(e) => setEditedPrimarySupervisorId(e.target.value ? parseInt(e.target.value) : undefined)}
             className="modal-input-supervisor"
           >
-            <option value="">Select Lead Supervisor</option>
+            <option value="">Select Primary Supervisor</option>
             {supervisors.map((supervisor) =>
               <option key={supervisor.id} value={supervisor.id}>
                 {supervisor.name}
