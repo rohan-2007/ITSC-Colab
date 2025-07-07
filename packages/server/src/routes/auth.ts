@@ -88,8 +88,13 @@ router.post(`/signup`, loginLimiter, async (
   const { email, name, password, role, supervisorEmail, teamName } = req.body;
 
   try {
-    const existingUser: PrismaUser | null = await prisma.user.findUnique({
-      where: { email },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { name },
+        ],
+      },
     });
 
     let supervisorId: number | null = null;
