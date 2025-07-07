@@ -169,12 +169,9 @@ const Evaluations: React.FC = () => {
     const jsonData = await response.json();
     if (jsonData && jsonData.students) {
       const allStudents = jsonData.students as Student[];
-      const tempFilteredStudents = allStudents.filter(
-        (student) => student.supervisorId === user?.id,
-      );
-      setStudents(tempFilteredStudents);
+      setStudents(allStudents);
     }
-  }, [ user ]);
+  }, []);
 
   const fetchEvaluations = React.useCallback(async (evalUser: User) => {
     try {
@@ -431,12 +428,6 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  const filteredStudents = students.filter(
-    (student) =>
-      student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
-      student.email.toLowerCase().includes(studentSearch.toLowerCase()),
-  );
-
   if (isLoading) {
     return <div className="evaluations-page">
       <h1>Loading...</h1>
@@ -550,8 +541,8 @@ const Evaluations: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredStudents.length > 0 ?
-                      filteredStudents.map((student: Student) =>
+                    {students.length > 0 ?
+                      students.map((student: Student) =>
                         // const status = studentsEvalStatus[student.id];
                         // const _isCompleted = status ? status.supervisorCompleted : false;
                         <tr

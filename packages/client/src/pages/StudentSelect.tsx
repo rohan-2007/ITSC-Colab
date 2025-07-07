@@ -96,7 +96,7 @@ const StudentSelect: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/students/`, {
+      const response = await fetch(`http://localhost:3001/students/?filtered=true`, {
         credentials: `include`,
         headers: { 'Content-Type': `application/json` },
         method: `POST`,
@@ -130,11 +130,6 @@ const StudentSelect: React.FC = () => {
   useEffect(() => {
     void fetchStudents();
   });
-
-  // Filter students based on search
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
-    student.email.toLowerCase().includes(studentSearch.toLowerCase()));
 
   if (loading) {
     return <div>Loading...</div>;
@@ -173,8 +168,8 @@ const StudentSelect: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredStudents.length > 0 ?
-              filteredStudents.map((student) =>
+            {students.length > 0 ?
+              students.map((student) =>
                 <tr
                   key={student.id}
                   className={selectedStudentId === student.id ? `selected` : ``}
