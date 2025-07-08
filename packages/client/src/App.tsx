@@ -61,9 +61,9 @@ const App: React.FC = () =>
       />
       <Route
         path="/change_rubric"
-        element={<RequireAuth>
+        element={<RequireRole allowedRoles={[ `SUPERVISOR` ]}>
           <EditRubric />
-        </RequireAuth>}
+        </RequireRole>}
       />
     </Routes>
   </Layout>;
