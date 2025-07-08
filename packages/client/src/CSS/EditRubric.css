@@ -1,42 +1,344 @@
-.change-rubric-input {
-    width: 100%;
-    height: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+:root {
+  --primary-color: #d55959;
+  --primary-color-dark: #c04848;
+  --border-color-light: #e5e7eb;
+  --border-color-default: #d1d5db;
+  --bg-color-page: #f9fafb;
+  --bg-color-card: #ffffff;
+  --text-color-header: #111827;
+  --text-color-body: #374151;
+  --text-color-muted: #6b7280;
+  --danger-color: #dc2626;
+  --danger-bg-light: #fee2e2;
+  --danger-color-hover: #b91c1c;
+  --focus-shadow: 0 0 0 3px rgba(213, 89, 89, 0.15);
 }
 
-.edit-rubric-btn {
-    background-color: red;
-    color: white;
-    padding: 0.5em;
-    margin: 0.5em;
+.edit-rubric-page {
+  padding: 2rem 2.5rem; /* Adjusted padding */
+  background-color: var(--bg-color-page);
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /* Modern font stack */
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
-.subitem-button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    width: 100%;
+.edit-rubric-container {
+  width: 100%; /* Use full width of parent */
+  height: 100%; /* Use full height of parent */
+  overflow-y: auto; /* Enable scrolling within the container */
+  padding-right: 15px; /* Prevent content from hiding under scrollbar */
 }
 
-.add-subitem-btn {
-    width: 50%;
+.edit-rubric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem; /* Increased margin */
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color-light);
 }
 
-.delete-subitem-btn {
-    margin-top: 0;
-    padding: 0.5em;
+.edit-rubric-header h1 {
+  font-size: 2.25rem; /* Slightly adjusted size */
+  font-weight: 700; /* Bolder */
+  color: var(--text-color-header);
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
-.delete-level-btn {
-    margin-left: 0;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem; /* More generous padding */
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; /* Smooth transition for all properties */
+  white-space: nowrap;
+}
+.btn:active {
+  transform: scale(0.97);
 }
 
-.subitem-list-item {
-    display: flex;
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+.btn-primary:hover {
+  background-color: var(--primary-color-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background-color: var(--bg-color-card);
+  color: var(--text-color-body);
+  border-color: var(--border-color-default);
+}
+.btn-secondary:hover {
+  background-color: #f3f4f6;
+  border-color: #b3b9c4;
+}
+
+.icon-btn {
+  background-color: transparent;
+  color: var(--text-color-muted);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.icon-btn:hover {
+  background-color: var(--border-color-light);
+  color: var(--text-color-body);
+}
+
+.icon-btn:active {
+  transform: scale(0.9);
+}
+
+.icon-btn-danger:hover {
+  background-color: var(--danger-bg-light);
+  color: var(--danger-color-hover);
+}
+
+.icon-btn svg {
+  width: 18px; /* Slightly smaller */
+  height: 18px;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--text-color-header);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s 0.1s ease, visibility 0.2s 0.1s ease; /* Added delay */
+  pointer-events: none;
+  z-index: 10;
+}
+.icon-btn:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.rubric-grid {
+  display: grid;
+  gap: 1.5rem; /* Adjusted gap */
+}
+
+.rubric-headers {
+  display: grid;
+  grid-template-columns: 320px repeat(var(--num-columns, 4), 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.header-criteria-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.level-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-color-card);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color-light);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  cursor: grab;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.level-header:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: scale(1.02);
+  border-color: var(--primary-color);
+}
+
+.drag-handle {
+  color: var(--text-color-muted);
+  flex-shrink: 0;
+  padding: 0.25rem;
+}
+
+.input-base {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-color-default);
+  border-radius: 8px;
+  background-color: var(--bg-color-card);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: var(--text-color-body);
+  line-height: 1.5;
+}
+.input-base:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: var(--focus-shadow);
+}
+
+.input-level-title {
+  border: 1px solid transparent;
+  background: transparent;
+  flex-grow: 1;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+.input-level-title:focus {
+  background-color: var(--bg-color-page);
+  border-color: var(--border-color-default);
+  box-shadow: none;
+}
+
+.textarea-description {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.description-cell {
+    background-color: var(--bg-color-card);
+    border-radius: 12px;
+    padding: 0.5rem; /* Padding for the container */
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.description-cell .textarea-description {
+  border: 1px solid transparent; /* No border by default */
+}
+
+.description-cell .textarea-description:focus {
+   border-color: var(--primary-color); /* Border only on focus */
+}
+
+
+.criterion-row {
+  display: grid;
+  grid-template-columns: 320px repeat(var(--num-columns, 4), 1fr);
+  gap: 1.5rem;
+  background-color: var(--bg-color-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-color-light);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.criterion-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.criterion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.criterion-title-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.input-criterion-title {
+  width: 100%;
+  color: var(--text-color-header);
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem -0.5rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.input-criterion-title:focus {
+  background: white;
+  border-color: var(--border-color-default);
+  outline: none;
+  box-shadow: var(--focus-shadow);
+}
+
+.subitems-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 15vh; /* Or adjust as needed */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px; /* Space for scrollbar */
+}
+
+.subitem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.input-subitem {
+  flex-grow: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--text-color-body);
+  transition: all 0.2s;
+}
+.input-subitem:focus {
+  background: var(--bg-color-card);
+  border-color: var(--border-color-default);
+  outline: none;
+  box-shadow: var(--focus-shadow);
+}
+
+.criterion-actions {
+  border-top: 1px solid var(--border-color-light);
+  padding-top: 1rem;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.rubric-footer-actions {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color-light);
+  display: flex;
+  justify-content: center;
 }

@@ -91,6 +91,7 @@ model RubricPerformanceLevel {
   rubricCategoryId   Int
   level              String
   description        String
+  displayOrder       Int                @default(0)
   deletedAt          DateTime?
 
   rubricCategory     RubricCategory     @relation(fields: [rubricCategoryId], references: [id], onDelete: Cascade)
