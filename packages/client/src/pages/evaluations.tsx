@@ -216,14 +216,8 @@ const Evaluations: React.FC = () => {
 
       setPerformanceLevelTypes(uniquePerformanceLevelTypes);
 
-      const initialSelections: Selections = {};
-      for (const category of rubricCategories) {
-        const defaultLevel = category.levels.find((l) => l.level === `Starting`) || category.levels[0];
-        if (defaultLevel) {
-          initialSelections[category.id] = defaultLevel.id;
-        }
-      }
-      setSelections(initialSelections);
+      // FIX: Removed logic that pre-populates selections.
+      // The `selections` state will now start empty and only be populated by user clicks.
     }
   }, [ rubricCategories ]);
 
@@ -288,14 +282,9 @@ const Evaluations: React.FC = () => {
     void getRubricData();
   }, [ navigate, fetchEvaluations, fetchStudents, searchParams, students, _studentsEvalStatus ]);
 
-  const handleSelect = (categoryId: number, levelId: number, target: HTMLElement) => {
-    Array.from(document.getElementsByClassName(`level-cell`)).forEach((el) => {
-      const htmlEl = el as HTMLElement;
-      if (htmlEl.dataset.categoryId === target.dataset.categoryId) {
-        htmlEl.classList.remove(`selected`);
-      }
-    });
-    target.classList.add(`selected`);
+  // REFACTOR: Simplified handleSelect to only update state.
+  // The UI will derive its style from the state, which is a better React practice.
+  const handleSelect = (categoryId: number, levelId: number) => {
     setSelections((prev) => ({ ...prev, [categoryId]: levelId }));
   };
 
@@ -305,6 +294,8 @@ const Evaluations: React.FC = () => {
       notify(`Error: User not found.`);
       return;
     }
+    // FIX: This validation now works as intended because `selections` is not pre-filled.
+    // It will prevent submission until the user has made a selection for every category.
     if (Object.keys(selections).length !== rubricCategories.length) {
       notify(`Please make a selection for every rubric category.`);
       return;
@@ -598,10 +589,15 @@ const Evaluations: React.FC = () => {
                           return <td key={`${category.id}-${levelType.level}`}>N/A</td>;
                         }
 
+                        // REFACTOR: The `selected` class is now applied based on component state,
+                        // creating a more reliable and declarative UI.
+                        const isSelected = selections[category.id] === categorySpecificLevel.id;
+
                         return <td
-                          className="level-cell"
+                          key={`${category.id}-${levelType.level}`}
+                          className={`level-cell ${isSelected ? `selected` : ``}`}
                           data-category-id={category.id}
-                          onClick={(e) => handleSelect(category.id, categorySpecificLevel.id, e.currentTarget)}
+                          onClick={() => handleSelect(category.id, categorySpecificLevel.id)}
                         >
                           <div className="level-text">{categorySpecificLevel.description}</div>
                         </td>;
