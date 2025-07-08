@@ -15,32 +15,33 @@
 }
 
 .edit-rubric-page {
-  padding: 2rem 2.5rem; /* Adjusted padding */
+  padding: 3rem 2rem;
   background-color: var(--bg-color-page);
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /* Modern font stack */
-  min-height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 
 .edit-rubric-container {
-  width: 100%; /* Use full width of parent */
-  height: 100%; /* Use full height of parent */
-  overflow-y: auto; /* Enable scrolling within the container */
-  padding-right: 15px; /* Prevent content from hiding under scrollbar */
+    width: 85vw;
+  height: 80vh;
+  margin-top: -10px;
+  padding-bottom: 2rem;
+  overflow-y:auto;
 }
 
 .edit-rubric-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem; /* Increased margin */
+  margin-bottom: 3rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color-light);
 }
 
 .edit-rubric-header h1 {
-  font-size: 2.25rem; /* Slightly adjusted size */
-  font-weight: 700; /* Bolder */
+  font-size: 2.75rem;
+  font-weight: 800;
   color: var(--text-color-header);
   margin: 0;
   letter-spacing: -0.02em;
@@ -50,13 +51,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem; /* More generous padding */
-  font-size: 0.9rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
   font-weight: 600;
   border-radius: 8px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease-in-out; /* Smooth transition for all properties */
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 .btn:active {
@@ -66,11 +67,9 @@
 .btn-primary {
   background-color: var(--primary-color);
   color: white;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 .btn-primary:hover {
   background-color: var(--primary-color-dark);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
@@ -80,7 +79,6 @@
 }
 .btn-secondary:hover {
   background-color: #f3f4f6;
-  border-color: #b3b9c4;
 }
 
 .icon-btn {
@@ -94,7 +92,7 @@
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .icon-btn:hover {
@@ -102,18 +100,14 @@
   color: var(--text-color-body);
 }
 
-.icon-btn:active {
-  transform: scale(0.9);
-}
-
 .icon-btn-danger:hover {
   background-color: var(--danger-bg-light);
-  color: var(--danger-color-hover);
+  color: var(--danger-color);
 }
 
 .icon-btn svg {
-  width: 18px; /* Slightly smaller */
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .tooltip {
@@ -121,7 +115,7 @@
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--text-color-header);
+  background-color: #333;
   color: white;
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
@@ -130,7 +124,7 @@
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s 0.1s ease, visibility 0.2s 0.1s ease; /* Added delay */
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
   z-index: 10;
 }
@@ -141,23 +135,21 @@
 
 .rubric-grid {
   display: grid;
-  gap: 1.5rem; /* Adjusted gap */
+  gap: 2rem;
 }
 
 .rubric-headers {
   display: grid;
   grid-template-columns: 320px repeat(var(--num-columns, 4), 1fr);
-  gap: 1.5rem;
+  gap: 1.75rem;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
 .header-criteria-title {
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-color-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--text-color-body);
 }
 
 .level-header {
@@ -166,29 +158,25 @@
   gap: 0.5rem;
   background-color: var(--bg-color-card);
   border-radius: 8px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-color-light);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   cursor: grab;
-  transition: box-shadow 0.2s, transform 0.2s;
 }
 .level-header:active {
   cursor: grabbing;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: scale(1.02);
-  border-color: var(--primary-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .drag-handle {
   color: var(--text-color-muted);
   flex-shrink: 0;
-  padding: 0.25rem;
 }
 
 .input-base {
   width: 100%;
   padding: 0.75rem 1rem;
-  font-size: 0.95rem;
+  font-size: 1rem;
   border: 1px solid var(--border-color-default);
   border-radius: 8px;
   background-color: var(--bg-color-card);
@@ -196,7 +184,6 @@
   box-sizing: border-box;
   font-family: inherit;
   color: var(--text-color-body);
-  line-height: 1.5;
 }
 .input-base:focus {
   outline: none;
@@ -205,60 +192,60 @@
 }
 
 .input-level-title {
-  border: 1px solid transparent;
-  background: transparent;
+  ime-mode: input-base;
   flex-grow: 1;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
-.input-level-title:focus {
-  background-color: var(--bg-color-page);
-  border-color: var(--border-color-default);
-  box-shadow: none;
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 
 .textarea-description {
+  ime-mode: input-base;
   min-height: 150px;
   resize: vertical;
 }
+.input-base,
+.input-criterion-title,
+.input-subitem,
+.textarea-description {
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  line-height: 1.5;
+}
 
 .description-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1rem;
+    width: 100%;
+    color: var(--text-color-muted);
     background-color: var(--bg-color-card);
-    border-radius: 12px;
-    padding: 0.5rem; /* Padding for the container */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: background-color 0.2s, box-shadow 0.2s;
 }
-
-.description-cell .textarea-description {
-  border: 1px solid transparent; /* No border by default */
-}
-
-.description-cell .textarea-description:focus {
-   border-color: var(--primary-color); /* Border only on focus */
-}
-
 
 .criterion-row {
   display: grid;
   grid-template-columns: 320px repeat(var(--num-columns, 4), 1fr);
-  gap: 1.5rem;
+  gap: 1.75rem;
   background-color: var(--bg-color-card);
   border-radius: 16px;
   border: 1px solid var(--border-color-light);
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease;
 }
 .criterion-row:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .criterion-content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .criterion-title-header {
@@ -271,17 +258,18 @@
 .input-criterion-title {
   width: 100%;
   color: var(--text-color-header);
-  padding: 0.25rem 0.5rem;
-  margin: -0.25rem -0.5rem;
-  border-radius: 6px;
+  padding: 0.5rem;
+  margin: -0.5rem;
+  border-radius: 8px;
   border: 1px solid transparent;
   background: transparent;
-  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
-  font-size: 1.25rem;
+  transition: border-color 0.2s, background-color 0.2s;
+  font-size: 1.5rem;
   font-weight: 600;
+  margin-top: 0.25rem;
 }
 .input-criterion-title:focus {
-  background: white;
+  background: var(--bg-color-card);
   border-color: var(--border-color-default);
   outline: none;
   box-shadow: var(--focus-shadow);
@@ -293,32 +281,29 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-height: 15vh; /* Or adjust as needed */
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 8px; /* Space for scrollbar */
+  gap: 1.25rem;
+  overflow-y:auto;
+  overflow-x:hidden;
+  max-height:15vh;
 }
 
 .subitem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.25rem;
+  padding: 0.75 1rem;
   background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .input-subitem {
   flex-grow: 1;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem;
   border: 1px solid transparent;
   background: transparent;
   border-radius: 6px;
   font-size: 0.9rem;
-  color: var(--text-color-body);
-  transition: all 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 .input-subitem:focus {
   background: var(--bg-color-card);
@@ -336,8 +321,8 @@
 }
 
 .rubric-footer-actions {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
   border-top: 1px solid var(--border-color-light);
   display: flex;
   justify-content: center;
