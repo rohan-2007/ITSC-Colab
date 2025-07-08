@@ -14,7 +14,10 @@ const Navbar: React.FC = () => {
       <Link to="/profile">Profile</Link>
       {(localStorage.getItem(`userMeta`) &&
         JSON.parse(localStorage.getItem(`userMeta`) as string).role === `SUPERVISOR`) &&
-          <Link to="/supervisor">Supervisor</Link>}
+          <>
+            <Link to="/supervisor">Supervisor</Link>
+            <Link to="/change_rubric">Edit Rubric</Link>
+          </>}
       <Link to="/contact">Contact</Link>
     </nav>
     <button

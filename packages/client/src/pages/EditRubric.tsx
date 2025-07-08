@@ -1,7 +1,13 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
-import type { RubricCategory } from './PastEvaluations';
-
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from '@hello-pangea/dnd';
+import { type RubricCategory, RubricPerformanceLevel } from './PastEvaluations';
+import '../CSS/EditRubric.css';
 // interface RubricRequestBody {
 //   categoryId?: number;
 //   categoryTitle?: string;
@@ -13,6 +19,7 @@ import type { RubricCategory } from './PastEvaluations';
 
 const EditRubric: React.FC = () => {
   const [ rubricCategories, setRubricCategories ] = useState<RubricCategory[]>([]);
+  const [ columns, setColumns ] = useState<RubricPerformanceLevel[]>();
 
   const fetchRubricCategories = async () => {
     try {
@@ -32,7 +39,11 @@ const EditRubric: React.FC = () => {
     void fetchRubricCategories();
   }, []);
 
-  const changeDescription = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    setColumns(rubricCategories[0]?.levels.filter((level) => !level.deletedAt));
+  }, [ rubricCategories ]);
+
+  const changeDescription = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const [ category, level ] = name.split(`_`);
     const categoryId = parseInt(category, 10);
@@ -266,107 +277,199 @@ const EditRubric: React.FC = () => {
     }
   };
 
+  const addSubItem = async (categoryId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ addSubItem: true, categoryId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          subItems: [
+            ...category.subItems,
+            resJson,
+          ],
+        })));
+
+      await fetchRubricCategories();
+      console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
+  const deleteSubItem = async (subItemId: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/changeRubric`, {
+        body: JSON.stringify({ deletedSubItem: subItemId }),
+        credentials: `include`,
+        headers: { "Content-Type": `application/json` },
+        method: `POST`,
+      });
+
+      const resJson = await res.json();
+      console.log(`resJson`, resJson);
+
+      setRubricCategories((prev) =>
+        prev.map((category) => ({
+          ...category,
+          subItems: category.subItems.filter((si) => si.id !== subItemId),
+        })));
+
+      await fetchRubricCategories();
+      // console.log(`updatedCategories: `, rubricCategories);
+    } catch {
+      return;
+    }
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updated = Array.from(columns ?? []);
+    const [ moved ] = updated.splice(result.source.index, 1);
+    updated.splice(result.destination.index, 0, moved);
+    setColumns(updated);
+  };
+
   return <div className="rubric-table-wrapper-past-eval">
-    <table className="rubric-table-past-eval">
-      <thead>
-        <tr>
-          <th>Criteria</th>
-          {rubricCategories[0]?.levels
-            .filter((level) => !level.deletedAt)
-            .map((level) =>
-              <th key={level.id}>
-                <input
-                  className="change-rubric-input"
-                  value={level.level}
-                  name={`${level.level}`}
-                  onChange={changeLevel}
-                />
-                <button onClick={() => deleteLevel(level.id)}>Delete</button>
-              </th>)}
-          <th>
-            <button onClick={createNewLevel}>Add Level</button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {rubricCategories.map((category) =>
-          <tr key={category.id}>
-            <td className="criteria-column">
-              <strong>
-                <input
-                  className="change-rubric-input"
-                  value={category.title}
-                  name={`${category.id}`}
-                  onChange={changeCategory}
-                />
-              </strong>
-              <ul>
-                {category.subItems?.map((subItem) =>
-                  <li key={subItem.id}>
-                    <input
-                      className="change-rubric-input"
-                      value={subItem.name}
-                      name={`${subItem.id}_${category.id}`}
-                      onChange={changeSubItem}
-                    />
-                  </li>)}
-              </ul>
-              <button onClick={() => deleteCriterion(category.id)}>Delete</button>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <table className="rubric-table-past-eval">
+        <thead>
+          <Droppable droppableId="columns" direction="horizontal">
+            {(provided) =>
+              <tr ref={provided.innerRef} {...provided.droppableProps}>
+                <th>Criteria</th>
+                {columns?.map((level, index) =>
+                  <Draggable key={level.id} draggableId={`${level.id}`} index={index}>
+                    {(providedDrag) =>
+                      <th
+                        key={level.id}
+                        ref={providedDrag.innerRef}
+                        {...providedDrag.draggableProps}
+                        {...providedDrag.dragHandleProps}
+                      >
+                        <input
+                          className="change-rubric-input"
+                          value={level.level}
+                          name={`${level.level}`}
+                          onChange={changeLevel}
+                        />
+                        <button
+                          onClick={() => deleteLevel(level.id)}
+                          className="edit-rubric-btn delete-level-btn"
+                        >Delete Level</button>
+                      </th>}
+                  </Draggable>)}
+                {provided.placeholder}
+                <th>
+                  <button onClick={createNewLevel} className="edit-rubric-btn">Add Level</button>
+                </th>
+              </tr>}
+          </Droppable>
+        </thead>
+        <tbody>
+          {rubricCategories.map((category) =>
+            <tr key={category.id}>
+              <td className="criteria-column">
+                <strong>
+                  <input
+                    className="change-rubric-input"
+                    value={category.title}
+                    name={`${category.id}`}
+                    onChange={changeCategory}
+                  />
+                </strong>
+                <ul>
+                  {category.subItems?.map((subItem) =>
+                    <li key={subItem.id} className="subitem-list-item">
+                      <input
+                        className="change-rubric-input"
+                        value={subItem.name}
+                        name={`${subItem.id}_${category.id}`}
+                        onChange={changeSubItem}
+                      />
+                      <button
+                        onClick={() => deleteSubItem(subItem.id)}
+                        className="edit-rubric-btn delete-subitem-btn"
+                      >Delete Sub-Criterion</button>
+                    </li>)}
+                </ul>
+                <div className="subitem-button-group">
+                  <button
+                    onClick={() => addSubItem(category.id)}
+                    className="edit-rubric-btn add-subitem-btn"
+                  >Add Sub-Criterion</button>
+                  <button
+                    onClick={() => deleteCriterion(category.id)}
+                    className="edit-rubric-btn"
+                  >Delete Criterion</button>
+                </div>
+              </td>
+              {columns?.map((headerLevel) => {
+                const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
+                const cellClass = `display-cell`;
+
+                //   const studentSelected = studentTeamResults[category.id] === level.id;
+                //   const supervisorSelected = supervisorTeamResults[category.id] === level.id;
+                //   console.log(`supervisorTeamResults[category.id]`, supervisorTeamResults);
+
+                //   if (!(category.id in supervisorTeamResults) && !(category.id in studentTeamResults)) {
+                //     if (!alreadyDisplayed) {
+                //       alreadyDisplayed = true;
+                //       return <td
+                //         key={level.id}
+                //         style={dynamicStyles}
+                //         className={cellClass}
+                //         colSpan={category.levels.length}
+                //       >
+                //         <div className="level-text no-criteria">
+                //           This criterion is not available for this evaluation
+                //         </div>
+                //       </td>;
+                //     }
+                //   } else {
+                //   if (studentSelected && supervisorSelected) {
+                //     cellClass += ` both-selected`;
+                //   } else if (studentSelected) {
+                //     cellClass += ` student-selected`;
+                //   } else if (supervisorSelected) {
+                //     cellClass += ` supervisor-selected`;
+                //   }
+
+                return <td
+                  key={headerLevel.id}
+                  // style={dynamicStyles}
+                  className={cellClass}
+                >
+
+                  <textarea
+                    className="change-rubric-input"
+                    value={matchingLevel?.description}
+                    name={`${category.id}_${matchingLevel?.id}`}
+                    onChange={(e) => changeDescription(e)}
+                  />
+                </td>;
+                //   }
+              })}
+            </tr>)}
+          <tr>
+            <td>
+              <button onClick={createNewCriterion} className="edit-rubric-btn">Add Criterion</button>
             </td>
-            {rubricCategories[0]?.levels.map((headerLevel) => {
-              const matchingLevel = category.levels.find((l) => l.level === headerLevel.level);
-              const cellClass = `display-cell`;
-
-              //   const studentSelected = studentTeamResults[category.id] === level.id;
-              //   const supervisorSelected = supervisorTeamResults[category.id] === level.id;
-              //   console.log(`supervisorTeamResults[category.id]`, supervisorTeamResults);
-
-              //   if (!(category.id in supervisorTeamResults) && !(category.id in studentTeamResults)) {
-              //     if (!alreadyDisplayed) {
-              //       alreadyDisplayed = true;
-              //       return <td
-              //         key={level.id}
-              //         style={dynamicStyles}
-              //         className={cellClass}
-              //         colSpan={category.levels.length}
-              //       >
-              //         <div className="level-text no-criteria">
-              //           This criterion is not available for this evaluation
-              //         </div>
-              //       </td>;
-              //     }
-              //   } else {
-              //   if (studentSelected && supervisorSelected) {
-              //     cellClass += ` both-selected`;
-              //   } else if (studentSelected) {
-              //     cellClass += ` student-selected`;
-              //   } else if (supervisorSelected) {
-              //     cellClass += ` supervisor-selected`;
-              //   }
-
-              return <td
-                key={headerLevel.id}
-                // style={dynamicStyles}
-                className={cellClass}
-              >
-
-                <input
-                  className="change-rubric-input"
-                  value={matchingLevel?.description}
-                  name={`${category.id}_${matchingLevel?.id}`}
-                  onChange={changeDescription}
-                />
-              </td>;
-            //   }
-            })}
-          </tr>)}
-        <tr>
-          <td>
-            <button onClick={createNewCriterion}>Add Criterion</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </DragDropContext>
   </div>;
 };
 

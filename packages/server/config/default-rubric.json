@@ -4,8 +4,8 @@
     "name": "critical_thinking",
     "performanceLevels": [
       {
-        "description": "thinking problem",
-        "level": "Intermediate"
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "",
@@ -45,14 +45,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "scenic",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -68,12 +60,20 @@
         "level": "Custom"
       },
       {
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
-        "level": "StartingLevel"
+        "description": "scenic",
+        "level": "radiant"
       },
       {
-        "description": "",
-        "level": "added another"
+        "description": "thinking problem",
+        "level": "Intermediate"
+      },
+      {
+        "description": "interlevel 1",
+        "level": "interlevel"
+      },
+      {
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "StartingLevel"
       },
       {
         "description": "react here",
@@ -94,6 +94,14 @@
       {
         "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
         "level": "InProgress"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -108,8 +116,8 @@
     "name": "technical_proficiency",
     "performanceLevels": [
       {
-        "description": "dynamic",
-        "level": "Intermediate"
+        "description": "",
+        "level": "col 6"
       },
       {
         "description": "Adapts to new situationsdwd effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
@@ -145,14 +153,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -168,12 +168,20 @@
         "level": "Custom"
       },
       {
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
-        "level": "StartingLevel"
+        "description": "",
+        "level": "radiant"
       },
       {
-        "description": "",
-        "level": "added another"
+        "description": "dynamic",
+        "level": "Intermediate"
+      },
+      {
+        "description": "interlevel 2",
+        "level": "interlevel"
+      },
+      {
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "StartingLevel"
       },
       {
         "description": "",
@@ -198,6 +206,14 @@
       {
         "description": "Capable of performing and solving problems. Can meet the technical requirements of the role consistently. Consistently learning new, relevant tools.",
         "level": "InProgress"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -214,7 +230,7 @@
     "performanceLevels": [
       {
         "description": "",
-        "level": "Intermediate"
+        "level": "col 6"
       },
       {
         "description": "",
@@ -254,14 +270,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -277,12 +285,20 @@
         "level": "Custom"
       },
       {
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
-        "level": "StartingLevel"
+        "description": "",
+        "level": "radiant"
       },
       {
         "description": "",
-        "level": "added another"
+        "level": "Intermediate"
+      },
+      {
+        "description": "interlevel 3",
+        "level": "interlevel"
+      },
+      {
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback.",
+        "level": "StartingLevel"
       },
       {
         "description": "",
@@ -303,6 +319,14 @@
       {
         "description": "Maintains team-oriented mind frame by being accountable, taking initiative, and being flexible on tasks needed to support team goals.",
         "level": "InProgress"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [
@@ -323,7 +347,7 @@
     "performanceLevels": [
       {
         "description": "",
-        "level": "Intermediate"
+        "level": "col 6"
       },
       {
         "description": "Adapts to new situations effectively. Is open to feedback and demonstrates willingness to learn and grow through problem solving skills and adaptability.",
@@ -367,14 +391,6 @@
       },
       {
         "description": "",
-        "level": "col 6"
-      },
-      {
-        "description": "",
-        "level": "radiant"
-      },
-      {
-        "description": "",
         "level": "this is added"
       },
       {
@@ -386,12 +402,20 @@
         "level": "Custom"
       },
       {
-        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",
-        "level": "StartingLevel"
+        "description": "",
+        "level": "radiant"
       },
       {
         "description": "",
-        "level": "added another"
+        "level": "Intermediate"
+      },
+      {
+        "description": "interlevel 4",
+        "level": "interlevel"
+      },
+      {
+        "description": "Resists change and struggles to adapt to new situations. Exhibits inflexibility and is resistant to feedback. heeeyyyyy",
+        "level": "StartingLevel"
       },
       {
         "description": "",
@@ -412,6 +436,14 @@
       {
         "description": "Shows good range of interpersonal skills through effective communication in verbal and written channels and accomplishing tasks in a timely manner.",
         "level": "InProgress"
+      },
+      {
+        "description": "",
+        "level": "added another"
+      },
+      {
+        "description": "",
+        "level": ""
       }
     ],
     "subItems": [

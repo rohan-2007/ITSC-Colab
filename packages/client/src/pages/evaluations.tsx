@@ -207,10 +207,12 @@ const Evaluations: React.FC = () => {
         });
       });
 
-      const orderedLevelNames = [ `Starting`, `InProgress`, `Competitive` ];
+      const orderedLevelNames = Array.from(levelNames);
       const uniquePerformanceLevelTypes = orderedLevelNames
         .filter((name) => levelNames.has(name))
         .map((name) => ({ level: name }));
+
+      // const uniquePerformanceLevelTypes = levelNames.map((name) => ({ level: name }));
 
       setPerformanceLevelTypes(uniquePerformanceLevelTypes);
 

@@ -7,10 +7,12 @@ const router = Router();
 interface RubricRequestBody {
   addCategory?: boolean;
   addLevel?: boolean;
+  addSubItem?: boolean;
   categoryId?: number;
   categoryTitle?: string;
   deletedCategory?: number;
   deletedLevel?: number;
+  deletedSubItem?: number;
   description?: string;
   level?: string;
   levelId?: number;
@@ -24,6 +26,9 @@ router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void
     const rubricCategories = await prisma.rubricCategory.findMany({
       include: {
         levels: {
+          orderBy: {
+            id: `asc`,
+          },
           select: {
             id: true,
             description: true,
@@ -37,6 +42,9 @@ router.get(`/rubric`, limiter, async (req: Request, res: Response): Promise<void
           select: {
             id: true,
             name: true,
+          },
+          where: {
+            deletedAt: null,
           },
         },
       },
@@ -57,10 +65,12 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
   const {
     addCategory,
     addLevel,
+    addSubItem,
     categoryId,
     categoryTitle,
     deletedCategory,
     deletedLevel,
+    deletedSubItem,
     description,
     level,
     levelId,
@@ -218,6 +228,49 @@ router.post(`/changeRubric`, limiter, async (req: Request<unknown, unknown, Rubr
       `;
 
       res.status(200).json({ message: `deleted category successfully` });
+      return;
+    } catch (error) {
+      res.status(500).json({ error, message: `Internal Server Error` });
+      return;
+    }
+  } else if (deletedSubItem) {
+    try {
+      const time = new Date();
+
+      await prisma.$executeRaw`
+        UPDATE "perf_review"."rubricSubItem"
+        SET "deletedAt" = ${ time }
+        WHERE "id" = ${ deletedSubItem };
+      `;
+
+      res.status(200).json({ message: `deleted sub-item successfully` });
+      return;
+    } catch (error) {
+      res.status(500).json({ error, message: `Internal Server Error` });
+      return;
+    }
+  }
+  if (addSubItem && categoryId) {
+    const subItems = await prisma.rubricSubItem.findMany({
+      orderBy: {
+        id: `asc`,
+      },
+      where: {
+        deletedAt: null,
+        rubricCategoryId: categoryId,
+      },
+    });
+
+    try {
+      const newSubItem = await prisma.rubricSubItem.create({
+        data: {
+          id: subItems.length + 1 + categoryId * 100,
+          name: ``,
+          rubricCategoryId: categoryId,
+        },
+      });
+
+      res.status(200).json(newSubItem);
       return;
     } catch (error) {
       res.status(500).json({ error, message: `Internal Server Error` });
